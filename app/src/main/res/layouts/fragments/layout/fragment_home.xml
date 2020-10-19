@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="com.example.courier.common.BindingUtils" />
+
+        <variable
+                name="homeViewModel"
+                type="com.example.courier.viewmodels.home.HomeViewModel" />
+
+    </data>
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/colorPrimary"
+            android:orientation="vertical">
+
+        <include
+                android:id="@+id/toolbarCommon"
+                layout="@layout/common_toolbar_back"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_50"
+                android:layout_marginTop="10dp"
+                android:visibility="gone" />
+
+        <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_toobar"
+                android:background="@color/colorPrimary">
+
+            <ImageView
+                    android:id="@+id/toolbar"
+                    android:layout_width="@dimen/dp_55"
+                    android:layout_height="@dimen/dp_55"
+                    android:contentDescription="@string/todo"
+                    android:onClick="@{(v) -> homeViewModel.clickListener(v)}"
+                    android:padding="@dimen/dp_15"
+                    android:rotation="-180"
+                    android:src="@drawable/ic_arrow_forward"
+                    android:tint="@color/colorWhite"  />
+
+            <TextView
+                    android:id="@+id/img_toolbar_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="@dimen/dp_15"
+                    android:layout_marginLeft="@dimen/dp_15"
+                    android:layout_toEndOf="@+id/toolbar"
+                    android:layout_toRightOf="@+id/toolbar"
+                    android:gravity="center"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="@dimen/sp_16"
+                    app:font="@{`semibold`}"
+                    tools:text="@string/home" />
+
+            <Button
+                    android:id="@+id/img_cost"
+                    android:layout_width="@dimen/dp_100"
+                    android:layout_height="@dimen/dp_40"
+                    android:layout_centerHorizontal="true"
+                    android:src="@drawable/ic_email"
+                    android:textAllCaps="false"
+                    android:textColor="@color/colorWhite"
+                    android:visibility="gone"
+                    app:font="@{`regular`}" />
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/img_right"
+                    android:layout_width="40dp"
+                    android:layout_height="@dimen/dp_40"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="@dimen/dp_15"
+                    android:layout_marginRight="@dimen/dp_15"
+                    android:contentDescription="@string/todo"
+                    android:onClick="@{(v) -> homeViewModel.clickListener(v)}"
+                    android:src="@drawable/ic_user"
+
+                    android:visibility="visible"
+                    app:civ_border_color="@color/colorWhite"
+                    app:civ_border_width="2dp" />
+
+        </RelativeLayout>
+
+        <TextView
+                android:id="@+id/txtWelcome"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:text="Welcome, Akash Gharu"
+                android:textColor="@color/colorWhite"
+                android:textSize="@dimen/sp_18"
+                android:textStyle="bold"
+                app:font="@{`semibold`}" />
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/ic_top_circle"
+                android:orientation="vertical">
+
+            <TextView
+                    android:layout_width="180dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="40dp"
+                    android:layout_marginTop="40dp"
+                    android:layout_marginRight="40dp"
+                    android:gravity="center"
+                    android:text="@string/delivery_few_minutes"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="22sp"
+                    android:textStyle="bold"
+                    app:font="@{`semibold`}" />
+
+            <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="25dp"
+                    android:src="@drawable/ic_home_logo" />
+
+            <TextView
+                    android:id="@+id/txtCreateOrder"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="25dp"
+                    android:background="@drawable/shape_button_round_back"
+                    android:gravity="center"
+                    android:onClick="@{(v) -> homeViewModel.clickListener(v)}"
+                    android:text="@string/new_order"
+                    android:textAllCaps="false"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="18sp" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</layout>

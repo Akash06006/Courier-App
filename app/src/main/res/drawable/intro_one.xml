@@ -1,0 +1,35 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="381dp"
+    android:height="432dp"
+    android:viewportWidth="381"
+    android:viewportHeight="432">
+  <path
+      android:pathData="M164.08,55.264L186.641,107.067L175.348,152.382L68.912,309.888L128.938,338.895L136.678,359.464L189.603,389.344L243.736,395.671"
+      android:strokeWidth="4"
+      android:fillColor="#00000000"
+      android:strokeColor="#6A61F8"/>
+  <path
+      android:pathData="M281.48,389.241C281.48,396.266 277.889,401.746 273.889,407.202L258.24,428.499L242.591,407.202C238.591,401.746 235,396.266 235,389.24C235,376.426 245.424,366 258.238,366H258.336C271.106,366.052 281.48,376.459 281.48,389.241Z"
+      android:fillColor="#FF623F"/>
+  <path
+      android:pathData="M281.48,389.241C281.48,396.266 277.889,401.746 273.889,407.202L258.24,428.499V366H258.336C271.106,366.052 281.48,376.459 281.48,389.241Z"
+      android:fillColor="#E30020"/>
+  <path
+      android:pathData="M273.343,389.24C273.343,393.833 271.281,397.956 268.035,400.726C265.397,402.981 261.974,404.343 258.24,404.343C254.508,404.343 251.089,402.982 248.45,400.733C245.201,397.96 243.137,393.837 243.137,389.24C243.137,380.913 249.912,374.138 258.24,374.138C266.567,374.138 273.343,380.913 273.343,389.24Z"
+      android:fillColor="#ffffff"/>
+  <path
+      android:pathData="M273.343,389.24C273.343,393.833 271.281,397.956 268.036,400.726C265.397,402.981 261.974,404.343 258.24,404.343V374.138C266.568,374.138 273.343,380.913 273.343,389.24Z"
+      android:fillColor="#D6D6D8"/>
+  <path
+      android:pathData="M161,49m-33,0a33,33 0,1 1,66 0a33,33 0,1 1,-66 0"
+      android:fillColor="#ffffff"/>
+  <path
+      android:pathData="M153.672,35.25H181.104V62.682H153.672V35.25Z"
+      android:fillColor="#F4D072"/>
+  <path
+      android:pathData="M164.944,35.25H169.833V43.836H164.944V35.25Z"
+      android:fillColor="#FAEED2"/>
+  <path
+      android:pathData="M141.062,35.25H153.673V62.682H141.062V35.25Z"
+      android:fillColor="#ECA95F"/>
+</vector>

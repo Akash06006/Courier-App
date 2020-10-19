@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:cardCornerRadius="4dp"
+        app:elevation="2dp">
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+        <include
+                android:id="@+id/common_tool_bar"
+                layout="@layout/common_toolbar_back"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:onClick="@{(v) -> addressViewModel.clickListener(v)}" />
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical">
+
+            <com.airbnb.lottie.LottieAnimationView
+                    android:id="@+id/animationView"
+                    android:layout_width="250dp"
+                    android:layout_height="150dp"
+                    app:lottie_autoPlay="true"
+                    app:lottie_loop="true"
+                    app:lottie_rawRes="@raw/payment" />
+
+            <LinearLayout
+                    android:id="@+id/totalItemsLay1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dp_5"
+                    android:layout_marginTop="@dimen/dp_20"
+                    android:layout_marginRight="@dimen/dp_5"
+                    android:layout_marginBottom="@dimen/dp_5"
+                    android:background="@drawable/round_back_transparent"
+                    android:elevation="@dimen/dp_5"
+                    android:orientation="vertical"
+                    android:visibility="visible">
+
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_above="@+id/totalPriceLay"
+                        android:orientation="horizontal"
+                        android:paddingLeft="@dimen/dp_20"
+                        android:paddingTop="@dimen/dp_10"
+                        android:paddingRight="@dimen/dp_20"
+                        android:paddingBottom="@dimen/dp_10">
+
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:singleLine="true"
+                            android:text="Items"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                            android:textStyle="bold" />
+
+                    <TextView
+                            android:id="@+id/tvTotalItems"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="end"
+                            android:gravity="right"
+                            android:singleLine="true"
+                            android:text="10"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                            android:textColor="@android:color/black" />
+                </LinearLayout>
+
+                <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp_1"
+                        android:background="@color/colorGrey1" />
+
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingLeft="@dimen/dp_20"
+                        android:paddingTop="@dimen/dp_10"
+                        android:paddingRight="@dimen/dp_20"
+                        android:paddingBottom="@dimen/dp_10"
+                        android:weightSum="2">
+
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.5"
+                            android:singleLine="true"
+                            android:text="Delivery Charges"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                            android:textColor="@android:color/black"
+                            android:textStyle="bold" />
+
+                    <TextView
+                            android:id="@+id/tvQuantity"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="end"
+                            android:gravity="right"
+                            android:singleLine="true"
+                            android:text="Rs. 1000"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                            android:textColor="@color/colorPrimary"
+                            android:textStyle="bold"
+                            android:visibility="gone" />
+
+                    <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1.5"
+                            android:gravity="right">
+
+                        <TextView
+                                android:id="@+id/tv_offer_price"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="@dimen/dp_10"
+                                android:padding="@dimen/dp_1"
+                                android:text="Rs.100"
+                                android:textColor="@color/colorPrimary"
+                                android:textStyle="bold" />
+
+                        <RelativeLayout
+                                android:id="@+id/rl_real_price"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="@dimen/dp_2"
+                                android:layout_marginTop="@dimen/dp_5"
+                                android:layout_marginBottom="@dimen/dp_5"
+                                android:visibility="gone">
+
+                            <TextView
+                                    android:id="@+id/tv_real_price"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerInParent="true"
+                                    android:text="Rs.150"
+                                    android:textColor="@color/colorGrey"
+                                    android:textSize="@dimen/sp_10"
+                                    android:textStyle="bold" />
+
+                            <View
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="1dp"
+                                    android:layout_alignLeft="@+id/tv_real_price"
+                                    android:layout_alignRight="@+id/tv_real_price"
+                                    android:layout_centerInParent="true"
+                                    android:background="@color/colorGrey" />
+                        </RelativeLayout>
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal"
+                    android:padding="10dp"
+                    android:weightSum="3">
+
+                <TextView
+                        android:id="@+id/txv_product_price"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1.5"
+                        android:background="@android:color/holo_orange_dark"
+                        android:gravity="center"
+                        android:padding="10dp"
+                        android:textColor="@android:color/white"
+                        android:textSize="@dimen/sp_20"
+                        android:textStyle="bold"
+                        tools:text="8000" />
+
+                <TextView
+                        android:id="@+id/txt_buy_product"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1.5"
+                        android:background="@android:color/holo_blue_dark"
+                        android:gravity="center"
+                        android:padding="10dp"
+                        android:text="@string/pay_now"
+                        android:textColor="@android:color/white"
+                        android:textSize="@dimen/sp_20"
+                        android:textStyle="bold" />
+
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

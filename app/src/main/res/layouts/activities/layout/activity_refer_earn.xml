@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="com.example.courier.common.BindingUtils" />
+
+        <variable
+                name="reviewsViewModel"
+                type="com.example.courier.viewmodels.notifications.NotificaionViewModel" />
+
+    </data>
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorWhite"
+            android:orientation="vertical"
+            app:hideKeyBoardOnClick="@{`back`}">
+
+        <include
+                android:id="@+id/common_tool_bar"
+                layout="@layout/common_toolbar_back"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:onClick="@{(v) -> reviewsViewModel.clickListener(v)}" />
+
+        <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            <androidx.cardview.widget.CardView
+                    android:id="@+id/card_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/rv_reviews"
+                    android:layout_marginTop="10dp"
+                    android:elevation="2dp"
+                    app:cardCornerRadius="@dimen/dp_10">
+
+                <LinearLayout
+                        android:id="@+id/llRest"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:orientation="vertical">
+
+                    <com.airbnb.lottie.LottieAnimationView
+                            android:id="@+id/animationView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="180dp"
+                            android:layout_centerInParent="true"
+                            app:lottie_autoPlay="true"
+                            app:lottie_loop="true"
+                            app:lottie_rawRes="@raw/gift" />
+
+                    <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="20dp"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginRight="20dp"
+                            android:gravity="center_horizontal"
+                            android:text="Invite your friends and get loyalty points."
+                            android:textColor="@color/colorBlack"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            app:font="@{`bold`}" />
+
+                    <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="20dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginRight="20dp"
+                            android:gravity="center_horizontal"
+                            android:text="@string/referral_msg"
+                            android:textColor="@color/colorBlack"
+                            app:font="@{`regular`}" />
+
+                    <RelativeLayout
+                            android:id="@+id/btnSubmit"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/dp_20"
+                            android:layout_marginTop="@dimen/dp_30"
+                            android:layout_marginRight="@dimen/dp_20"
+                            android:layout_marginBottom="@dimen/dp_20"
+                            android:background="@drawable/shape_button_back"
+                            android:onClick="@{(v) -> reviewsViewModel.clickListener(v)}">
+
+                        <Button
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerInParent="true"
+                                android:background="@null"
+                                android:text="Share and Earn"
+                                android:textAlignment="center"
+                                android:textAllCaps="false"
+                                android:textColor="@color/colorWhite"
+                                android:textSize="@dimen/button_text_size"
+                                android:textStyle="bold"
+                                app:font="@{`bold`}" />
+
+                        <RelativeLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentRight="true"
+                                android:layout_centerVertical="true"
+                                android:layout_marginRight="15dp">
+
+                            <ImageView
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:src="@drawable/ic_share_code" />
+
+                        </RelativeLayout>
+                    </RelativeLayout>
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+        </ScrollView>
+
+    </LinearLayout>
+
+</layout>

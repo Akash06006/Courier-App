@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="@dimen/dp_30"
+            android:layout_marginRight="@dimen/dp_30"
+            android:background="@drawable/shape_round_corner_back"
+            android:orientation="vertical">
+
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorPrimary"
+                android:gravity="center"
+                android:paddingTop="@dimen/dp_15"
+                android:paddingBottom="@dimen/dp_10"
+                android:text="@string/select_option"
+                android:textColor="@color/colorWhite"
+                android:textSize="@dimen/sp_14"
+                app:font="@{`semibold`}" />
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="@dimen/dp_10"
+                tools:ignore="UselessParent">
+
+            <androidx.cardview.widget.CardView
+                    android:id="@+id/cv_gallery_video"
+                    android:layout_width="@dimen/dp_150"
+                    android:layout_height="130dp"
+                    android:elevation="@dimen/dp_10"
+                    app:cardCornerRadius="4dp"
+                    app:cardElevation="2dp"
+                    app:cardUseCompatPadding="true">
+
+                <LinearLayout
+                        android:id="@+id/ll_camera"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:orientation="vertical"
+                        android:padding="@dimen/dp_5"
+                        tools:ignore="UseCompoundDrawables">
+
+                    <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:contentDescription="@string/todo"
+                            android:padding="@dimen/dp_10"
+                            android:src="@drawable/ic_camera_upload" />
+
+                    <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="@string/upload_with_camera"
+                            android:textColor="@color/colorGrey"
+                            android:textSize="@dimen/sp_12"
+                            app:font="@{`regular`}" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                    android:id="@+id/cv_record"
+                    android:layout_width="@dimen/dp_150"
+                    android:layout_height="130dp"
+                    android:layout_marginLeft="@dimen/dp_10"
+                    android:elevation="@dimen/dp_10"
+                    app:cardCornerRadius="4dp"
+                    app:cardElevation="2dp"
+                    app:cardUseCompatPadding="true">
+
+                <LinearLayout
+                        android:id="@+id/ll_gallery"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:orientation="vertical"
+                        android:padding="@dimen/dp_5"
+                        tools:ignore="UseCompoundDrawables">
+
+                    <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:contentDescription="@string/todo"
+                            android:padding="@dimen/dp_10"
+                            android:src="@drawable/ic_drop_image" />
+
+                    <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:text="@string/place_image_here"
+                            android:textColor="@color/colorGrey"
+                            android:textSize="@dimen/sp_12"
+                            app:font="@{`regular`}" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</layout>

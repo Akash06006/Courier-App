@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:card_view="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+                name="orderViewModel"
+                type="com.example.courier.viewmodels.order.OrderViewModel" />
+
+        <variable
+                name="orderDetailModel"
+                type="com.example.courier.model.order.OrdersDetailResponse.Data" />
+
+    </data>
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+        <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_toobar"
+                android:background="@color/colorPrimary"
+                app:layout_constraintBottom_toTopOf="@+id/img_cost"
+                app:layout_constraintTop_toTopOf="@+id/img_cost">
+
+            <ImageView
+                    android:id="@+id/imagBack"
+                    android:layout_width="@dimen/dp_55"
+                    android:layout_height="@dimen/dp_55"
+                    android:contentDescription="@string/todo"
+                    android:padding="@dimen/dp_15"
+                    android:rotation="-180"
+                    android:src="@drawable/ic_arrow_forward"
+                    android:tint="@color/colorWhite" />
+
+            <TextView
+                    android:id="@+id/img_toolbar_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="@dimen/dp_15"
+                    android:layout_marginLeft="@dimen/dp_15"
+                    android:layout_toEndOf="@+id/imagBack"
+                    android:layout_toRightOf="@+id/imagBack"
+                    android:gravity="center"
+                    android:text="@string/order_preview"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="@dimen/sp_16"
+                    app:font="@{`semibold`}" />
+
+            <Button
+                    android:id="@+id/img_cost"
+                    android:layout_width="@dimen/dp_100"
+                    android:layout_height="@dimen/dp_40"
+                    android:layout_centerHorizontal="true"
+                    android:src="@drawable/ic_email"
+                    android:textAllCaps="false"
+                    android:textColor="@color/colorWhite"
+                    android:visibility="gone"
+                    app:font="@{`regular`}" />
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/img_right"
+                    android:layout_width="40dp"
+                    android:layout_height="@dimen/dp_40"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="@dimen/dp_15"
+                    android:layout_marginRight="@dimen/dp_15"
+                    android:contentDescription="@string/todo"
+                    android:src="@drawable/ic_user"
+                    android:visibility="visible"
+                    app:civ_border_color="@color/colorWhite"
+                    app:civ_border_width="2dp" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/shape_round_corner"
+                android:elevation="5dp"
+                android:padding="5dp">
+
+            <ScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                    <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_margin="5dp"
+                            android:background="@drawable/shape_round_corner"
+                            android:orientation="vertical">
+
+                        <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_marginLeft="5dp"
+                                android:orientation="horizontal"
+                                android:padding="5dp"
+                                android:weightSum="3">
+
+                            <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="2"
+                                    android:orientation="vertical">
+
+                                <TextView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:gravity="left"
+                                        android:text="@string/delivery_option"
+                                        android:textSize="10sp"
+                                        app:font="@{`regular`}" />
+
+                                <TextView
+                                        android:id="@+id/txtDeliveryOption"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="5dp"
+                                        android:drawableLeft="@drawable/ic_delivery_option"
+                                        android:drawablePadding="5dp"
+                                        android:gravity="left"
+                                        android:textColor="@color/colorBlack"
+                                        app:font="@{`regular`}" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="10dp"
+                                    android:layout_weight="1"
+                                    android:orientation="vertical">
+
+                                <TextView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:gravity="left"
+                                        android:text="@string/fare"
+                                        android:textSize="10sp"
+                                        app:font="@{`regular`}" />
+
+                                <TextView
+                                        android:id="@+id/txtFare"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="5dp"
+                                        android:drawableLeft="@drawable/ic_rupee"
+                                        android:drawablePadding="2dp"
+                                        android:gravity="center_vertical"
+                                        android:textColor="@color/colorBlack"
+                                        app:font="@{`regular`}" />
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                        <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_margin="5dp"
+                                android:background="@color/colorGrey1" />
+
+                        <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginTop="5dp"
+                                android:orientation="horizontal"
+                                android:padding="5dp"
+                                android:weightSum="3">
+
+                            <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+
+                                    android:layout_weight="2"
+                                    android:orientation="vertical">
+
+                                <TextView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:gravity="left"
+                                        android:text="@string/weight"
+                                        android:textSize="10sp"
+                                        app:font="@{`regular`}" />
+
+                                <TextView
+                                        android:id="@+id/txtWeight"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="5dp"
+                                        android:drawableLeft="@drawable/ic_weight"
+                                        android:drawablePadding="5dp"
+                                        android:gravity="left"
+                                        android:textColor="@color/colorBlack"
+                                        app:font="@{`regular`}" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentRight="true"
+                                    android:layout_weight="1"
+                                    android:orientation="vertical">
+
+                                <TextView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:gravity="left"
+                                        android:text="@string/value"
+                                        android:textSize="10sp"
+                                        app:font="@{`regular`}" />
+
+                                <TextView
+                                        android:id="@+id/txtValue"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="5dp"
+                                        android:drawableLeft="@drawable/ic_rupee"
+                                        android:drawablePadding="5dp"
+                                        android:gravity="left"
+                                        android:textColor="@color/colorBlack"
+                                        app:font="@{`regular`}" />
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_margin="5dp"
+                                android:background="@color/colorGrey1" />
+
+                        <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginTop="5dp"
+                                android:orientation="horizontal"
+                                android:padding="5dp"
+                                android:weightSum="3">
+
+                            <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="2"
+                                    android:orientation="vertical">
+
+                                <TextView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:gravity="left"
+                                        android:text="@string/fair_collected"
+                                        android:textSize="10sp"
+                                        app:font="@{`regular`}" />
+
+                                <TextView
+                                        android:id="@+id/txtFareCollected"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="5dp"
+                                        android:drawableLeft="@drawable/ic_fare"
+                                        android:drawablePadding="5dp"
+                                        android:gravity="left"
+                                        android:textColor="@color/colorBlack"
+                                        app:font="@{`regular`}" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:orientation="vertical">
+
+                                <TextView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:gravity="left"
+                                        android:text="@string/vehicle_type"
+                                        android:textSize="10sp"
+                                        app:font="@{`regular`}" />
+
+                                <TextView
+                                        android:id="@+id/txtVehicleType"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="5dp"
+                                        android:drawableLeft="@drawable/ic_vehicle_logo"
+                                        android:drawablePadding="5dp"
+                                        android:gravity="left"
+                                        android:textColor="@color/colorBlack"
+                                        app:font="@{`regular`}" />
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                        <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/rvAddress"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="@dimen/dp_5"
+                                android:layout_marginTop="@dimen/dp_5"
+                                android:layout_marginRight="@dimen/dp_5"
+                                android:padding="@dimen/dp_5"
+                                android:visibility="visible" />
+
+                    </LinearLayout>
+
+                    <Button
+                            android:id="@+id/btnConfirm"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="20dp"
+                            android:background="@drawable/shape_button_back"
+                            android:text="@string/confirm"
+                            android:textAllCaps="false"
+                            android:textColor="@color/colorWhite" />
+
+                </LinearLayout>
+            </ScrollView>
+        </RelativeLayout>
+
+    </LinearLayout>
+</layout>

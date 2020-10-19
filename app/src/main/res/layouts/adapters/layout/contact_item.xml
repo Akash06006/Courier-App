@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="com.example.courier.common.BindingUtils" />
+
+    </data>
+
+    <RelativeLayout
+            android:id="@+id/topLay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dp_5"
+            android:layout_marginTop="@dimen/dp_5"
+            android:layout_marginRight="@dimen/dp_5"
+            android:background="@drawable/shape_round_corner"
+            android:elevation="5dp"
+            android:padding="5dp"
+            app:hideKeyBoardOnClick="@{`back`}">
+        <!---->
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+            <TextView
+                    android:id="@+id/txtContactName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
+                    android:layout_toLeftOf="@+id/txtOrderStatus"
+                    android:gravity="left"
+                    android:padding="10dp"
+                    android:text="Akash"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    app:font="@{`bold`}" />
+
+            <TextView
+                    android:id="@+id/txtNumber"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
+                    android:layout_toLeftOf="@+id/txtOrderStatus"
+                    android:gravity="left"
+                    android:paddingLeft="10dp"
+                    android:text="N/A"
+                    android:textSize="13sp"
+                    app:font="@{`regular`}" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</layout>

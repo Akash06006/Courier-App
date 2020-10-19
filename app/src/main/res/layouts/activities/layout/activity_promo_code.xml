@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="com.example.courier.common.BindingUtils" />
+
+        <variable
+                name="promcodeViewModel"
+                type="com.example.courier.viewmodels.promocode.PromoCodeViewModel" />
+
+    </data>
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/colorWhite"
+            android:orientation="vertical"
+            app:hideKeyBoardOnClick="@{`back`}">
+
+        <include
+
+                android:id="@+id/common_tool_bar"
+                layout="@layout/common_toolbar_back"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:onClick="@{(v) -> promcodeViewModel.clickListener(v)}" />
+
+        <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/dp_2"
+                android:paddingBottom="@dimen/dp_5">
+
+            <TextView
+                    android:id="@+id/tv_no_record"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="No Record Found"
+                    android:visibility="gone" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_promo"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="@dimen/dp_5" />
+
+        </RelativeLayout>
+    </LinearLayout>
+</layout>

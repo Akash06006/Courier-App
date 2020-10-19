@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="com.example.courier.common.BindingUtils" />
+
+    </data>
+    <!-- android:background="@drawable/shape_round_corner_grid"
+    android:padding="@dimen/dp_5"-->
+    <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+        <!---->
+
+        <LinearLayout
+                android:id="@+id/iconsLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/toLayout"
+                android:layout_alignBottom="@+id/toLayout"
+                android:background="@drawable/shape_round_corner"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="5dp">
+
+            <ImageView
+                    android:id="@+id/imgAddressIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_address" />
+
+            <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_below="@+id/imgAddressIcon"
+                    android:src="@drawable/ic_dot_line" />
+
+        </LinearLayout>
+
+        <LinearLayout
+                android:id="@+id/toLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/iconsLayout"
+                android:background="@drawable/shape_round_corner"
+                android:orientation="vertical"
+                android:padding="5dp">
+
+            <TextView
+                    android:id="@+id/txtAddressType"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/dp_3"
+                    android:singleLine="true"
+                    android:text="Type 1"
+                    android:textAllCaps="false"
+                    android:textSize="@dimen/sp_10"
+                    app:font="@{`regular`}" />
+
+            <TextView
+                    android:id="@+id/txtAddress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_5"
+                    android:layout_marginBottom="@dimen/dp_3"
+                    android:text="Type 1"
+                    android:textAllCaps="false"
+                    android:textColor="@color/colorBlack"
+                    app:font="@{`regular`}" />
+
+            <!--
+                                -->
+        </LinearLayout>
+
+        <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/toLayout"
+                android:layout_margin="5dp"
+                android:background="@color/colorGrey1" />
+    </RelativeLayout>
+
+</layout>

@@ -1,0 +1,83 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="transparent_dialog_borderless" parent="Theme.AppCompat.Dialog">
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowBackground">@null</item>
+        <item name="android:layout_margin">20dp</item>
+        <item name="android:padding">0dp</item>
+        <item name="android:backgroundDimEnabled">true</item>
+    </style>
+
+    <style name="dialogAnimation_animation">
+        <item name="android:windowEnterAnimation">@anim/slide_in</item>
+        <item name="android:windowExitAnimation">@anim/slide_out</item>
+    </style>
+
+    <style name="transparent_dialog" parent="Theme.AppCompat.Dialog">
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowBackground">@null</item>
+        <item name="android:padding">0dp</item>
+        <item name="android:backgroundDimEnabled">true</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="customizeTabText" parent="TextAppearance.Design.Tab">
+        <item name="android:textSize">12sp</item>
+        <item name="textAllCaps">false</item>
+        <item name="android:textColor">@color/tabColor</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="TabLayout" parent="Widget.Design.TabLayout">
+        <item name="tabIndicatorColor">@color/colorWhite</item>
+        <item name="tabSelectedTextColor">@color/colorOrange</item>
+        <item name="tabTextColor">@color/colorWhite</item>
+        <item name="tabTextAppearance">@style/TabLayoutTextAppearance</item>
+    </style>
+
+    <style name="TabLayoutTextAppearance" parent="TextAppearance.Design.Tab">
+        <item name="android:textSize">17sp</item>
+        <item name="textAllCaps">false</item>
+        <item name="android:textStyle">normal</item>
+        <item name="fontFamily">@font/montserrat_regular</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="NavigationViewStyle">
+        <item name="android:textColorPrimary">@color/colorWhite</item>
+        <item name="android:textColorSecondary">@color/colorPrimary</item>
+        <item name="android:listDivider">@android:color/transparent</item>
+        <item name="android:textSize">@dimen/sp_13</item>
+        <item name="listPreferredItemHeightSmall">43dp</item>
+        <item name="fontFamily">@font/montserrat_regular</item>
+
+    </style>
+
+    <style name="NavigationTextViewStyle" parent="android:Widget.TextView">
+        <item name="android:fontFamily" tools:targetApi="jelly_bean">@font/montserrat_regular</item>
+    </style>
+
+    <style name="PayUMoney" parent="PayumoneyAppTheme">
+
+        <item name="alertDialogTheme">@style/AlertDialogStylePayUMoney</item>
+        <item name="actionMenuTextColor">@color/white</item>
+    </style>
+
+    <style name="AlertDialogStylePayUMoney" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="colorAccent">@color/colorPrimary</item>
+        <item name="android:textColorPrimary">@color/payumoney_text_color</item>
+    </style>
+
+</resources>

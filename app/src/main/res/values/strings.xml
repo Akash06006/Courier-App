@@ -1,0 +1,323 @@
+<!DOCTYPE resources [<!ENTITY app_name "LOCOMO">]>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+    <string name="app_name">&app_name;</string>
+    <string name="facebook_app_id">630169387861716</string>
+    <string name="fb_login_protocol_scheme">fb630169387861716</string>
+    <string name="web_client_id">763082686875-r3722vdrfu003u13rt56193g1foi56v9.apps.googleusercontent.com</string>
+    <!--<string name="maps_api_key">AIzaSyAeq8blHRgWH-Lg6ImQJRRAFzYpJ3qVjjI</string>-->
+    <!-- <string name="maps_api_key">AIzaSyA7Zj-PTZm4sDG-eoiLPA-XohvgxBe95wU</string>--><!--food vali-->
+    <string name="maps_api_key">AIzaSyDBBLtvW2kqoNiPXOuDBzlk5V_QmRXJLKg</string>
+
+    <string name="internal_server_error">Internal server error, so please try after some time!</string>
+    <string name="internet_connection">Please check your internet connection and try after some time!</string>
+    <string name="sorry_text">Sorry we couldn\'t find any matches</string>
+    <string name="please_wait">Please wait…</string>
+    <string name="dummy">dummy</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="email_c">E-MAIL</string>
+    <string name="already_exist">Phone number is already exist</string>
+    <string name="invalid_number">Invalid Number</string>
+    <string name="password_c">PASSWORD</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="forgot_password_heading">Forgot Password</string>
+    <string name="login">Login</string>
+    <string name="invalid">Please Enster Valid</string>
+    <string name="home">Home</string>
+    <string name="email_here">Please Enter Your E-mail address</string>
+    <string name="mobile_here">Please Enter Your Phone Number</string>
+    <string name="enter_email">Enter your username / email id</string>
+    <string name="send_otp">Send OTP</string>
+    <string name="cancel">Cancel</string>
+    <string name="forgot_password">Forgot password?</string>
+    <string name="verification_code">Verification Code</string>
+    <string name="proceed">Proceed</string>
+    <string name="otp_verification_text">Please Enter OTP received on E-mail</string>
+    <string name="enter_otp">Enter OTP</string>
+    <string name="resend_otp"><u>Resend Code</u></string>
+    <string name="OTP">OTP</string>
+
+    <string name="server_not_reached">We can\'t connect to the server right now,please try again after some time.</string>
+    <string name="resend_otp_message">We sent OTP to verify,Please check associated phone</string>
+    <string name="invalid_otp">Invalid OTP</string>
+    <string name="something_error">Somthing is wrong, we will fix it soon...</string>
+    <string name="verify">Verify</string>
+    <string name="otp_verify">Otp verify</string>
+    <string name="enter_new_password">Enter New Password</string>
+    <string name="enter_new_password1">New Password</string>
+    <string name="password_len_msg">Password Length should be of 8–20 characters</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="mismatch_paaword">Password and Confirm password doesn\'t match</string>
+    <string name="reset_password">Reset Password</string>
+    <string name="service">Service</string>
+    <string name="welcome">Welcome</string>
+    <string name="services">Services</string>
+    <string name="auto_checkin">Auto Checkin</string>
+    <string name="booking_alert">Booking Alert</string>
+    <string name="other_alert">Other Alert</string>
+    <string name="memebership">Memebership</string>
+    <string name="type">Type</string>
+    <string name="accounts">Accounts</string>
+    <string name="settings">Settings</string>
+    <string name="payment_method">Payment Method</string>
+    <string name="linked_Card">Linked Card</string>
+    <string name="email1">Email</string>
+    <string name="change">Change</string>
+    <string name="todo">TODO</string>
+    <string name="yes">Yes</string>
+    <string name="by" tools:keep="@string/by">By</string>
+    <string name="want_to_logout">ARE YOU SURE YOU WOULD LIKE TO LOG OUT?</string>
+    <string name="no">No</string>
+    <string name="logout_msg">Logout Successfully</string>
+    <string name="coming_soon">Coming Soon</string>
+    <string name="dummy_text">Lorem ipsum, or lipsum as it is sometimes known, is dummy text used in laying out print,
+        graphic or web designs. The passage is attributed to an unknown typesetter in the 15th.
+    </string>
+    <string name="dummy_text1">Lorem ipsum, or lipsum as it is sometimes known, is dummy text used in laying out print,
+        graphic or web designs.
+    </string>
+    <string name="memebertext">Member since 2019</string>
+    <string name="sun">Sun</string>
+    <string name="mon">Mon</string>
+    <string name="tue">Tue</string>
+    <string name="wed">Wed</string>
+    <string name="thu">Thu</string>
+    <string name="fri">Fri</string>
+    <string name="sat">Sat</string>
+    <string name="book">Book</string>
+    <string name="dummy_pass">******</string>
+    <string name="dummy_email">androidseasia@mailinator.com</string>
+    <string name="dummy_visa">Visa ending in 2019</string>
+    <string name="dummy_year">Yearly</string>
+    <string name="dummy_card">Credit Card</string>
+    <string name="dummy_title">Thanks for Using Our Service</string>
+    <string name="rate_title">Please Rate your experience below</string>
+    <string name="comment_title">In Case you have any thoughts /comment do let us Know.</string>
+    <string name="add_comment_here">Add comment here (optional)</string>
+    <string name="trip_add_title">Would you like to add trip for service ?</string>
+    <string name="submit">Submit</string>
+    <string name="rate1">$5</string>
+    <string name="add_custom">Add Custom Amount</string>
+    <string name="enter_price">Enter Price</string>
+    <string name="rate2">$10</string>
+    <string name="rate3">$15</string>
+    <string name="my_booking">My Bookings</string>
+    <string name="chat">Chat</string>
+    <string name="dummy_massage">Massage</string>
+    <string name="bookings">Bookings</string>
+    <string name="coupans">Coupons</string>
+    <string name="view_profile">View Profile</string>
+    <string name="change_password">Change Password</string>
+    <string name="enter_old_password">Old Password</string>
+    <string name="dummy_date">23 July 2019</string>
+    <string name="dummy_time">9:00 PM</string>
+    <string name="profile">Profile</string>
+    <string name="booking_history">Booking History</string>
+    <string name="fname">First Name</string>
+    <string name="lname">Last Name</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="accept_terms">Accept Terms and Conditions</string>
+    <string name="dummy_name">Karan</string>
+    <string name="gender">Gender</string>
+    <string name="dummy_phone">9123456784</string>
+    <string name="dob">Date Of Birth</string>
+    <string name="social_link">Social Media Link</string>
+    <string name="about_us_heading">Tell us about yourself</string>
+    <string name="lpoints">Loyality Points</string>
+    <string name="view_details">View Details</string>
+    <string name="dummy_price">$ 300</string>
+    <string name="cancel_booking">Cancel Booking</string>
+    <string name="cancelled">Cancelled</string>
+
+    <string name="back">Back</string>
+    <string name="continues">Continue</string>
+    <string name="cancellationstext">Cancellation of this service will cost you $25 from your account. In order to
+        proceed, press Continue :
+    </string>
+    <string name="off_paid">off on paid Services</string>
+    <string name="dummy_percentage">20%</string>
+    <string name="dummy_baskin">Baskin Robbins</string>
+    <string name="dummy_ago">6 days ago</string>
+    <string name="write_message">Write message</string>
+    <string name="today">Today</string>
+    <string name="redeemed">Redeemed</string>
+    <string name="emoji"> &#128522;&#128522;&#128522;&#128522;&#128522;</string>
+    <string name="auto_redeem">Auto Redeem Coupons</string>
+    <string name="no_slots">No Slots Available</string>
+    <string name="booking_details">Booking Details</string>
+    <string name="service1">Service:</string>
+    <string name="attendies">Attendees</string>
+    <string name="time">Time</string>
+    <string name="date">Date</string>
+    <string name="dummy_count">(34/45)</string>
+    <string name="provided_by" tools:keep="@string/provided_by">Provided By</string>
+    <string name="time_slots">Time Slots</string>
+    <string name="classes">Classes</string>
+    <string name="therapies">Therapies</string>
+    <string name="included_memebership">Included in Membership</string>
+    <string name="no_bookings">You have no upcoming booking</string>
+    <string name="no_bookings_text2">Please make a booking for better health</string>
+    <string name="booking_rules">Booking Rules</string>
+    <string name="about_us">About Us</string>
+    <string name="prev_week">Prev week</string>
+    <string name="next_week">Next week</string>
+    <string name="key_screenttype">screen_type</string>
+    <string name="guest">Guest</string>
+    <string name="about">About</string>
+    <string name="choose_slot">Please select slot to continue</string>
+    <string name="ok">OK</string>
+    <string name="completed">Completed</string>
+    <string name="voucher_title">You have service voucher for guest avaialble, Would you like to apply same?</string>
+    <string name="apply_voucher">Apply Voucher</string>
+    <string name="book_for_self_guest"> Self and Guest</string>
+    <string name="self">Self</string>
+    <string name="booking_for">Booking For : &#160; </string>
+    <string name="booked_for" tools:keep="@string/booked_for">Booked For : &#160; </string>
+    <string name="accept_digits">abcdefghijklmnopqrstuvwxyz</string>
+    <string name="phone_min">should be minimum of 10 characters</string>
+    <string name="name_min">should be minimum of 3 characters</string>
+    <string name="key_type">key_type</string>
+    <string name="calendar">Calendar</string>
+    <string name="want_to_book">Do you want to book this slot?</string>
+    <string name="female">Female</string>
+    <string name="male">Male</string>
+    <string name="other">Other</string>
+    <string name="update">Update</string>
+    <string name="congratulation">Congratulations!!</string>
+    <string name="booking_success">You Successfully created your booking</string>
+    <string name="instructor">Instructor</string>
+    <string name="x">X</string>
+    <string name="add_more">Add</string>
+    <string name="register">Register</string>
+    <string name="log_in">Login</string>
+    <string name="your_password">Your Password</string>
+    <string name="your_email">Your e-mail</string>
+    <string name="contact">Contact</string>
+    <string name="pick_your_therapy">Pick Your therapy</string>
+    <string name="therapy_long_text">ARTHA, a state-of-the-art wellness
+        sanctuary, provides the best in class equipment for our members to have
+        the most comprehensive holistic rejuvenation experience</string>
+    <string name="book_now">Book Now</string>
+    <string name="book_a_class">Book a class</string>
+    <string name="book_a_therapy">Book a therapy</string>
+
+    <string name="name">Name</string>
+    <string name="message">Message</string>
+    <string name="send_message">Send Message</string>
+    <string name="edit_payment_method">Edit payment method</string>
+    <string name="location">Location</string>
+
+    <string name="invite_a_friend">Invite a friend</string>
+    <string name="notifications">Notifications</string>
+    <string name="help_and_info">Help and info</string>
+    <string name="feedback">Feedback</string>
+    <string name="contact_us">Contact Us</string>
+    <string name="booked">Booked</string>
+    <string name="your_upcoming_booking">Upcoming Booking :</string>
+    <string name="key_activity">activity</string>
+    <string name="date_time">Date and Time</string>
+    <string name="signup_with">Or Sign up with</string>
+    <string name="dont_have_account">Don\'t have an account?</string>
+    <string name="signup">Sign up</string>
+    <string name="delivery_few_minutes">Delivery within few minutes</string>
+    <string name="new_order">New Order</string>
+    <string name="vehicle_type">Vehicle Type</string>
+    <string name="delivery_option">Delivery Option</string>
+    <string name="pickup_location">Pickup Location</string>
+    <string name="pickup_address">Pickup Address</string>
+    <string name="delivery_address">Delivery Address</string>
+    <string name="mob_no">Mobile No</string>
+    <string name="delivery_location">Delivery Location</string>
+    <string name="add_address">Add Address</string>
+    <string name="item_name">Item Name</string>
+    <string name="weight">Weight</string>
+    <string name="parcel_value">Parcel Value (Rs)</string>
+    <string name="promo_code">Promo Code</string>
+    <string name="notification_sms">Notification SMS</string>
+    <string name="notify_recipent_sms">Notify recipients by SMS</string>
+    <string name="apply">Apply</string>
+    <string name="cash">Cash</string>
+    <string name="non_cash">Non Cash</string>
+    <string name="pickup_end">Pickup end</string>
+    <string name="delivery_end">Delivery end</string>
+    <string name="create_order">Create Order</string>
+    <string name="fair_collected">Fare to be collected</string>
+    <string name="from">From</string>
+    <string name="to">To</string>
+    <string name="del_charges">Delivery Charges</string>
+    <string name="back_login">Back to Login</string>
+    <string name="empty">Please Enter</string>
+    <string name="upload_profile_picture">Upload profile picture</string>
+    <string name="upload_with_camera">Upload with camera</string>
+    <string name="select_option">Select option</string>
+    <string name="place_image_here">Upload from gallery</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="key_phone">phone_number</string>
+
+    <string name="key_country_code">country_code</string>
+    <string name="search">Search</string>
+    <string name="two_hours">2 Hours</string>
+    <string name="four_hour">4 Hours</string>
+    <string name="same_day">Same Day</string>
+    <string name="delivery_type">Delivery Type</string>
+    <string name="remove_address">Remove Address</string>
+    <string name="order_details">Order Details</string>
+    <string name="value">Value</string>
+    <string name="fare">Fare</string>
+    <string name="order_no">Order No</string>
+    <string name="reschedule">Reschedule</string>
+
+    <string name="del_boy">Delivery Boy</string>
+    <string name="cancel_reason">Please specify for withdrawing the order</string>
+    <string name="enter_reason">Enter reason...</string>
+    <string name="send">Send</string>
+    <string name="done">Done</string>
+    <string name="pay_now">Pay Now</string>
+    <string name="order_services_msg">Thank you for using our services</string>
+    <string name="success">SUCCESS</string>
+    <string name="order_preview">Order Preview</string>
+    <string name="confirm">Confirm</string>
+    <string name="my_account">My Account</string>
+    <string name="payment">Payment</string>
+    <string name="offer_zone">Offer Zone</string>
+    <string name="refer_earn">Refer &amp; Earn</string>
+    <string name="loyalty_points">Loyalty Points</string>
+    <string name="support">Support</string>
+    <string name="more">More</string>
+    <string name="help">Help (App Tutorial)</string>
+    <string name="terms_condition">Terms  &amp; Condition</string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="logout">Logout</string>
+    <string name="orders">Orders</string>
+    <string name="total">Total: </string>
+    <string name="selected_address">Selected Address</string>
+    <string name="confirm_location_and_proceed">Confirm Address and Proceed</string>
+    <string name="transaction_history">Transaction History</string>
+    <string name="contacts">Contacts</string>
+    <string name="referral_code">Referral Code (Optional)</string>
+    <string name="referral_msg"> This referral code gives 50 loyalty points to your friends when they will login in Locomo using this code, and you will receive 100 loyalty points for a referral.
+</string>
+
+    <string name="order_name">Order Name</string>
+    <string name="order_number">Order Number</string>
+    <string name="price">Price</string>
+    <string name="pay_type">Pay Type</string>
+    <string name="select_address">Select Address</string>
+    <string name="cancellation_charges">Cancellation Charges: </string>
+    <string name="total_price">Total Price</string>
+
+    <string name="cancel_orders">Cancel Orders</string>
+    <string name="cancel_charges">Cancel Charges</string>
+    <string name="use_loyalty_points">Use Loyalty Points</string>
+
+    <string name="folder">Folder</string>
+    <string name="gallery_select_title_msg">Tap to select</string>
+    <string-array name="Languages">
+        <item>Java</item>
+        <item>Kotlin</item>
+        <item>Swift</item>
+        <item>Python</item>
+        <item>Scala</item>
+        <item>Perl</item>
+    </string-array>
+</resources>

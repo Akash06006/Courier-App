@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="com.example.courier.common.BindingUtils" />
+
+    </data>
+
+    <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <RelativeLayout
+                android:id="@+id/layoutBottomSheet"
+                android:layout_width="match_parent"
+                android:layout_height="450dp"
+                android:layout_gravity="bottom"
+                android:background="#50000000"
+                android:orientation="vertical">
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="450dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_gravity="bottom"
+                    android:background="#ffffff"
+                    android:elevation="@dimen/dp_10"
+                    android:orientation="vertical"
+                    android:visibility="visible">
+                <!--android:background="@drawable/texture_back"-->
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_gravity="bottom"
+                        android:elevation="@dimen/dp_10"
+                        android:gravity="bottom"
+                        android:maxHeight="450dp"
+                        android:orientation="vertical">
+                    <!--android:background="@drawable/texture_back"-->
+                    <ImageView
+                            android:id="@+id/imgOffer"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/dp_150"
+                            android:layout_gravity="center"
+                            android:layout_marginLeft="@dimen/dp_10"
+                            android:layout_marginTop="@dimen/dp_10"
+                            android:layout_marginRight="@dimen/dp_10"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/ic_dummy"
+                            android:visibility="visible" />
+
+                    <ScrollView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                        <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentBottom="true"
+                                android:layout_margin="@dimen/dp_10"
+                                android:background="@drawable/shape_round_corner"
+                                android:elevation="@dimen/dp_10"
+                                android:orientation="vertical"
+                                android:padding="@dimen/dp_5"
+                                android:visibility="visible">
+
+                            <RelativeLayout
+                                    android:id="@+id/relatiiveParent"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:paddingLeft="10dp"
+                                    android:paddingRight="10dp">
+
+                                <TextView
+                                        android:id="@+id/txtCouponName"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="@dimen/dp_10"
+                                        android:text="Offer Name"
+                                        android:textAllCaps="false"
+                                        android:textColor="@color/tabSelection"
+                                        app:font="@{`regular`}"
+                                        tools:ignore="AllCaps" />
+
+                                <TextView
+                                        android:id="@+id/txtCouponCode"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_below="@+id/txtCouponName"
+                                        android:layout_marginTop="@dimen/dp_10"
+                                        android:background="@drawable/primary_back"
+                                        android:gravity="center"
+                                        android:paddingLeft="30dp"
+                                        android:paddingTop="5dp"
+                                        android:paddingRight="30dp"
+                                        android:paddingBottom="5dp"
+                                        android:text="NEW50"
+                                        android:textAllCaps="false"
+                                        android:textColor="@color/colorBlack"
+                                        android:textStyle="bold"
+                                        app:font="@{`bold`}"
+                                        tools:ignore="AllCaps" />
+
+                                <TextView
+                                        android:id="@+id/txtCouponDiscount"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_alignParentRight="true"
+                                        android:layout_marginTop="@dimen/dp_10"
+                                        android:text="20% OFF"
+                                        android:textAllCaps="false"
+                                        android:textColor="@color/colorPrice"
+                                        android:textStyle="bold"
+                                        app:font="@{`bold`}"
+                                        tools:ignore="AllCaps" />
+                            </RelativeLayout>
+
+                            <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_below="@+id/txtCouponName"
+                                    android:layout_marginLeft="@dimen/dp_10"
+                                    android:layout_marginTop="@dimen/dp_15"
+                                    android:gravity="center"
+                                    android:text="How to apply this?"
+                                    android:textAllCaps="false"
+                                    android:textColor="@color/colorBlack"
+                                    android:textStyle="bold"
+                                    app:font="@{`bold`}"
+                                    tools:ignore="AllCaps" />
+
+                            <TextView
+                                    android:id="@+id/txtCouponDesc"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="@dimen/dp_10"
+                                    android:layout_marginTop="@dimen/dp_5"
+                                    android:layout_marginRight="@dimen/dp_10"
+                                    android:textAllCaps="false"
+                                    android:textColor="@color/colorBlack"
+                                    app:font="@{`regular`}"
+                                    tools:ignore="AllCaps" />
+
+                            <Button
+                                    android:id="@+id/btnSubmit"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="@dimen/dp_20"
+                                    android:layout_marginTop="@dimen/dp_10"
+                                    android:layout_marginRight="@dimen/dp_20"
+                                    android:layout_marginBottom="@dimen/dp_20"
+                                    android:background="@drawable/shape_button_back_primary"
+                                    android:text="@string/done"
+                                    android:textColor="@color/colorWhite"
+                                    android:visibility="visible"
+                                    app:font="@{`bold`}" />
+                        </LinearLayout>
+                    </ScrollView>
+                </LinearLayout>
+
+            </LinearLayout>
+        </RelativeLayout>
+    </ScrollView>
+</layout>

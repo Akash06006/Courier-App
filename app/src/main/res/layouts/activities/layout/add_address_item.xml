@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="com.example.courier.common.BindingUtils" />
+
+        <variable
+                name="loginViewModel"
+                type="com.example.courier.viewmodels.LoginViewModel" />
+
+    </data>
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:orientation="vertical">
+
+        <TextView
+                android:id="@+id/txtRemoveAddress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_marginTop="@dimen/dp_15"
+                android:layout_marginRight="10dp"
+                android:text="@string/remove_address"
+                android:textAllCaps="false"
+                android:textColor="@color/colorRed"
+                android:textSize="17sp"
+                android:textStyle="bold"
+                app:font="@{`bold`}"
+                tools:ignore="AllCaps" />
+
+        <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <EditText
+                    android:id="@+id/edtDelAddress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_toLeftOf="@+id/imgDelMap"
+                    android:editable="false"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:hint="@string/delivery_location"
+                    android:imeOptions="actionNext"
+                    android:paddingRight="10dp"
+                    android:paddingBottom="15dp"
+                    android:textSize="14sp"
+                    app:font="@{`regular`}" />
+
+            <ImageView
+                    android:id="@+id/imgDelMap"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/ic_map_select" />
+        </RelativeLayout>
+
+        <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <EditText
+                    android:id="@+id/edtDelMob"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_toLeftOf="@+id/imgDelContact"
+                    android:hint="@string/mob_no"
+                    android:layout_marginRight="10dp"
+                    android:imeOptions="actionDone"
+                    android:inputType="number"
+                    android:paddingBottom="15dp"
+                    android:singleLine="true"
+                    android:textSize="14sp"
+                    app:font="@{`regular`}" />
+
+            <ImageView
+                    android:id="@+id/imgDelContact"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/ic_contact" />
+        </RelativeLayout>
+
+        <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <EditText
+                    android:id="@+id/edtDelDateTime"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:clickable="true"
+                    android:editable="false"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:hint="@string/date_time"
+                    android:imeOptions="actionNext"
+                    android:paddingBottom="15dp"
+                    android:singleLine="true"
+                    android:textSize="14sp"
+                    app:font="@{`regular`}" />
+
+            <ImageView
+                    android:id="@+id/imgTime1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/ic_clock" />
+
+            <ImageView
+                    android:id="@+id/imgCal1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="5dp"
+                    android:layout_toLeftOf="@+id/imgTime1"
+                    android:src="@drawable/ic_cal" />
+        </RelativeLayout>
+
+    </LinearLayout>
+</layout>

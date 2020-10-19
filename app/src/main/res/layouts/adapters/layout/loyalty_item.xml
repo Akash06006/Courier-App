@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="com.example.courier.common.BindingUtils" />
+
+    </data>
+
+    <RelativeLayout
+            android:id="@+id/topLay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dp_5"
+            android:layout_marginTop="@dimen/dp_5"
+            android:layout_marginRight="@dimen/dp_5"
+            android:background="@drawable/shape_round_corner"
+            android:elevation="2dp"
+            android:padding="5dp">
+        <!---->
+        <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/imgUser"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_centerVertical="true"
+                android:contentDescription="@string/todo"
+                android:src="@drawable/ic_user" />
+        <!-- app:civ_border_color="@color/colorPrimary"
+                        app:civ_border_width="3dp"-->
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/imgUser"
+                android:orientation="vertical">
+
+            <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/imgUser"
+                    android:orientation="horizontal">
+
+                <TextView
+                        android:id="@+id/txtUserName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="5dp"
+                        android:layout_toLeftOf="@+id/txtPoints"
+                        android:gravity="left"
+                        android:paddingLeft="10dp"
+                        android:paddingTop="5dp"
+                        android:text="Order No #120"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        app:font="@{`bold`}" />
+
+                <TextView
+                        android:id="@+id/txtPoints"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="10dp"
+                        android:layout_toLeftOf="@+id/txtOrderStatus"
+                        android:gravity="right"
+                        android:paddingLeft="10dp"
+                        android:paddingTop="5dp"
+                        android:text="+100"
+                        android:textColor="@color/colorSuccess"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        app:font="@{`bold`}" />
+            </RelativeLayout>
+
+            <TextView
+                    android:id="@+id/txtDetail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
+                    android:layout_toLeftOf="@+id/txtOrderStatus"
+                    android:gravity="left"
+                    android:paddingLeft="10dp"
+                    android:paddingTop="5dp"
+                    android:text="Order No #120 has been confirmed"
+                    android:textSize="13sp"
+                    app:font="@{`regular`}" />
+
+            <TextView
+                    android:id="@+id/txtDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
+                    android:paddingLeft="10dp"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="10dp"
+                    android:text="12-10-2020 17:30"
+                    android:textSize="11sp"
+                    app:font="@{`regular`}" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</layout>

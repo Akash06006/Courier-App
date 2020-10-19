@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+>
+
+
+    <ScrollView android:layout_width="match_parent"
+                android:background="@drawable/container_view"
+                android:layout_height="match_parent">
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dp_20"
+                android:layout_marginRight="@dimen/dp_20"
+                android:orientation="vertical">
+
+
+            <TextView
+                    android:id="@+id/txt_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLines="3"
+                    android:text="@string/dummy_title"
+                    android:textColor="@color/colorPrimary"
+                    android:layout_marginTop="@dimen/dp_20"
+                    android:textSize="@dimen/sp_18"
+                    app:font="@{`bold`}"
+            />
+
+            <TextView
+                    android:id="@+id/txt_rate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/rate_title"
+                    android:textColor="@color/colorblack"
+                    android:layout_marginTop="@dimen/dp_10"
+                    android:textSize="@dimen/sp_14"
+                    app:font="@{`semibold`}"/>
+
+
+            <RatingBar
+                    android:id="@+id/ratingBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:numStars="5"
+                    android:rating="1"
+                    android:stepSize="1"
+                    android:scaleX=".6"
+                    android:scaleY=".6"
+                    android:progressTint="@color/colorGolden"
+                    tools:ignore="UnusedAttribute"/>
+
+            <TextView
+                    android:id="@+id/tv_commnet_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/comment_title"
+                    android:textColor="@color/colorblack"
+                    android:layout_marginTop="@dimen/dp_10"
+                    android:textSize="@dimen/sp_14"
+                    app:font="@{`semibold`}"
+            />
+            <EditText
+                    android:id="@+id/et_email"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_110"
+                    android:hint="@string/add_comment_here"
+                    android:maxLength="200"
+                    android:inputType="textMultiLine"
+                    android:layout_marginTop="@dimen/dp_15"
+                    android:scrollbars="vertical"
+                    android:background="@drawable/shape_round_corner_back"
+                    android:textSize="@dimen/hint_size"
+                    app:font="@{`regular`}"
+                    android:gravity="start"
+                    android:padding="@dimen/dp_15"
+                    android:textColor="@color/colorblack"
+                    tools:ignore="Autofill,TextFields"/>
+
+
+            <TextView
+                    android:id="@+id/tv_trip_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/trip_add_title"
+                    android:textColor="@color/colorblack"
+                    android:layout_marginTop="@dimen/dp_20"
+                    android:gravity="start"
+                    android:maxLines="2"
+                    android:textSize="@dimen/sp_14"
+                    app:font="@{`semibold`}"
+            />
+
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:layout_marginTop="@dimen/dp_15"
+                    android:orientation="horizontal"
+                    android:weightSum="10">
+
+
+                <TextView
+                        android:id="@+id/tv_rate1"
+                        android:layout_width="@dimen/dp_60"
+                        android:layout_height="@dimen/dp_60"
+                        android:text="@string/rate1"
+                        android:background="@drawable/circle_background"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="@dimen/sp_16"
+                        app:font="@{`semibold`}"
+                        android:gravity="center"/>
+
+                <TextView
+                        android:id="@+id/tv_rate2"
+                        android:layout_width="@dimen/dp_60"
+                        android:layout_height="@dimen/dp_60"
+                        android:text="@string/rate2"
+                        android:layout_marginLeft="@dimen/dp_20"
+                        android:background="@drawable/circle_background"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="@dimen/sp_16"
+                        app:font="@{`semibold`}"
+                        android:gravity="center" android:layout_marginStart="@dimen/dp_20"/>
+
+
+                <TextView
+                        android:id="@+id/tv_rate3"
+                        android:layout_width="@dimen/dp_60"
+                        android:layout_height="@dimen/dp_60"
+                        android:text="@string/rate3"
+                        android:layout_marginLeft="@dimen/dp_20"
+                        android:background="@drawable/circle_background"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="@dimen/sp_16"
+                        app:font="@{`semibold`}"
+                        android:gravity="center" android:layout_marginStart="@dimen/dp_20"/>
+
+
+            </LinearLayout>
+
+
+            <TextView
+                    android:id="@+id/tv_addcustom"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/add_custom"
+                    android:textColor="@color/colorblack"
+                    android:layout_marginTop="@dimen/dp_20"
+                    android:textSize="@dimen/sp_11"
+                    app:font="@{`semibold`}"
+                    android:gravity="center"/>
+
+
+            <EditText
+                    android:id="@+id/et_custom_amount"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_40"
+                    android:hint="@string/enter_price"
+                    android:maxLength="64"
+                    android:layout_marginTop="@dimen/dp_10"
+                    android:background="@drawable/shape_round_corner_back"
+                    android:textSize="@dimen/hint_size"
+                    app:font="@{`regular`}"
+                    android:paddingLeft="@dimen/dp_20"
+                    android:visibility="gone"
+                    android:inputType="number"
+                    android:textColor="@color/colorblack"
+                    tools:ignore="Autofill,RtlSymmetry" android:paddingStart="@dimen/dp_20"/>
+
+
+            <Button
+                    android:id="@+id/submit"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginLeft="@dimen/dp_20"
+                    android:layout_marginRight="@dimen/dp_20"
+                    android:layout_weight="0.3"
+                    android:gravity="center"
+                    android:layout_marginTop="@dimen/dp_20"
+                    android:text="@string/submit"
+                    android:background="@drawable/round_button_layout_red"
+                    android:padding="@dimen/dp_5"
+                    android:layout_marginBottom="@dimen/dp_20"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="@dimen/btn_text"
+                    android:textStyle="bold"
+                    app:font="@{`regular`}"
+                    android:layout_marginStart="@dimen/dp_10"
+                    tools:ignore="ButtonStyle"/>
+
+        </LinearLayout>
+
+
+    </ScrollView>
+
+
+</layout>

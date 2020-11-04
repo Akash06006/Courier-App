@@ -1,43 +1,86 @@
 {
   "project_info": {
-    "project_number": "763082686875",
-    "firebase_url": "https://courier-app-59b7d.firebaseio.com",
-    "project_id": "courier-app-59b7d",
-    "storage_bucket": "courier-app-59b7d.appspot.com"
+    "project_number": "828323466157",
+    "firebase_url": "https://locomo.firebaseio.com",
+    "project_id": "locomo",
+    "storage_bucket": "locomo.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:763082686875:android:52200a7bbb5a423efee13e",
+        "mobilesdk_app_id": "1:828323466157:android:2444e9bbc687b518ed6f24",
         "android_client_info": {
-          "package_name": "com.example.courier"
+          "package_name": "com.android.courier"
         }
       },
       "oauth_client": [
         {
-          "client_id": "763082686875-qvv64b1i9un2sj46ujgcnkpmcoc6pj5k.apps.googleusercontent.com",
+          "client_id": "828323466157-knfujamuc71cm4r2160a5b37qh8k3v03.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.courier",
+            "package_name": "com.android.courier",
             "certificate_hash": "446a3dd568a6ed5783f3947579de81d4dad7ea1e"
           }
         },
         {
-          "client_id": "763082686875-r3722vdrfu003u13rt56193g1foi56v9.apps.googleusercontent.com",
+          "client_id": "828323466157-6d6nrtl2e1r6v6u2sh48i6o13mv46u7o.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAljKfHeChMBwE_WoVUr3OZyL3mtc9LJCc"
+          "current_key": "AIzaSyAD4BusiVqTa2e-udgTEuqbKAkQctcugbA"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "763082686875-r3722vdrfu003u13rt56193g1foi56v9.apps.googleusercontent.com",
+              "client_id": "828323466157-62brh7m1ftgcvkslrep8l0ff0tskgahh.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "828323466157-g5qli1pn7s1mump29vpqqj3lvppca4vg.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.app.locomodriver"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:828323466157:android:50c99d3833eb3c30ed6f24",
+        "android_client_info": {
+          "package_name": "com.example.courier"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "828323466157-6d6nrtl2e1r6v6u2sh48i6o13mv46u7o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAD4BusiVqTa2e-udgTEuqbKAkQctcugbA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "828323466157-62brh7m1ftgcvkslrep8l0ff0tskgahh.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "828323466157-g5qli1pn7s1mump29vpqqj3lvppca4vg.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.app.locomodriver"
+              }
             }
           ]
         }

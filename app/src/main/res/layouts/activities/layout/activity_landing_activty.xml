@@ -7,7 +7,7 @@
 
         <variable
                 name="dashboardViewModel"
-                type="com.example.courier.viewmodels.home.DashboardViewModel" />
+                type="com.android.courier.viewmodels.home.DashboardViewModel" />
 
     </data>
 

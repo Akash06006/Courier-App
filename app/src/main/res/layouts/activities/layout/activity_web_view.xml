@@ -5,11 +5,11 @@
 
     <data>
 
-        <import type="com.example.courier.common.BindingUtils" />
+        <import type="com.android.courier.common.BindingUtils" />
 
         <variable
                 name="myaccountsViewModel"
-                type="com.example.courier.viewmodels.MyAccountsViewModel" />
+                type="com.android.courier.viewmodels.MyAccountsViewModel" />
     </data>
 
     <LinearLayout

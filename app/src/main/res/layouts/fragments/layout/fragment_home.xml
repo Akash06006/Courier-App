@@ -6,11 +6,11 @@
 
     <data>
 
-        <import type="com.example.courier.common.BindingUtils" />
+        <import type="com.android.courier.common.BindingUtils" />
 
         <variable
                 name="homeViewModel"
-                type="com.example.courier.viewmodels.home.HomeViewModel" />
+                type="com.android.courier.viewmodels.home.HomeViewModel" />
 
     </data>
 

@@ -3,7 +3,11 @@
     <string name="app_name">&app_name;</string>
     <string name="facebook_app_id">630169387861716</string>
     <string name="fb_login_protocol_scheme">fb630169387861716</string>
-    <string name="web_client_id">763082686875-r3722vdrfu003u13rt56193g1foi56v9.apps.googleusercontent.com</string>
+    <!--Paid Account-->
+    <string name="web_client_id">828323466157-6d6nrtl2e1r6v6u2sh48i6o13mv46u7o.apps.googleusercontent.com</string>
+
+    <!--<string name="web_client_id">763082686875-r3722vdrfu003u13rt56193g1foi56v9.apps.googleusercontent.com</string>-->
+
     <!--<string name="maps_api_key">AIzaSyAeq8blHRgWH-Lg6ImQJRRAFzYpJ3qVjjI</string>-->
     <!-- <string name="maps_api_key">AIzaSyA7Zj-PTZm4sDG-eoiLPA-XohvgxBe95wU</string>--><!--food vali-->
     <string name="maps_api_key">AIzaSyDBBLtvW2kqoNiPXOuDBzlk5V_QmRXJLKg</string>

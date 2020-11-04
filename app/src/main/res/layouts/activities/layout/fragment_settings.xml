@@ -4,14 +4,14 @@
         xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
-        <import type="com.example.courier.common.BindingUtils"/>
+        <import type="com.android.courier.common.BindingUtils"/>
         <variable
                 name="settingsViewModel"
-                type="com.example.courier.viewmodels.SettingsModel"/>
+                type="com.android.courier.viewmodels.SettingsModel"/>
 
         <variable
                 name="profileModel"
-                type="com.example.courier.model.ProfileModel"/>
+                type="com.android.courier.model.ProfileModel"/>
 
     </data>
 

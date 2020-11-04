@@ -5,11 +5,11 @@
 
     <data>
 
-        <import type="com.example.courier.common.BindingUtils" />
+        <import type="com.android.courier.common.BindingUtils" />
 
         <variable
                 name="loginViewModel"
-                type="com.example.courier.viewmodels.LoginViewModel" />
+                type="com.android.courier.viewmodels.LoginViewModel" />
 
     </data>
 

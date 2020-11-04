@@ -5,7 +5,7 @@
 
     <data>
 
-        <import type="com.example.courier.common.BindingUtils" />
+        <import type="com.android.courier.common.BindingUtils" />
 
     </data>
 

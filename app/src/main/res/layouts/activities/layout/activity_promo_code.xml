@@ -6,11 +6,11 @@
 
     <data>
 
-        <import type="com.example.courier.common.BindingUtils" />
+        <import type="com.android.courier.common.BindingUtils" />
 
         <variable
                 name="promcodeViewModel"
-                type="com.example.courier.viewmodels.promocode.PromoCodeViewModel" />
+                type="com.android.courier.viewmodels.promocode.PromoCodeViewModel" />
 
     </data>
 

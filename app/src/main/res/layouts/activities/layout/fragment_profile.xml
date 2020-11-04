@@ -7,15 +7,15 @@
 
     <data>
 
-        <import type="com.example.courier.common.BindingUtils" />
+        <import type="com.android.courier.common.BindingUtils" />
 
          <!--<variable
                 name="profileViewModel"
-                type="com.example.courier.viewmodels.profile.ProfileViewModel" />
+                type="com.android.courier.viewmodels.profile.ProfileViewModel" />
 -->
         <variable
                 name="profileModel"
-                type="com.example.courier.model.ProfileModel" />
+                type="com.android.courier.model.ProfileModel" />
 
     </data>
 

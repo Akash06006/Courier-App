@@ -7,11 +7,11 @@
 
         <variable
                 name="orderViewModel"
-                type="com.example.courier.viewmodels.order.OrderViewModel" />
+                type="com.android.courier.viewmodels.order.OrderViewModel" />
 
         <variable
                 name="orderDetailModel"
-                type="com.example.courier.model.order.OrdersDetailResponse.Data" />
+                type="com.android.courier.model.order.OrdersDetailResponse.Data" />
 
     </data>
 
@@ -361,7 +361,7 @@
                                     </RelativeLayout>
 
                                     <RelativeLayout
-                                            android:id="@+id/fbLogin"
+                                            android:id="@+id/imgChat"
                                             android:layout_width="60dp"
                                             android:layout_height="60dp"
                                             android:layout_marginLeft="10dp"

@@ -5,15 +5,15 @@
 
     <data>
 
-        <import type="com.example.courier.common.BindingUtils" />
+        <import type="com.android.courier.common.BindingUtils" />
 
         <variable
                 name="profileViewModel"
-                type="com.example.courier.viewmodels.profile.ProfileViewModel" />
+                type="com.android.courier.viewmodels.profile.ProfileViewModel" />
 
         <variable
                 name="model"
-                type="com.example.courier.model.LoginResponse.Data" />
+                type="com.android.courier.model.LoginResponse.Data" />
 
     </data>
 

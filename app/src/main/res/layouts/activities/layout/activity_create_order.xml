@@ -7,11 +7,11 @@
 
         <variable
                 name="orderViewModel"
-                type="com.example.courier.viewmodels.order.OrderViewModel" />
+                type="com.android.courier.viewmodels.order.OrderViewModel" />
 
         <variable
                 name="orderDetailModel"
-                type="com.example.courier.model.order.OrdersDetailResponse.Data" />
+                type="com.android.courier.model.order.OrdersDetailResponse.Data" />
 
     </data>
 

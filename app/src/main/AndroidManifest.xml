@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
-        package="com.example.courier">
+        package="com.android.courier">
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.VIBRATE" />
@@ -61,6 +61,10 @@
                 android:windowSoftInputMode="stateHidden" />
         <activity
                 android:name=".views.chat.ChatActivity"
+                android:screenOrientation="portrait"
+                android:windowSoftInputMode="stateHidden" />
+        <activity
+                android:name=".views.chat.DriverChatActivity"
                 android:screenOrientation="portrait"
                 android:windowSoftInputMode="stateHidden" />
         <activity
@@ -168,7 +172,7 @@
 
         <provider
                 android:name="androidx.core.content.FileProvider"
-                android:authorities="com.example.courier.fileprovider"
+                android:authorities="com.android.courier.fileprovider"
                 android:exported="false"
                 android:grantUriPermissions="true">
             <meta-data

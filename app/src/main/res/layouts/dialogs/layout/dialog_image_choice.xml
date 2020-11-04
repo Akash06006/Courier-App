@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginLeft="@dimen/dp_30"
+        android:layout_marginRight="@dimen/dp_30"
+        android:background="@drawable/round_layout"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/dp_10">
+
+        <!--
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/colorPrimary"
+                        android:gravity="center"
+                        android:paddingTop="@dimen/dp_15"
+                        android:paddingBottom="@dimen/dp_10"
+                        android:text="@string/select_option"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="@dimen/sp_14"
+                        app:font="@{`semibold`}" />
+        -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            tools:ignore="UselessParent">
+
+            <!--<androidx.cardview.widget.CardView
+                    android:id="@+id/cv_gallery_video"
+                    android:layout_width="@dimen/dp_150"
+                    android:layout_height="130dp"
+                    android:elevation="@dimen/dp_10"
+                    app:cardCornerRadius="4dp"
+                    app:cardElevation="2dp"
+                    app:cardUseCompatPadding="true">-->
+
+            <ImageView
+                android:id="@+id/img_cross"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:paddingLeft="@dimen/dp_10"
+                android:paddingTop="@dimen/dp_5"
+                android:paddingRight="@dimen/dp_10"
+                android:src="@drawable/ic__cross_round" />
+
+            <LinearLayout
+                android:id="@+id/ll_camera"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingLeft="@dimen/dp_10"
+                android:paddingRight="@dimen/dp_10"
+                tools:ignore="UseCompoundDrawables">
+
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:contentDescription="@string/todo"
+                    android:padding="@dimen/dp_10"
+                    android:src="@drawable/ic_camera" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center"
+                    android:text="@string/take_a_photo"
+                    android:textColor="@color/colorHomeTabRed"
+                    android:textSize="@dimen/sp_14"
+                    app:font="@{`bold`}" />
+            </LinearLayout>
+            <!--            </androidx.cardview.widget.CardView>-->
+
+            <!-- <androidx.cardview.widget.CardView
+                     android:id="@+id/cv_record"
+                     android:layout_width="@dimen/dp_150"
+                     android:layout_height="130dp"
+                     android:layout_marginLeft="@dimen/dp_10"
+                     android:elevation="@dimen/dp_10"
+                     app:cardCornerRadius="4dp"
+                     app:cardElevation="2dp"
+                     app:cardUseCompatPadding="true">-->
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_1"
+                android:layout_marginLeft="@dimen/dp_15"
+                android:layout_marginTop="@dimen/dp_10"
+                android:layout_marginRight="@dimen/dp_15"
+                android:background="@color/colorGreyLight" />
+
+            <LinearLayout
+                android:id="@+id/ll_gallery"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/dp_10"
+                android:orientation="horizontal"
+                android:paddingLeft="@dimen/dp_10"
+                android:paddingRight="@dimen/dp_10"
+                tools:ignore="UseCompoundDrawables">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:contentDescription="@string/todo"
+                    android:padding="@dimen/dp_10"
+                    android:src="@drawable/ic_gallery" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center"
+                    android:text="@string/choose_from_album"
+                    android:textColor="@color/colorHomeTabRed"
+                    android:textSize="@dimen/sp_14"
+                    app:font="@{`regular`}" />
+            </LinearLayout>
+            <!--            </androidx.cardview.widget.CardView>-->
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</layout>

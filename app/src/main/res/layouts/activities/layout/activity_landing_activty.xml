@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="verifViewModel"
+            type="com.courierdriver.viewmodels.OTPVerificationModel" />
+
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".views.home.LandingActivty">
+
+        <FrameLayout
+            android:id="@+id/frame_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/tabParent"
+            android:layout_marginBottom="5dp" />
+
+        <RelativeLayout
+            android:id="@+id/tabParent"
+            android:layout_width="match_parent"
+            android:layout_height="90dp"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/ic_tab_background">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="17dp"
+                android:background="@drawable/bottom_round"
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <RelativeLayout
+                    android:layout_width="@dimen/dp_80"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
+
+                    <ImageView
+                        android:id="@+id/orderTab"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/dp_50"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="-24dp"
+                        android:src="@drawable/ic_tab_selector" />
+
+
+                    <RelativeLayout
+                        android:id="@+id/imgOrderParent"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <ImageView
+                            android:id="@+id/imgOrder"
+                            android:layout_width="@dimen/dp_25"
+                            android:layout_height="@dimen/dp_25"
+                            android:layout_centerInParent="true"
+                            android:src="@drawable/ic_tab_order"
+                            android:tint="@color/colorWhite" />
+
+                        <TextView
+                            android:id="@+id/txtOrder"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/imgOrder"
+                            android:layout_centerInParent="true"
+                            android:layout_marginTop="@dimen/dp_5"
+                            android:text="@string/orders"
+                            android:textColor="@color/colorWhite" />
+                    </RelativeLayout>
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="@dimen/dp_80"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
+
+                    <ImageView
+                        android:id="@+id/profileTab"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/dp_50"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="-24dp"
+                        android:src="@drawable/ic_tab_selector"
+                        android:visibility="gone" />
+
+                    <RelativeLayout
+                        android:id="@+id/imgProfileParent"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <ImageView
+                            android:id="@+id/imgProfile"
+                            android:layout_width="@dimen/dp_25"
+                            android:layout_height="@dimen/dp_25"
+                            android:layout_centerInParent="true"
+                            android:src="@drawable/ic_tab_profile"
+                            android:tint="@color/colorLiteWhite" />
+
+                        <TextView
+                            android:id="@+id/txtProfile"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/imgProfile"
+                            android:layout_centerInParent="true"
+                            android:layout_marginTop="@dimen/dp_5"
+                            android:text="@string/profile"
+                            android:textColor="@color/colorLiteWhite" />
+                    </RelativeLayout>
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="@dimen/dp_80"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
+
+                    <ImageView
+                        android:id="@+id/messageTab"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/dp_50"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="-24dp"
+                        android:src="@drawable/ic_tab_selector"
+                        android:visibility="gone" />
+
+
+                    <RelativeLayout
+                        android:id="@+id/imgMessageParent"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <ImageView
+                            android:id="@+id/imgMessage"
+                            android:layout_width="@dimen/dp_25"
+                            android:layout_height="@dimen/dp_25"
+                            android:layout_centerInParent="true"
+                            android:src="@drawable/ic_tab_message"
+                            android:tint="@color/colorLiteWhite" />
+
+                        <TextView
+                            android:id="@+id/txtNotification"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/imgMessage"
+                            android:layout_centerInParent="true"
+                            android:layout_marginTop="@dimen/dp_5"
+                            android:text="@string/message"
+                            android:textColor="@color/colorLiteWhite" />
+                    </RelativeLayout>
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/rel_available"
+                    android:layout_width="@dimen/dp_80"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
+
+                    <ImageView
+                        android:id="@+id/availbleTab"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/dp_50"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="-24dp"
+                        android:src="@drawable/ic_tab_selector"
+                        android:visibility="gone" />
+
+                    <RelativeLayout
+                        android:id="@+id/imgAvailableParent"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <ImageView
+                            android:id="@+id/imgAvailable"
+                            android:layout_width="@dimen/dp_25"
+                            android:layout_height="@dimen/dp_25"
+                            android:layout_centerInParent="true"
+                            android:src="@drawable/ic_tab_available"
+                            android:tint="@color/colorGrey1" />
+
+                        <TextView
+                            android:id="@+id/txtAvailble"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/imgAvailable"
+                            android:layout_centerInParent="true"
+                            android:layout_marginTop="@dimen/dp_5"
+                            android:text="@string/available"
+                            android:textColor="@color/colorLiteWhite" />
+                    </RelativeLayout>
+                </RelativeLayout>
+            </LinearLayout>
+        </RelativeLayout>
+
+        <!--
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/card_view_tab_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    app:cardCornerRadius="@dimen/dp_20">
+
+                    <com.google.android.material.tabs.TabLayout
+                        android:id="@+id/tablayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:visibility="visible"
+                        app:tabBackground="@color/colorTabsRed"
+                        app:tabIconTint="@color/colorWhite"
+                        app:tabIndicator="@drawable/ic_tab_selector"
+                        app:tabIndicatorGravity="top"
+                        app:tabSelectedTextColor="@color/colorWhite"
+                        app:tabTextAppearance="@style/customizeTabText"
+                        app:tabTextColor="@color/colorWhite">
+
+
+                        &lt;!&ndash;  <LinearLayout
+                              android:layout_width="match_parent"
+                              android:layout_height="wrap_content"
+                              android:orientation="vertical">
+
+                              <ImageView
+                                  android:layout_width="wrap_content"
+                                  android:layout_height="wrap_content"
+                                  android:src="@drawable/ic_tab_selector" />
+          &ndash;&gt;
+                        <com.google.android.material.tabs.TabItem
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:icon="@drawable/ic_tab_order"
+                            android:text="@string/orders" />
+                        &lt;!&ndash;                </LinearLayout>&ndash;&gt;
+
+                        <com.google.android.material.tabs.TabItem
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:icon="@drawable/ic_tab_profile"
+                            android:text="@string/profile" />
+
+                        <com.google.android.material.tabs.TabItem
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:icon="@drawable/ic_tab_message"
+                            android:text="@string/message" />
+
+                        <com.google.android.material.tabs.TabItem
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:icon="@drawable/ic_tab_available"
+                            android:text="@string/available" />
+
+                    </com.google.android.material.tabs.TabLayout>
+                </androidx.cardview.widget.CardView>
+        -->
+
+    </RelativeLayout>
+</layout>

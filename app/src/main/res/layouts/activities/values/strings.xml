@@ -1,0 +1,12 @@
+<resources>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="verification_in_progress">Verification in Progress</string>
+    <string name="meanwhile_you_can_read_informationabout_working_with_locomo">Meanwhile you can read information about working with LOCOMO</string>
+    <string name="dear_user_we_have_received_your_n_documents_we_are_working_on_verifying_n_your_document">Dear user, we have received your documents we are working on verifying your document</string>
+    <string name="how_to_work">How to work</string>
+    <string name="select_subject">Select Subject</string>
+    <string name="take_a_photo">Take a photo</string>
+    <string name="choose_from_album">Choose from album</string>
+</resources>

@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/container_view">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dp_20"
+            android:layout_marginRight="@dimen/dp_20"
+            android:orientation="vertical">
+
+
+            <TextView
+                android:id="@+id/txt_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_20"
+                android:maxLines="3"
+                android:text="@string/dummy_title"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/sp_18"
+                app:font="@{`bold`}" />
+
+            <TextView
+                android:id="@+id/txt_rate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_10"
+                android:text="@string/rate_title"
+                android:textColor="@color/colorblack"
+                android:textSize="@dimen/sp_14"
+                app:font="@{`semibold`}" />
+
+
+            <RatingBar
+                android:id="@+id/ratingBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:numStars="5"
+                android:progressTint="@color/colorGolden"
+                android:rating="1"
+                android:scaleX=".6"
+                android:scaleY=".6"
+                android:stepSize="1"
+                tools:ignore="UnusedAttribute" />
+
+            <TextView
+                android:id="@+id/tv_commnet_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_10"
+                android:text="@string/comment_title"
+                android:textColor="@color/colorblack"
+                android:textSize="@dimen/sp_14"
+                app:font="@{`semibold`}" />
+
+            <EditText
+                android:id="@+id/et_email"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_110"
+                android:layout_marginTop="@dimen/dp_15"
+                android:background="@drawable/shape_round_corner_back"
+                android:gravity="start"
+                android:hint="@string/add_comment_here"
+                android:inputType="textMultiLine"
+                android:maxLength="200"
+                android:padding="@dimen/dp_15"
+                android:scrollbars="vertical"
+                android:textColor="@color/colorblack"
+                android:textSize="@dimen/hint_size"
+                app:font="@{`regular`}"
+                tools:ignore="Autofill,TextFields" />
+
+
+            <TextView
+                android:id="@+id/tv_trip_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_20"
+                android:gravity="start"
+                android:maxLines="2"
+                android:text="@string/trip_add_title"
+                android:textColor="@color/colorblack"
+                android:textSize="@dimen/sp_14"
+                app:font="@{`semibold`}" />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_15"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:weightSum="10">
+
+
+                <TextView
+                    android:id="@+id/tv_rate1"
+                    android:layout_width="@dimen/dp_60"
+                    android:layout_height="@dimen/dp_60"
+                    android:background="@drawable/circle_background"
+                    android:gravity="center"
+                    android:text="@string/rate1"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/sp_16"
+                    app:font="@{`semibold`}" />
+
+                <TextView
+                    android:id="@+id/tv_rate2"
+                    android:layout_width="@dimen/dp_60"
+                    android:layout_height="@dimen/dp_60"
+                    android:layout_marginStart="@dimen/dp_20"
+                    android:layout_marginLeft="@dimen/dp_20"
+                    android:background="@drawable/circle_background"
+                    android:gravity="center"
+                    android:text="@string/rate2"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/sp_16"
+                    app:font="@{`semibold`}" />
+
+
+                <TextView
+                    android:id="@+id/tv_rate3"
+                    android:layout_width="@dimen/dp_60"
+                    android:layout_height="@dimen/dp_60"
+                    android:layout_marginStart="@dimen/dp_20"
+                    android:layout_marginLeft="@dimen/dp_20"
+                    android:background="@drawable/circle_background"
+                    android:gravity="center"
+                    android:text="@string/rate3"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/sp_16"
+                    app:font="@{`semibold`}" />
+
+
+            </LinearLayout>
+
+
+            <TextView
+                android:id="@+id/tv_addcustom"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_20"
+                android:gravity="center"
+                android:text="@string/add_custom"
+                android:textColor="@color/colorblack"
+                android:textSize="@dimen/sp_11"
+                app:font="@{`semibold`}" />
+
+
+            <EditText
+                android:id="@+id/et_custom_amount"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_40"
+                android:layout_marginTop="@dimen/dp_10"
+                android:background="@drawable/shape_round_corner_back"
+                android:hint="@string/enter_price"
+                android:inputType="number"
+                android:maxLength="64"
+                android:paddingStart="@dimen/dp_20"
+                android:paddingLeft="@dimen/dp_20"
+                android:textColor="@color/colorblack"
+                android:textSize="@dimen/hint_size"
+                android:visibility="gone"
+                app:font="@{`regular`}"
+                tools:ignore="Autofill,RtlSymmetry" />
+
+
+            <Button
+                android:id="@+id/submit"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginStart="@dimen/dp_10"
+                android:layout_marginLeft="@dimen/dp_20"
+                android:layout_marginTop="@dimen/dp_20"
+                android:layout_marginRight="@dimen/dp_20"
+                android:layout_marginBottom="@dimen/dp_20"
+                android:layout_weight="0.3"
+                android:background="@drawable/round_button_layout_red"
+                android:gravity="center"
+                android:padding="@dimen/dp_5"
+                android:text="@string/submit"
+                android:textColor="@color/colorWhite"
+                android:textSize="@dimen/btn_text"
+                android:textStyle="bold"
+                app:font="@{`regular`}"
+                tools:ignore="ButtonStyle" />
+
+        </LinearLayout>
+
+
+    </ScrollView>
+
+
+</layout>

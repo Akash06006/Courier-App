@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dp_10"
+            android:layout_marginRight="@dimen/dp_10"
+            android:background="@drawable/round_layout"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/dp_30"
+            tools:ignore="UselessParent">
+
+            <ImageView
+                android:id="@+id/img_cross"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:paddingLeft="@dimen/dp_15"
+                android:paddingTop="@dimen/dp_15"
+                android:paddingRight="@dimen/dp_15"
+                android:src="@drawable/ic__cross_round" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/where_you_live"
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/sp_14"
+                app:font="@{`bold`}" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_5"
+                android:gravity="center"
+                android:text="@string/so_we_reach_out_to_you_better"
+                android:textColor="@color/colorGrey"
+                android:textSize="@dimen/sp_12"
+                app:font="@{`bold`}" />
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dp_20"
+                android:layout_marginTop="@dimen/dp_30"
+                android:layout_marginRight="@dimen/dp_20"
+                android:background="@drawable/shape_square_stroke">
+
+                <Spinner
+                    android:id="@+id/sp_region"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_50"
+                    android:layout_gravity="center_vertical"
+                    android:paddingLeft="@dimen/dp_15"
+                    android:paddingTop="@dimen/dp_5"
+                    android:paddingRight="@dimen/dp_15"
+                    android:paddingBottom="@dimen/dp_5" />
+            </RelativeLayout>
+
+            <!--
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginLeft="@dimen/dp_20"
+                            android:layout_marginTop="@dimen/dp_5"
+                            android:layout_marginRight="@dimen/dp_20"
+                            android:background="@color/colorGrey" />
+            -->
+
+            <RelativeLayout
+                android:id="@+id/rel_other_reason"
+                android:layout_width="match_parent"
+                android:layout_height="86dp"
+                android:layout_marginLeft="@dimen/dp_15"
+                android:layout_marginTop="@dimen/dp_20"
+                android:layout_marginRight="@dimen/dp_15"
+                android:background="@drawable/shape_round_corner_back"
+                android:visibility="gone">
+
+                <EditText
+                    android:id="@+id/et_other_reason"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@null"
+                    android:gravity="top"
+                    android:hint="@string/enter_reason"
+                    android:inputType="textCapSentences|textMultiLine"
+                    android:padding="@dimen/dp_10"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="@dimen/sp_14" />
+            </RelativeLayout>
+
+            <!--  <LinearLayout
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:layout_marginTop="@dimen/dp_30"
+                  android:gravity="center">
+  -->
+            <TextView
+                android:id="@+id/tv_submit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="@dimen/dp_10"
+                android:layout_marginTop="@dimen/dp_40"
+                android:layout_marginRight="@dimen/dp_10"
+                android:background="@drawable/round_corners_home_tab"
+                android:backgroundTint="@color/colorHomeTabRed"
+                android:paddingLeft="@dimen/dp_40"
+                android:paddingTop="@dimen/dp_10"
+                android:paddingRight="@dimen/dp_40"
+                android:paddingBottom="@dimen/dp_10"
+                android:text="@string/submit"
+                android:textAlignment="center"
+                android:textColor="@color/colorWhite"
+                android:textSize="@dimen/sp_14"
+                app:font="@{`bold`}" />
+
+            <!--<TextView
+                android:id="@+id/tv_cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="@dimen/dp_10"
+                android:layout_marginRight="@dimen/dp_10"
+                android:background="@drawable/shape_round_stroke"
+                android:paddingLeft="@dimen/dp_40"
+                android:paddingTop="@dimen/dp_10"
+                android:paddingRight="@dimen/dp_40"
+                android:paddingBottom="@dimen/dp_10"
+                android:text="@string/cancel"
+                android:textAlignment="center"
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/sp_14"
+                app:font="@{`bold`}" />
+        </LinearLayout>-->
+
+        </LinearLayout>
+    </FrameLayout>
+</layout>

@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "415276539609",
+    "firebase_url": "https://locomo-driver.firebaseio.com",
+    "project_id": "locomo-driver",
+    "storage_bucket": "locomo-driver.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:415276539609:android:fbc406eccab421ffd528c8",
+        "android_client_info": {
+          "package_name": "com.courierdriver"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "415276539609-eh03g7cpt1vi5il2fvqplre8rm0h6uf8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.courierdriver",
+            "certificate_hash": "b35fecec1da9299a85b051229ccd2da38a247918"
+          }
+        },
+        {
+          "client_id": "415276539609-qcngtq7l4tb63tt6r4cn2ll626o99ogi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCC88zuWSsYTcanZZEeL2QW4hQBz2Kemk4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "415276539609-qcngtq7l4tb63tt6r4cn2ll626o99ogi.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

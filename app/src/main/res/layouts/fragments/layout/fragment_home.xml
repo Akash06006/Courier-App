@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="com.courierdriver.common.BindingUtils" />
+
+
+        <variable
+            name="onClick"
+            type="android.view.View.OnClickListener" />
+
+        <variable
+            name="homeViewModel"
+            type="com.courierdriver.viewmodels.home.HomeViewModel" />
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimary"
+        android:orientation="vertical">
+
+        <include
+            android:id="@+id/toolbarCommon"
+            layout="@layout/common_toolbar_back"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_50"
+            android:layout_marginTop="10dp"
+            android:visibility="visible"
+            app:onClick="@{(v) -> homeViewModel.clickListener(v)}" />
+
+
+        <LinearLayout
+            android:id="@+id/lin_in_progress"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/ic_top_circle"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <!--  <LinearLayout
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:background="@drawable/ic_top_circle"
+                  android:paddingTop="@dimen/dp_30"
+                  android:layout_weight="1"
+                  android:paddingBottom="@dimen/dp_20"
+                  android:backgroundTint="@color/colorHomeTabRed"
+                  android:orientation="vertical">-->
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/dp_60"
+                android:src="@drawable/ic_inprogress" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_20"
+                android:text="@string/verification_in_progress"
+                android:textAlignment="center"
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/sp_22"
+                app:font="@{`bold`}" />
+
+            <View
+                android:layout_width="@dimen/dp_30"
+                android:layout_height="6dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/dp_20"
+                android:background="@color/colorTabsRed" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dp_40"
+                android:layout_marginTop="@dimen/dp_20"
+                android:layout_marginRight="@dimen/dp_40"
+                android:text="@string/dear_user_we_have_received_your_n_documents_we_are_working_on_verifying_n_your_document"
+                android:textAlignment="center"
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/sp_14"
+                app:font="@{`regular`}" />
+            <!--            </LinearLayout>-->
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dp_40"
+                android:layout_marginTop="@dimen/dp_20"
+                android:layout_marginRight="@dimen/dp_40"
+                android:text="@string/meanwhile_you_can_read_informationabout_working_with_locomo"
+                android:textAlignment="center"
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/sp_14"
+                app:font="@{`regular`}" />
+
+            <TextView
+                android:id="@+id/tv_how_to_work"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="@dimen/dp_40"
+                android:layout_marginTop="@dimen/dp_60"
+                android:layout_marginRight="@dimen/dp_40"
+                android:background="@drawable/round_layout"
+                android:backgroundTint="@color/colorTabsRed"
+                android:onClick="@{(v) -> homeViewModel.clickListener(v)}"
+                android:paddingLeft="@dimen/dp_30"
+                android:paddingTop="@dimen/dp_10"
+                android:paddingRight="@dimen/dp_30"
+                android:paddingBottom="@dimen/dp_10"
+                android:text="@string/how_to_work"
+                android:textAlignment="center"
+                android:textColor="@color/colorWhite"
+                android:textSize="@dimen/sp_14"
+                app:font="@{`regular`}" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/lin_tabs_main"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/ic_top_circle"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dp_20"
+                android:layout_marginTop="@dimen/dp_20"
+                android:layout_marginRight="@dimen/dp_20"
+                android:orientation="horizontal"
+                android:weightSum="3">
+
+                <TextView
+                    android:id="@+id/tv_available"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dp_10"
+                    android:layout_marginRight="@dimen/dp_10"
+                    android:layout_weight="1"
+                    android:background="@drawable/round_corners_home_tab"
+                    android:backgroundTint="@color/colorHomeTabRed"
+                    android:onClick="@{(v) -> homeViewModel.clickListener(v)}"
+                    android:padding="@dimen/dp_10"
+                    android:text="@string/available"
+                    android:textAlignment="center"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="@dimen/sp_14"
+                    app:font="@{`bold`}" />
+
+                <TextView
+                    android:id="@+id/tv_active"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dp_10"
+                    android:layout_marginRight="@dimen/dp_10"
+                    android:layout_weight="1"
+                    android:background="@drawable/round_corners_home_tab"
+                    android:backgroundTint="@color/colorWhite"
+                    android:onClick="@{(v) -> homeViewModel.clickListener(v)}"
+                    android:padding="@dimen/dp_10"
+                    android:text="@string/active"
+                    android:textAlignment="center"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="@dimen/sp_14"
+                    app:font="@{`bold`}" />
+
+                <TextView
+                    android:id="@+id/tv_completed"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dp_10"
+                    android:layout_marginRight="@dimen/dp_10"
+                    android:layout_weight="1"
+                    android:background="@drawable/round_corners_home_tab"
+                    android:backgroundTint="@color/colorWhite"
+                    android:onClick="@{(v) -> homeViewModel.clickListener(v)}"
+                    android:padding="@dimen/dp_10"
+                    android:text="@string/completed"
+                    android:textAlignment="center"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="@dimen/sp_14"
+                    app:font="@{`bold`}" />
+            </LinearLayout>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dp_20"
+                android:layout_marginTop="@dimen/dp_10"
+                android:layout_marginRight="@dimen/dp_20"
+                android:background="@drawable/shape_round_stroke"
+                android:drawableLeft="@drawable/places_ic_search"
+                android:drawablePadding="@dimen/dp_10"
+                android:hint="@string/search_hint"
+                android:paddingLeft="@dimen/dp_20"
+                android:paddingTop="@dimen/dp_10"
+                android:paddingRight="@dimen/dp_20"
+                android:paddingBottom="@dimen/dp_10"
+                android:textSize="@dimen/sp_16" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_order_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <!--
+                        <TextView
+                                android:layout_width="180dp"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_marginLeft="40dp"
+                                android:layout_marginTop="40dp"
+                                android:layout_marginRight="40dp"
+                                android:gravity="center"
+                                android:text="@string/delivery_few_minutes"
+                                android:textColor="@color/colorPrimary"
+                                android:textSize="22sp"
+                                android:textStyle="bold"
+                                app:font="@{`semibold`}" />
+
+
+                        <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_marginTop="25dp"
+                                android:src="@drawable/ic_home_logo" />
+
+                        <TextView
+                                android:id="@+id/txtCreateOrder"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_marginTop="25dp"
+                                android:background="@drawable/shape_button_round_back"
+                                android:gravity="center"
+                                android:onClick="@{(v) -> homeViewModel.clickListener(v)}"
+                                android:text="@string/new_order"
+                                android:textAllCaps="false"
+                                android:textColor="@color/colorWhite"
+                                android:textSize="18sp" />
+                                -->
+        </LinearLayout>
+
+    </LinearLayout>
+
+</layout>

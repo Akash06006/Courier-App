@@ -13,28 +13,30 @@
 
     </data>
 
-    <LinearLayout
+    <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/colorPrimary"
-            android:orientation="vertical"
-            app:hideKeyBoardOnClick="@{`back` }">
+            android:layout_height="match_parent">
 
-        <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="@dimen/dp_80"
-                android:background="@drawable/ic_login_logo"
-                android:textColor="@color/colorWhite"
-
-                />
-
-        <ScrollView
+        <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="@dimen/dp_80"
-                android:background="@drawable/ic_top_circle">
+                android:background="@color/colorWhite"
+                android:orientation="vertical"
+                app:hideKeyBoardOnClick="@{`back` }">
+
+            <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/ic_bottom_corner"
+                    android:gravity="center">
+
+                <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:background="@drawable/ic_login_logo"
+                        android:textColor="@color/colorWhite" />
+            </RelativeLayout>
 
             <LinearLayout
                     android:layout_width="match_parent"
@@ -119,6 +121,7 @@
                                 android:paddingTop="@dimen/dp_2"
                                 android:paddingRight="@dimen/dp_5"
                                 android:paddingBottom="@dimen/dp_2"
+                                android:visibility="gone"
                                 app:ccpDialog_showNameCode="false"
                                 app:ccp_arrowSize="@dimen/dp_20"
                                 app:ccp_clickable="true"
@@ -132,7 +135,8 @@
                                 android:layout_width="@dimen/dp_120"
                                 android:layout_height="1.5dp"
                                 android:layout_marginLeft="10dp"
-                                android:background="@color/colorBlack" />
+                                android:background="@color/colorBlack"
+                                android:visibility="gone" />
 
                     </LinearLayout>
 
@@ -167,6 +171,7 @@
                         android:singleLine="true"
                         android:text="12345678"
                         android:textSize="14sp"
+                        android:visibility="gone"
                         app:font="@{`regular`}" />
 
                 <EditText
@@ -183,6 +188,7 @@
                         android:singleLine="true"
                         android:text="12345678"
                         android:textSize="14sp"
+                        android:visibility="gone"
                         app:font="@{`regular`}" />
 
                 <EditText
@@ -199,6 +205,14 @@
                         android:textSize="14sp"
                         app:font="@{`regular`}" />
 
+                <CheckBox
+                        android:id="@+id/chkTerms"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:text="by continuing you agree to our Terms and Conditions."
+                        android:textColor="@color/gray" />
+
                 <Button
                         android:id="@+id/btnSignup"
                         android:layout_width="match_parent"
@@ -206,6 +220,7 @@
                         android:layout_marginLeft="10dp"
                         android:layout_marginTop="25dp"
                         android:layout_marginRight="10dp"
+                        android:layout_marginBottom="10dp"
                         android:background="@drawable/shape_button_back"
                         android:onClick="@{(v) -> loginViewModel.clickListener(v)}"
                         android:text="@string/signup"
@@ -215,7 +230,7 @@
                         app:font="@{`regular`}" />
 
             </LinearLayout>
-        </ScrollView>
-    </LinearLayout>
 
+        </LinearLayout>
+    </ScrollView>
 </layout>

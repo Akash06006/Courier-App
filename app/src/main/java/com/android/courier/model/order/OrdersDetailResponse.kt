@@ -19,6 +19,9 @@ class OrdersDetailResponse {
         @SerializedName("deliveryAddress")
         @Expose
         var deliveryAddress : ArrayList<PickupAddress>? = null
+        @SerializedName("assignedEmployees")
+        @Expose
+        var assignedEmployees : AssignedEmployees? = null
         @SerializedName("weight")
         @Expose
         var weight : WeightData? = null
@@ -121,6 +124,9 @@ class OrdersDetailResponse {
         @SerializedName("lPointsPrice")
         @Expose
         var lPointsPrice : String? = null
+        @SerializedName("createdAt")
+        @Expose
+        var createdAt : String? = null
 
     }
 
@@ -224,4 +230,30 @@ class OrdersDetailResponse {
 
     }
 
+    class AssignedEmployees {
+        @SerializedName("id")
+        @Expose
+        var id : String? = null
+        @SerializedName("firstName")
+        @Expose
+        var firstName : String? = null
+        @SerializedName("lastName")
+        @Expose
+        var lastName : String? = null
+        @SerializedName("image")
+        @Expose
+        var image : String? = null
+        @SerializedName("phoneNumber")
+        @Expose
+        var phoneNumber : String? = null
+        @SerializedName("countryCode")
+        @Expose
+        var countryCode : String? = null
+        @SerializedName("rating")
+        @Expose
+        var rating : String? = null
+        @SerializedName("payVia")
+        @Expose
+        var payVia : ArrayList<String>? = null
+    }
 }

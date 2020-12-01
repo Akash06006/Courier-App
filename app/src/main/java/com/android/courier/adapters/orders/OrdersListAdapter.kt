@@ -46,49 +46,46 @@ class OrdersListAdapter(
     override fun onBindViewHolder(@NonNull holder : ViewHolder, position : Int) {
         viewHolder = holder
         val dis = (position + 1) * 10
-        if (active.equals("true")) {
-            holder.binding!!.txtTrack.visibility = View.VISIBLE
-            holder.binding!!.txtCancel.visibility = View.VISIBLE
-            holder.binding!!.llActiveOrder.visibility = View.VISIBLE
+        //if (active.equals("true")) {
+        //  holder.binding!!.txtTrack.visibility = View.VISIBLE
+        //  holder.binding!!.txtCancel.visibility = View.VISIBLE
+        //  holder.binding!!.llActiveOrder.visibility = View.VISIBLE
+        holder.binding!!.txtOrderStatus.visibility = View.GONE
+        holder.binding!!.txtViewDetails.visibility = View.GONE
+        holder.binding!!.llOrderCompleted.visibility = View.GONE
 
-            holder.binding!!.txtOrderStatus.visibility = View.GONE
-            holder.binding!!.txtViewDetails.visibility = View.GONE
-            holder.binding!!.llOrderCompleted.visibility = View.GONE
+        holder.binding.txtOrderNo.text = orderList!![position].orderNo
+        holder.binding.txtKm.text =
+            orderList!![position].deliveryPoints!![0].distance + " Away"
+        holder.binding.txtTime.text = "In " + orderList!![position].deliveryPoints!![0].time
+        holder.binding.txtStatus.text = orderList!![position].orderStatus
+        holder.binding.txtCreatedTime.text = "Created on " + orderList!![position].createdAt
+        holder.binding.txtPrice.text = "₹ " + orderList!![position].totalOrderPrice
 
-            holder.binding.txtOrderNo.text = "Order No #" + orderList!![position].orderNo
-            holder.binding.txtKm.text =
-                orderList!![position].deliveryPoints!![0].distance + " Away"
-            holder.binding.txtTime.text = "In " + orderList!![position].deliveryPoints!![0].time
-            holder.binding.txtStatus.text = orderList!![position].orderStatus
-            holder.binding.txtCreatedTime.text = "Created on " + orderList!![position].createdAt
-
-            holder.binding.txtPickAddress.text = orderList!![position].pickupAddress?.address
-            if (orderList!![position].deliveryAddress?.size!! > 1) {
-                val size = orderList!![position].deliveryAddress?.size!!
-                holder.binding.txtDeliveryAddress.text =
-                    orderList!![position].deliveryAddress!![size?.minus(1)].address + " and " + size?.minus(
-                        1
-                    ) + " address in between"
-            } else {
-                if (orderList!![position].deliveryAddress?.size!! > 0)
-                    holder.binding.txtDeliveryAddress.text =
-                        orderList!![position].deliveryAddress!![0].address
-            }
-
+        holder.binding.txtPickAddress.text = orderList!![position].pickupAddress?.address
+        if (orderList!![position].deliveryAddress?.size!! > 1) {
+            val size = orderList!![position].deliveryAddress?.size!!
+            holder.binding.txtAddressInBetween.text =
+                orderList!![position].deliveryAddress!![size?.minus(1)].address + " and " + size?.minus(
+                    1
+                ) + " address in between"
         } else {
+            if (orderList!![position].deliveryAddress?.size!! > 0)
+                holder.binding.txtDeliveryAddress.text =
+                    orderList!![position].deliveryAddress!![0].address
+        }
+        /*} else {
             holder.binding!!.txtTrack.visibility = View.GONE
             holder.binding!!.txtCancel.visibility = View.GONE
             holder.binding!!.llActiveOrder.visibility = View.GONE
-
-            holder.binding!!.txtOrderStatus.visibility = View.VISIBLE
-            holder.binding!!.txtViewDetails.visibility = View.VISIBLE
-            holder.binding!!.llOrderCompleted.visibility = View.VISIBLE
-
-            holder.binding.txtOrderNo.text = "Order No #" + orderList!![position].orderNo
+            //holder.binding!!.txtOrderStatus.visibility = View.VISIBLE
+            // holder.binding!!.txtViewDetails.visibility = View.VISIBLE
+            //holder.binding!!.llOrderCompleted.visibility = View.VISIBLE
+            holder.binding.txtOrderNo.text = orderList!![position].orderNo
             holder.binding.txtOrderStatus.text = orderList!![position].orderStatus
             holder.binding.txtDistance.text = orderList!![position].weight?.name
 
-        }
+        }*/
         //holder.binding!!.txtName.text = weightList!![position].name
         holder.binding!!.txtTrack.setOnClickListener {
         }

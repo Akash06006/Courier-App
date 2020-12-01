@@ -100,6 +100,7 @@ class ChatActivity : BaseActivity(),
                 val data = args[0] as JSONObject
                 try {
                     val roomId = data.getString("groupId")
+                    GlobalConstants.ROOM_ID = roomId
                     sharedPrefClass.putObject(this, GlobalConstants.ROOM_ID, roomId)
                     val objectChatHistory = JSONObject()
                     objectChatHistory.put(
@@ -109,10 +110,10 @@ class ChatActivity : BaseActivity(),
                         ).toString()
                     )
                     objectChatHistory.put(
-                        "groupId", sharedPrefClass.getPrefValue(
+                        "groupId",   GlobalConstants.ROOM_ID/* sharedPrefClass.getPrefValue(
                             MyApplication.instance,
                             GlobalConstants.ROOM_ID
-                        ).toString()
+                        ).toString()*/
                     )
                     objectChatHistory.put("userType", "user")
                     SocketConnectionManager.getInstance()
@@ -165,10 +166,10 @@ class ChatActivity : BaseActivity(),
                     ).toString()
                 )
                 objectChatHistory.put(
-                    "groupId", sharedPrefClass.getPrefValue(
+                    "groupId", GlobalConstants.ROOM_ID/*sharedPrefClass.getPrefValue(
                         MyApplication.instance,
                         GlobalConstants.ROOM_ID
-                    ).toString()
+                    ).toString()*/
                 )
                 objectChatHistory.put("type", 1)
                 objectChatHistory.put("message", chatBinding.edittextChatbox.text.toString())
@@ -248,10 +249,10 @@ class ChatActivity : BaseActivity(),
             ).toString()
         )
         objectChatHistory.put(
-            "groupId", sharedPrefClass.getPrefValue(
+            "groupId", GlobalConstants.ROOM_ID /*sharedPrefClass.getPrefValue(
                 MyApplication.instance,
                 GlobalConstants.ROOM_ID
-            ).toString()
+            ).toString()*/
         )
         SocketConnectionManager.getInstance()
             .socket.emit("leaveRoom", objectChatHistory)
@@ -345,10 +346,10 @@ class ChatActivity : BaseActivity(),
                 ).toString()
             )
             objectChatHistory.put(
-                "groupId", sharedPrefClass.getPrefValue(
+                "groupId", GlobalConstants.ROOM_ID/*sharedPrefClass.getPrefValue(
                     MyApplication.instance,
                     GlobalConstants.ROOM_ID
-                ).toString()
+                ).toString()*/
             )
             objectChatHistory.put("type", 2)
             objectChatHistory.put("media", image)
@@ -366,10 +367,10 @@ class ChatActivity : BaseActivity(),
                 ).toString()
             )
             objChatHistory.put(
-                "groupId", sharedPrefClass.getPrefValue(
+                "groupId", GlobalConstants.ROOM_ID /*sharedPrefClass.getPrefValue(
                     MyApplication.instance,
                     GlobalConstants.ROOM_ID
-                ).toString()
+                ).toString()*/
             )
             SocketConnectionManager.getInstance()
                 .socket.emit(
@@ -416,10 +417,10 @@ class ChatActivity : BaseActivity(),
             ).toString()
         )
         objectChatHistory.put(
-            "groupId", sharedPrefClass.getPrefValue(
+            "groupId", GlobalConstants.ROOM_ID/* sharedPrefClass.getPrefValue(
                 MyApplication.instance,
                 GlobalConstants.ROOM_ID
-            ).toString()
+            ).toString()*/
         )
         objectChatHistory.put("type", 1)
         objectChatHistory.put("message", message)

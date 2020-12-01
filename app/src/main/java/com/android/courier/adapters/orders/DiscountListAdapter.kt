@@ -11,15 +11,16 @@ import com.bumptech.glide.Glide
 import com.android.courier.R
 import com.android.courier.databinding.DiscountItemBinding
 import com.android.courier.model.order.ListsResponse
+import com.android.courier.views.home.fragments.HomeFragment
 import com.android.courier.views.orders.CreateOrderActivty
+import com.payumoney.sdkui.ui.activities.BaseActivity
 
 class DiscountListAdapter(
-    context : CreateOrderActivty,
-    addressList : ArrayList<ListsResponse.BannersData>,
-    var activity : Context
+    context : HomeFragment,
+    addressList : ArrayList<ListsResponse.BannersData>
 ) :
     RecyclerView.Adapter<DiscountListAdapter.ViewHolder>() {
-    private val mContext : CreateOrderActivty
+    private val mContext : HomeFragment
     private var viewHolder : ViewHolder? = null
     private var bannersList : ArrayList<ListsResponse.BannersData>?
 
@@ -41,28 +42,27 @@ class DiscountListAdapter(
 
     override fun onBindViewHolder(@NonNull holder : ViewHolder, position : Int) {
         viewHolder = holder
-        val dis = (position + 1) * 10
-        Glide.with(mContext).load(bannersList!![position].icon).placeholder(R.drawable.ic_dummy)
-            .into(holder.binding!!.imgBanner)
+        /* Glide.with(mContext).load(bannersList!![position].icon).placeholder(R.drawable.ic_dummy)
+             .into(holder.binding!!.imgBanner)
 
-        holder.binding!!.imgBanner.setOnClickListener {
-            if (bannersList!![position].type.equals("coupon")) {
-                mContext.showOfferInformation(position)
-            } else {
-                mContext.showToastSuccess("No Information")
-            }
-        }
+         holder.binding!!.imgBanner.setOnClickListener {
+             if (bannersList!![position].type.equals("coupon")) {
+                 mContext.showOfferInformation(position)
+             } else {
+                 mContext.baseActivity.showToastSuccess("No Information")
+             }
+         }*/
     }
 
     override fun getItemCount() : Int {
-        return bannersList!!.count()
+        return 6//bannersList!!.count()
     }
 
     inner class ViewHolder//This constructor would switch what to findViewBy according to the type of viewType
         (
         v : View, val viewType : Int, //These are the general elements in the RecyclerView
         val binding : DiscountItemBinding?,
-        mContext : CreateOrderActivty,
+        mContext : HomeFragment,
         addressList : ArrayList<ListsResponse.BannersData>?
     ) : RecyclerView.ViewHolder(v) {
         /*init {

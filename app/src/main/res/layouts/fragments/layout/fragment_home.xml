@@ -17,7 +17,7 @@
     <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/colorPrimary"
+            android:background="@color/colorWhite"
             android:orientation="vertical">
 
         <include
@@ -42,16 +42,15 @@
                     android:padding="@dimen/dp_15"
                     android:rotation="-180"
                     android:src="@drawable/ic_arrow_forward"
-                    android:tint="@color/colorWhite"  />
+                    android:tint="@color/colorWhite" />
 
             <TextView
                     android:id="@+id/img_toolbar_text"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:layout_centerInParent="true"
                     android:layout_marginStart="@dimen/dp_15"
                     android:layout_marginLeft="@dimen/dp_15"
-                    android:layout_toEndOf="@+id/toolbar"
-                    android:layout_toRightOf="@+id/toolbar"
                     android:gravity="center"
                     android:textColor="@color/colorWhite"
                     android:textSize="@dimen/sp_16"
@@ -82,30 +81,82 @@
                     android:onClick="@{(v) -> homeViewModel.clickListener(v)}"
                     android:src="@drawable/ic_user"
 
-                    android:visibility="visible"
+                    android:visibility="gone"
                     app:civ_border_color="@color/colorWhite"
                     app:civ_border_width="2dp" />
 
         </RelativeLayout>
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ic_bottom_corner"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:paddingTop="50dp"
+                android:paddingBottom="50dp">
+
+            <ImageView
+                    android:id="@+id/txtLogo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@drawable/ic_login_logo" />
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="@string/your_local_delivery_partner"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+
+                    app:font="@{`semibold`}" />
+
+            <TextView
+                    android:id="@+id/txtCreateOrder"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/txtLogo"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="35dp"
+                    android:background="@drawable/shape_button_round_back"
+                    android:gravity="center"
+                    android:onClick="@{(v) -> homeViewModel.clickListener(v)}"
+                    android:text="@string/new_order"
+                    android:textAllCaps="false"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+        </LinearLayout>
 
         <TextView
                 android:id="@+id/txtWelcome"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginTop="10dp"
                 android:text="Welcome, Akash Gharu"
                 android:textColor="@color/colorWhite"
                 android:textSize="@dimen/sp_18"
                 android:textStyle="bold"
+                android:visibility="gone"
                 app:font="@{`semibold`}" />
 
         <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="20dp"
-                android:background="@drawable/ic_top_circle"
+                android:layout_marginTop="15dp"
+                android:background="@color/colorWhite"
                 android:orientation="vertical">
+
+            <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvDiscounts"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:padding="@dimen/dp_5" />
 
             <TextView
                     android:layout_width="180dp"
@@ -119,28 +170,19 @@
                     android:textColor="@color/colorPrimary"
                     android:textSize="22sp"
                     android:textStyle="bold"
+
+                    android:visibility="gone"
                     app:font="@{`semibold`}" />
 
             <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginTop="25dp"
-                    android:src="@drawable/ic_home_logo" />
 
-            <TextView
-                    android:id="@+id/txtCreateOrder"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
                     android:layout_marginTop="25dp"
-                    android:background="@drawable/shape_button_round_back"
-                    android:gravity="center"
-                    android:onClick="@{(v) -> homeViewModel.clickListener(v)}"
-                    android:text="@string/new_order"
-                    android:textAllCaps="false"
-                    android:textColor="@color/colorWhite"
-                    android:textSize="18sp" />
+                    android:src="@drawable/ic_home_logo"
+                    android:visibility="gone" />
+
         </LinearLayout>
 
     </LinearLayout>

@@ -84,6 +84,9 @@ public class PaymentActivity extends BaseActivity {
         });
     }
 
+    private Double convertStringToDouble(String str) {
+        return Double.parseDouble(str);
+    }
     private void launchPaymentFlow(String amount, String currency) {
         PayUmoneyConfig payUmoneyConfig = PayUmoneyConfig.getInstance();
         payUmoneyConfig.setPayUmoneyActivityTitle(getResources().getString(R.string.book) + " " + getResources().getString(R.string.service));
@@ -215,9 +218,7 @@ public class PaymentActivity extends BaseActivity {
         }
     }
 
-    private Double convertStringToDouble(String str) {
-        return Double.parseDouble(str);
-    }
+
 
     private void showAlert(String msg) {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);

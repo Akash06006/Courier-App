@@ -4,14 +4,14 @@
     <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/colorWhite">
+            android:background="@color/colorPrimary">
 
         <ImageView
                 android:id="@+id/splsh_image"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:background="@drawable/ic_splash_logo"
+                android:background="@drawable/ic_login_logo"
                 android:contentDescription="@string/todo" />
 
     </RelativeLayout>

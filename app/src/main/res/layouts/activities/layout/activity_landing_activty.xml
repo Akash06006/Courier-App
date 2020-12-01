@@ -33,61 +33,69 @@
                     android:id="@+id/frame_layout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_above="@+id/tablayout"
+                    android:layout_above="@+id/tabRelative"
                     android:layout_marginBottom="70dp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintBottom_toTopOf="@+id/tablayout"
+                    app:layout_constraintBottom_toTopOf="@+id/tabRelative"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent" />
 
-            <com.google.android.material.tabs.TabLayout
-                    android:id="@+id/tablayout"
+            <RelativeLayout
+                    android:id="@+id/tabRelative"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
-                    android:visibility="visible"
+                    android:layout_margin="5dp"
+                    android:background="@drawable/ic_tab_back"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:tabBackground="@color/colorWhite"
-                    app:tabIndicatorColor="@color/colorPrimary"
-                    app:tabSelectedTextColor="@color/colorPrimary"
-                    app:tabTextAppearance="@style/customizeTabText"
-                    app:tabTextColor="@color/tabColor">
-                <!--                    app:layout_constraintTop_toBottomOf="@+id/frame_layout"
-                -->
-                <com.google.android.material.tabs.TabItem
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:icon="@drawable/ic_tab_home"
-                        android:text="Home" />
+                    app:layout_constraintStart_toStartOf="parent">
 
-                <com.google.android.material.tabs.TabItem
-                        android:layout_width="wrap_content"
+                <com.google.android.material.tabs.TabLayout
+                        android:id="@+id/tablayout"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:icon="@drawable/ic_tab_order"
-                        android:text="Orders" />
-                <!---->
 
-                <com.google.android.material.tabs.TabItem
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:icon="@drawable/ic_tab_create"
-                        android:text="Create" />
-                <!-- android:icon="@drawable/ic_booking_tab"-->
-                <com.google.android.material.tabs.TabItem
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:icon="@drawable/ic_tab_notification"
-                        android:text="Notification" />
-                <!-- android:icon="@drawable/ic_wallet_tab"-->
-                <com.google.android.material.tabs.TabItem
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:icon="@drawable/ic_tab_user"
-                        android:text="Profile" />
-                <!-- android:icon="@drawable/ic_profile_tab"-->
-            </com.google.android.material.tabs.TabLayout>
+                        android:visibility="visible"
+                        app:tabIndicatorColor="@android:color/transparent"
+                        app:tabSelectedTextColor="@color/colorWhite"
+                        app:tabTextAppearance="@style/customizeTabText"
+                        app:tabTextColor="@color/tabColor">
+                    <!--                    app:layout_constraintTop_toBottomOf="@+id/frame_layout"
+                    -->
+                    <com.google.android.material.tabs.TabItem
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:icon="@drawable/ic_tab_home"
+                            android:text="Home" />
+
+                    <com.google.android.material.tabs.TabItem
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:icon="@drawable/ic_tab_order"
+                            android:text="Orders" />
+                    <!---->
+
+                    <com.google.android.material.tabs.TabItem
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:icon="@drawable/ic_tab_create"
+                            android:text="Create" />
+                    <!-- android:icon="@drawable/ic_booking_tab"-->
+                    <com.google.android.material.tabs.TabItem
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:icon="@drawable/ic_tab_notification"
+                            android:text="Notification" />
+                    <!-- android:icon="@drawable/ic_wallet_tab"-->
+                    <com.google.android.material.tabs.TabItem
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:icon="@drawable/ic_tab_user"
+                            android:text="Profile" />
+                    <!-- android:icon="@drawable/ic_profile_tab"-->
+                </com.google.android.material.tabs.TabLayout>
+            </RelativeLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <com.google.android.material.navigation.NavigationView
@@ -99,7 +107,7 @@
                 android:background="@color/colorPrimary"
                 android:fitsSystemWindows="true"
                 android:paddingRight="10dp"
-                android:visibility="visible"
+                android:visibility="gone"
                 app:theme="@style/NavigationViewStyle">
 
             <!-- <android.support.design.widget.NavigationView

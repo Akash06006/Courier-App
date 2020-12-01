@@ -279,30 +279,33 @@ class SignupActivity : BaseActivity() {
                                     R.string.phone_min
                                 )
                             )
-                            password.isEmpty() -> showError(
-                                activitySignupbinding.edtPassword,
-                                getString(R.string.empty) + " " + getString(
-                                    R.string.password
-                                )
-                            )
-                            password.length < 8 -> showError(
-                                activitySignupbinding.edtPassword,
-                                getString(R.string.password_len_msg)
-                            )
-                            confirmPassword.isEmpty() -> showError(
-                                activitySignupbinding.edtConfirmPassword,
-                                getString(R.string.empty) + " " + getString(
-                                    R.string.confirm_password
-                                )
-                            )
-                            password != confirmPassword -> showError(
-                                activitySignupbinding.edtConfirmPassword,
-                                MyApplication.instance.getString(R.string.mismatch_paaword)
-                            )
+                            /* password.isEmpty() -> showError(
+                                 activitySignupbinding.edtPassword,
+                                 getString(R.string.empty) + " " + getString(
+                                     R.string.password
+                                 )
+                             )
+                             password.length < 8 -> showError(
+                                 activitySignupbinding.edtPassword,
+                                 getString(R.string.password_len_msg)
+                             )
+                             confirmPassword.isEmpty() -> showError(
+                                 activitySignupbinding.edtConfirmPassword,
+                                 getString(R.string.empty) + " " + getString(
+                                     R.string.confirm_password
+                                 )
+                             )
+                             password != confirmPassword -> showError(
+                                 activitySignupbinding.edtConfirmPassword,
+                                 MyApplication.instance.getString(R.string.mismatch_paaword)
+                             )*/
+                            !activitySignupbinding.chkTerms.isChecked() -> {
+                                showToastError("Please agree to Terms and Conditions")
+                            }
                             else -> {
                                 mOtpJsonObject.addProperty(
                                     "countryCode",
-                                    "+" + activitySignupbinding.btnCcp.selectedCountryCode
+                                    "+" + 91
                                 )
                                 mOtpJsonObject.addProperty("phoneNumber", phone)
                                 val mJsonObject = JsonObject()
@@ -314,7 +317,7 @@ class SignupActivity : BaseActivity() {
                                 )
                                 mJsonObject.addProperty("phoneNumber", phone)
                                 mJsonObject.addProperty("email", email)
-                                mJsonObject.addProperty("password", password)
+                                // mJsonObject.addProperty("password", password)
                                 mJsonObject.addProperty("isSocial", isSocial)
                                 mJsonObject.addProperty("deviceToken", "deivce_token")
                                 mJsonObject.addProperty("platform", "android")

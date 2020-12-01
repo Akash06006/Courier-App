@@ -217,13 +217,24 @@ class OTPVerificationActivity : BaseActivity() {
                 { task->
                     stopProgressDialog()
                     if (task.isSuccessful) {
+                        SharedPrefClass().putObject(
+                            MyApplication.instance,
+                            "isLogin",
+                            true
+                        )
                         showToastSuccess("OTP Verified")
                         if (GlobalConstants.VERIFICATION_TYPE.equals("signup")) {
                             callVerifyUserApi()
                         } else {
-                            val intent = Intent(this, ResetPasswrodActivity::class.java)
+                            /* val intent = Intent(this, ResetPasswrodActivity::class.java)
+                             startActivity(intent)
+                             finish()*/
+                            val intent = Intent(this, LandingActivty::class.java)
+                            intent.flags =
+                                Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                             startActivity(intent)
                             finish()
+
                         }
                         /*  var dob = SharedPrefClass().getPrefValue(this, "dob").toString()
                           var intent: Intent? = null

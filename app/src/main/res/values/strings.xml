@@ -26,13 +26,14 @@
     <string name="password">Password</string>
     <string name="forgot_password_heading">Forgot Password</string>
     <string name="login">Login</string>
-    <string name="invalid">Please Enster Valid</string>
+    <string name="invalid">Please Enter Valid</string>
     <string name="home">Home</string>
     <string name="email_here">Please Enter Your E-mail address</string>
     <string name="mobile_here">Please Enter Your Phone Number</string>
     <string name="enter_email">Enter your username / email id</string>
     <string name="send_otp">Send OTP</string>
     <string name="cancel">Cancel</string>
+    <string name="new_user">New User?</string>
     <string name="forgot_password">Forgot password?</string>
     <string name="verification_code">Verification Code</string>
     <string name="proceed">Proceed</string>
@@ -224,7 +225,8 @@
     <string name="dont_have_account">Don\'t have an account?</string>
     <string name="signup">Sign up</string>
     <string name="delivery_few_minutes">Delivery within few minutes</string>
-    <string name="new_order">New Order</string>
+    <string name="your_local_delivery_partner">Your Local Delivery Partner</string>
+    <string name="new_order">Create Order</string>
     <string name="vehicle_type">Vehicle Type</string>
     <string name="delivery_option">Delivery Option</string>
     <string name="pickup_location">Pickup Location</string>
@@ -314,6 +316,10 @@
     <string name="cancel_charges">Cancel Charges</string>
     <string name="use_loyalty_points">Use Loyalty Points</string>
 
+    <string name="booking_id">Booking ID</string>
+    <string name="created">Created</string>
+    <string name="content">Content</string>
+    <string name="rider_receipts">Rider Receipts</string>
     <string name="folder">Folder</string>
     <string name="gallery_select_title_msg">Tap to select</string>
     <string-array name="Languages">

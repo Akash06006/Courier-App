@@ -31,8 +31,8 @@ import com.google.firebase.auth.GoogleAuthProvider
 import com.google.gson.JsonObject
 import org.json.JSONObject
 import com.android.courier.R
+import com.android.courier.common.FirebaseFunctions
 import java.util.*
-import java.util.logging.Logger
 
 class LoginActivity : BaseActivity() {
     private lateinit var activityLoginbinding : ActivityLoginBinding
@@ -43,6 +43,7 @@ class LoginActivity : BaseActivity() {
     lateinit var mGoogleSignInClient : GoogleSignInClient
     lateinit var mGoogleSignInOptions : GoogleSignInOptions
     private lateinit var firebaseAuth : FirebaseAuth
+    val mOtpJsonObject = JsonObject()
     override fun getLayoutId() : Int {
         return R.layout.activity_login
     }
@@ -68,11 +69,6 @@ class LoginActivity : BaseActivity() {
                     val message = loginResponse.message
 
                     if (loginResponse.code == 200) {
-                        SharedPrefClass().putObject(
-                            MyApplication.instance,
-                            "isLogin",
-                            true
-                        )
                         SharedPrefClass().putObject(
                             MyApplication.instance,
                             GlobalConstants.ACCESS_TOKEN,
@@ -129,12 +125,13 @@ class LoginActivity : BaseActivity() {
                             GlobalConstants.REFERRAL_CODE,
                             loginResponse.data!!.referralCode
                         )
-
-                        showToastSuccess(message)
-                        val intent = Intent(this, LandingActivty::class.java)
+                        GlobalConstants.VERIFICATION_TYPE = "login"
+                        FirebaseFunctions.sendOTP("login", mOtpJsonObject, this)
+                        //showToastSuccess(message)
+                        //val intent = Intent(this, LandingActivty::class.java)
                         //intent.putExtra("catId", ""/*categoriesList[position].id*/)
-                        startActivity(intent)
-                        finish()
+                        //startActivity(intent)
+                        // finish()
 
                     } else {
                         showToastError(message)
@@ -186,33 +183,45 @@ class LoginActivity : BaseActivity() {
 
                     }
                     "btnLogin" -> {
-                        val email = activityLoginbinding.edtEmail.text.toString()
-                        val password = activityLoginbinding.edtPassword.text.toString()
-
+                        val phoneNumber = activityLoginbinding.edtEmail.text.toString()
+                        //val password = activityLoginbinding.edtPassword.text.toString()
                         when {
-                            email.isEmpty() -> showError(
+                            phoneNumber.isEmpty() -> showError(
                                 activityLoginbinding.edtEmail,
                                 getString(R.string.empty) + " " + getString(
+                                    R.string.mob_no
+                                )
+                            )
+                            phoneNumber.length < 10 -> showError(
+                                activityLoginbinding.edtEmail,
+                                getString(R.string.invalid) + " " + getString(
+                                    R.string.mob_no
+                                )
+                            )
+                            /*!phoneNumber.matches((ValidationsClass.EMAIL_PATTERN).toRegex())
+                        ->
+                            showError(
+                                activityLoginbinding.edtEmail,
+                                getString(R.string.invalid) + " " + getString(
                                     R.string.email
                                 )
-                            )
-                            !email.matches((ValidationsClass.EMAIL_PATTERN).toRegex()) ->
-                                showError(
-                                    activityLoginbinding.edtEmail,
-                                    getString(R.string.invalid) + " " + getString(
-                                        R.string.email
-                                    )
-                                )
-                            password.isEmpty() -> showError(
-                                activityLoginbinding.edtPassword,
-                                getString(R.string.empty) + " " + getString(
-                                    R.string.password
-                                )
-                            )
+                            )*/
+                            /*  password.isEmpty() -> showError(
+                                  activityLoginbinding.edtPassword,
+                                  getString(R.string.empty) + " " + getString(
+                                      R.string.password
+                                  )
+                              )*/
                             else -> {
+                                mOtpJsonObject.addProperty(
+                                    "countryCode",
+                                    "+" + 91
+                                )
+                                mOtpJsonObject.addProperty("phoneNumber", phoneNumber)
                                 val mJsonObject = JsonObject()
-                                mJsonObject.addProperty("email", email)
-                                mJsonObject.addProperty("password", password)
+                                mJsonObject.addProperty("phoneNumber", phoneNumber)
+                                mJsonObject.addProperty("countryCode", "+91")
+                                //mJsonObject.addProperty("password", password)
                                 mJsonObject.addProperty("isSocial", false)
                                 mJsonObject.addProperty("socialId", "")
                                 mJsonObject.addProperty("deviceToken", "deivce_token")

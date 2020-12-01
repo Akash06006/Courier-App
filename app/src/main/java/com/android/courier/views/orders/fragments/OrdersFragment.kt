@@ -109,11 +109,13 @@ OrdersFragment : BaseFragment() {
                                 //fragmentOrdersBinding.edtSearch.visibility = View.VISIBLE
                                 fragmentOrdersBinding.txtNoRecord.visibility = View.GONE
                                 fragmentOrdersBinding.llOrderList.visibility = View.VISIBLE
-                                if (isActive.equals("false")) {
+                                /*if (isActive.equals("false")) {
                                     fragmentOrdersBinding.txtActiveOrders.setText("Total Orders: " + orderList.size)
                                 } else {
                                     fragmentOrdersBinding.txtActiveOrders.setText("Active Orders: " + orderList.size)
-                                }
+                                }*/
+
+                                fragmentOrdersBinding.txtActiveOrders.visibility = View.GONE
 
                                 initOrdersAdapter()
                             } else {

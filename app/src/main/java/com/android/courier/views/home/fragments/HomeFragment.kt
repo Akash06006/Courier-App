@@ -2,18 +2,29 @@ package com.android.courier.views.home.fragments
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.location.Location
 import android.location.LocationManager
 import android.os.Looper
-import android.widget.Toast
 import android.provider.Settings
+import android.text.Html
+import android.view.LayoutInflater
 import android.view.View
+import android.view.Window
+import android.view.animation.AnimationUtils
+import android.widget.*
 import androidx.core.app.ActivityCompat
+import androidx.databinding.DataBindingUtil
+import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.android.courier.databinding.FragmentHomeBinding
 import com.android.courier.constants.GlobalConstants
@@ -25,6 +36,8 @@ import com.android.courier.views.home.LandingActivty
 import com.android.courier.views.orders.CreateOrderActivty
 import com.google.android.gms.location.*
 import com.android.courier.R
+import com.android.courier.adapters.orders.DiscountListAdapter
+import com.android.courier.model.order.ListsResponse
 import kotlinx.android.synthetic.main.activity_profile.view.*
 
 class
@@ -35,6 +48,7 @@ HomeFragment : BaseFragment() {
     lateinit var mFusedLocationClient : FusedLocationProviderClient
     var currentLat = ""
     var currentLong = ""
+    var bannersList = ArrayList<ListsResponse.BannersData>()
     private lateinit var fragmentHomeBinding : FragmentHomeBinding
     //var categoriesList = null
     override fun getLayoutResId() : Int {
@@ -56,7 +70,10 @@ HomeFragment : BaseFragment() {
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(activity!!)
         // initRecyclerView()
         val name = SharedPrefClass().getPrefValue(activity!!, GlobalConstants.USERNAME).toString()
-        fragmentHomeBinding.txtWelcome.setText("Welcome, " + name)
+        fragmentHomeBinding.imgToolbarText.setText("Welcome, " + name)
+
+
+        initDiscountsAdapter()
 
 
         fragmentHomeBinding.toolbar.setImageResource(R.drawable.ic_side_menu)
@@ -168,6 +185,74 @@ HomeFragment : BaseFragment() {
             }, 2000)*/
 
         }
+    }
+
+    private fun initDiscountsAdapter() {
+        /*val adapter = CategoriesGridListAdapter(this@HomeFragment, categoriesList, activity!!)
+        fragmentHomeBinding.gridview.adapter = adapter*/
+        val discountAdapter =
+            DiscountListAdapter(
+                this,
+                bannersList
+            )
+        val linearLayoutManager = LinearLayoutManager(activity)
+        linearLayoutManager.orientation = RecyclerView.HORIZONTAL
+        //val gridLayoutManager = GridLayoutManager(this, 4)
+        fragmentHomeBinding.rvDiscounts.layoutManager = linearLayoutManager
+        fragmentHomeBinding.rvDiscounts.setHasFixedSize(true)
+        fragmentHomeBinding.rvDiscounts.adapter = discountAdapter
+        fragmentHomeBinding.rvDiscounts.addOnScrollListener(object :
+            RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView : RecyclerView, dx : Int, dy : Int) {
+
+            }
+        })
+
+    }
+
+    public fun showOfferInformation(pos : Int) {
+        var confirmationDialog = Dialog(activity, R.style.dialogAnimation_animation)
+        confirmationDialog?.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        val binding =
+            DataBindingUtil.inflate<ViewDataBinding>(
+                LayoutInflater.from(activity),
+                R.layout.layout_offer_dialog,
+                null,
+                false
+            )
+
+        confirmationDialog?.setContentView(binding.root)
+        confirmationDialog?.setCancelable(false)
+
+        confirmationDialog?.window!!.setLayout(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.MATCH_PARENT
+        )
+        confirmationDialog?.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        val btnSubmit = confirmationDialog?.findViewById<Button>(R.id.btnSubmit)
+        val imgOffer = confirmationDialog?.findViewById<ImageView>(R.id.imgOffer)
+        val txtCouponName = confirmationDialog?.findViewById<TextView>(R.id.txtCouponName)
+        val txtCouponCode = confirmationDialog?.findViewById<TextView>(R.id.txtCouponCode)
+        val txtCouponDiscount = confirmationDialog?.findViewById<TextView>(R.id.txtCouponDiscount)
+        val txtCouponDesc = confirmationDialog?.findViewById<TextView>(R.id.txtCouponDesc)
+        val layoutBottomSheet =
+            confirmationDialog?.findViewById<RelativeLayout>(R.id.layoutBottomSheet)
+        val animation = AnimationUtils.loadAnimation(activity!!, R.anim.anim)
+        animation.setDuration(500)
+        layoutBottomSheet?.setAnimation(animation)
+        layoutBottomSheet?.animate()
+        animation.start()
+        /*txtCouponName.setText("Offer Name: " + bannersList[pos].name)
+        txtCouponCode.setText(bannersList[pos].code)
+        txtCouponDesc.setText(Html.fromHtml(bannersList[pos].description).toString())
+        txtCouponDiscount.setText(bannersList[pos].discount + "% OFF")
+
+        Glide.with(this).load(bannersList[pos].icon).into(imgOffer)*/
+        btnSubmit?.setOnClickListener {
+            confirmationDialog?.dismiss()
+        }
+
+        confirmationDialog?.show()
     }
 
 }

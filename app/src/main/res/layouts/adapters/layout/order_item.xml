@@ -22,6 +22,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_margin="@dimen/dp_5"
+
                 android:paddingLeft="@dimen/dp_10"
                 android:paddingRight="@dimen/dp_10"
                 app:cardCornerRadius="15dp"
@@ -30,23 +31,38 @@
             <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:padding="5dp">
 
                 <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@color/colorPrimary">
+                        android:layout_height="wrap_content">
+
+                    <TextView
+                            android:id="@+id/txtBookingId"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginRight="5dp"
+                            android:gravity="left"
+                            android:text="@string/booking_id"
+
+                            android:textSize="10sp"
+                            app:font="@{`regular`}" />
 
                     <TextView
                             android:id="@+id/txtOrderNo"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_below="@+id/txtBookingId"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginTop="2dp"
                             android:layout_marginRight="5dp"
                             android:layout_toLeftOf="@+id/txtOrderStatus"
                             android:gravity="left"
-                            android:padding="10dp"
                             android:text="Order No #120"
-                            android:textColor="@color/colorWhite"
+                            android:textColor="@color/colorPrimary"
                             android:textStyle="bold"
                             app:font="@{`bold`}" />
 
@@ -66,158 +82,239 @@
                             android:textColor="@color/colorSuccess"
                             android:textSize="12sp"
                             android:textStyle="bold"
+                            android:visibility="gone"
                             app:font="@{`bold`}" />
+
+                    <TextView
+                            android:id="@+id/txtPrice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:background="@drawable/shape_button_back"
+                            android:drawableLeft="@drawable/ic_money"
+                            android:drawablePadding="5dp"
+                            android:minWidth="80dp"
+                            android:paddingLeft="20dp"
+                            android:paddingTop="10dp"
+                            android:paddingRight="20dp"
+                            android:paddingBottom="10dp"
+                            android:text="300"
+                            android:textColor="@color/colorWhite" />
 
                 </RelativeLayout>
 
-                <LinearLayout
-                        android:id="@+id/llActiveOrder"
+                <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="10dp"
+                        android:alpha="0.5"
+                        android:background="@color/colorGrey1" />
+
+                <TextView
+                        android:id="@+id/txtDriverStatus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/dp_5"
+                        android:layout_marginTop="@dimen/dp_5"
+                        android:layout_marginBottom="@dimen/dp_5"
+                        android:text="Searching for a rider"
+                        android:textAllCaps="false"
+                        android:textColor="@color/colorMustad"
+                        android:textStyle="bold"
+                        app:font="@{`bold`}" />
+
+                <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
+                        android:layout_marginLeft="5dp"
+                        android:orientation="horizontal"
                         android:visibility="visible">
 
-                    <TextView
-                            android:id="@+id/txtAddressType"
+                    <ImageView
+                            android:id="@+id/imgLine"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/dp_5"
-                            android:layout_marginTop="@dimen/dp_5"
-                            android:singleLine="true"
-                            android:text="Pickup Address"
-                            android:textAllCaps="false"
-                            android:textSize="@dimen/sp_10"
-                            app:font="@{`regular`}" />
-
-                    <TextView
-                            android:id="@+id/txtPickAddress"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/dp_5"
-                            android:layout_marginTop="@dimen/dp_5"
-                            android:layout_marginBottom="@dimen/dp_5"
-                            android:text="Type 1"
-                            android:textAllCaps="false"
-                            android:textColor="@color/colorBlack"
-                            app:font="@{`regular`}" />
-
-                    <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
+                            android:layout_alignTop="@+id/llActiveOrder"
+                            android:layout_alignBottom="@+id/llActiveOrder"
                             android:layout_margin="5dp"
-                            android:background="@color/colorGrey1" />
-
-                    <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/dp_5"
-                            android:layout_marginTop="@dimen/dp_5"
-                            android:singleLine="true"
-                            android:text="Delivery Address"
-                            android:textAllCaps="false"
-                            android:textSize="@dimen/sp_10"
-                            app:font="@{`regular`}" />
-
-                    <TextView
-                            android:id="@+id/txtDeliveryAddress"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/dp_5"
-                            android:layout_marginTop="@dimen/dp_5"
-                            android:layout_marginBottom="@dimen/dp_5"
-                            android:text="Type 1"
-                            android:textAllCaps="false"
-                            android:textColor="@color/colorBlack"
-                            app:font="@{`regular`}" />
+                            android:src="@drawable/ic_pin_dots" />
 
                     <LinearLayout
+                            android:id="@+id/llActiveOrder"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:visibility="gone"
-                            android:weightSum="2">
+                            android:layout_marginLeft="5dp"
+                            android:layout_toRightOf="@+id/imgLine"
+                            android:orientation="vertical"
+                            android:visibility="visible">
 
                         <TextView
-                                android:id="@+id/txtKm"
-                                android:layout_width="0dp"
+                                android:id="@+id/txtAddressType"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:drawableLeft="@drawable/ic_km"
-                                android:drawablePadding="10dp"
-                                android:padding="10dp"
-                                android:text="2 Km Away"
-                                android:textColor="@color/colorBlack"
-                                android:textSize="14sp"
+                                android:layout_marginLeft="@dimen/dp_5"
+                                android:layout_marginTop="@dimen/dp_5"
+                                android:singleLine="true"
+                                android:text="Pickup Address"
+                                android:textAllCaps="false"
+                                android:textSize="@dimen/sp_10"
                                 app:font="@{`regular`}" />
 
                         <TextView
-                                android:id="@+id/txtTime"
-                                android:layout_width="0dp"
+                                android:id="@+id/txtPickAddress"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:drawableLeft="@drawable/ic_clock_blue"
-                                android:drawablePadding="10dp"
-                                android:padding="10dp"
-                                android:text="In 10 Minutes"
+                                android:layout_marginLeft="@dimen/dp_5"
+                                android:layout_marginTop="@dimen/dp_5"
+                                android:layout_marginBottom="@dimen/dp_5"
+                                android:text="Type 1"
+                                android:textAllCaps="false"
                                 android:textColor="@color/colorBlack"
                                 app:font="@{`regular`}" />
 
-                    </LinearLayout>
+                        <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_margin="5dp"
+                                android:alpha="0.5"
+                                android:background="@color/colorGrey1" />
 
-                    <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:layout_margin="5dp"
-                            android:background="@color/colorGrey1" />
-
-                    <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:weightSum="2">
-
-                        <LinearLayout
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:orientation="horizontal">
+                        <RelativeLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content">
 
                             <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
+                                    android:layout_marginLeft="@dimen/dp_5"
+                                    android:layout_marginTop="@dimen/dp_5"
+                                    android:singleLine="true"
+                                    android:text="Delivery Address"
+                                    android:textAllCaps="false"
+                                    android:textSize="@dimen/sp_10"
+                                    app:font="@{`regular`}" />
+
+                            <TextView
+                                    android:id="@+id/txtAddressInBetween"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentRight="true"
+                                    android:layout_marginLeft="@dimen/dp_5"
+                                    android:layout_marginTop="@dimen/dp_5"
+                                    android:layout_marginRight="@dimen/dp_5"
+                                    android:drawableLeft="@drawable/ic_plus_icon"
+                                    android:drawablePadding="4dp"
+                                    android:singleLine="true"
+                                    android:text="2 in between"
+                                    android:textAllCaps="false"
+                                    android:textColor="@color/colorMustad"
+                                    android:textSize="8sp"
+                                    app:font="@{`regular`}" />
+                        </RelativeLayout>
+
+                        <TextView
+                                android:id="@+id/txtDeliveryAddress"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="@dimen/dp_5"
+                                android:layout_marginTop="@dimen/dp_5"
+                                android:layout_marginBottom="@dimen/dp_5"
+                                android:text="Type 1"
+                                android:textAllCaps="false"
+                                android:textColor="@color/colorBlack"
+                                app:font="@{`regular`}" />
+
+                        <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:visibility="gone"
+                                android:weightSum="2">
+
+                            <TextView
+                                    android:id="@+id/txtKm"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:drawableLeft="@drawable/ic_km"
+                                    android:drawablePadding="10dp"
                                     android:padding="10dp"
-                                    android:text="Status :"
+                                    android:text="2 Km Away"
                                     android:textColor="@color/colorBlack"
                                     android:textSize="14sp"
                                     app:font="@{`regular`}" />
 
                             <TextView
-                                    android:id="@+id/txtStatus"
+                                    android:id="@+id/txtTime"
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
                                     android:layout_weight="1"
-                                    android:paddingTop="10dp"
-                                    android:paddingBottom="10dp"
-                                    android:text=""
-                                    android:textColor="@color/colorSuccess"
-                                    android:textSize="14sp"
+                                    android:drawableLeft="@drawable/ic_clock_blue"
+                                    android:drawablePadding="10dp"
+                                    android:padding="10dp"
+                                    android:text="In 10 Minutes"
+                                    android:textColor="@color/colorBlack"
                                     app:font="@{`regular`}" />
+
                         </LinearLayout>
 
-                        <TextView
-                                android:id="@+id/txtCreatedTime"
-                                android:layout_width="0dp"
+                        <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_margin="5dp"
+                                android:background="@color/colorGrey1"
+                                android:visibility="gone" />
+
+                        <LinearLayout
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:gravity="right"
-                                android:padding="10dp"
-                                android:text="Created 2 min. ago"
-                                android:textSize="10sp"
-                                app:font="@{`regular`}" />
+                                android:orientation="horizontal"
+                                android:visibility="gone"
+                                android:weightSum="2">
+
+                            <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:orientation="horizontal">
+
+                                <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:padding="10dp"
+                                        android:text="Status :"
+                                        android:textColor="@color/colorBlack"
+                                        android:textSize="14sp"
+                                        app:font="@{`regular`}" />
+
+                                <TextView
+                                        android:id="@+id/txtStatus"
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="1"
+                                        android:paddingTop="10dp"
+                                        android:paddingBottom="10dp"
+                                        android:text=""
+                                        android:textColor="@color/colorSuccess"
+                                        android:textSize="14sp"
+                                        app:font="@{`regular`}" />
+                            </LinearLayout>
+
+                            <TextView
+                                    android:id="@+id/txtCreatedTime"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:gravity="right"
+                                    android:padding="10dp"
+                                    android:text="Created 2 min. ago"
+                                    android:textSize="10sp"
+                                    app:font="@{`regular`}" />
+
+                        </LinearLayout>
 
                     </LinearLayout>
-
-                </LinearLayout>
+                </RelativeLayout>
 
                 <LinearLayout
                         android:id="@+id/llOrderCompleted"
@@ -259,14 +356,16 @@
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:layout_margin="5dp"
-                        android:background="@color/colorGrey1" />
+                        android:background="@color/colorGrey1"
+                        android:visibility="gone" />
 
                 <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="10dp"
                         android:gravity="center"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:visibility="gone">
 
                     <TextView
                             android:id="@+id/txtTrack"

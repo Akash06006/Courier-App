@@ -28,7 +28,11 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.android.courier.R
+import com.android.courier.adapters.orders.OrderAddressListAdapter
+import com.android.courier.adapters.orders.PaymentOptionsListAdapter
 import com.bumptech.glide.Glide
 import com.android.courier.common.UtilsFunctions
 import com.android.courier.constants.GlobalConstants
@@ -95,6 +99,7 @@ class OrderDetailActivity : BaseActivity(), OnMapReadyCallback, LocationListener
     internal lateinit var mLocationRequest : LocationRequest
     var reasons = java.util.ArrayList<String>()
     var cancelledCharges = "0"
+    var phoneNumber = ""
     override fun getLayoutId() : Int {
         return R.layout.activity_order_detail
     }
@@ -207,6 +212,11 @@ class OrderDetailActivity : BaseActivity(), OnMapReadyCallback, LocationListener
                                 response.data?.pickupAddress?.long!!.toDouble()
                             )
 
+                            activityCreateOrderBinding.txtBookingId.text =
+                                "Booking ID " + response.data?.orderNo!!
+                            activityCreateOrderBinding.txtfare.text =
+                                "₹ " + response.data?.totalOrderPrice!!
+
                             mGoogleMap!!.moveCamera(CameraUpdateFactory.newLatLng(source))
                             mGoogleMap!!.animateCamera(CameraUpdateFactory.zoomTo(16f))
                             var isSourceAdded = false
@@ -226,6 +236,60 @@ class OrderDetailActivity : BaseActivity(), OnMapReadyCallback, LocationListener
                                     oldLatLong = destination
                                 }
                             }
+                            if (response.data?.assignedEmployees != null) {
+                                activityCreateOrderBinding.rlDriverDetail.visibility = View.VISIBLE
+                                activityCreateOrderBinding.rlPayment.visibility = View.VISIBLE
+                                Glide.with(this).load(response.data?.assignedEmployees?.image)
+                                    .placeholder(R.drawable.ic_user)
+                                    .into(activityCreateOrderBinding.imgDriver)
+                                phoneNumber = response.data?.assignedEmployees?.phoneNumber!!
+                                activityCreateOrderBinding.txtDelBoyName.text =
+                                    response.data?.assignedEmployees?.firstName + " " + response.data?.assignedEmployees?.lastName
+                            } else {
+                                activityCreateOrderBinding.rlDriverDetail.visibility = View.GONE
+                                activityCreateOrderBinding.rlPayment.visibility = View.GONE
+
+                            }
+                            val addressAdapter =
+                                OrderAddressListAdapter(
+                                    this,
+                                    response.data?.deliveryAddress, response.data?.pickupAddress
+                                )
+                            val linearLayoutManager = LinearLayoutManager(this)
+                            linearLayoutManager.orientation = RecyclerView.VERTICAL
+                            activityCreateOrderBinding.rvAddress.layoutManager = linearLayoutManager
+                            activityCreateOrderBinding.rvAddress.setHasFixedSize(true)
+                            activityCreateOrderBinding.rvAddress.adapter = addressAdapter
+                            activityCreateOrderBinding.rvAddress.addOnScrollListener(object :
+                                RecyclerView.OnScrollListener() {
+                                override fun onScrolled(
+                                    recyclerView : RecyclerView,
+                                    dx : Int,
+                                    dy : Int
+                                ) {
+                                }
+                            })
+                            val paymentAdapter =
+                                PaymentOptionsListAdapter(
+                                    this,
+                                    response.data?.assignedEmployees?.payVia
+                                )
+                            val linearLayoutManager1 = LinearLayoutManager(this)
+                            linearLayoutManager1.orientation = RecyclerView.HORIZONTAL
+                            activityCreateOrderBinding.rvPaymentOptions.layoutManager =
+                                linearLayoutManager1
+                            activityCreateOrderBinding.rvPaymentOptions.setHasFixedSize(true)
+                            activityCreateOrderBinding.rvPaymentOptions.adapter = paymentAdapter
+                            activityCreateOrderBinding.rvPaymentOptions.addOnScrollListener(object :
+                                RecyclerView.OnScrollListener() {
+                                override fun onScrolled(
+                                    recyclerView : RecyclerView,
+                                    dx : Int,
+                                    dy : Int
+                                ){
+                                    
+                                }
+                            })
                             //drawPolyline()
                         }
                         else -> message?.let { UtilsFunctions.showToastError(it) }
@@ -239,6 +303,11 @@ class OrderDetailActivity : BaseActivity(), OnMapReadyCallback, LocationListener
             this, Observer<String>(function =
             fun(it : String?) {
                 when (it) {
+                    "imgCall" -> {
+                        val dialIntent = Intent(Intent.ACTION_DIAL)
+                        dialIntent.data = Uri.parse("tel:" + phoneNumber)
+                        startActivity(dialIntent)
+                    }
                     "imgChat" -> {
                         val intent = Intent(this, DriverChatActivity::class.java)
                         intent.putExtra("orderId", orderId)

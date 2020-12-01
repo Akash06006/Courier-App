@@ -1155,24 +1155,27 @@ class CreateOrderActivty : BaseActivity(), DialogssInterface {
     private fun initDiscountsAdapter() {
         /*val adapter = CategoriesGridListAdapter(this@HomeFragment, categoriesList, activity!!)
         fragmentHomeBinding.gridview.adapter = adapter*/
-        val discountAdapter =
-            DiscountListAdapter(
-                this,
-                bannersList,
-                this
-            )
-        val linearLayoutManager = LinearLayoutManager(this)
-        linearLayoutManager.orientation = RecyclerView.HORIZONTAL
-        //val gridLayoutManager = GridLayoutManager(this, 4)
-        activityCreateOrderBinding.rvDiscounts.layoutManager = linearLayoutManager
-        activityCreateOrderBinding.rvDiscounts.setHasFixedSize(true)
-        activityCreateOrderBinding.rvDiscounts.adapter = discountAdapter
-        activityCreateOrderBinding.rvDiscounts.addOnScrollListener(object :
-            RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView : RecyclerView, dx : Int, dy : Int) {
 
-            }
-        })
+
+
+        /* val discountAdapter =
+             DiscountListAdapter(
+                 this,
+                 bannersList,
+                 this
+             )
+         val linearLayoutManager = LinearLayoutManager(this)
+         linearLayoutManager.orientation = RecyclerView.HORIZONTAL
+         //val gridLayoutManager = GridLayoutManager(this, 4)
+         activityCreateOrderBinding.rvDiscounts.layoutManager = linearLayoutManager
+         activityCreateOrderBinding.rvDiscounts.setHasFixedSize(true)
+         activityCreateOrderBinding.rvDiscounts.adapter = discountAdapter
+         activityCreateOrderBinding.rvDiscounts.addOnScrollListener(object :
+             RecyclerView.OnScrollListener() {
+             override fun onScrolled(recyclerView : RecyclerView, dx : Int, dy : Int) {
+
+             }
+         })*/
 
     }
 

@@ -38,8 +38,31 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
+            <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
+                    android:layout_toLeftOf="@+id/imgDelMap">
+
+                <EditText
+                        android:id="@+id/edtDelAddress"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
+                        android:clickable="true"
+                        android:editable="false"
+                        android:focusable="false"
+                        android:focusableInTouchMode="false"
+                        android:hint="@string/delivery_location"
+                        android:paddingRight="10dp"
+                        android:paddingBottom="15dp"
+                        android:textColorHint="@color/colorGrey1"
+                        android:textSize="14sp"
+                        app:font="@{`semibold`}" />
+            </com.google.android.material.textfield.TextInputLayout>
+
             <EditText
-                    android:id="@+id/edtDelAddress"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
@@ -54,6 +77,7 @@
                     android:paddingRight="10dp"
                     android:paddingBottom="15dp"
                     android:textSize="14sp"
+                    android:visibility="gone"
                     app:font="@{`regular`}" />
 
             <ImageView
@@ -70,19 +94,42 @@
                 android:layout_height="wrap_content">
 
             <EditText
-                    android:id="@+id/edtDelMob"
+                    android:id="@+id/edtDelMob1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
+                    android:layout_marginRight="10dp"
                     android:layout_toLeftOf="@+id/imgDelContact"
                     android:hint="@string/mob_no"
-                    android:layout_marginRight="10dp"
                     android:imeOptions="actionDone"
                     android:inputType="number"
                     android:paddingBottom="15dp"
                     android:singleLine="true"
                     android:textSize="14sp"
+                    android:visibility="gone"
                     app:font="@{`regular`}" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
+                    android:layout_toLeftOf="@+id/imgDelContact">
+
+                <EditText
+                        android:id="@+id/edtDelMob"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
+                        android:hint="@string/mob_no"
+                        android:imeOptions="actionDone"
+                        android:inputType="number"
+                        android:paddingRight="10dp"
+                        android:paddingBottom="15dp"
+                        android:textColorHint="@color/colorGrey1"
+                        android:textSize="14sp"
+                        app:font="@{`semibold`}" />
+            </com.google.android.material.textfield.TextInputLayout>
 
             <ImageView
                     android:id="@+id/imgDelContact"
@@ -95,7 +142,8 @@
 
         <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:visibility="gone">
 
             <EditText
                     android:id="@+id/edtDelDateTime"

@@ -14,14 +14,14 @@ import com.android.courier.R
 import com.android.courier.databinding.DeliveryTypeItemBinding
 import com.android.courier.model.order.ListsResponse
 import com.android.courier.views.orders.CreateOrderActivty
+import com.android.courier.views.orders.fragments.CreateOrderFirstFragment
 
 class DeliveryTypesAdapter(
-    context : CreateOrderActivty,
-    addressList : ArrayList<ListsResponse.DeliveryOptionData>,
-    var activity : Context
+    context : CreateOrderFirstFragment,
+    addressList : ArrayList<ListsResponse.DeliveryOptionData>
 ) :
     RecyclerView.Adapter<DeliveryTypesAdapter.ViewHolder>() {
-    private val mContext : CreateOrderActivty
+    private val mContext : CreateOrderFirstFragment
     private var viewHolder : ViewHolder? = null
     private var bannersList : ArrayList<ListsResponse.DeliveryOptionData>?
 
@@ -43,20 +43,28 @@ class DeliveryTypesAdapter(
 
     override fun onBindViewHolder(@NonNull holder : ViewHolder, position : Int) {
         viewHolder = holder
-        val dis = (position + 1) * 10
-        holder.binding!!.txtDeliveryType.text = bannersList!![position].title
+        holder.binding!!.txtDelType.text = bannersList!![position].title
 
         if (!TextUtils.isEmpty(bannersList!![position].selected) && bannersList!![position].selected.equals(
                 "true"
             )
         ) {
-            holder.binding.txtDeliveryType.setTextColor(mContext.resources.getColor(R.color.colorPrimary))
+            holder.binding.txtDelType.setTextColor(mContext.resources.getColor(R.color.colorPrimary))
+
+            holder.binding!!.txtDelType.setBackground(mContext.resources.getDrawable(R.drawable.ic_del_type_selected))
+            /*  holder.binding!!.toLayout.setBackgroundTintList(
+                  mContext.getResources().getColorStateList(R.color.colorPrimary)
+              )*/
+            // holder.binding.txtName.setTextColor(mContext.resources.getColor(R.color.colorPrimary))
         } else {
-            holder.binding.txtDeliveryType.setTextColor(mContext.resources.getColor(R.color.colorBlack))
+//            holder.binding.txtDeliveryType.setTextColor(mContext.resources.getColor(R.color.colorBlack))
+            holder.binding.txtDelType.setTextColor(mContext.resources.getColor(R.color.colorBlack))
+
+            holder.binding!!.txtDelType.setBackground(mContext.resources.getDrawable(R.drawable.ic_del_type_unselected))
         }
 
 
-        holder.binding!!.txtDeliveryType.setOnClickListener {
+        holder.binding!!.txtDelType.setOnClickListener {
             if (bannersList!![position].selected.equals("true")) {
                 mContext.selectedDeliveryType(position, "false")
             } else {
@@ -73,7 +81,7 @@ class DeliveryTypesAdapter(
         (
         v : View, val viewType : Int, //These are the general elements in the RecyclerView
         val binding : DeliveryTypeItemBinding?,
-        mContext : CreateOrderActivty,
+        mContext : CreateOrderFirstFragment,
         addressList : ArrayList<ListsResponse.DeliveryOptionData>?
     ) : RecyclerView.ViewHolder(v) {
         /*init {

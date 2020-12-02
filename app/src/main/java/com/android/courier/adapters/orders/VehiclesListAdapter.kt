@@ -74,9 +74,9 @@ class VehiclesListAdapter(
         }
         holder.binding!!.toLayout.setOnClickListener {
             if (vehicleList!![position].selected.equals("true")) {
-                mContext.selectedVehicle(position, "false")
+               // mContext.selectedVehicle(position, "false")
             } else {
-                mContext.selectedVehicle(position, "true")
+               // mContext.selectedVehicle(position, "true")
             }
         }
     }

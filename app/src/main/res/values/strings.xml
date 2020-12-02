@@ -233,7 +233,7 @@
     <string name="pickup_address">Pickup Address</string>
     <string name="delivery_address">Delivery Address</string>
     <string name="mob_no">Mobile No</string>
-    <string name="delivery_location">Delivery Location</string>
+    <string name="delivery_location">Drop Location</string>
     <string name="add_address">Add Address</string>
     <string name="item_name">Item Name</string>
     <string name="weight">Weight</string>
@@ -321,6 +321,8 @@
     <string name="content">Content</string>
     <string name="rider_receipts">Rider Receipts</string>
     <string name="folder">Folder</string>
+    <string name="discard">Discard</string>
+
     <string name="gallery_select_title_msg">Tap to select</string>
     <string-array name="Languages">
         <item>Java</item>

@@ -16,6 +16,11 @@
         <item name="android:backgroundDimEnabled">true</item>
     </style>
 
+    <style name="TextInputLayoutAppearance" parent="Widget.Design.TextInputLayout">
+        <!-- reference our hint & error styles -->
+        <item name="android:textColorHint">@color/colorGrey1</item>
+    </style>
+
     <style name="dialogAnimation_animation">
         <item name="android:windowEnterAnimation">@anim/slide_in</item>
         <item name="android:windowExitAnimation">@anim/slide_out</item>

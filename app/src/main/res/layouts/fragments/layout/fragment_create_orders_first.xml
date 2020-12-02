@@ -1,0 +1,381 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="com.android.courier.common.BindingUtils" />
+
+        <variable
+                name="orderViewModel"
+                type="com.android.courier.viewmodels.order.OrderViewModel" />
+
+        <variable
+                name="orderDetailModel"
+                type="com.android.courier.model.order.OrdersDetailResponse.Data" />
+
+    </data>
+
+    <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="5dp"
+                android:orientation="vertical"
+                android:paddingBottom="5dp">
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/shape_round_corner"
+                    android:elevation="2dp"
+                    android:orientation="vertical"
+                    android:padding="10dp">
+
+                <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/username_text_input_layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="5dp"
+                            android:layout_toLeftOf="@+id/imgPickupAddress"
+                            android:textColorHint="@color/colorGrey1">
+
+                        <EditText
+                                android:id="@+id/edtPickupLoc"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_centerHorizontal="true"
+                                android:layout_centerVertical="true"
+                                android:clickable="true"
+                                android:editable="false"
+                                android:focusable="false"
+                                android:focusableInTouchMode="false"
+                                android:hint="Pickup Location"
+                                android:onClick="@{(v) -> orderViewModel.clickListener(v)}"
+                                android:paddingRight="10dp"
+                                android:paddingBottom="15dp"
+                                android:text="@{orderDetailModel.pickupAddress.address}"
+                                android:textColorHint="@color/colorGrey1"
+                                android:textSize="14sp"
+                                app:font="@{`semibold`}" />
+                    </com.google.android.material.textfield.TextInputLayout>
+                    <!--
+                                                        android:drawableRight="@drawable/ic_location_color"
+                                                        android:drawablePadding="10dp"-->
+
+                    <ImageView
+                            android:id="@+id/imgPickupAddress"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:onClick="@{(v) -> orderViewModel.clickListener(v)}"
+                            android:src="@drawable/ic_map_select" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="5dp"
+                            android:layout_toLeftOf="@+id/imgPickContact"
+                            android:hint="@string/mob_no"
+                            android:textColorHint="@color/colorGrey1"
+                            android:theme="@style/TextInputLayoutAppearance">
+
+                        <EditText
+                                android:id="@+id/edtPickMob"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_centerHorizontal="true"
+                                android:layout_centerVertical="true"
+
+                                android:imeOptions="actionDone"
+                                android:inputType="number"
+                                android:onClick="@{(v) -> orderViewModel.clickListener(v)}"
+                                android:paddingRight="10dp"
+                                android:paddingBottom="15dp"
+                                android:text="@{orderDetailModel.pickupAddress.address}"
+                                android:textColorHint="@color/colorGrey1"
+                                android:textSize="14sp"
+                                app:font="@{`semibold`}" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <ImageView
+                            android:id="@+id/imgPickContact"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:onClick="@{(v) -> orderViewModel.clickListener(v)}"
+                            android:src="@drawable/ic_contact" />
+                </RelativeLayout>
+
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp">
+
+                    <Spinner
+                            android:id="@+id/txtDate"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/ic_today_back"
+                            android:gravity="center"
+                            android:text="Today"
+                            android:textColor="@color/colorBlack" />
+                    <!--app:font="@{`regular`}"-->
+                    <Spinner
+                            android:id="@+id/txtTime"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:background="@drawable/ic_select_time_back"
+                            android:gravity="center"
+                            android:text="Select Time"
+                            android:textColor="@color/colorPrimary" />
+                    <!--  app:font="@{`regular`}" -->
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/shape_round_corner"
+                    android:elevation="2dp"
+                    android:orientation="vertical"
+                    android:padding="10dp">
+
+                <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="5dp"
+                            android:layout_toLeftOf="@+id/imgDelAddress">
+
+                        <EditText
+                                android:id="@+id/edtDelAddress"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_centerHorizontal="true"
+                                android:layout_centerVertical="true"
+                                android:clickable="true"
+                                android:editable="false"
+                                android:focusable="false"
+                                android:focusableInTouchMode="false"
+                                android:hint="@string/delivery_location"
+                                android:onClick="@{(v) -> orderViewModel.clickListener(v)}"
+                                android:paddingRight="10dp"
+                                android:paddingBottom="15dp"
+                                android:text="@{orderDetailModel.pickupAddress.address}"
+                                android:textColorHint="@color/colorGrey1"
+                                android:textSize="14sp"
+                                app:font="@{`semibold`}" />
+                    </com.google.android.material.textfield.TextInputLayout>
+                    <!--
+                                                        android:drawableRight="@drawable/ic_location_color"
+                                                        android:drawablePadding="10dp"-->
+
+                    <ImageView
+                            android:id="@+id/imgDelAddress"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:onClick="@{(v) -> orderViewModel.clickListener(v)}"
+                            android:src="@drawable/ic_map_select" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="5dp"
+                            android:layout_toLeftOf="@+id/imgDelContact">
+
+                        <EditText
+                                android:id="@+id/edtDelMob"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_centerHorizontal="true"
+                                android:layout_centerVertical="true"
+
+                                android:hint="@string/mob_no"
+                                android:imeOptions="actionDone"
+                                android:inputType="number"
+                                android:onClick="@{(v) -> orderViewModel.clickListener(v)}"
+                                android:paddingRight="10dp"
+                                android:paddingBottom="15dp"
+                                android:text="@{orderDetailModel.pickupAddress.address}"
+                                android:textColorHint="@color/colorGrey1"
+                                android:textSize="14sp"
+                                app:font="@{`semibold`}" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <ImageView
+                            android:id="@+id/imgDelContact"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:onClick="@{(v) -> orderViewModel.clickListener(v)}"
+                            android:src="@drawable/ic_contact" />
+                </RelativeLayout>
+
+                <LinearLayout
+                        android:id="@+id/llAddress"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                </LinearLayout>
+
+                <TextView
+                        android:id="@+id/txtAddAddress"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right"
+                        android:drawableLeft="@drawable/ic_plus"
+                        android:drawablePadding="5dp"
+                        android:gravity="center"
+                        android:onClick="@{(v) -> orderViewModel.clickListener(v)}"
+                        android:padding="5dp"
+                        android:text="Add Stop"
+                        android:textColor="@color/colorPrimary"
+                        app:font="@{`semibold`}" />
+
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvAddress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dp_5"
+                    android:layout_marginTop="@dimen/dp_5"
+                    android:layout_marginRight="@dimen/dp_5"
+                    android:padding="@dimen/dp_5"
+                    android:visibility="visible" />
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginRight="10dp"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:text="Delivery Type"
+                    android:textColor="@color/colorBlack"
+                    android:textStyle="bold"
+                    app:font="@{`semibold`}" />
+
+            <RelativeLayout
+
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp">
+
+                <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvDeliveryTypes"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/dp_5"
+                        android:layout_marginRight="@dimen/dp_5"
+                        android:padding="@dimen/dp_5"
+                        android:visibility="visible" />
+
+                <TextView
+                        android:id="@+id/txtRegular"
+                        android:layout_width="wrap_content"
+                        android:layout_height="45dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="5dp"
+                        android:background="@drawable/ic_del_type_selected"
+                        android:gravity="center"
+                        android:onClick="@{(v) -> orderViewModel.clickListener(v)}"
+                        android:text="Regular"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:visibility="gone"
+                        app:font="@{`semibold`}" />
+
+                <TextView
+                        android:id="@+id/txtExpress"
+                        android:layout_width="wrap_content"
+                        android:layout_height="45dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_toRightOf="@+id/txtRegular"
+                        android:background="@drawable/ic_del_type_unselected"
+                        android:gravity="center"
+                        android:onClick="@{(v) -> orderViewModel.clickListener(v)}"
+                        android:text="Express"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:visibility="gone"
+                        app:font="@{`semibold`}" />
+
+                <ImageView
+                        android:id="@+id/imgDelInfo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_gravity="center"
+                        android:layout_marginRight="10dp"
+                        android:onClick="@{(v) -> orderViewModel.clickListener(v)}"
+                        android:src="@drawable/ic_info" />
+
+            </RelativeLayout>
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginRight="10dp"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:text="Package Weight"
+                    android:textColor="@color/colorBlack"
+                    android:textStyle="bold"
+                    app:font="@{`semibold`}" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvWeight"
+
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dp_5"
+                    android:layout_marginTop="@dimen/dp_5"
+                    android:layout_marginRight="@dimen/dp_5"
+                    android:padding="@dimen/dp_5"
+                    android:visibility="visible" />
+        </LinearLayout>
+    </ScrollView>
+</layout>

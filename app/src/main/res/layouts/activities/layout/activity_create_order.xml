@@ -15,865 +15,1272 @@
 
     </data>
 
-    <LinearLayout
+    <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
 
         <include
-                android:id="@+id/toolbarCommon"
+                android:id="@+id/toolbarCommon1"
                 layout="@layout/common_toolbar_back"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dp_50"
-                android:visibility="visible" />
+                android:visibility="gone" />
 
-        <ScrollView
+        <RelativeLayout
+                android:id="@+id/toolbarCommon"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="120dp"
+                android:background="@drawable/ic_toolbar_back">
 
-            <RelativeLayout
+            <ImageView
+                    android:id="@+id/toolbar"
+                    android:layout_width="@dimen/dp_55"
+                    android:layout_height="@dimen/dp_55"
+                    android:contentDescription="@string/todo"
+                    android:onClick="@{(v) -> orderViewModel.clickListener(v)}"
+                    android:padding="@dimen/dp_15"
+                    android:rotation="-180"
+                    android:src="@drawable/ic_arrow_forward"
+                    android:tint="@color/colorWhite" />
+
+            <TextView
+                    android:id="@+id/img_toolbar_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/toolbar"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginStart="@dimen/dp_15"
+                    android:layout_marginLeft="@dimen/dp_15"
+                    android:layout_marginBottom="@dimen/dp_15"
+                    android:gravity="center"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="@dimen/sp_16"
+                    app:font="@{`semibold`}"
+                    tools:text="@string/home" />
+
+            <TextView
+                    android:id="@+id/txtDiscard"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/toolbar"
+                    android:layout_alignParentRight="true"
+
+                    android:layout_marginEnd="@dimen/dp_15"
+                    android:layout_marginRight="@dimen/dp_15"
+                    android:layout_marginBottom="@dimen/dp_15"
+                    android:alpha="0.5"
+                    android:gravity="center"
+                    android:text="@string/discard"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="@dimen/sp_12"
+                    app:font="@{`semibold`}" />
+
+            <LinearLayout
+                    android:id="@+id/rlStepper"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="60dp"
+                    android:layout_below="@+id/toolbar"
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center_horizontal"
+                    android:orientation="horizontal">
 
-                <!-- <fragment
-                         android:id="@+id/autocomplete_fragment"
-                         android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
-                         android:layout_width="match_parent"
-                         android:layout_height="wrap_content" />-->
+                <ImageView
+                        android:id="@+id/imgOne"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_tick" />
 
-                <LinearLayout
+                <View
+                        android:layout_width="70dp"
+                        android:layout_height="1dp"
+                        android:layout_gravity="center"
+                        android:alpha="0.5"
+                        android:background="@color/colorGrey1" />
+
+                <ImageView
+                        android:id="@+id/imgTwo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_stepper_unselected" />
+
+                <View
+                        android:layout_width="70dp"
+                        android:layout_height="1dp"
+                        android:layout_gravity="center"
+                        android:alpha="0.5"
+                        android:background="@color/colorGrey1" />
+
+                <ImageView
+                        android:id="@+id/imgThree"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_stepper_unselected" />
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@+id/rlBottom"
+                android:layout_below="@+id/toolbarCommon"
+                android:layout_marginBottom="5dp"
+                android:orientation="vertical"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent">
+
+            <FrameLayout
+                    android:id="@+id/frame_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_above="@+id/tabRelative"
+
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintBottom_toTopOf="@+id/tabRelative"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <RelativeLayout
+                android:id="@+id/llPriceDetail"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@+id/rlBottom"
+                android:background="@drawable/ic_transparent_back"
+                android:onClick="@{(v) -> orderViewModel.clickListener(v)}"
+                android:visibility="gone">
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:background="@drawable/ic_top_corner_circle"
+                    android:elevation="5dp"
+                    android:orientation="vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingTop="10dp"
+                    android:paddingRight="15dp">
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="15dp"
+                        android:text="Fare Details"
+                        android:textAllCaps="false"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        app:font="@{`bold`}" />
+
+                <RelativeLayout
+                        android:id="@+id/rlDelivery"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical"
-                        android:padding="10dp"
-                        tools:context=".views.home.LandingActivty">
-
-                    <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/rvDiscounts"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/dp_5"
-                            android:gravity="center"
-                            android:padding="@dimen/dp_5"
-                            android:visibility="visible" />
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp">
 
                     <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/dp_10"
-                            android:layout_marginRight="10dp"
-                            android:text="@string/vehicle_type"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="15dp"
+                            android:text="Delivery Fee"
                             android:textAllCaps="false"
                             android:textColor="@color/colorBlack"
-                            android:textSize="17sp"
-                            app:font="@{`regular`}"
-                            tools:ignore="AllCaps" />
+                            android:textSize="15sp"
+                            app:font="@{`semibold`}" />
 
-                    <RelativeLayout
-                            android:layout_width="match_parent"
+                    <TextView
+                            android:id="@+id/txtDelivery"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/dp_10"
-                            android:background="@drawable/shape_round_corner"
-                            android:elevation="2dp"
-                            android:padding="10dp">
+                            android:layout_alignParentRight="true"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="15dp"
+                            android:text="₹ 250"
+                            android:textAllCaps="false"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="15sp"
+                            android:textStyle="bold"
+                            app:font="@{`bold`}" />
+                </RelativeLayout>
 
-                        <ImageView
-                                android:id="@+id/imgLeft"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentLeft="true"
-                                android:layout_centerVertical="true"
-                                android:src="@drawable/ic_left_cursor" />
+                <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_margin="10dp"
+                        android:background="@color/colorGrey1" />
 
-                        <androidx.recyclerview.widget.RecyclerView
-                                android:id="@+id/rvVehicles"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_centerVertical="true"
-                                android:layout_margin="@dimen/dp_5"
-                                android:layout_toLeftOf="@+id/imgRight"
-                                android:layout_toRightOf="@+id/imgLeft"
-                                android:padding="@dimen/dp_5"
-                                android:visibility="visible" />
-
-                        <ImageView
-                                android:id="@+id/imgRight"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentRight="true"
-                                android:layout_centerVertical="true"
-                                android:src="@drawable/ic_right_cursor" />
-                    </RelativeLayout>
-
-                    <EditText
-                            android:id="@+id/edtDelOptions"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
-                            android:drawableRight="@drawable/ic_down_arrow"
-                            android:drawablePadding="10dp"
-                            android:editable="false"
-                            android:hint="@string/delivery_option"
-                            android:imeOptions="actionNext"
-                            android:paddingBottom="15dp"
-                            android:singleLine="true"
-                            android:textSize="14sp"
-                            android:visibility="gone"
-                            app:font="@{`regular`}" />
+                <RelativeLayout
+                        android:id="@+id/rlWeight"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp">
 
                     <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/dp_10"
-                            android:layout_marginRight="10dp"
-                            android:text="@string/delivery_type"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="5dp"
+                            android:text="Weight Fee"
                             android:textAllCaps="false"
                             android:textColor="@color/colorBlack"
-                            android:textSize="17sp"
-                            app:font="@{`regular`}"
-                            tools:ignore="AllCaps" />
+                            android:textSize="15sp"
+                            app:font="@{`semibold`}" />
+
+                    <TextView
+                            android:id="@+id/txtWeight"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="5dp"
+                            android:text="₹ 250"
+                            android:textAllCaps="false"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="15sp"
+                            android:textStyle="bold"
+                            app:font="@{`bold`}" />
+                </RelativeLayout>
+
+                <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_margin="10dp"
+                        android:background="@color/colorGrey1" />
+
+                <RelativeLayout
+                        android:id="@+id/rlSecurity"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp">
+
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="5dp"
+                            android:text="Security Fee"
+                            android:textAllCaps="false"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="15sp"
+                            app:font="@{`semibold`}" />
+
+                    <TextView
+                            android:id="@+id/txtSecurity"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="5dp"
+                            android:text="₹ 250"
+                            android:textAllCaps="false"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="15sp"
+                            android:textStyle="bold"
+                            app:font="@{`bold`}" />
+                </RelativeLayout>
+
+                <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_margin="10dp"
+                        android:background="@color/colorGrey1" />
+
+                <RelativeLayout
+                        android:id="@+id/rlCancel"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp">
+
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="5dp"
+                            android:text="Order Cancellation Charges"
+                            android:textAllCaps="false"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="15sp"
+                            app:font="@{`semibold`}" />
+
+                    <TextView
+                            android:id="@+id/txtCancellation"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="5dp"
+                            android:text="₹ 50"
+                            android:textAllCaps="false"
+                            android:textColor="@color/colorRed"
+                            android:textSize="15sp"
+                            android:textStyle="bold"
+                            app:font="@{`bold`}" />
+                </RelativeLayout>
+
+                <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_margin="10dp"
+                        android:background="@color/colorGrey1" />
+
+                <RelativeLayout
+                        android:id="@+id/rlCouponDeduction"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp">
+
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="5dp"
+                            android:drawableLeft="@drawable/ic_coupon_image"
+                            android:drawablePadding="5dp"
+                            android:text="Coupon Deduction"
+                            android:textAllCaps="false"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="15sp"
+                            app:font="@{`semibold`}" />
+
+                    <TextView
+                            android:id="@+id/txtCouponDeduction"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="5dp"
+                            android:text="₹ 250"
+                            android:textAllCaps="false"
+                            android:textColor="@color/colorMustad"
+                            android:textSize="15sp"
+                            android:textStyle="bold"
+                            app:font="@{`bold`}" />
+                </RelativeLayout>
+
+            </LinearLayout>
+        </RelativeLayout>
+
+        <RelativeLayout
+                android:id="@+id/rlBottom"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/ic_tab_back">
+
+            <TextView
+                    android:id="@+id/txtFareDummy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="15dp"
+                    android:alpha="0.5"
+                    android:text="Fare"
+                    android:textAllCaps="true"
+                    android:textColor="#FAFAFA"
+                    app:font="@{`regular`}" />
+
+            <TextView
+                    android:id="@+id/txtFare"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/txtFareDummy"
+                    android:layout_marginLeft="20dp"
+
+                    android:drawablePadding="5dp"
+                    android:text="₹ 250"
+                    android:textAllCaps="true"
+                    android:textColor="#F6E3D2"
+                    android:textSize="15sp"
+                    app:font="@{`regular`}" />
+
+            <ImageView
+                    android:id="@+id/imgPriceDetails"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@+id/txtFare"
+                    android:layout_alignBottom="@+id/txtFare"
+                    android:layout_toRightOf="@+id/txtFare"
+                    android:onClick="@{(v) -> orderViewModel.clickListener(v)}"
+                    android:padding="5dp"
+                    android:src="@drawable/ic_up_arrow" />
+
+            <Button
+                    android:id="@+id/btnProceed"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="20dp"
+                    android:background="@drawable/round_button_layout"
+                    android:minWidth="130dp"
+                    android:onClick="@{(v) -> orderViewModel.clickListener(v)}"
+                    android:text="@string/proceed"
+                    android:textAllCaps="false"
+                    android:textColor="@color/colorWhite"
+                    app:font="@{`regular`}" />
+
+        </RelativeLayout>
+
+        <!--<ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">-->
+
+        <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone">
+
+            <!-- <fragment
+                     android:id="@+id/autocomplete_fragment"
+                     android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
+                     android:layout_width="match_parent"
+                     android:layout_height="wrap_content" />-->
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:padding="10dp"
+                    android:visibility="gone"
+                    tools:context=".views.home.LandingActivty">
+
+                <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvDiscounts"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_5"
+                        android:gravity="center"
+                        android:padding="@dimen/dp_5"
+                        android:visibility="visible" />
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_10"
+                        android:layout_marginRight="10dp"
+                        android:text="@string/vehicle_type"
+                        android:textAllCaps="false"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="17sp"
+                        app:font="@{`regular`}"
+                        tools:ignore="AllCaps" />
+
+                <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_10"
+                        android:background="@drawable/shape_round_corner"
+                        android:elevation="2dp"
+                        android:padding="10dp">
+
+                    <ImageView
+                            android:id="@+id/imgLeft"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_centerVertical="true"
+                            android:src="@drawable/ic_left_cursor" />
 
                     <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/rvDeliveryTypes"
+                            android:id="@+id/rvVehicles"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
-                            android:layout_marginLeft="@dimen/dp_5"
-                            android:layout_marginTop="@dimen/dp_5"
+                            android:layout_margin="@dimen/dp_5"
                             android:layout_toLeftOf="@+id/imgRight"
                             android:layout_toRightOf="@+id/imgLeft"
                             android:padding="@dimen/dp_5"
                             android:visibility="visible" />
 
-                    <RadioGroup
-                            android:id="@+id/rgDeliveryType"
-                            android:layout_width="match_parent"
+                    <ImageView
+                            android:id="@+id/imgRight"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:padding="@dimen/dp_5"
-                            android:visibility="gone">
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:src="@drawable/ic_right_cursor" />
+                </RelativeLayout>
 
-                        <RadioButton
-                                android:id="@+id/rd_two"
-                                android:layout_width="wrap_content"
+                <EditText
+                        android:id="@+id/edtDelOptions"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:drawableRight="@drawable/ic_down_arrow"
+                        android:drawablePadding="10dp"
+                        android:editable="false"
+                        android:hint="@string/delivery_option"
+                        android:imeOptions="actionNext"
+                        android:paddingBottom="15dp"
+                        android:singleLine="true"
+                        android:textSize="14sp"
+                        android:visibility="gone"
+                        app:font="@{`regular`}" />
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_10"
+                        android:layout_marginRight="10dp"
+                        android:text="@string/delivery_type"
+                        android:textAllCaps="false"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="17sp"
+                        app:font="@{`regular`}"
+                        tools:ignore="AllCaps" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvDeliveryTypes"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="@dimen/dp_5"
+                        android:layout_marginTop="@dimen/dp_5"
+                        android:layout_toLeftOf="@+id/imgRight"
+                        android:layout_toRightOf="@+id/imgLeft"
+                        android:padding="@dimen/dp_5"
+                        android:visibility="visible" />
+
+                <RadioGroup
+                        android:id="@+id/rgDeliveryType"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="@dimen/dp_5"
+                        android:visibility="gone">
+
+                    <RadioButton
+                            android:id="@+id/rd_two"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checked="true"
+                            android:padding="5dp"
+                            android:text="@string/two_hours"
+                            android:textColor="@color/colorGrey1"
+                            app:font="@{`regular`}" />
+
+                    <RadioButton
+                            android:id="@+id/rd_four"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:padding="5dp"
+                            android:text="@string/four_hour"
+                            android:textColor="@color/colorGrey1"
+                            app:font="@{`regular`}" />
+
+                    <RadioButton
+                            android:id="@+id/rd_same"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:padding="5dp"
+                            android:text="@string/same_day"
+                            android:textColor="@color/colorGrey1"
+                            app:font="@{`regular`}" />
+
+                </RadioGroup>
+
+                <LinearLayout
+                        android:id="@+id/llAddressDetail"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/dp_15"
+                            android:layout_marginRight="10dp"
+                            android:text="@string/from"
+                            android:textAllCaps="false"
+                            android:textColor="@color/colorSuccess"
+                            android:textSize="17sp"
+                            android:textStyle="bold"
+                            app:font="@{`bold`}"
+                            tools:ignore="AllCaps" />
+
+                    <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                        <EditText
+                                android:id="@+id/edtPickupLoc"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:checked="true"
-                                android:padding="5dp"
-                                android:text="@string/two_hours"
-                                android:textColor="@color/colorGrey1"
+                                android:layout_marginTop="10dp"
+                                android:layout_marginRight="5dp"
+                                android:layout_toLeftOf="@+id/imgPickupAddress"
+                                android:clickable="true"
+                                android:editable="false"
+                                android:focusable="false"
+                                android:focusableInTouchMode="false"
+                                android:hint="@string/pickup_location"
+                                android:imeOptions="actionNext"
+                                android:onClick="@{(v) -> orderViewModel.clickListener(v)}"
+                                android:paddingBottom="15dp"
+                                android:text="@{orderDetailModel.pickupAddress.address}"
+                                android:textSize="14sp"
+                                app:font="@{`regular`}" />
+                        <!--
+                                                            android:drawableRight="@drawable/ic_location_color"
+                                                            android:drawablePadding="10dp"-->
+
+                        <ImageView
+                                android:id="@+id/imgPickupAddress"
+                                android:layout_width="25dp"
+                                android:layout_height="25dp"
+                                android:layout_alignParentRight="true"
+                                android:layout_centerVertical="true"
+                                android:onClick="@{(v) -> orderViewModel.clickListener(v)}"
+                                android:src="@drawable/ic_map_select" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                        <EditText
+                                android:id="@+id/edtPickMob"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                android:layout_marginRight="5dp"
+                                android:layout_toLeftOf="@+id/imgPickContact"
+                                android:drawablePadding="10dp"
+                                android:hint="@string/mob_no"
+                                android:imeOptions="actionDone"
+                                android:inputType="number"
+                                android:paddingBottom="15dp"
+                                android:singleLine="true"
+                                android:text="@{orderDetailModel.pickupAddress.phoneNumber}"
+                                android:textSize="14sp"
                                 app:font="@{`regular`}" />
 
-                        <RadioButton
-                                android:id="@+id/rd_four"
-                                android:layout_width="wrap_content"
+                        <ImageView
+                                android:id="@+id/imgPickContact"
+                                android:layout_width="25dp"
+                                android:layout_height="25dp"
+                                android:layout_alignParentRight="true"
+                                android:layout_centerVertical="true"
+                                android:onClick="@{(v) -> orderViewModel.clickListener(v)}"
+                                android:src="@drawable/ic_contact" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                        <EditText
+                                android:id="@+id/edtPickDateTime"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="10dp"
-                                android:padding="5dp"
-                                android:text="@string/four_hour"
-                                android:textColor="@color/colorGrey1"
+                                android:layout_marginTop="10dp"
+                                android:clickable="true"
+                                android:drawablePadding="10dp"
+                                android:editable="false"
+                                android:focusable="false"
+                                android:focusableInTouchMode="false"
+                                android:hint="@string/date_time"
+                                android:imeOptions="actionNext"
+                                android:onClick="@{(v) -> orderViewModel.clickListener(v)}"
+                                android:paddingRight="60dp"
+                                android:paddingBottom="15dp"
+                                android:singleLine="true"
+                                android:textSize="14sp"
                                 app:font="@{`regular`}" />
 
-                        <RadioButton
-                                android:id="@+id/rd_same"
+                        <ImageView
+                                android:id="@+id/imgTime"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="10dp"
-                                android:padding="5dp"
-                                android:text="@string/same_day"
-                                android:textColor="@color/colorGrey1"
+                                android:layout_alignParentRight="true"
+                                android:layout_centerVertical="true"
+                                android:src="@drawable/ic_clock" />
+
+                        <ImageView
+                                android:id="@+id/imgCal"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:layout_marginRight="10dp"
+                                android:layout_toLeftOf="@+id/imgTime"
+                                android:src="@drawable/ic_cal" />
+                    </RelativeLayout>
+
+                    <View
+                            android:layout_width="match_parent"
+                            android:layout_height="0.5dp"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="15dp"
+                            android:layout_marginRight="10dp"
+                            android:background="@color/colorPrimary"
+                            android:visibility="gone" />
+
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/dp_15"
+                            android:layout_marginRight="10dp"
+                            android:text="@string/to"
+                            android:textAllCaps="false"
+                            android:textColor="@color/colorRed"
+                            android:textSize="17sp"
+                            android:textStyle="bold"
+                            app:font="@{`bold`}"
+                            tools:ignore="AllCaps" />
+
+                    <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                        <EditText
+                                android:id="@+id/edtDelAddress"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                android:layout_toLeftOf="@+id/imgDelAddress"
+                                android:clickable="true"
+                                android:editable="false"
+                                android:focusable="false"
+                                android:focusableInTouchMode="false"
+                                android:hint="@string/delivery_location"
+                                android:imeOptions="actionNext"
+                                android:onClick="@{(v) -> orderViewModel.clickListener(v)}"
+                                android:paddingBottom="15dp"
+                                android:textSize="14sp"
+                                app:font="@{`regular`}" />
+                        <!--
+                                                            android:drawableRight="@drawable/ic_location_color"
+                                                            android:drawablePadding="10dp"-->
+
+                        <ImageView
+                                android:id="@+id/imgDelAddress"
+                                android:layout_width="25dp"
+                                android:layout_height="25dp"
+                                android:layout_alignParentRight="true"
+                                android:layout_centerVertical="true"
+                                android:onClick="@{(v) -> orderViewModel.clickListener(v)}"
+                                android:src="@drawable/ic_map_select" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                        <EditText
+                                android:id="@+id/edtDelMob"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                android:layout_toLeftOf="@+id/imgDelContact"
+                                android:hint="@string/mob_no"
+                                android:imeOptions="actionDone"
+                                android:inputType="number"
+                                android:paddingBottom="15dp"
+                                android:singleLine="true"
+                                android:textSize="14sp"
                                 app:font="@{`regular`}" />
 
-                    </RadioGroup>
+                        <ImageView
+                                android:id="@+id/imgDelContact"
+                                android:layout_width="25dp"
+                                android:layout_height="25dp"
+                                android:layout_alignParentRight="true"
+                                android:layout_centerVertical="true"
+                                android:onClick="@{(v) -> orderViewModel.clickListener(v)}"
+                                android:src="@drawable/ic_contact" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                        <EditText
+                                android:id="@+id/edtDelDateTime"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                android:clickable="true"
+                                android:editable="false"
+                                android:focusable="false"
+                                android:focusableInTouchMode="false"
+                                android:hint="@string/date_time"
+                                android:imeOptions="actionNext"
+                                android:onClick="@{(v) -> orderViewModel.clickListener(v)}"
+                                android:paddingBottom="15dp"
+                                android:singleLine="true"
+                                android:textSize="14sp"
+                                app:font="@{`regular`}" />
+
+                        <ImageView
+                                android:id="@+id/imgTime1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentRight="true"
+                                android:layout_centerVertical="true"
+                                android:src="@drawable/ic_clock" />
+
+                        <ImageView
+                                android:id="@+id/imgCal1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:layout_marginRight="5dp"
+                                android:layout_toLeftOf="@+id/imgTime1"
+                                android:src="@drawable/ic_cal" />
+                    </RelativeLayout>
 
                     <LinearLayout
-                            android:id="@+id/llAddressDetail"
+                            android:id="@+id/llAddress"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="vertical">
 
-                        <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/dp_15"
-                                android:layout_marginRight="10dp"
-                                android:text="@string/from"
-                                android:textAllCaps="false"
-                                android:textColor="@color/colorSuccess"
-                                android:textSize="17sp"
-                                android:textStyle="bold"
-                                app:font="@{`bold`}"
-                                tools:ignore="AllCaps" />
-
-                        <RelativeLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content">
-
-                            <EditText
-                                    android:id="@+id/edtPickupLoc"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="10dp"
-                                    android:layout_marginRight="5dp"
-                                    android:layout_toLeftOf="@+id/imgPickupAddress"
-                                    android:clickable="true"
-                                    android:editable="false"
-                                    android:focusable="false"
-                                    android:focusableInTouchMode="false"
-                                    android:hint="@string/pickup_location"
-                                    android:imeOptions="actionNext"
-                                    android:onClick="@{(v) -> orderViewModel.clickListener(v)}"
-                                    android:paddingBottom="15dp"
-                                    android:text="@{orderDetailModel.pickupAddress.address}"
-                                    android:textSize="14sp"
-                                    app:font="@{`regular`}" />
-                            <!--
-                                                                android:drawableRight="@drawable/ic_location_color"
-                                                                android:drawablePadding="10dp"-->
-
-                            <ImageView
-                                    android:id="@+id/imgPickupAddress"
-                                    android:layout_width="25dp"
-                                    android:layout_height="25dp"
-                                    android:layout_alignParentRight="true"
-                                    android:layout_centerVertical="true"
-                                    android:onClick="@{(v) -> orderViewModel.clickListener(v)}"
-                                    android:src="@drawable/ic_map_select" />
-                        </RelativeLayout>
-
-                        <RelativeLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content">
-
-                            <EditText
-                                    android:id="@+id/edtPickMob"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="10dp"
-                                    android:layout_marginRight="5dp"
-                                    android:layout_toLeftOf="@+id/imgPickContact"
-                                    android:drawablePadding="10dp"
-                                    android:hint="@string/mob_no"
-                                    android:imeOptions="actionDone"
-                                    android:inputType="number"
-                                    android:paddingBottom="15dp"
-                                    android:singleLine="true"
-                                    android:text="@{orderDetailModel.pickupAddress.phoneNumber}"
-                                    android:textSize="14sp"
-                                    app:font="@{`regular`}" />
-
-                            <ImageView
-                                    android:id="@+id/imgPickContact"
-                                    android:layout_width="25dp"
-                                    android:layout_height="25dp"
-                                    android:layout_alignParentRight="true"
-                                    android:layout_centerVertical="true"
-                                    android:onClick="@{(v) -> orderViewModel.clickListener(v)}"
-                                    android:src="@drawable/ic_contact" />
-                        </RelativeLayout>
-
-                        <RelativeLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content">
-
-                            <EditText
-                                    android:id="@+id/edtPickDateTime"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="10dp"
-                                    android:clickable="true"
-                                    android:drawablePadding="10dp"
-                                    android:editable="false"
-                                    android:focusable="false"
-                                    android:focusableInTouchMode="false"
-                                    android:hint="@string/date_time"
-                                    android:imeOptions="actionNext"
-                                    android:onClick="@{(v) -> orderViewModel.clickListener(v)}"
-                                    android:paddingRight="60dp"
-                                    android:paddingBottom="15dp"
-                                    android:singleLine="true"
-                                    android:textSize="14sp"
-                                    app:font="@{`regular`}" />
-
-                            <ImageView
-                                    android:id="@+id/imgTime"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_alignParentRight="true"
-                                    android:layout_centerVertical="true"
-                                    android:src="@drawable/ic_clock" />
-
-                            <ImageView
-                                    android:id="@+id/imgCal"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_centerVertical="true"
-                                    android:layout_marginRight="10dp"
-                                    android:layout_toLeftOf="@+id/imgTime"
-                                    android:src="@drawable/ic_cal" />
-                        </RelativeLayout>
-
-                        <View
-                                android:layout_width="match_parent"
-                                android:layout_height="0.5dp"
-                                android:layout_marginLeft="10dp"
-                                android:layout_marginTop="15dp"
-                                android:layout_marginRight="10dp"
-                                android:background="@color/colorPrimary"
-                                android:visibility="gone" />
-
-                        <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/dp_15"
-                                android:layout_marginRight="10dp"
-                                android:text="@string/to"
-                                android:textAllCaps="false"
-                                android:textColor="@color/colorRed"
-                                android:textSize="17sp"
-                                android:textStyle="bold"
-                                app:font="@{`bold`}"
-                                tools:ignore="AllCaps" />
-
-                        <RelativeLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content">
-
-                            <EditText
-                                    android:id="@+id/edtDelAddress"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="10dp"
-                                    android:layout_toLeftOf="@+id/imgDelAddress"
-                                    android:clickable="true"
-                                    android:editable="false"
-                                    android:focusable="false"
-                                    android:focusableInTouchMode="false"
-                                    android:hint="@string/delivery_location"
-                                    android:imeOptions="actionNext"
-                                    android:onClick="@{(v) -> orderViewModel.clickListener(v)}"
-                                    android:paddingBottom="15dp"
-                                    android:textSize="14sp"
-                                    app:font="@{`regular`}" />
-                            <!--
-                                                                android:drawableRight="@drawable/ic_location_color"
-                                                                android:drawablePadding="10dp"-->
-
-                            <ImageView
-                                    android:id="@+id/imgDelAddress"
-                                    android:layout_width="25dp"
-                                    android:layout_height="25dp"
-                                    android:layout_alignParentRight="true"
-                                    android:layout_centerVertical="true"
-                                    android:onClick="@{(v) -> orderViewModel.clickListener(v)}"
-                                    android:src="@drawable/ic_map_select" />
-                        </RelativeLayout>
-
-                        <RelativeLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content">
-
-                            <EditText
-                                    android:id="@+id/edtDelMob"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="10dp"
-                                    android:layout_toLeftOf="@+id/imgDelContact"
-                                    android:hint="@string/mob_no"
-                                    android:imeOptions="actionDone"
-                                    android:inputType="number"
-                                    android:paddingBottom="15dp"
-                                    android:singleLine="true"
-                                    android:textSize="14sp"
-                                    app:font="@{`regular`}" />
-
-                            <ImageView
-                                    android:id="@+id/imgDelContact"
-                                    android:layout_width="25dp"
-                                    android:layout_height="25dp"
-                                    android:layout_alignParentRight="true"
-                                    android:layout_centerVertical="true"
-                                    android:onClick="@{(v) -> orderViewModel.clickListener(v)}"
-                                    android:src="@drawable/ic_contact" />
-                        </RelativeLayout>
-
-                        <RelativeLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content">
-
-                            <EditText
-                                    android:id="@+id/edtDelDateTime"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="10dp"
-                                    android:clickable="true"
-                                    android:editable="false"
-                                    android:focusable="false"
-                                    android:focusableInTouchMode="false"
-                                    android:hint="@string/date_time"
-                                    android:imeOptions="actionNext"
-                                    android:onClick="@{(v) -> orderViewModel.clickListener(v)}"
-                                    android:paddingBottom="15dp"
-                                    android:singleLine="true"
-                                    android:textSize="14sp"
-                                    app:font="@{`regular`}" />
-
-                            <ImageView
-                                    android:id="@+id/imgTime1"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_alignParentRight="true"
-                                    android:layout_centerVertical="true"
-                                    android:src="@drawable/ic_clock" />
-
-                            <ImageView
-                                    android:id="@+id/imgCal1"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_centerVertical="true"
-                                    android:layout_marginRight="5dp"
-                                    android:layout_toLeftOf="@+id/imgTime1"
-                                    android:src="@drawable/ic_cal" />
-                        </RelativeLayout>
-
-                        <LinearLayout
-                                android:id="@+id/llAddress"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="vertical">
-
-                        </LinearLayout>
-
-                        <LinearLayout
-                                android:id="@+id/txtAddAddressLay"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:background="@drawable/ic_add_address_back"
-                                android:gravity="center"
-                                android:orientation="horizontal">
-
-                            <TextView
-                                    android:id="@+id/txtAddAddress"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:drawableLeft="@drawable/ic_add_address_plus"
-                                    android:drawablePadding="5dp"
-                                    android:gravity="center"
-                                    android:onClick="@{(v) -> orderViewModel.clickListener(v)}"
-                                    android:text="@string/add_address"
-                                    android:textAllCaps="false"
-                                    android:textColor="@color/colorForgotPassword"
-                                    app:font="@{`regular`}"
-                                    tools:ignore="AllCaps" />
-                        </LinearLayout>
                     </LinearLayout>
 
-                    <EditText
-                            android:id="@+id/edtItemName"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
-                            android:drawableRight="@drawable/ic_down_arrow"
-                            android:drawablePadding="10dp"
-                            android:hint="@string/item_name"
-                            android:imeOptions="actionNext"
-                            android:paddingBottom="15dp"
-                            android:singleLine="true"
-                            android:text="@{orderDetailModel.itemName}"
-                            android:textSize="14sp"
-                            app:font="@{`regular`}" />
-
-                    <TextView
+                    <LinearLayout
+                            android:id="@+id/txtAddAddressLay"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/dp_10"
-                            android:layout_marginRight="10dp"
-                            android:text="@string/weight"
-                            android:textAllCaps="false"
-                            android:textColor="@color/colorBlack"
-                            android:textSize="17sp"
-                            app:font="@{`regular`}"
-                            tools:ignore="AllCaps" />
-
-                    <RelativeLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/dp_10"
-                            android:background="@drawable/shape_round_corner"
-                            android:elevation="2dp"
-                            android:padding="10dp">
-
-                        <ImageView
-                                android:id="@+id/imgLeftWeight"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentLeft="true"
-                                android:layout_centerVertical="true"
-                                android:src="@drawable/ic_left_cursor" />
-
-                        <androidx.recyclerview.widget.RecyclerView
-                                android:id="@+id/rvWeight"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_centerVertical="true"
-                                android:layout_margin="@dimen/dp_5"
-                                android:layout_toLeftOf="@+id/imgRightWeight"
-                                android:layout_toRightOf="@+id/imgLeftWeight"
-                                android:padding="@dimen/dp_5"
-                                android:visibility="visible" />
-
-                        <ImageView
-                                android:id="@+id/imgRightWeight"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentRight="true"
-                                android:layout_centerVertical="true"
-                                android:src="@drawable/ic_right_cursor" />
-                    </RelativeLayout>
-
-                    <EditText
-                            android:id="@+id/edtParcelValue"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
-                            android:drawablePadding="10dp"
-                            android:hint="@string/parcel_value"
-                            android:imeOptions="actionNext"
-                            android:inputType="number"
-                            android:paddingBottom="15dp"
-                            android:singleLine="true"
-                            android:textSize="14sp"
-                            app:font="@{`regular`}" />
-
-                    <RelativeLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
-
-                        <EditText
-                                android:id="@+id/edtPromoCode"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="10dp"
-                                android:enabled="false"
-                                android:hint="@string/promo_code"
-                                android:imeOptions="actionNext"
-                                android:paddingRight="100dp"
-                                android:paddingBottom="15dp"
-                                android:singleLine="true"
-                                android:text="@{orderDetailModel.promoCode}"
-                                android:textSize="14sp"
-                                app:font="@{`regular`}" />
+                            android:background="@drawable/ic_add_address_back"
+                            android:gravity="center"
+                            android:orientation="horizontal">
 
                         <TextView
-                                android:id="@+id/txtApply"
-                                android:layout_width="60dp"
-                                android:layout_height="30dp"
-                                android:layout_alignBottom="@+id/edtPromoCode"
-                                android:layout_alignParentRight="true"
-                                android:layout_marginBottom="15dp"
-                                android:background="@drawable/ic_add_address_back"
+                                android:id="@+id/txtAddAddress"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:drawableLeft="@drawable/ic_add_address_plus"
+                                android:drawablePadding="5dp"
                                 android:gravity="center"
                                 android:onClick="@{(v) -> orderViewModel.clickListener(v)}"
-                                android:text="@string/apply"
+                                android:text="@string/add_address"
                                 android:textAllCaps="false"
                                 android:textColor="@color/colorForgotPassword"
-                                android:textSize="12sp"
                                 app:font="@{`regular`}"
                                 tools:ignore="AllCaps" />
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
-
-                        <EditText
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="10dp"
-                                android:drawablePadding="10dp"
-                                android:editable="false"
-                                android:focusable="false"
-                                android:focusableInTouchMode="false"
-                                android:hint="@string/notification_sms"
-                                android:imeOptions="actionNext"
-                                android:paddingRight="60dp"
-                                android:paddingBottom="15dp"
-                                android:singleLine="true"
-                                android:textSize="14sp"
-                                app:font="@{`regular`}" />
-
-                        <!--<com.google.android.material.switchmaterial.SwitchMaterial-->
-                        <Switch
-                                android:id="@+id/chkNotificationMsg"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentRight="true"
-                                android:layout_centerVertical="true"
-                                android:checked="false"
-                                android:switchPadding="5dp"
-                                android:text=""
-                                android:textColor="@color/colorWhite" />
-
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
-
-                        <EditText
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="10dp"
-                                android:drawablePadding="10dp"
-                                android:editable="false"
-                                android:focusable="false"
-                                android:focusableInTouchMode="false"
-                                android:hint="@string/notify_recipent_sms"
-                                android:imeOptions="actionNext"
-                                android:paddingRight="60dp"
-                                android:paddingBottom="15dp"
-                                android:singleLine="true"
-                                android:textSize="14sp"
-                                app:font="@{`regular`}" />
-
-                        <!--<com.google.android.material.switchmaterial.SwitchMaterial-->
-                        <Switch
-                                android:id="@+id/chkNotificationReceipentMsg"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentRight="true"
-                                android:layout_centerVertical="true"
-                                android:checked="false"
-                                android:switchPadding="5dp"
-                                android:text=""
-                                android:textColor="@color/colorWhite" />
-
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                            android:id="@+id/cancelLayout"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/dp_10"
-                            android:visibility="gone">
-
-                        <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="10dp"
-                                android:imeOptions="actionNext"
-                                android:singleLine="true"
-                                android:text="@string/cancellation_charges"
-                                android:textColor="@color/colorBlack"
-                                android:textSize="14sp"
-                                app:font="@{`regular`}" />
-
-                        <TextView
-                                android:id="@+id/txtCancellationCharges"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentRight="true"
-                                android:layout_marginTop="10dp"
-                                android:drawableRight="@drawable/ic_rupee_red"
-                                android:drawablePadding="2dp"
-                                android:onClick="@{(v) -> orderViewModel.clickListener(v)}"
-                                android:singleLine="true"
-                                android:textColor="@color/colorRed"
-                                android:textSize="14sp"
-                                app:font="@{`regular`}" />
-
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                            android:id="@+id/rlLoyaltyPoints"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/dp_10"
-                            android:visibility="gone">
-
-                        <CheckBox
-                                android:id="@+id/chkLoyalty"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="-5dp"
-                                android:layout_toLeftOf="@+id/txtLoyaltyPoints"
-                                android:gravity="left|center"
-                                android:text="@string/use_loyalty_points"
-                                android:textColor="@color/colorPrimary"
-                                android:textSize="12sp" />
-
-                        <TextView
-                                android:id="@+id/txtLoyaltyPoints"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentRight="true"
-                                android:layout_centerVertical="true"
-                                android:layout_gravity="center_vertical"
-                                android:drawableRight="@drawable/ic_rupee_red"
-                                android:drawablePadding="2dp"
-                                android:singleLine="true"
-                                android:textColor="@color/colorRed"
-                                android:textSize="9sp"
-
-                                app:font="@{`regular`}" />
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/dp_10">
-
-                        <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:imeOptions="actionNext"
-                                android:singleLine="true"
-                                android:text="@string/del_charges"
-                                android:textColor="@color/colorBlack"
-                                android:textSize="14sp"
-                                android:textStyle="bold"
-                                app:font="@{`bold`}" />
-
-                        <RelativeLayout
-                                android:id="@+id/rlOriginalPrice"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignBottom="@+id/txtDelCharges"
-                                android:layout_marginRight="5dp"
-                                android:layout_toLeftOf="@+id/txtDelCharges"
-                                android:gravity="bottom"
-                                android:visibility="gone">
-
-                            <TextView
-                                    android:id="@+id/txtTotalAmount"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_alignParentRight="true"
-                                    android:layout_alignParentBottom="true"
-                                    android:singleLine="true"
-                                    android:text="500"
-                                    android:textSize="10sp"
-                                    app:font="@{`regular`}" />
-
-                            <View
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="1dp"
-                                    android:layout_alignLeft="@+id/txtTotalAmount"
-                                    android:layout_alignRight="@+id/txtTotalAmount"
-                                    android:layout_centerInParent="true"
-                                    android:background="@color/colorGrey" />
-                        </RelativeLayout>
-
-                        <TextView
-                                android:id="@+id/txtDelCharges"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentRight="true"
-                                android:drawableRight="@drawable/ic_rupee_red"
-                                android:drawablePadding="2dp"
-                                android:singleLine="true"
-                                android:text="@{orderDetailModel.deliveryCharges}"
-                                android:textColor="@color/colorRed"
-                                android:textSize="14sp"
-                                android:textStyle="bold"
-                                app:font="@{`bold`}" />
-
-                    </RelativeLayout>
-
-                    <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="15dp"
-                            android:layout_marginRight="10dp"
-                            android:text="@string/fair_collected"
-                            android:textAllCaps="false"
-                            android:textColor="@color/colorBlack"
-                            android:textSize="17sp"
-                            app:font="@{`regular`}"
-                            tools:ignore="AllCaps" />
-
-                    <RadioGroup
-                            android:id="@+id/rgFair"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:padding="@dimen/dp_15">
-
-                        <RadioButton
-                                android:id="@+id/rd_pickup"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:checked="true"
-                                android:padding="5dp"
-                                android:text="@string/pickup_end"
-                                app:font="@{`regular`}" />
-
-                        <RadioButton
-                                android:id="@+id/rd_delivery"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="20dp"
-                                android:padding="5dp"
-                                android:text="@string/delivery_end"
-                                app:font="@{`regular`}" />
-
-                    </RadioGroup>
-
-                    <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/dp_10"
-                            android:layout_marginRight="10dp"
-                            android:text="@string/payment"
-                            android:textAllCaps="false"
-                            android:textColor="@color/colorBlack"
-                            android:textSize="17sp"
-                            app:font="@{`regular`}"
-                            tools:ignore="AllCaps" />
-
-                    <RadioGroup
-                            android:id="@+id/rgCash"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:padding="@dimen/dp_15">
-
-                        <RadioButton
-                                android:id="@+id/rd_cash"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:button="@null"
-                                android:checked="true"
-                                android:onClick="@{(v) -> orderViewModel.clickListener(v)}"
-                                android:padding="10dp"
-                                android:text="@string/cash"
-                                android:textColor="@color/colorPrimary"
-                                app:font="@{`regular`}" />
-
-                        <RadioButton
-                                android:id="@+id/rd_non_cash"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:button="@null"
-                                android:onClick="@{(v) -> orderViewModel.clickListener(v)}"
-                                android:padding="10dp"
-                                android:text="@string/non_cash"
-                                android:textColor="@color/colorBlack"
-                                app:font="@{`regular`}" />
-
-                    </RadioGroup>
-
-                    <Button
-                            android:id="@+id/btnCreateOrder"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="20dp"
-                            android:background="@drawable/shape_button_back"
-                            android:onClick="@{(v) -> orderViewModel.clickListener(v)}"
-                            android:text="@string/create_order"
-                            android:textAllCaps="false"
-                            android:textColor="@color/colorWhite" />
+                    </LinearLayout>
                 </LinearLayout>
-            </RelativeLayout>
-        </ScrollView>
-    </LinearLayout>
+
+                <EditText
+                        android:id="@+id/edtItemName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:drawableRight="@drawable/ic_down_arrow"
+                        android:drawablePadding="10dp"
+                        android:hint="@string/item_name"
+                        android:imeOptions="actionNext"
+                        android:paddingBottom="15dp"
+                        android:singleLine="true"
+                        android:text="@{orderDetailModel.itemName}"
+                        android:textSize="14sp"
+                        app:font="@{`regular`}" />
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_10"
+                        android:layout_marginRight="10dp"
+                        android:text="@string/weight"
+                        android:textAllCaps="false"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="17sp"
+                        app:font="@{`regular`}"
+                        tools:ignore="AllCaps" />
+
+                <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_10"
+                        android:background="@drawable/shape_round_corner"
+                        android:elevation="2dp"
+                        android:padding="10dp">
+
+                    <ImageView
+                            android:id="@+id/imgLeftWeight"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_centerVertical="true"
+                            android:src="@drawable/ic_left_cursor" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/rvWeight"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_margin="@dimen/dp_5"
+                            android:layout_toLeftOf="@+id/imgRightWeight"
+                            android:layout_toRightOf="@+id/imgLeftWeight"
+                            android:padding="@dimen/dp_5"
+                            android:visibility="visible" />
+
+                    <ImageView
+                            android:id="@+id/imgRightWeight"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:src="@drawable/ic_right_cursor" />
+                </RelativeLayout>
+
+                <EditText
+                        android:id="@+id/edtParcelValue"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:drawablePadding="10dp"
+                        android:hint="@string/parcel_value"
+                        android:imeOptions="actionNext"
+                        android:inputType="number"
+                        android:paddingBottom="15dp"
+                        android:singleLine="true"
+                        android:textSize="14sp"
+                        app:font="@{`regular`}" />
+
+                <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                    <EditText
+                            android:id="@+id/edtPromoCode"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:enabled="false"
+                            android:hint="@string/promo_code"
+                            android:imeOptions="actionNext"
+                            android:paddingRight="100dp"
+                            android:paddingBottom="15dp"
+                            android:singleLine="true"
+                            android:text="@{orderDetailModel.promoCode}"
+                            android:textSize="14sp"
+                            app:font="@{`regular`}" />
+
+                    <TextView
+                            android:id="@+id/txtApply"
+                            android:layout_width="60dp"
+                            android:layout_height="30dp"
+                            android:layout_alignBottom="@+id/edtPromoCode"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginBottom="15dp"
+                            android:background="@drawable/ic_add_address_back"
+                            android:gravity="center"
+                            android:onClick="@{(v) -> orderViewModel.clickListener(v)}"
+                            android:text="@string/apply"
+                            android:textAllCaps="false"
+                            android:textColor="@color/colorForgotPassword"
+                            android:textSize="12sp"
+                            app:font="@{`regular`}"
+                            tools:ignore="AllCaps" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                    <EditText
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:drawablePadding="10dp"
+                            android:editable="false"
+                            android:focusable="false"
+                            android:focusableInTouchMode="false"
+                            android:hint="@string/notification_sms"
+                            android:imeOptions="actionNext"
+                            android:paddingRight="60dp"
+                            android:paddingBottom="15dp"
+                            android:singleLine="true"
+                            android:textSize="14sp"
+                            app:font="@{`regular`}" />
+
+                    <!--<com.google.android.material.switchmaterial.SwitchMaterial-->
+                    <Switch
+                            android:id="@+id/chkNotificationMsg"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:checked="false"
+                            android:switchPadding="5dp"
+                            android:text=""
+                            android:textColor="@color/colorWhite" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                    <EditText
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:drawablePadding="10dp"
+                            android:editable="false"
+                            android:focusable="false"
+                            android:focusableInTouchMode="false"
+                            android:hint="@string/notify_recipent_sms"
+                            android:imeOptions="actionNext"
+                            android:paddingRight="60dp"
+                            android:paddingBottom="15dp"
+                            android:singleLine="true"
+                            android:textSize="14sp"
+                            app:font="@{`regular`}" />
+
+                    <!--<com.google.android.material.switchmaterial.SwitchMaterial-->
+                    <Switch
+                            android:id="@+id/chkNotificationReceipentMsg"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:checked="false"
+                            android:switchPadding="5dp"
+                            android:text=""
+                            android:textColor="@color/colorWhite" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                        android:id="@+id/cancelLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_10"
+                        android:visibility="gone">
+
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:imeOptions="actionNext"
+                            android:singleLine="true"
+                            android:text="@string/cancellation_charges"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="14sp"
+                            app:font="@{`regular`}" />
+
+                    <TextView
+                            android:id="@+id/txtCancellationCharges"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginTop="10dp"
+                            android:drawableRight="@drawable/ic_rupee_red"
+                            android:drawablePadding="2dp"
+                            android:onClick="@{(v) -> orderViewModel.clickListener(v)}"
+                            android:singleLine="true"
+                            android:textColor="@color/colorRed"
+                            android:textSize="14sp"
+                            app:font="@{`regular`}" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                        android:id="@+id/rlLoyaltyPoints"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_10"
+                        android:visibility="gone">
+
+                    <CheckBox
+                            android:id="@+id/chkLoyalty"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="-5dp"
+                            android:layout_toLeftOf="@+id/txtLoyaltyPoints"
+                            android:gravity="left|center"
+                            android:text="@string/use_loyalty_points"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="12sp" />
+
+                    <TextView
+                            android:id="@+id/txtLoyaltyPoints"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_gravity="center_vertical"
+                            android:drawableRight="@drawable/ic_rupee_red"
+                            android:drawablePadding="2dp"
+                            android:singleLine="true"
+                            android:textColor="@color/colorRed"
+                            android:textSize="9sp"
+
+                            app:font="@{`regular`}" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_10">
+
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:imeOptions="actionNext"
+                            android:singleLine="true"
+                            android:text="@string/del_charges"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            app:font="@{`bold`}" />
+
+                    <RelativeLayout
+                            android:id="@+id/rlOriginalPrice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignBottom="@+id/txtDelCharges"
+                            android:layout_marginRight="5dp"
+                            android:layout_toLeftOf="@+id/txtDelCharges"
+                            android:gravity="bottom"
+                            android:visibility="gone">
+
+                        <TextView
+                                android:id="@+id/txtTotalAmount"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentRight="true"
+                                android:layout_alignParentBottom="true"
+                                android:singleLine="true"
+                                android:text="500"
+                                android:textSize="10sp"
+                                app:font="@{`regular`}" />
+
+                        <View
+                                android:layout_width="wrap_content"
+                                android:layout_height="1dp"
+                                android:layout_alignLeft="@+id/txtTotalAmount"
+                                android:layout_alignRight="@+id/txtTotalAmount"
+                                android:layout_centerInParent="true"
+                                android:background="@color/colorGrey" />
+                    </RelativeLayout>
+
+                    <TextView
+                            android:id="@+id/txtDelCharges"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:drawableRight="@drawable/ic_rupee_red"
+                            android:drawablePadding="2dp"
+                            android:singleLine="true"
+                            android:text="@{orderDetailModel.deliveryCharges}"
+                            android:textColor="@color/colorRed"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            app:font="@{`bold`}" />
+
+                </RelativeLayout>
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginRight="10dp"
+                        android:text="@string/fair_collected"
+                        android:textAllCaps="false"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="17sp"
+                        app:font="@{`regular`}"
+                        tools:ignore="AllCaps" />
+
+                <RadioGroup
+                        android:id="@+id/rgFair"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="@dimen/dp_15">
+
+                    <RadioButton
+                            android:id="@+id/rd_pickup"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checked="true"
+                            android:padding="5dp"
+                            android:text="@string/pickup_end"
+                            app:font="@{`regular`}" />
+
+                    <RadioButton
+                            android:id="@+id/rd_delivery"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="20dp"
+                            android:padding="5dp"
+                            android:text="@string/delivery_end"
+                            app:font="@{`regular`}" />
+
+                </RadioGroup>
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_10"
+                        android:layout_marginRight="10dp"
+                        android:text="@string/payment"
+                        android:textAllCaps="false"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="17sp"
+                        app:font="@{`regular`}"
+                        tools:ignore="AllCaps" />
+
+                <RadioGroup
+                        android:id="@+id/rgCash"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="@dimen/dp_15">
+
+                    <RadioButton
+                            android:id="@+id/rd_cash"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:button="@null"
+                            android:checked="true"
+                            android:onClick="@{(v) -> orderViewModel.clickListener(v)}"
+                            android:padding="10dp"
+                            android:text="@string/cash"
+                            android:textColor="@color/colorPrimary"
+                            app:font="@{`regular`}" />
+
+                    <RadioButton
+                            android:id="@+id/rd_non_cash"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:button="@null"
+                            android:onClick="@{(v) -> orderViewModel.clickListener(v)}"
+                            android:padding="10dp"
+                            android:text="@string/non_cash"
+                            android:textColor="@color/colorBlack"
+                            app:font="@{`regular`}" />
+
+                </RadioGroup>
+
+                <Button
+                        android:id="@+id/btnCreateOrder"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="20dp"
+                        android:background="@drawable/shape_button_back"
+                        android:onClick="@{(v) -> orderViewModel.clickListener(v)}"
+                        android:text="@string/create_order"
+                        android:textAllCaps="false"
+                        android:textColor="@color/colorWhite" />
+            </LinearLayout>
+        </RelativeLayout>
+        <!-- </ScrollView>-->
+    </RelativeLayout>
 </layout>

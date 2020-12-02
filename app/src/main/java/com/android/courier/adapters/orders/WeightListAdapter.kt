@@ -14,14 +14,14 @@ import com.android.courier.R
 import com.android.courier.databinding.VehicleWeightItemBinding
 import com.android.courier.model.order.ListsResponse
 import com.android.courier.views.orders.CreateOrderActivty
+import com.android.courier.views.orders.fragments.CreateOrderFirstFragment
 
 class WeightListAdapter(
-    context : CreateOrderActivty,
-    addressList : ArrayList<ListsResponse.WeightData>,
-    var activity : Context
+    context : CreateOrderFirstFragment,
+    addressList : ArrayList<ListsResponse.WeightData>
 ) :
     RecyclerView.Adapter<WeightListAdapter.ViewHolder>() {
-    private val mContext : CreateOrderActivty
+    private val mContext : CreateOrderFirstFragment
     private var viewHolder : ViewHolder? = null
     private var weightList : ArrayList<ListsResponse.WeightData>?
 
@@ -43,32 +43,27 @@ class WeightListAdapter(
 
     override fun onBindViewHolder(@NonNull holder : ViewHolder, position : Int) {
         viewHolder = holder
-        val dis = (position + 1) * 10
         holder.binding!!.txtName.text = weightList!![position].name
         if (!TextUtils.isEmpty(weightList!![position].selected) && weightList!![position].selected.equals(
                 "true"
             )
         ) {
-            // holder.binding!!.toLayout.setBackground(mContext.resources.getColor(R.color.colorPrimary))
-            holder.binding!!.toLayout.setBackgroundTintList(
-                ColorStateList.valueOf(
-                    Color.parseColor(
-                        "#6D60F8"
-                    )
-                )/*mContext.getResources().getColorStateList(R.color.colorOrange)*/
-            )
-            holder.binding.txtName.setTextColor(mContext.resources.getColor(R.color.colorWhite))
+            holder.binding!!.toLayout.setBackground(mContext.resources.getDrawable(R.drawable.ic_weight_seleted))
+            /*  holder.binding!!.toLayout.setBackgroundTintList(
+                  mContext.getResources().getColorStateList(R.color.colorPrimary)
+              )*/
+            holder.binding.txtName.setTextColor(mContext.resources.getColor(R.color.colorPrimary))
         } else {
-            // holder.binding.topLay.setBackgroundResource(R.drawable.shape_round_corner)
+            holder.binding!!.toLayout.setBackground(mContext.resources.getDrawable(R.drawable.ic_weight_unseleted))
             holder.binding.txtName.setTextColor(mContext.resources.getColor(R.color.colorBlack))
             // holder.binding!!.toLayout.setBackground(mContext.resources.getColor(R.color.colorWhite))
-            holder.binding!!.toLayout.setBackgroundTintList(
-                ColorStateList.valueOf(
-                    Color.parseColor(
-                        "#ffffff"
-                    )
-                )/*mContext.getResources().getColorStateList(R.color.colorOrange)*/
-            )
+            /*  holder.binding!!.toLayout.setBackgroundTintList(
+                  ColorStateList.valueOf(
+                      Color.parseColor(
+                          "#ffffff"
+                      )
+                  )*//*mContext.getResources().getColorStateList(R.color.colorOrange)*//*
+            )*/
         }
         holder.binding!!.toLayout.setOnClickListener {
             if (weightList!![position].selected.equals("true")) {
@@ -88,7 +83,7 @@ class WeightListAdapter(
         (
         v : View, val viewType : Int, //These are the general elements in the RecyclerView
         val binding : VehicleWeightItemBinding?,
-        mContext : CreateOrderActivty,
+        mContext : CreateOrderFirstFragment,
         addressList : ArrayList<ListsResponse.WeightData>?
     ) : RecyclerView.ViewHolder(v) {
         /*init {

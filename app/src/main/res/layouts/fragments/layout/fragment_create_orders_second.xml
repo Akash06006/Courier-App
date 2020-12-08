@@ -18,7 +18,6 @@
 
     </data>
 
-    <!---->
     <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -323,6 +322,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginTop="5dp"
                     android:orientation="vertical"
+                    android:padding="5dp"
                     android:paddingBottom="5dp">
 
                 <LinearLayout
@@ -332,7 +332,6 @@
                         android:layout_marginTop="5dp"
                         android:layout_marginRight="10dp"
                         android:background="@drawable/shape_round_corner"
-                        android:elevation="2dp"
                         android:orientation="vertical"
                         android:padding="10dp">
 
@@ -345,24 +344,24 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginRight="5dp"
-                                android:layout_toLeftOf="@+id/imgPickupAddress"
+                                android:layout_toLeftOf="@+id/imgItemName"
                                 android:textColorHint="@color/colorGrey1">
 
                             <EditText
-                                    android:id="@+id/edtPickupLoc"
+                                    android:id="@+id/edtItemName"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_centerHorizontal="true"
                                     android:layout_centerVertical="true"
-                                    android:clickable="true"
-                                    android:editable="false"
-                                    android:focusable="false"
-                                    android:focusableInTouchMode="false"
-                                    android:hint="Pickup Location"
+                                    android:background="@null"
+                                    android:hint="Item Name"
+                                    android:imeOptions="actionDone"
                                     android:onClick="@{(v) -> orderViewModel.clickListener(v)}"
+                                    android:paddingTop="10dp"
                                     android:paddingRight="10dp"
                                     android:paddingBottom="15dp"
-                                    android:text="@{orderDetailModel.pickupAddress.address}"
+                                    android:singleLine="true"
+
                                     android:textColorHint="@color/colorGrey1"
                                     android:textSize="14sp"
                                     app:font="@{`semibold`}" />
@@ -372,120 +371,107 @@
                                                             android:drawablePadding="10dp"-->
 
                         <ImageView
-                                android:id="@+id/imgPickupAddress"
+                                android:id="@+id/imgItemName"
                                 android:layout_width="25dp"
                                 android:layout_height="25dp"
                                 android:layout_alignParentRight="true"
                                 android:layout_centerVertical="true"
                                 android:onClick="@{(v) -> orderViewModel.clickListener(v)}"
-                                android:src="@drawable/ic_map_select" />
+                                android:src="@drawable/ic_item_name" />
+
+                        <View
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/username_text_input_layout"
+                                android:layout_marginTop="5dp"
+                                android:background="@drawable/ic_bottom_line" />
                     </RelativeLayout>
+
+                    <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_gravity="right"
+                            android:layout_marginTop="5dp"
+                            android:src="@drawable/ic_eg_document" />
 
                     <RelativeLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content">
 
                         <com.google.android.material.textfield.TextInputLayout
+                                android:id="@+id/username_text_input_layout1"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginRight="5dp"
-                                android:layout_toLeftOf="@+id/imgPickContact"
-                                android:hint="@string/mob_no"
+                                android:layout_toLeftOf="@+id/imgParcelValue"
+                                android:hint="Parcel Value"
                                 android:textColorHint="@color/colorGrey1"
                                 android:theme="@style/TextInputLayoutAppearance">
 
                             <EditText
-                                    android:id="@+id/edtPickMob"
+                                    android:id="@+id/edtParcelValue"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_centerHorizontal="true"
                                     android:layout_centerVertical="true"
-                                    android:focusableInTouchMode="true"
+                                    android:background="@null"
                                     android:imeOptions="actionDone"
                                     android:inputType="number"
                                     android:onClick="@{(v) -> orderViewModel.clickListener(v)}"
+                                    android:paddingTop="10dp"
                                     android:paddingRight="10dp"
                                     android:paddingBottom="15dp"
-                                    android:text="@{orderDetailModel.pickupAddress.address}"
                                     android:textColorHint="@color/colorGrey1"
                                     android:textSize="14sp"
                                     app:font="@{`semibold`}" />
                         </com.google.android.material.textfield.TextInputLayout>
 
                         <ImageView
-                                android:id="@+id/imgPickContact"
+                                android:id="@+id/imgParcelValue"
                                 android:layout_width="25dp"
                                 android:layout_height="25dp"
                                 android:layout_alignParentRight="true"
                                 android:layout_centerVertical="true"
                                 android:onClick="@{(v) -> orderViewModel.clickListener(v)}"
-                                android:src="@drawable/ic_contact" />
+                                android:src="@drawable/ic_info" />
+
+                        <View
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/username_text_input_layout1"
+                                android:layout_marginTop="5dp"
+                                android:background="@drawable/ic_bottom_line" />
                     </RelativeLayout>
-
-                    <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="5dp">
-
-                        <Spinner
-                                android:id="@+id/txtDate"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:background="@drawable/ic_today_back"
-                                android:gravity="center"
-                                android:minWidth="100dp"
-                                android:text="Today"
-                                android:textColor="@color/colorBlack" />
-                        <!--app:font="@{`regular`}"-->
-                        <Spinner
-                                android:id="@+id/txtTime"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="10dp"
-                                android:background="@drawable/ic_select_time_back"
-                                android:gravity="center"
-                                android:text="Select Time"
-                                android:textColor="@color/colorPrimary" />
-                        <!--  app:font="@{`regular`}" -->
-                    </LinearLayout>
-                </LinearLayout>
-
-                <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginRight="10dp"
-                        android:background="@drawable/shape_round_corner"
-                        android:elevation="2dp"
-                        android:orientation="vertical"
-                        android:padding="10dp">
 
                     <RelativeLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content">
 
                         <com.google.android.material.textfield.TextInputLayout
+                                android:id="@+id/username_text_input_layout2"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginRight="5dp"
-                                android:layout_toLeftOf="@+id/imgDelAddress">
+                                android:layout_toLeftOf="@+id/btnApplyCoupon"
+                                android:textColorHint="@color/colorGrey1">
 
                             <EditText
-                                    android:id="@+id/edtDelAddress"
+                                    android:id="@+id/edtPromoCode"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_centerHorizontal="true"
                                     android:layout_centerVertical="true"
-                                    android:clickable="true"
-                                    android:editable="false"
-                                    android:focusable="false"
-                                    android:focusableInTouchMode="false"
-                                    android:hint="@string/delivery_location"
+                                    android:background="@null"
+                                    android:enabled="false"
+                                    android:hint="Promo Code"
+                                    android:imeOptions="actionDone"
                                     android:onClick="@{(v) -> orderViewModel.clickListener(v)}"
+                                    android:paddingTop="10dp"
                                     android:paddingRight="10dp"
                                     android:paddingBottom="15dp"
-                                    android:text="@{orderDetailModel.pickupAddress.address}"
+                                    android:singleLine="true"
                                     android:textColorHint="@color/colorGrey1"
                                     android:textSize="14sp"
                                     app:font="@{`semibold`}" />
@@ -494,185 +480,238 @@
                                                             android:drawableRight="@drawable/ic_location_color"
                                                             android:drawablePadding="10dp"-->
 
-                        <ImageView
-                                android:id="@+id/imgDelAddress"
-                                android:layout_width="25dp"
-                                android:layout_height="25dp"
+                        <Button
+                                android:id="@+id/btnApplyCoupon"
+                                android:layout_width="wrap_content"
+                                android:layout_height="40dp"
                                 android:layout_alignParentRight="true"
                                 android:layout_centerVertical="true"
+                                android:background="@drawable/ic_promocode_back"
                                 android:onClick="@{(v) -> orderViewModel.clickListener(v)}"
-                                android:src="@drawable/ic_map_select" />
-                    </RelativeLayout>
+                                android:paddingLeft="10dp"
+                                android:paddingRight="10dp"
+                                android:src="@drawable/ic_item_name"
+                                android:text="@string/apply_coupon"
+                                android:textAllCaps="false"
+                                android:textColor="@color/colorPrimary"
+                                android:textSize="12sp"
+                                app:font="@{`semibold`}" />
 
-                    <RelativeLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
-
-                        <com.google.android.material.textfield.TextInputLayout
-                                android:layout_width="match_parent"
+                        <View
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginRight="5dp"
-                                android:layout_toLeftOf="@+id/imgDelContact">
-
-                            <EditText
-                                    android:id="@+id/edtDelMob"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_centerHorizontal="true"
-                                    android:layout_centerVertical="true"
-                                    android:focusableInTouchMode="true"
-                                    android:hint="@string/mob_no"
-                                    android:imeOptions="actionDone"
-                                    android:inputType="number"
-                                    android:onClick="@{(v) -> orderViewModel.clickListener(v)}"
-                                    android:paddingRight="10dp"
-                                    android:paddingBottom="15dp"
-                                    android:text="@{orderDetailModel.pickupAddress.address}"
-                                    android:textColorHint="@color/colorGrey1"
-                                    android:textSize="14sp"
-                                    app:font="@{`semibold`}" />
-                        </com.google.android.material.textfield.TextInputLayout>
-
-                        <ImageView
-                                android:id="@+id/imgDelContact"
-                                android:layout_width="25dp"
-                                android:layout_height="25dp"
-                                android:layout_alignParentRight="true"
-                                android:layout_centerVertical="true"
-                                android:onClick="@{(v) -> orderViewModel.clickListener(v)}"
-                                android:src="@drawable/ic_contact" />
+                                android:layout_below="@+id/username_text_input_layout2"
+                                android:layout_marginTop="5dp"
+                                android:background="@drawable/ic_bottom_line" />
                     </RelativeLayout>
-
-                    <LinearLayout
-                            android:id="@+id/llAddress"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical">
-
-                    </LinearLayout>
-
-                    <TextView
-                            android:id="@+id/txtAddAddress"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="right"
-                            android:drawableLeft="@drawable/ic_plus"
-                            android:drawablePadding="5dp"
-                            android:gravity="center"
-                            android:onClick="@{(v) -> orderViewModel.clickListener(v)}"
-                            android:padding="5dp"
-                            android:text="Add Stop"
-                            android:textColor="@color/colorPrimary"
-                            app:font="@{`semibold`}" />
 
                 </LinearLayout>
 
-                <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/rvAddress"
+                <LinearLayout
+                        android:id="@+id/rlLoyaltyPoints"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/dp_5"
-                        android:layout_marginTop="@dimen/dp_5"
-                        android:layout_marginRight="@dimen/dp_5"
-                        android:padding="@dimen/dp_5"
-                        android:visibility="visible" />
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginRight="10dp"
+                        android:orientation="horizontal"
+                        android:padding="5dp"
+                        android:visibility="gone">
+                    <!--                    android:background="@drawable/shape_round_corner"
+                    -->
+                    <CheckBox
+                            android:id="@+id/chkLoyalty"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="5dp"
+                            android:button="@drawable/checkbox_selector"
+                            android:checked="false"
+                            android:padding="5dp"
+                            android:text="@string/use_loyalty_point"
+                            app:font="@{`semibold`}" />
+
+                    <TextView
+                            android:id="@+id/txtLoyaltyPoints"
+                            androidLlayout_gravity="right"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_gravity="center"
+                            android:layout_marginLeft="20dp"
+                            android:layout_marginRight="10dp"
+                            android:gravity="center"
+                            android:padding="5dp"
+                            android:text="Max usable points 50, 1 point = ₹ 1"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="10sp"
+                            app:font="@{`semibold`}" />
+                </LinearLayout>
 
                 <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
-                        android:layout_marginTop="5dp"
+                        android:layout_marginTop="10dp"
                         android:layout_marginRight="10dp"
                         android:gravity="center"
                         android:padding="5dp"
-                        android:text="Delivery Type"
+                        android:text="Payment Method"
                         android:textColor="@color/colorBlack"
                         android:textStyle="bold"
                         app:font="@{`semibold`}" />
 
                 <RelativeLayout
-
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp">
-
-                    <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/rvDeliveryTypes"
-                            android:layout_width="match_parent"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:padding="2dp">
+                    <!--                    android:background="@drawable/shape_round_corner"
+    -->
+                    <TextView
+                            android:id="@+id/txtCash"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/dp_5"
-                            android:layout_marginRight="@dimen/dp_5"
-                            android:paddingLeft="@dimen/dp_5"
-                            android:visibility="visible" />
-
-                    <TextView
-                            android:id="@+id/txtRegular"
-                            android:layout_width="wrap_content"
-                            android:layout_height="45dp"
                             android:layout_marginLeft="10dp"
-                            android:layout_marginRight="5dp"
-                            android:background="@drawable/ic_del_type_selected"
+                            android:layout_marginRight="10dp"
                             android:gravity="center"
                             android:onClick="@{(v) -> orderViewModel.clickListener(v)}"
-                            android:text="Regular"
+                            android:paddingLeft="5dp"
+                            android:paddingTop="5dp"
+                            android:paddingBottom="5dp"
+                            android:text="Cash"
                             android:textColor="@color/colorPrimary"
-                            android:textSize="16sp"
+                            android:textSize="18sp"
                             android:textStyle="bold"
-                            android:visibility="gone"
-                            app:font="@{`semibold`}" />
-
-                    <TextView
-                            android:id="@+id/txtExpress"
-                            android:layout_width="wrap_content"
-                            android:layout_height="45dp"
-                            android:layout_marginLeft="5dp"
-                            android:layout_toRightOf="@+id/txtRegular"
-                            android:background="@drawable/ic_del_type_unselected"
-                            android:gravity="center"
-                            android:onClick="@{(v) -> orderViewModel.clickListener(v)}"
-                            android:text="Express"
-                            android:textColor="@color/colorBlack"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
-                            android:visibility="gone"
-                            app:font="@{`semibold`}" />
+                            app:font="@{`bold`}" />
 
                     <ImageView
-                            android:id="@+id/imgDelInfo"
+                            android:id="@+id/imgCash"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_toRightOf="@+id/txtCash"
+                            android:onClick="@{(v) -> orderViewModel.clickListener(v)}"
+                            android:src="@drawable/ic_payment_selected" />
+
+                    <TextView
+                            android:id="@+id/txtOnline"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="20dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_toRightOf="@+id/imgCash"
+                            android:alpha="0.5"
+                            android:gravity="center"
+                            android:onClick="@{(v) -> orderViewModel.clickListener(v)}"
+                            android:paddingLeft="5dp"
+                            android:paddingTop="5dp"
+                            android:paddingBottom="5dp"
+                            android:text="Online"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            app:font="@{`bold`}" />
+
+                    <ImageView
+                            android:id="@+id/imgOnline"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_toRightOf="@+id/txtOnline"
+                            android:onClick="@{(v) -> orderViewModel.clickListener(v)}"
+                            android:src="@drawable/ic_payment_selected"
+                            android:visibility="gone" />
+
+                    <ImageView
+                            android:id="@+id/imgPaymentInfo"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
                             android:layout_alignParentRight="true"
                             android:layout_centerVertical="true"
-                            android:layout_gravity="center"
-                            android:layout_marginRight="10dp"
+                            android:layout_marginRight="5dp"
                             android:onClick="@{(v) -> orderViewModel.clickListener(v)}"
                             android:src="@drawable/ic_info" />
-
                 </RelativeLayout>
 
                 <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
-                        android:layout_marginTop="5dp"
+                        android:layout_marginTop="10dp"
                         android:layout_marginRight="10dp"
                         android:gravity="center"
                         android:padding="5dp"
-                        android:text="Package Weight"
+                        android:text="Fare to be collected at"
                         android:textColor="@color/colorBlack"
                         android:textStyle="bold"
                         app:font="@{`semibold`}" />
 
-                <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/rvWeight"
-
+                <RadioGroup
+                        android:id="@+id/rgCashCollectType"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/dp_5"
-                        android:layout_marginTop="@dimen/dp_5"
-                        android:layout_marginRight="@dimen/dp_5"
-                        android:padding="@dimen/dp_5"
-                        android:visibility="visible" />
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginBottom="5dp"
+
+                        android:orientation="vertical"
+                        android:padding="@dimen/dp_10"
+                        android:visibility="visible">
+                    <!--                    android:background="@drawable/shape_round_corner"
+                    -->
+                    <RadioButton
+                            android:id="@+id/rdPickup"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginRight="10dp"
+                            android:button="@drawable/checkbox_selector"
+                            android:checked="true"
+                            android:padding="5dp"
+                            android:text="Pick up location"
+                            android:textColor="@color/colorBlack"
+                            app:font="@{`semibold`}" />
+
+                    <RadioButton
+                            android:id="@+id/rdDelivery"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginRight="10dp"
+                            android:button="@drawable/checkbox_selector"
+                            android:checked="false"
+                            android:padding="5dp"
+                            android:text="Drop location"
+                            android:textColor="@color/colorBlack"
+                            app:font="@{`semibold`}" />
+
+                </RadioGroup>
+                <!--
+                            <CheckBox
+                                    android:id="@+id/chkPaymentPickup"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="25dp"
+                                    android:layout_marginTop="5dp"
+                                    android:button="@drawable/checkbox_selector"
+                                    android:checked="true"
+                                    android:padding="5dp"
+                                    android:text="@string/use_loyalty_point"
+                                    app:font="@{`semibold`}" />
+
+                            <CheckBox
+                                    android:id="@+id/chkPaymentDelivery"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="25dp"
+                                    android:button="@drawable/checkbox_selector"
+                                    android:checked="false"
+                                    android:padding="5dp"
+                                    android:text="@string/use_loyalty_point"
+                                    app:font="@{`semibold`}" />-->
             </LinearLayout>
         </ScrollView>
     </RelativeLayout>

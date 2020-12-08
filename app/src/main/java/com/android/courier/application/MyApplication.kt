@@ -2,6 +2,7 @@ package com.android.courier.application
 
 import androidx.multidex.MultiDex
 import androidx.multidex.MultiDexApplication
+import com.android.courier.model.order.CreateOrdersInput
 import com.android.courier.utils.FontStyle
 import com.facebook.FacebookSdk
 import com.facebook.appevents.AppEventsLogger
@@ -21,6 +22,7 @@ class MyApplication : MultiDexApplication() {
         customFontFamily!!.addFont("regular", "Montserrat-Regular_0.ttf")
         customFontFamily!!.addFont("semibold", "Montserrat-Medium_0.ttf")
         customFontFamily!!.addFont("bold", "Montserrat-SemiBold_0.ttf")
+        //val createOrdersInput = CreateOrdersInput()
     }
 
     companion object {
@@ -29,6 +31,8 @@ class MyApplication : MultiDexApplication() {
          */
         @get:Synchronized
         lateinit var instance : MyApplication
+        @get:Synchronized
+        lateinit var createOrdersInput : CreateOrdersInput
     }
 
 }

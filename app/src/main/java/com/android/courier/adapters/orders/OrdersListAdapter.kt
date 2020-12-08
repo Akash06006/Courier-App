@@ -46,7 +46,25 @@ class OrdersListAdapter(
     override fun onBindViewHolder(@NonNull holder : ViewHolder, position : Int) {
         viewHolder = holder
         val dis = (position + 1) * 10
-        //if (active.equals("true")) {
+        if (active.equals("true")) {
+            if (true) {
+                holder.binding!!.txtDriverStatus.setText("Searching for Rider")
+                holder.binding!!.txtDriverStatus.setTextColor(mContext.resources.getColor(R.color.colorRed))
+            } else {
+                holder.binding!!.txtDriverStatus.setText("Rider has been assigned")
+                holder.binding!!.txtDriverStatus.setTextColor(mContext.resources.getColor(R.color.colorMustad))
+            }
+
+        } else {
+            if (orderList!![position].orderStatus!!.contains("Can")) {
+                holder.binding!!.txtDriverStatus.setText(orderList!![position].orderStatus)
+                holder.binding!!.txtDriverStatus.setTextColor(mContext.resources.getColor(R.color.colorRed))
+            } else {
+                holder.binding!!.txtDriverStatus.setText("Completed")
+                holder.binding!!.txtDriverStatus.setTextColor(mContext.resources.getColor(R.color.colorPrimary))
+            }
+            // orderStatus -> { JsonPrimitive@ 9175 } ""Cancelled By you""
+        }
         //  holder.binding!!.txtTrack.visibility = View.VISIBLE
         //  holder.binding!!.txtCancel.visibility = View.VISIBLE
         //  holder.binding!!.llActiveOrder.visibility = View.VISIBLE
@@ -63,17 +81,21 @@ class OrdersListAdapter(
         holder.binding.txtPrice.text = "₹ " + orderList!![position].totalOrderPrice
 
         holder.binding.txtPickAddress.text = orderList!![position].pickupAddress?.address
+        val size = orderList!![position].deliveryAddress?.size!!
         if (orderList!![position].deliveryAddress?.size!! > 1) {
-            val size = orderList!![position].deliveryAddress?.size!!
-            holder.binding.txtAddressInBetween.text =
-                orderList!![position].deliveryAddress!![size?.minus(1)].address + " and " + size?.minus(
-                    1
-                ) + " address in between"
+            holder.binding.txtAddressInBetween.visibility = View.VISIBLE
+            holder.binding.txtAddressInBetween.text = size.minus(
+                1
+            ).toString() + " address in between"
         } else {
-            if (orderList!![position].deliveryAddress?.size!! > 0)
-                holder.binding.txtDeliveryAddress.text =
-                    orderList!![position].deliveryAddress!![0].address
+            holder.binding.txtAddressInBetween.visibility = View.GONE
         }
+        if (orderList!![position].deliveryAddress?.size!! > 0)
+            holder.binding.txtDeliveryAddress.text =
+                orderList!![position].deliveryAddress!![size.minus(
+                    1
+                )].address
+        // }
         /*} else {
             holder.binding!!.txtTrack.visibility = View.GONE
             holder.binding!!.txtCancel.visibility = View.GONE
@@ -95,6 +117,7 @@ class OrdersListAdapter(
                 orderList!![position].cancellationCharges
             )
         }
+
 
         holder.binding!!.topLay.setOnClickListener {
             val intent = Intent(mContext.activity, OrderDetailActivity::class.java)

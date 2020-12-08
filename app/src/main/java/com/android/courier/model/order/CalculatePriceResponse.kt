@@ -26,6 +26,20 @@ class Body {
     @SerializedName("loyalityData")
     @Expose
     var loyalityData : LoyalityData? = null
+    @SerializedName("weightFee")
+    @Expose
+    var weightFee : String? = null
+    @SerializedName("securityFee")
+    @Expose
+    var securityFee : String? = null
+    @SerializedName("deliveryFee")
+    @Expose
+    var deliveryFee : String? = null
+    @SerializedName("discountPrice")
+    @Expose
+    var discountPrice : String? = null
+
+
 
 }
 

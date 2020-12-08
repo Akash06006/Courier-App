@@ -27,6 +27,7 @@ import androidx.lifecycle.ViewModelProviders
 import com.android.courier.common.UtilsFunctions
 import com.android.courier.utils.BaseActivity
 import com.android.courier.viewmodels.order.OrderViewModel
+import com.android.courier.views.contacts.ContactListActivity
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.location.*
@@ -218,25 +219,27 @@ class AddAddressActivity : BaseActivity(), OnMapReadyCallback, LocationListener,
     private fun getAddress(loc : LatLng?) {
         // Geocoder geocoder
         //  List<Address> addresses;
-        val geocoder = Geocoder(this, Locale.getDefault());
-        var addresses = geocoder.getFromLocation(
-            loc?.latitude!!,
-            loc.longitude,
-            1
-        ) // Here 1 represent max location result to returned, by documents it recommended 1 to 5
-        if (addresses.size > 0) {
-            selectedLat = loc?.latitude!!.toString()
-            selectedLong = loc.longitude.toString()
-            var address = addresses?.get(0)
-                ?.getAddressLine(0) // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
-            var city = addresses.get(0).getLocality()
-            var state = addresses.get(0).getAdminArea()
-            var country = addresses.get(0).getCountryName()
-            var postalCode = addresses.get(0).getPostalCode()
-            var knownName = addresses.get(0).getFeatureName()
-            // addressBinding.etAddress.setText(address)
-            selectedAddress = address!!
-            addressBinding.tvAddress.setText(address)
+        if (UtilsFunctions.isNetworkConnected()) {
+            val geocoder = Geocoder(this, Locale.getDefault());
+            var addresses = geocoder.getFromLocation(
+                loc?.latitude!!,
+                loc.longitude,
+                1
+            ) // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+            if (addresses.size > 0) {
+                selectedLat = loc?.latitude!!.toString()
+                selectedLong = loc.longitude.toString()
+                var address = addresses?.get(0)
+                    ?.getAddressLine(0) // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+                var city = addresses.get(0).getLocality()
+                var state = addresses.get(0).getAdminArea()
+                var country = addresses.get(0).getCountryName()
+                var postalCode = addresses.get(0).getPostalCode()
+                var knownName = addresses.get(0).getFeatureName()
+                // addressBinding.etAddress.setText(address)
+                selectedAddress = address!!
+                addressBinding.tvAddress.setText(address)
+            }
         }
     }
 }

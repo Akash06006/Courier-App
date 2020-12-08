@@ -24,6 +24,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dp_toobar"
                 android:background="@color/colorPrimary"
+                android:visibility="gone"
                 app:layout_constraintBottom_toTopOf="@+id/img_cost"
                 app:layout_constraintTop_toTopOf="@+id/img_cost">
 
@@ -82,13 +83,13 @@
         <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/shape_round_corner"
                 android:elevation="5dp"
                 android:padding="5dp">
 
             <ScrollView
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:layout_above="@+id/rlBottom">
 
                 <LinearLayout
                         android:layout_width="match_parent"
@@ -113,7 +114,7 @@
                             <LinearLayout
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
-                                    android:layout_weight="2"
+                                    android:layout_weight="1.5"
                                     android:orientation="vertical">
 
                                 <TextView
@@ -129,18 +130,16 @@
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:layout_marginTop="5dp"
-                                        android:drawableLeft="@drawable/ic_delivery_option"
-                                        android:drawablePadding="5dp"
                                         android:gravity="left"
                                         android:textColor="@color/colorBlack"
-                                        app:font="@{`regular`}" />
+                                        app:font="@{`bold`}" />
                             </LinearLayout>
 
                             <LinearLayout
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
                                     android:layout_marginLeft="10dp"
-                                    android:layout_weight="1"
+                                    android:layout_weight="1.5"
                                     android:orientation="vertical">
 
                                 <TextView
@@ -156,11 +155,12 @@
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:layout_marginTop="5dp"
-                                        android:drawableLeft="@drawable/ic_rupee"
+                                        android:drawableLeft="@drawable/ic_rupee_mustad"
                                         android:drawablePadding="2dp"
                                         android:gravity="center_vertical"
-                                        android:textColor="@color/colorBlack"
-                                        app:font="@{`regular`}" />
+                                        android:textColor="@color/colorMustad"
+                                        android:textSize="16sp"
+                                        app:font="@{`bold`}" />
                             </LinearLayout>
 
                         </LinearLayout>
@@ -183,42 +183,15 @@
                             <LinearLayout
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
-
-                                    android:layout_weight="2"
-                                    android:orientation="vertical">
-
-                                <TextView
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:gravity="left"
-                                        android:text="@string/weight"
-                                        android:textSize="10sp"
-                                        app:font="@{`regular`}" />
-
-                                <TextView
-                                        android:id="@+id/txtWeight"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:layout_marginTop="5dp"
-                                        android:drawableLeft="@drawable/ic_weight"
-                                        android:drawablePadding="5dp"
-                                        android:gravity="left"
-                                        android:textColor="@color/colorBlack"
-                                        app:font="@{`regular`}" />
-                            </LinearLayout>
-
-                            <LinearLayout
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
                                     android:layout_alignParentRight="true"
-                                    android:layout_weight="1"
+                                    android:layout_weight="1.5"
                                     android:orientation="vertical">
 
                                 <TextView
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:gravity="left"
-                                        android:text="@string/value"
+                                        android:text="Parcel Value"
                                         android:textSize="10sp"
                                         app:font="@{`regular`}" />
 
@@ -227,11 +200,34 @@
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:layout_marginTop="5dp"
-                                        android:drawableLeft="@drawable/ic_rupee"
-                                        android:drawablePadding="5dp"
                                         android:gravity="left"
                                         android:textColor="@color/colorBlack"
+                                        app:font="@{`bold`}" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentRight="true"
+                                    android:layout_weight="1.5"
+                                    android:orientation="vertical">
+
+                                <TextView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:gravity="left"
+                                        android:text="Item name"
+                                        android:textSize="10sp"
                                         app:font="@{`regular`}" />
+
+                                <TextView
+                                        android:id="@+id/txtItemName"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="5dp"
+                                        android:gravity="left"
+                                        android:textColor="@color/colorBlack"
+                                        app:font="@{`bold`}" />
                             </LinearLayout>
                         </LinearLayout>
 
@@ -253,7 +249,7 @@
                             <LinearLayout
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
-                                    android:layout_weight="2"
+                                    android:layout_weight="1.5"
                                     android:orientation="vertical">
 
                                 <TextView
@@ -269,18 +265,42 @@
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:layout_marginTop="5dp"
-                                        android:drawableLeft="@drawable/ic_fare"
-                                        android:drawablePadding="5dp"
                                         android:gravity="left"
                                         android:textColor="@color/colorBlack"
+                                        app:font="@{`bold`}" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+
+                                    android:layout_weight="1.5"
+                                    android:orientation="vertical">
+
+                                <TextView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:gravity="left"
+                                        android:text="@string/weight"
+                                        android:textSize="10sp"
                                         app:font="@{`regular`}" />
+
+                                <TextView
+                                        android:id="@+id/txtWeight"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="5dp"
+                                        android:gravity="left"
+                                        android:textColor="@color/colorBlack"
+                                        app:font="@{`bold`}" />
                             </LinearLayout>
 
                             <LinearLayout
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
                                     android:layout_weight="1"
-                                    android:orientation="vertical">
+                                    android:orientation="vertical"
+                                    android:visibility="gone">
 
                                 <TextView
                                         android:layout_width="match_parent"
@@ -316,18 +336,32 @@
 
                     </LinearLayout>
 
-                    <Button
-                            android:id="@+id/btnConfirm"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="20dp"
-                            android:background="@drawable/shape_button_back"
-                            android:text="@string/confirm"
-                            android:textAllCaps="false"
-                            android:textColor="@color/colorWhite" />
-
                 </LinearLayout>
             </ScrollView>
+
+            <RelativeLayout
+                    android:id="@+id/rlBottom"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_margin="20dp"
+                    android:background="@drawable/ic_tab_back">
+
+                <Button
+                        android:id="@+id/btnConfirm"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:layout_margin="5dp"
+                        android:background="@drawable/shape_button_back"
+                        android:paddingLeft="30dp"
+                        android:paddingRight="30dp"
+                        android:text="Confirm Order"
+                        android:textAllCaps="false"
+                        android:textColor="@color/colorWhite" />
+
+            </RelativeLayout>
+
         </RelativeLayout>
 
     </LinearLayout>

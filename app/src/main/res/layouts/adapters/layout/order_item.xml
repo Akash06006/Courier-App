@@ -90,8 +90,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentRight="true"
-                            android:background="@drawable/shape_button_back"
-                            android:drawableLeft="@drawable/ic_money"
                             android:drawablePadding="5dp"
                             android:minWidth="80dp"
                             android:paddingLeft="20dp"
@@ -99,7 +97,10 @@
                             android:paddingRight="20dp"
                             android:paddingBottom="10dp"
                             android:text="300"
-                            android:textColor="@color/colorWhite" />
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            app:font="@{`bold`}" />
 
                 </RelativeLayout>
 

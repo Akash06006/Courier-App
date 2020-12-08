@@ -67,7 +67,6 @@ class CreateOrderOldActivty : BaseActivity(), DialogssInterface {
     private lateinit var orderViewModel : OrderViewModel
     var vehicleList = ArrayList<ListsResponse.VehicleData>()
     var bannersList = ArrayList<ListsResponse.BannersData>()
-
     var addressList = ArrayList<CreateOrdersInput.PickupAddress>()
     var weightList = ArrayList<ListsResponse.WeightData>()
     var vehiclesAdapter : VehiclesListAdapter? = null
@@ -407,7 +406,6 @@ class CreateOrderOldActivty : BaseActivity(), DialogssInterface {
                                 activityCreateOrderBinding.rlLoyaltyPoints.visibility =
                                     View.GONE
                             }
-
 
                             if (response.data?.deliveryAddress?.size!! > 0) {
                                 delMobile =

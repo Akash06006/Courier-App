@@ -1,41 +1,31 @@
 package com.android.courier.views.orders.fragments
 
-import android.Manifest
-import android.annotation.SuppressLint
 import android.app.Activity
-import android.app.DatePickerDialog
 import android.app.Dialog
-import android.app.TimePickerDialog
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import android.location.Location
-import android.location.LocationManager
-import android.os.Looper
-import android.provider.Settings
 import android.text.TextUtils
-import android.text.format.DateUtils
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.Window
 import android.view.animation.AnimationUtils
+import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
-import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.android.courier.databinding.FragmentCreateOrdersFirstBinding
 import com.android.courier.R
 import com.android.courier.adapters.orders.DeliveryTypesAdapter
 import com.android.courier.adapters.orders.WeightListAdapter
+import com.android.courier.application.MyApplication
 import com.android.courier.common.UtilsFunctions
 import com.android.courier.common.UtilsFunctions.showToastError
 import com.android.courier.constants.GlobalConstants
@@ -45,9 +35,9 @@ import com.android.courier.sharedpreference.SharedPrefClass
 import com.android.courier.utils.BaseFragment
 import com.android.courier.utils.DialogClass
 import com.android.courier.utils.DialogssInterface
+import com.android.courier.utils.Utils
 import com.android.courier.viewmodels.order.OrderViewModel
 import com.android.courier.views.contacts.ContactListActivity
-import com.android.courier.views.home.LandingActivty
 import com.android.courier.views.orders.AddAddressActivity
 import com.android.courier.views.orders.CreateOrderActivty
 import com.android.volley.Request
@@ -108,7 +98,7 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface {
     var latLongArrayList = ArrayList<LatLng>()
     var selectedAddress = ""
     var selectedlatLong = LatLng(0.0, 0.0)
-    var distance = "25"
+    var distance = "0"
     var deliveryType = "1"
     var deliveryTypeList = ArrayList<ListsResponse.DeliveryOptionData>()
     var deliveryTypeAdapter : DeliveryTypesAdapter? = null
@@ -116,7 +106,9 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface {
     private var isUsableLoyalty = false
     var discountApplied = ""
     var cancelOrderIds = ""
+    var pos = 0
     private lateinit var cancelOrderDetail : CancelOrder
+    var time = ArrayList<String>()
     //var categoriesList = null
     override fun getLayoutResId() : Int {
         return R.layout.fragment_create_orders_first
@@ -129,6 +121,7 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface {
 
     //api/mobile/services/getSubcat/b21a7c8f-078f-4323-b914-8f59054c4467
     override fun initView() {
+        //time = slot(0)
         createOrderFirstBinding = viewDataBinding as FragmentCreateOrdersFirstBinding
         orderViewModel = ViewModelProviders.of(this).get(OrderViewModel::class.java)
         createOrderFirstBinding.orderViewModel = orderViewModel
@@ -136,6 +129,84 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface {
         mFusedLocationClass = FusedLocationClass(activity)
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(activity!!)
         // initRecyclerView()
+        var adapter1 = ArrayAdapter(
+            activity!!,
+            R.layout.spinner_item, time
+        )
+        val days = ArrayList<String>()
+        days.add("Today")
+        days.add("Tomorrow")
+        val adapter = ArrayAdapter(
+            activity!!,
+            R.layout.spinner_item, days
+        )
+        createOrderFirstBinding.txtDate.adapter = adapter
+        createOrderFirstBinding.txtDate.onItemSelectedListener = object :
+            AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent : AdapterView<*>,
+                view : View, position : Int, id : Long
+            ) {
+                time = slot(position)
+                createOrderFirstBinding.txtTime.setSelection(0)
+                if (position == 0) {
+                    val date = Utils(activity!!).getDateLocal(
+                        "EEE MMM dd HH:mm:ss zzzz yyyy",
+                        getDaysAgo(0).toString(),
+                        "MM/dd/YYYY"
+                    )
+                    // MyApplication.createOrdersInput.pickupAddress?.date = date
+                    pickupDate = date
+                } else {
+                    val date = Utils(activity!!).getDateLocal(
+                        "EEE MMM dd HH:mm:ss zzzz yyyy",
+                        getDaysAgo(1).toString(),
+                        "MM/dd/YYYY"
+                    )
+                    // MyApplication.createOrdersInput.pickupAddress?.date = date
+                    pickupDate = date
+                }
+                adapter1 = ArrayAdapter(
+                    activity!!,
+                    R.layout.spinner_item, time
+                )
+                createOrderFirstBinding.txtTime.adapter = adapter1
+
+                for (i in 0 until time.size) {
+                    if (time[i].equals(pickTime)) {
+                        createOrderFirstBinding.txtTime.setSelection(i)
+                    }
+                }
+
+            }
+
+            override fun onNothingSelected(parent : AdapterView<*>) {
+                // write code to perform some action
+            }
+        }
+
+        createOrderFirstBinding.txtTime.adapter = adapter1
+        createOrderFirstBinding.txtTime.onItemSelectedListener = object :
+            AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent : AdapterView<*>,
+                view : View, position : Int, id : Long
+            ) {
+                view.background = ColorDrawable(Color.parseColor("#F6E3D2"))
+                if (position == 0) {
+                    // MyApplication.createOrdersInput.pickupAddress?.time = ""
+                    pickTime = ""
+                } else {
+                    pickTime = time[position]
+                    // MyApplication.createOrdersInput.pickupAddress?.time = time[position]
+                }
+
+            }
+
+            override fun onNothingSelected(parent : AdapterView<*>) {
+                // write code to perform some action
+            }
+        }
         val name = SharedPrefClass().getPrefValue(activity!!, GlobalConstants.USERNAME).toString()
         val userImage =
             SharedPrefClass().getPrefValue(activity!!, GlobalConstants.USER_IMAGE).toString()
@@ -161,6 +232,7 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface {
                             // bannersList.addAll(response.data?.bannersData!!)
                             deliveryTypeList.addAll(response.data?.deliveryOptionData!!)
                             initDeliveryTypeAdapter()
+                            preFilledData()
                             //  initDiscountsAdapter()
                             /*initWeightAdapter()
                             initVehiclesAdapter()
@@ -181,9 +253,12 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface {
                     val message = response.message
                     when {
                         response.code == 200 -> {
-                            val deliveryCharges = response.data?.beforeDiscount.toString()
+                            val orderPrice = response.data?.beforeDiscount.toString()
                             val payableAmount = response.data?.afterDiscount.toString()
                             var totalCancellationCharges = "0"
+
+
+
 
                             if (discountApplied.equals("")) {
                                 /*activityCreateOrderBinding.rlOriginalPrice.visibility = View.GONE
@@ -220,13 +295,28 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface {
                                   activityCreateOrderBinding.txtCancellationCharges.text = "0"*/
                             }
 
-                            (activity as CreateOrderActivty).setPrice(
-                                payableAmount,
-                                "deliveryFee",
-                                "weightFee",
-                                "securityFee",
-                                "couponDeduction",
+                            MyApplication.createOrdersInput.deliveryCharges = payableAmount
+                            MyApplication.createOrdersInput.totalOrderPrice = payableAmount
+                            MyApplication.createOrdersInput.orderPrice = orderPrice
+                            MyApplication.createOrdersInput.offerPrice =
+                                response.data?.discountPrice + ""
+                            MyApplication.createOrdersInput.pendingCCharges =
                                 totalCancellationCharges
+                            MyApplication.createOrdersInput.cancelOrderIds = cancelOrderIds
+                            MyApplication.createOrdersInput.notifyMe = "false"
+                            MyApplication.createOrdersInput.notifyRecipient = "false"
+                            MyApplication.createOrdersInput.vehicleType =
+                                "9c9d2c0e-02d6-4095-a0b4-b267b736dd65"
+
+                            (activity as CreateOrderActivty).setViewLine()
+
+                            setPrice(
+                                payableAmount,
+                                response.data?.deliveryFee + "",
+                                response.data?.weightFee + "",
+                                response.data?.securityFee + "",
+                                response.data?.discountPrice + "",
+                                totalCancellationCharges, "first"
                             )
                         }
                         else -> message?.let {
@@ -236,77 +326,132 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface {
                     }
                 }
             })
-        val days = ArrayList<String>()
-        days.add("Today")
-        days.add("Tomorrow")
-        val adapter = ArrayAdapter(
-            activity!!,
-            R.layout.spinner_item, days
-        )
-        createOrderFirstBinding.txtDate.adapter = adapter
-        createOrderFirstBinding.txtDate.onItemSelectedListener = object :
-            AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent : AdapterView<*>,
-                view : View, position : Int, id : Long
-            ) {
-                /* if (position != 0) {
-                 } else {
-                 }*/
-
+        // var time = ArrayList<String>()/*slot(position)*/
+        createOrderFirstBinding.edtDelMob.setOnFocusChangeListener(View.OnFocusChangeListener { v, hasFocus->
+            if (!hasFocus) { // code to execute when EditText loses focus
+                if (!TextUtils.isEmpty(createOrderFirstBinding.edtDelMob.text.toString()) && createOrderFirstBinding.edtDelMob.text.length < 10) {
+                    createOrderFirstBinding.edtDelMob.requestFocus()
+                    createOrderFirstBinding.edtDelMob.error =
+                        getString(R.string.mob_no) + " " + getString(R.string.phone_min)
+                } else {
+                    delMobile = createOrderFirstBinding.edtDelMob.text.toString()
+                }
             }
+        })
 
-            override fun onNothingSelected(parent : AdapterView<*>) {
-                // write code to perform some action
+        createOrderFirstBinding.edtPickMob.setOnFocusChangeListener(View.OnFocusChangeListener { v, hasFocus->
+            if (!hasFocus) { // code to execute when EditText loses focus
+                if (!TextUtils.isEmpty(createOrderFirstBinding.edtPickMob.text.toString()) && createOrderFirstBinding.edtPickMob.text.length < 10) {
+                    createOrderFirstBinding.edtPickMob.requestFocus()
+                    createOrderFirstBinding.edtPickMob.error =
+                        getString(R.string.mob_no) + " " + getString(R.string.phone_min)
+                } else {
+                    pickupMobile = createOrderFirstBinding.edtPickMob.text.toString()
+                    MyApplication.createOrdersInput.pickupAddress?.phoneNumber =
+                        createOrderFirstBinding.edtPickMob.text.toString()
+                }
+            }
+        })
+        //MyApplication.createOrdersInput.pickupAddress?.phoneNumber = pickupMobile
+        createOrderFirstBinding.edtDelMob.setOnEditorActionListener { v, actionId, event->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                // doSomething()
+                createOrderFirstBinding.edtDelMob.clearFocus()
+                if (!TextUtils.isEmpty(createOrderFirstBinding.edtDelMob.text.toString()) && createOrderFirstBinding.edtDelMob.text.length < 10) {
+                    createOrderFirstBinding.edtDelMob.requestFocus()
+                    createOrderFirstBinding.edtDelMob.error =
+                        getString(R.string.mob_no) + " " + getString(R.string.phone_min)
+                } else {
+                    val imm =
+                        activity!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                    imm.hideSoftInputFromWindow(v.windowToken, 0)
+                    delMobile = createOrderFirstBinding.edtDelMob.text.toString()
+                    /* MyApplication.createOrdersInput.pickupAddress?.phoneNumber =
+                         createOrderFirstBinding.edtDelMob.text.toString()*/
+                }
+                true
+            } else {
+                false
             }
         }
-        val time = slot()
-        val adapter1 = ArrayAdapter(
-            activity!!,
-            R.layout.spinner_item, time
-        )
-        createOrderFirstBinding.txtTime.adapter = adapter1
-        createOrderFirstBinding.txtTime.onItemSelectedListener = object :
-            AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent : AdapterView<*>,
-                view : View, position : Int, id : Long
-            ) {
-                /* if (position != 0) {
-                 } else {
-                 }*/
-
-            }
-
-            override fun onNothingSelected(parent : AdapterView<*>) {
-                // write code to perform some action
-            }
-        }
-
         orderViewModel.isClick().observe(
             this, Observer<String>(function =
             fun(it : String?) {
                 when (it) {
+                    "btnProceed" -> {
+                        if (TextUtils.isEmpty(
+                                pickupDate
+                            ) || TextUtils.isEmpty(
+                                pickTime
+                            ) || TextUtils.isEmpty(
+                                pickupMobile
+                            ) || TextUtils.isEmpty(
+                                delAddress
+                            ) || TextUtils.isEmpty(
+                                delMobile
+                            ) || TextUtils.isEmpty(
+                                MyApplication.createOrdersInput.deliveryOption
+                            ) || TextUtils.isEmpty(MyApplication.createOrdersInput.weight)
+                            || TextUtils.isEmpty(MyApplication.createOrdersInput.distance) || MyApplication.createOrdersInput.distance.equals(
+                                "0"
+                            )
+                        ) {
+                            showToastError("Please Select all the values")
+                        } else {
+                            val pickupAdd = CreateOrdersInput.PickupAddress()
+                            pickupAdd.address = pickupAddress
+                            pickupAdd.id = 0
+                            pickupAdd.lat = pickLat
+                            pickupAdd.long = pickLong
+                            pickupAdd.date = pickupDate
+                            pickupAdd.time = pickTime
+                            pickupAdd.isComplete = "false"
+                            pickupAdd.phoneNumber = pickupMobile
+                            MyApplication.createOrdersInput.pickupAddress = pickupAdd
+                            val deliveryAddressList =
+                                ArrayList<CreateOrdersInput.PickupAddress>()
+                            var address = CreateOrdersInput.PickupAddress()
+                            address.address = delAddress
+                            address.lat = delLat
+                            address.id = 0
+                            address.long = delLong
+                            address.isComplete = "false"
+                            address.phoneNumber = delMobile
+                            deliveryAddressList.add(address)
+                            MyApplication.createOrdersInput.deliveryAddress = deliveryAddressList
+
+                            MyApplication.createOrdersInput.deliveryAddress!!.addAll(addressList)
+
+                            (activity as CreateOrderActivty).callSecondFragment(2)
+
+                        }
+
+                    }
                     "imgDelAddress" -> {
+                        if (!TextUtils.isEmpty(createOrderFirstBinding.edtPickupLoc.text.toString())) {
+                            if (UtilsFunctions.isNetworkConnected()) {
+                                clickedForLocation = "delivery"
+                                val intent = Intent(activity, AddAddressActivity::class.java)
+                                startActivityForResult(intent, 200)
+                            }
+                        } else {
+                            showToastError("Please select pickup address")
+                        }
+
+                    }
+                    "imgPickContact" -> {
                         if (UtilsFunctions.isNetworkConnected()) {
-                            clickedForLocation = "delivery"
-                            val intent = Intent(activity, AddAddressActivity::class.java)
-                            startActivityForResult(intent, 200)
+                            clickedForLocation = "pickup"
+                            val intent = Intent(activity, ContactListActivity::class.java)
+                            startActivityForResult(intent, 201)
                         }
                     }
                     "imgPickupAddress" -> {
-                        if (UtilsFunctions.isNetworkConnected()) {
-                            clickedForLocation = "pickup"
-                            val intent = Intent(activity, AddAddressActivity::class.java)
-                            startActivityForResult(intent, 200)
-                        }
-                    }
-                    "imgPickContact" -> {
                         if (TextUtils.isEmpty(createOrderFirstBinding.edtDelAddress.text.toString())) {
                             if (UtilsFunctions.isNetworkConnected()) {
                                 clickedForLocation = "pickup"
-                                val intent = Intent(activity, ContactListActivity::class.java)
-                                startActivityForResult(intent, 201)
+                                val intent = Intent(activity, AddAddressActivity::class.java)
+                                startActivityForResult(intent, 200)
                             }
                         } else {
                             showCleareDataDialog(
@@ -354,17 +499,16 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface {
                     }
                     "txtAddAddress" -> {
                         createOrderFirstBinding.edtDelMob.clearFocus()
+                        // delMobile = "9865201201"
                         if (TextUtils.isEmpty(delAddress) || TextUtils.isEmpty(delMobile)
                         ) {
                             showToastError("Please add all delivery details")
                         } else if (addressList.size == 0) {
                             addAddressView(null)
                         } else {
-                            if (TextUtils.isEmpty(addressList[addressList.size - 1].date) || TextUtils.isEmpty(
-                                    addressList[addressList.size - 1].time
-                                ) || TextUtils.isEmpty(addressList[addressList.size - 1].time) || TextUtils.isEmpty(
+                            if (TextUtils.isEmpty(
                                     addressList[addressList.size - 1].address
-                                ) /*|| TextUtils.isEmpty(addressList[addressList.size - 1].phoneNumber)*/
+                                ) || TextUtils.isEmpty(addressList[addressList.size - 1].phoneNumber)
                             ) {
                                 showToastError("Please add all fields")
                             } else {
@@ -400,10 +544,98 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface {
                             )
                         )
                     }
+                    "imgPriceDetails" -> {
+                        if (createOrderFirstBinding.llPriceDetail.visibility == View.GONE) {
+                            createOrderFirstBinding.imgPriceDetails.setImageResource(
+                                R.drawable.ic_down_arrow
+                            )
+                            createOrderFirstBinding.llPriceDetail.visibility = View.VISIBLE
+                            createOrderFirstBinding.llPriceDetail.bringToFront()
+
+                        } else {
+                            createOrderFirstBinding.imgPriceDetails.setImageResource(
+                                R.drawable.ic_up_arrow
+                            )
+                            createOrderFirstBinding.llPriceDetail.visibility = View.GONE
+                        }
+                        ///showToastSuccess("Show Details")
+                        // showCancelOrdersDialog()
+                    }
+                    /**/
                 }
             })
         )
 
+    }
+
+    private fun preFilledData() {
+        //createOrderFirstBinding.orderDetailModel = response.data
+        if (!TextUtils.isEmpty(MyApplication.createOrdersInput.pickupAddress?.phoneNumber)) {
+            pickupMobile = MyApplication.createOrdersInput.pickupAddress?.phoneNumber as String
+            pickupDate = MyApplication.createOrdersInput.pickupAddress?.date as String
+            pickupAddress = MyApplication.createOrdersInput.pickupAddress?.address as String
+            pickLat = MyApplication.createOrdersInput.pickupAddress?.lat as String
+            pickLong = MyApplication.createOrdersInput.pickupAddress?.long as String
+            pickTime = MyApplication.createOrdersInput.pickupAddress?.time as String
+            createOrderFirstBinding.edtPickupLoc.setText(pickupAddress)
+            createOrderFirstBinding.edtPickMob.setText(pickupMobile)
+            val date = Utils(activity!!).getDateLocal(
+                "EEE MMM dd HH:mm:ss zzzz yyyy",
+                getDaysAgo(0).toString(),
+                "MM/dd/YYYY"
+            )
+
+            if (pickupDate.equals(date)) {
+                createOrderFirstBinding.txtDate.setSelection(0)
+            } else {
+                createOrderFirstBinding.txtDate.setSelection(1)
+            }
+
+
+            if (MyApplication.createOrdersInput.deliveryAddress?.size!! > 0) {
+                delMobile =
+                    MyApplication.createOrdersInput.deliveryAddress!![0].phoneNumber as String
+                //delDate = MyApplication.createOrdersInput.deliveryAddress!![0].date as String
+                delAddress =
+                    MyApplication.createOrdersInput.deliveryAddress!![0].address as String
+                delLat = MyApplication.createOrdersInput.deliveryAddress!![0].lat as String
+                delLong = MyApplication.createOrdersInput.deliveryAddress!![0].long as String
+                //delTime = MyApplication.createOrdersInput.deliveryAddress!![0].time as String
+                createOrderFirstBinding.edtDelAddress.setText(MyApplication.createOrdersInput.deliveryAddress!![0].address as String)
+                createOrderFirstBinding.edtDelMob.setText(MyApplication.createOrdersInput.deliveryAddress!![0].phoneNumber as String)
+                for (index in 1 until MyApplication.createOrdersInput.deliveryAddress?.size!!) {
+                    addAddressView(MyApplication.createOrdersInput.deliveryAddress!![index])
+                }
+
+
+                for (weight in weightList) {
+                    weight.selected = "false"
+                    if (weight.id.equals(MyApplication.createOrdersInput.weight)) {
+                        weight.selected = "true"
+                        weightId = weight.id.toString()
+                        weighValue = weight.name!!
+                        createOrderInput.weight = weightId
+                    }
+                }
+                weightAdapter?.notifyDataSetChanged()
+
+
+                for (deliveryType in deliveryTypeList) {
+                    deliveryType.selected = "false"
+                    if (deliveryType.id.equals(MyApplication.createOrdersInput.deliveryOption)) {
+                        deliveryType.selected = "true"
+                        deliveryTypeId = deliveryType.id.toString()
+                        // deliveryValue = deliveryType.title!!
+                        createOrderInput.deliveryOption = deliveryTypeId
+                    }
+                }
+                deliveryTypeAdapter?.notifyDataSetChanged()
+
+
+                calculatePrice()
+
+            }
+        }
     }
 
     //region Adapters
@@ -431,9 +663,12 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface {
         }
         weightList[position].selected = "true"
         weightId = weightList[position].id!!
+        GlobalConstants.WEIGHT_ID = weightId
         weightAdapter?.notifyDataSetChanged()
         createOrderInput.weight = weightId
         weighValue = weightList[position].name!!
+        MyApplication.createOrdersInput.weight = weightId
+        MyApplication.createOrdersInput.weightValue = weightList[position].name!!
         calculatePrice()
     }
 
@@ -464,6 +699,14 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface {
         deliveryTypeList[position].selected = "true"
         //  if (isSelected.equals("true")) {
         deliveryTypeId = deliveryTypeList[position].id!!
+        GlobalConstants.DELIVERY_TYPE = deliveryTypeId
+        MyApplication.createOrdersInput.deliveryOption = deliveryTypeId
+        if (deliveryTypeList[position].title!!.contains("Reg")) {
+            MyApplication.createOrdersInput.deliveryValue = "1"
+        } else {
+            MyApplication.createOrdersInput.deliveryValue = "2"
+        }
+
         calculatePrice()
         /*  } else {
               deliveryTypeId = ""
@@ -474,7 +717,7 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface {
 
     //endregion
     //region ADD MULTIPLE ADDRESS
-    private fun addAddressView(pickupAddress : OrdersDetailResponse.PickupAddress?) {
+    private fun addAddressView(pickupAddress : CreateOrdersInput.PickupAddress?) {
         i = i + 1
         val addressModel = CreateOrdersInput.PickupAddress()
         val inflater =
@@ -514,7 +757,7 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface {
 
             edtAddress.setText(addressModel.address)
             edtDelMob.setText(addressModel.phoneNumber)
-            edtDelDateTime.setText(addressModel.date + " " + addressModel.time)
+            //edtDelDateTime.setText(addressModel.date + " " + addressModel.time)
 
         }
 
@@ -573,6 +816,8 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface {
                         break
                     }
                 }
+                distance = "0"
+                callDistanceAPI()
                 if (addressList.size < 4) {
                     createOrderFirstBinding.txtAddAddress.visibility = View.VISIBLE
                 } else {
@@ -602,6 +847,35 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface {
                 }
             }
         })
+
+        edtDelMob.setOnEditorActionListener { v, actionId, event->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                // doSomething()
+                // val tag = v?.id as Int
+                if (!TextUtils.isEmpty(edtDelMob.text.toString()) && edtDelMob.text.length < 10) {
+                    edtDelMob.requestFocus()
+                    edtDelMob.error =
+                        getString(R.string.mob_no) + " " + getString(R.string.phone_min)
+                    /* } else {
+                         for (items in addressList) {
+                             if (tag == items.id) {
+                                 // addressList.remove(items)
+                                 items.phoneNumber = edtDelMob.text.toString()
+                                 break
+                             }
+                         }*/
+
+                } else {
+                    edtDelMob.clearFocus()
+                    val imm =
+                        activity!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                    imm.hideSoftInputFromWindow(v.windowToken, 0)
+                }
+                true
+            } else {
+                false
+            }
+        }
         //setListeners(rowView, true, addressList.size.minus(1))
     }
 
@@ -620,6 +894,8 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface {
         delLat = ""
         delLong = ""
         addressList.clear()
+        distance = "0"
+        MyApplication.createOrdersInput.distance = "0"
     }
 
     fun clearDataDialog(message : String) {
@@ -630,6 +906,13 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface {
             message
         )
         confirmationDialog?.show()
+    }
+
+    fun getDaysAgo(daysAgo : Int) : Date {
+        val calendar = Calendar.getInstance()
+        calendar.add(Calendar.DAY_OF_YEAR, daysAgo)
+
+        return calendar.time
     }
 
     override fun onDialogConfirmAction(mView : View?, mKey : String?) {
@@ -670,10 +953,10 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface {
         // activityCreateOrderBinding.autocompleteFragment.visibility = View.GONE
         val inputManager : InputMethodManager =
             activity!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        inputManager.hideSoftInputFromWindow(
-            activity!!.currentFocus.windowToken,
-            InputMethodManager.SHOW_FORCED
-        )
+        /* inputManager.hideSoftInputFromWindow(
+             activity!!.currentFocus.windowToken,
+             InputMethodManager.SHOW_FORCED
+         )*/
 
         if (requestCode == AUTOCOMPLETE_REQUEST_CODE) {
             when (resultCode) {
@@ -695,12 +978,22 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface {
                             pickLat = place.latLng!!.latitude.toString()
                             pickLong = place.latLng!!.longitude.toString()
 
+                            MyApplication.createOrdersInput.pickupAddress?.address =
+                                place.address.toString()
+                            MyApplication.createOrdersInput.address1 =
+                                place.address.toString()
+                            MyApplication.createOrdersInput.pickupAddress?.lat =
+                                place.latLng!!.latitude.toString()
+                            MyApplication.createOrdersInput.pickupAddress?.long =
+                                place.latLng!!.longitude.toString()
                         } else if (clickedForLocation.equals("delivery")) {
                             calculatePrice()
                             createOrderFirstBinding.edtDelAddress.setText(place.address.toString())
                             delAddress = place.address.toString()
                             delLat = place.latLng!!.latitude.toString()
                             delLong = place.latLng!!.longitude.toString()
+                            distance = "0"
+                            callDistanceAPI()
                             //}
                         } else {
                             calculatePrice()
@@ -716,6 +1009,8 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface {
                                     break
                                 }
                             }
+                            distance = "0"
+                            callDistanceAPI()
                             //}
                         }
                     }
@@ -743,6 +1038,11 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface {
                     pickLat = lat as String
                     pickLong = long.toString()
                     pickupAddress = address.toString()
+                    MyApplication.createOrdersInput.pickupAddress?.address = pickupAddress
+                    MyApplication.createOrdersInput.address1 = pickupAddress
+
+                    MyApplication.createOrdersInput.pickupAddress?.lat = pickLat
+                    MyApplication.createOrdersInput.pickupAddress?.long = pickLong
                 } else if (clickedForLocation.equals("delivery")) {
                     calculatePrice()
                     createOrderFirstBinding.edtDelAddress.setText(address)
@@ -750,7 +1050,8 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface {
                     delLong = long.toString()
                     delAddress = address.toString()
                     //}
-
+                    distance = "0"
+                    callDistanceAPI()
                 } else {
                     calculatePrice()
                     edtDelAddress?.setText(address)
@@ -764,7 +1065,10 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface {
                         }
                     }
                     //}
+                    distance = "0"
+                    callDistanceAPI()
                 }
+
             }
 
         } else if (requestCode == 201) {
@@ -773,6 +1077,7 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface {
                 if (clickedForLocation.equals("pickup")) {
                     createOrderFirstBinding.edtPickMob.setText(num)
                     pickupMobile = num.toString()
+                    MyApplication.createOrdersInput.pickupAddress?.phoneNumber = pickupMobile
                 } else if (clickedForLocation.equals("delivery")) {
                     createOrderFirstBinding.edtDelMob.setText(num)
                     delMobile = num.toString()
@@ -794,25 +1099,41 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface {
         super.onActivityResult(requestCode, resultCode, data)
     }
 
-    private fun callDistanceAPI(latLng : LatLng) {
+    private fun callDistanceAPI(/*latLng : LatLng*/) {
         var desLoc = ""
+        var origin = ""
         val mapQuery = HashMap<String?, String?>()
         mapQuery.put("units", "imperial");
-        if (distance.isEmpty()) {
+        if (TextUtils.isEmpty(distance) || distance.equals("0")) {
+            pos = 0
+            origin = pickLat + "," + pickLong
             mapQuery.put("origins", pickLat + "," + pickLong/*latLongArrayList[0].toString()*/)
-            desLoc = desLoc + "|" + latLng.latitude + "," + latLng.longitude
+            desLoc = desLoc + "|" + delLat /*latLng . latitude*/ + "," + delLong/*latLng.longitude*/
             mapQuery.put("destinations", desLoc)
         } else {
-            var pos = 0
             if (pos == 0) {
+                pos += 1
+                origin = delLat /*latLng . latitude*/ + "," + delLong
+                mapQuery.put("origins", pickLat + "," + pickLong/*latLongArrayList[0].toString()*/)
+                val lat = addressList[0].lat
+                val long = addressList[0].long
+                desLoc = desLoc + "|" + lat + "," + long
+                mapQuery.put("destinations", desLoc)
+            } else {
+                val startLat = addressList[pos - 1].lat
+                val startLong = addressList[pos - 1].long
+                origin = startLat /*latLng . latitude*/ + "," + startLong
+                mapQuery.put("origins", pickLat + "," + pickLong/*latLongArrayList[0].toString()*/)
+                val lat = addressList[pos].lat
+                val long = addressList[pos].long
+                desLoc = desLoc + "|" + lat + "," + long
+                mapQuery.put("destinations", desLoc)
+                pos += 1
             }
-            mapQuery.put("origins", pickLat + "," + pickLong/*latLongArrayList[0].toString()*/)
-            desLoc = desLoc + "|" + latLng.latitude + "," + latLng.longitude
-            mapQuery.put("destinations", desLoc)
+
         }
 
         mapQuery.put("key", getString(R.string.maps_api_key))
-        val origin = pickLat + "," + pickLong
         val requestQueue = Volley.newRequestQueue(activity)
         val url =
             "https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=${origin}&destinations=${desLoc}&key=${getString(
@@ -843,36 +1164,44 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface {
                     }
                     val distancInKm = distancInMeter / 1000
                     // showToastSuccess(distancInKm.toString())
-                    distance = distancInKm.toString()
+                    distance = distancInKm.toDouble().plus(distance.toDouble()).toString()
+                    MyApplication.createOrdersInput.distance = distance
+                    // distance = distancInKm.toString()
                     // if (distancInKm < 25) {
-                    //TODO--calculatePrice()
-                    latLongArrayList.add(latLng)
-                    if (clickedForLocation.equals("pickup")) {
-                        //latLongArrayList.add(place.latLng!!)
-                        createOrderFirstBinding.edtPickupLoc.setText(selectedAddress)
-                        pickupAddress = selectedAddress
-                        pickLat = selectedlatLong.latitude.toString()
-                        pickLong = selectedlatLong.longitude.toString()
-                    } else if (clickedForLocation.equals("delivery")) {
-                        createOrderFirstBinding.edtDelAddress.setText(selectedAddress)
-                        delAddress = selectedAddress//place.address.toString()
-                        delLat = selectedlatLong.latitude.toString()
-                        delLong = selectedlatLong.longitude.toString()
-
-                    } else {
-                        edtDelAddress?.setText(selectedAddress)
-                        val tag = edtDelAddress?.id
-                        for (items in addressList) {
-                            if (tag == items.id) {
-                                items.address =
-                                    selectedAddress//place.address.toString()
-                                items.lat = selectedlatLong.latitude.toString()
-                                items.long = selectedlatLong.longitude.toString()
-                                break
-                            }
+                    if (addressList != null && addressList.size > 0) {
+                        if (pos < addressList.size || pos == 0) {
+                            callDistanceAPI()
                         }
-
                     }
+                    GlobalConstants.DISTANCE = distance
+                    calculatePrice()
+                    // latLongArrayList.add(latLng)
+                    /* if (clickedForLocation.equals("pickup")) {
+                         //latLongArrayList.add(place.latLng!!)
+                         createOrderFirstBinding.edtPickupLoc.setText(selectedAddress)
+                         pickupAddress = selectedAddress
+                         pickLat = selectedlatLong.latitude.toString()
+                         pickLong = selectedlatLong.longitude.toString()
+                     } else if (clickedForLocation.equals("delivery")) {
+                         createOrderFirstBinding.edtDelAddress.setText(selectedAddress)
+                         delAddress = selectedAddress//place.address.toString()
+                         delLat = selectedlatLong.latitude.toString()
+                         delLong = selectedlatLong.longitude.toString()
+
+                     } else {
+                         edtDelAddress?.setText(selectedAddress)
+                         val tag = edtDelAddress?.id
+                         for (items in addressList) {
+                             if (tag == items.id) {
+                                 items.address =
+                                     selectedAddress//place.address.toString()
+                                 items.lat = selectedlatLong.latitude.toString()
+                                 items.long = selectedlatLong.longitude.toString()
+                                 break
+                             }
+                         }
+
+                     }*/
                 } catch (e : JSONException) {
                     e.printStackTrace()
                 }
@@ -922,16 +1251,17 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface {
         no.setOnClickListener {
             confirmationDialog.dismiss()
         }
+        confirmationDialog.show()
     }
 
     //region TIME SLOTS
-    private fun slot() : ArrayList<String> {
+    private fun slot(position : Int) : ArrayList<String> {
         val selectedDate = "2-12-2020"
         val selectedDateFormat = SimpleDateFormat("dd-MM-yyyy")
         val outputDate = selectedDateFormat.parse(selectedDate)
         val cal1 = Calendar.getInstance()
         val cal = Calendar.getInstance()
-        if (DateUtils.isToday(outputDate.time)) {
+        if (position == 0/*DateUtils.isToday(outputDate.time)*/) {
             if (cal.get(Calendar.MINUTE) >= 30)
                 cal.add(Calendar.HOUR_OF_DAY, 2);
             else
@@ -962,7 +1292,7 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface {
             diff += 1800000
             var enddate = Date(diff)
             var end = sdf.format(enddate.time)
-            var time = start + "-" + end
+            var time = start + " - " + end
             timeList.add(time)
 
         }
@@ -973,30 +1303,33 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface {
     //endregion
     //region CALCULATE PRICE
     fun calculatePrice() {
-        if (/*!TextUtils.isEmpty(vehicleId) && */!TextUtils.isEmpty(deliveryTypeId) && !TextUtils.isEmpty(
-                distance
+        if (/*!TextUtils.isEmpty(vehicleId) && */!TextUtils.isEmpty(MyApplication.createOrdersInput.deliveryOption) && !TextUtils.isEmpty(
+                MyApplication.createOrdersInput.distance
             ) && !TextUtils.isEmpty(
-                weightId
+                MyApplication.createOrdersInput.weight
             ) /*&& !TextUtils.isEmpty(activityCreateOrderBinding.edtParcelValue.text.toString())*/
         ) {
             val mJsonObject = JsonObject()
             mJsonObject.addProperty(
                 "parcelValue",
-                "100"/* activityCreateOrderBinding.edtParcelValue.text.toString()*/
+                MyApplication.createOrdersInput.parcelValue/* activityCreateOrderBinding.edtParcelValue.text.toString()*/
             )
-            if (orderId.equals("null")) {
+            if (MyApplication.createOrdersInput.orderId.equals("null") || TextUtils.isEmpty(
+                    MyApplication.createOrdersInput.orderId
+                )
+            ) {
                 orderId = ""
             }
             mJsonObject.addProperty("orderId", orderId)
             mJsonObject.addProperty("vehicleId", "9c9d2c0e-02d6-4095-a0b4-b267b736dd65")
-            mJsonObject.addProperty("deliveryId", deliveryTypeId)
-            mJsonObject.addProperty("weightId", weightId)
-            mJsonObject.addProperty("distance", distance)
-            mJsonObject.addProperty("isUseLoyality", isUsableLoyalty)
+            mJsonObject.addProperty("deliveryId", MyApplication.createOrdersInput.deliveryOption)
+            mJsonObject.addProperty("weightId", MyApplication.createOrdersInput.weight)
+            mJsonObject.addProperty("distance", MyApplication.createOrdersInput.distance)
+            mJsonObject.addProperty("isUseLoyality", GlobalConstants.isUsableLoyalty)
 
             mJsonObject.addProperty(
                 "discount",
-                discountApplied
+                GlobalConstants.discountApplied
             )
             if (UtilsFunctions.isNetworkConnected()) {
                 //  (activity as CreateOrderActivty).callPriceCalculationApi(mJsonObject)
@@ -1005,5 +1338,71 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface {
             }
         }
     }
+
     //endregion
+    fun setPrice(
+        payableAmount : String,
+        deliveryFee : String,
+        weightFee : String,
+        securityFee : String,
+        couponDeduction : String,
+        totalCancellationCharges : String,
+        from : String
+    ) {
+        /*if (from.equals("first")) {
+            createOrderFirstBinding.viewLine1.setAlpha(1f)
+            createOrderFirstBinding.viewLine1.background =
+                ColorDrawable(Color.parseColor("#ffffff"))
+        } else {
+            createOrderFirstBinding.viewLine1.setAlpha(1f)
+            createOrderFirstBinding.viewLine1.background =
+                ColorDrawable(Color.parseColor("#ffffff"))
+            createOrderFirstBinding.viewLine2.setAlpha(1f)
+            createOrderFirstBinding.viewLine2.background =
+                ColorDrawable(Color.parseColor("#ffffff"))
+
+        }*/
+
+        if (!deliveryFee.equals("0") && !deliveryFee.equals("")) {
+            createOrderFirstBinding.txtDelivery.text = "₹ " + deliveryFee
+            createOrderFirstBinding.view1.visibility = View.VISIBLE
+            createOrderFirstBinding.rlDelivery.visibility = View.VISIBLE
+        } else {
+            createOrderFirstBinding.rlDelivery.visibility = View.GONE
+            createOrderFirstBinding.view1.visibility = View.GONE
+        }
+        if (!weightFee.equals("0") && !weightFee.equals("")) {
+            createOrderFirstBinding.txtWeight.text = "₹ " + weightFee
+            createOrderFirstBinding.view2.visibility = View.VISIBLE
+            createOrderFirstBinding.rlWeight.visibility = View.VISIBLE
+        } else {
+            createOrderFirstBinding.rlWeight.visibility = View.GONE
+            createOrderFirstBinding.view2.visibility = View.GONE
+        }
+        if (!securityFee.equals("0") && !securityFee.equals("")) {
+            createOrderFirstBinding.txtSecurity.text = "₹ " + securityFee
+            createOrderFirstBinding.view3.visibility = View.VISIBLE
+            createOrderFirstBinding.rlSecurity.visibility = View.VISIBLE
+        } else {
+            createOrderFirstBinding.rlSecurity.visibility = View.GONE
+            createOrderFirstBinding.view3.visibility = View.GONE
+        }
+
+        if (!totalCancellationCharges.equals("0") && !totalCancellationCharges.equals("")) {
+            createOrderFirstBinding.txtCancellation.text = "₹ " + totalCancellationCharges
+            createOrderFirstBinding.view4.visibility = View.VISIBLE
+            createOrderFirstBinding.rlCancel.visibility = View.VISIBLE
+        } else {
+            createOrderFirstBinding.rlCancel.visibility = View.GONE
+            createOrderFirstBinding.view4.visibility = View.GONE
+        }
+        if (!couponDeduction.equals("0") && !couponDeduction.equals("")) {
+            createOrderFirstBinding.txtCouponDeduction.text = "₹ " + couponDeduction
+            createOrderFirstBinding.rlCouponDeduction.visibility = View.VISIBLE
+        } else {
+            createOrderFirstBinding.rlCouponDeduction.visibility = View.GONE
+        }
+
+        createOrderFirstBinding.txtFare.text = "₹ " + payableAmount
+    }
 }

@@ -13,6 +13,9 @@ class CreateOrdersInput {
     @SerializedName("weight")
     @Expose
     var weight : String? = null
+    @SerializedName("address1")
+    @Expose
+    var address1 : String? = null
     @SerializedName("vehicle")
     @Expose
     var vehicle : VehicleData? = null
@@ -115,6 +118,12 @@ class CreateOrdersInput {
     @SerializedName("fareCollected")
     @Expose
     var fareCollected : String? = null
+    @SerializedName("weightValue")
+    @Expose
+    var weightValue : String? = null
+    @SerializedName("deliveryValue")
+    @Expose
+    var deliveryValue : String? = null
 
     class OrderStatus {
         @SerializedName("statusName")
@@ -148,6 +157,9 @@ class CreateOrdersInput {
         @SerializedName("time")
         @Expose
         var time : String? = null
+        @SerializedName("isComplete")
+        @Expose
+        var isComplete : String? = null
 
     }
 

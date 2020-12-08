@@ -205,8 +205,6 @@ class OrderDetailActivity : BaseActivity(), OnMapReadyCallback, LocationListener
                         response.code == 200 -> {
                             activityCreateOrderBinding.orderDetailModel = response.data
                             cancelledCharges = response.data?.cancellationCharges!!
-                            activityCreateOrderBinding.toolbarCommon.imgToolbarText.text =
-                                "Order #" + response.data?.orderNo!!
                             val source = LatLng(
                                 response.data?.pickupAddress?.lat!!.toDouble(),
                                 response.data?.pickupAddress?.long!!.toDouble()
@@ -237,6 +235,8 @@ class OrderDetailActivity : BaseActivity(), OnMapReadyCallback, LocationListener
                                 }
                             }
                             if (response.data?.assignedEmployees != null) {
+                                activityCreateOrderBinding.toolbarCommon.imgToolbarText.text =
+                                    "Enroute to Pickup"
                                 activityCreateOrderBinding.rlDriverDetail.visibility = View.VISIBLE
                                 activityCreateOrderBinding.rlPayment.visibility = View.VISIBLE
                                 Glide.with(this).load(response.data?.assignedEmployees?.image)
@@ -246,10 +246,20 @@ class OrderDetailActivity : BaseActivity(), OnMapReadyCallback, LocationListener
                                 activityCreateOrderBinding.txtDelBoyName.text =
                                     response.data?.assignedEmployees?.firstName + " " + response.data?.assignedEmployees?.lastName
                             } else {
+                                activityCreateOrderBinding.toolbarCommon.imgToolbarText.text =
+                                    "Searching for a Driver"
                                 activityCreateOrderBinding.rlDriverDetail.visibility = View.GONE
                                 activityCreateOrderBinding.rlPayment.visibility = View.GONE
 
                             }
+                            /*if (response.data?.orderStatus.contains("Can")) {
+                                activityCreateOrderBinding.toolbarCommon.imgToolbarText.text =
+                                    "response.data?.orderStatus"
+                            }
+
+                            if(response.data?.orderStatus.contains("")){
+
+                            }*/
                             val addressAdapter =
                                 OrderAddressListAdapter(
                                     this,
@@ -286,8 +296,8 @@ class OrderDetailActivity : BaseActivity(), OnMapReadyCallback, LocationListener
                                     recyclerView : RecyclerView,
                                     dx : Int,
                                     dy : Int
-                                ){
-                                    
+                                ) {
+
                                 }
                             })
                             //drawPolyline()

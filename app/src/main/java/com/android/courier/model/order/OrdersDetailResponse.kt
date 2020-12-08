@@ -55,6 +55,9 @@ class OrdersDetailResponse {
         @SerializedName("promoCode")
         @Expose
         var promoCode : String? = null
+        @SerializedName("discountPercent")
+        @Expose
+        var discountPercent : String? = null
         @SerializedName("totalOrderPrice")
         @Expose
         var totalOrderPrice : String? = null

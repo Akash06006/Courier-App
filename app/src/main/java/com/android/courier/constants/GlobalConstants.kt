@@ -104,5 +104,15 @@ object GlobalConstants {
     var ROOM_ID = "roomID"
     @JvmStatic
     var ADMIN_ID = "25cbf58b-46ba-4ba2-b25d-8f8f653e9f11"
+    @JvmStatic
+    var WEIGHT_ID = "WEIGHT_ID"
+    @JvmStatic
+    var DELIVERY_TYPE = "DELIVERY_TYPE"
+    @JvmStatic
+    var DISTANCE = "DISTANCE"
+    @JvmStatic
+    var discountApplied = ""
+    @JvmStatic
+    var isUsableLoyalty = false
 
 }

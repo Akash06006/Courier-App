@@ -39,7 +39,7 @@
             android:background="@drawable/ic_top_circle"
             android:backgroundTint="@color/colorWhite"
             android:orientation="vertical"
-            android:visibility="visible">
+            android:visibility="gone">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -138,7 +138,7 @@
             android:background="@drawable/ic_top_circle"
             android:gravity="center"
             android:orientation="vertical"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <TextView
                 android:layout_width="match_parent"
@@ -151,6 +151,19 @@
                 android:textAlignment="center"
                 android:textColor="@color/colorBlack"
                 android:textSize="@dimen/sp_16"
+                app:font="@{`semibold`}" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dp_40"
+                android:layout_marginTop="@dimen/dp_20"
+                android:layout_marginRight="@dimen/dp_40"
+                android:gravity="center_horizontal"
+                android:text="You were away. so we've hidden available orders and turned off notifications"
+                android:textAlignment="center"
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/sp_13"
                 app:font="@{`regular`}" />
 
             <TextView
@@ -172,7 +185,7 @@
                 android:textAlignment="center"
                 android:textColor="@color/colorWhite"
                 android:textSize="@dimen/sp_14"
-                android:visibility="gone"
+                android:visibility="visible"
                 app:font="@{`regular`}" />
         </LinearLayout>
 

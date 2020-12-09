@@ -45,8 +45,7 @@ class StatisticsActivity : BaseFragment(), DialogssInterface {
     private var payableAmount = "0"
     private var confirmationDialog: Dialog? = null
     private var mDialogClass = DialogClass()
-    var TAG =
-        "mainActivity"
+    var TAG = "mainActivity"
     var PAYMENT_CODE = 857
     private var selectedMonth = "0"
     private var selectedYear = "2020"
@@ -76,7 +75,7 @@ class StatisticsActivity : BaseFragment(), DialogssInterface {
                     "tv_pay_now" -> {
                         //  makePayment()
                         val intent = Intent(baseActivity, PaymentButtonActivity::class.java)
-                        intent.putExtra("amount", "20")
+                        intent.putExtra("amount", payableAmount)
                         startActivityForResult(intent, PAYMENT_CODE)
                     }
                     "tv_convert_to_cash" -> {
@@ -166,7 +165,7 @@ class StatisticsActivity : BaseFragment(), DialogssInterface {
                 baseActivity.stopProgressDialog()
                 if (response != null) {
                     when (response.code) {
-                         200 -> {
+                        200 -> {
                             binding!!.model = response.body
                             invitedPoints = response.body!!.pointsData!!.invitedFriends!!.toInt()
                             earnedPoints = response.body.pointsData!!.earnedPoints!!.toInt()
@@ -385,7 +384,8 @@ class StatisticsActivity : BaseFragment(), DialogssInterface {
             if (data!!.hasExtra("paymentId")) {
                 val paymentId = data.getStringExtra("paymentId")
                 Log.d("TAG", "paymentIdStats=--- $paymentId")
-                viewModel!!.payComission(paymentId, payableAmount)
+                if (paymentId != "0")
+                    viewModel!!.payComission(paymentId, payableAmount)
             }
         }
     }

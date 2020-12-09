@@ -3,6 +3,8 @@ package com.courierdriver.views.profile
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.text.TextUtils
+import android.view.View
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -32,7 +34,13 @@ class PaymentHistoryActivity : BaseActivity() {
 
         getPaymentList()
         loaderObserver()
+        setToolbarTextIcons()
       //  viewClicks()
+    }
+
+    private fun setToolbarTextIcons() {
+        binding!!.toolbarCommon.imgRight.visibility = View.GONE
+        binding!!.toolbarCommon.imgToolbarText.text = "Payment History"
     }
 
 /*
@@ -129,7 +137,6 @@ class PaymentHistoryActivity : BaseActivity() {
             }
         })
     }
-
 
     private fun getPaymentList() {
         viewModel!!.paymentHistory()

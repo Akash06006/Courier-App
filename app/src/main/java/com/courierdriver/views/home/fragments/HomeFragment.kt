@@ -6,15 +6,18 @@ import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.IntentSender
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.drawable.ColorDrawable
 import android.location.Location
 import android.location.LocationManager
+import android.os.Build
 import android.os.Looper
 import android.provider.Settings
 import android.text.TextUtils
+import android.util.Log
 import android.view.*
 import android.widget.*
 import androidx.core.app.ActivityCompat
@@ -43,9 +46,16 @@ import com.courierdriver.utils.DialogClass
 import com.courierdriver.utils.DialogssInterface
 import com.courierdriver.utils.broadcastReceiver.NotifyWorkStatus
 import com.courierdriver.utils.broadcastReceiver.WorkStatusBroadcastReceiver
+import com.courierdriver.utils.broadcastReceiver.WorkStatusChangeAvailableButton
 import com.courierdriver.viewmodels.home.HomeViewModel
 import com.courierdriver.views.profile.HelpScreenActivity
+import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 
 class
 HomeFragment : BaseFragment(), DialogssInterface, NotifyWorkStatus {
@@ -53,8 +63,8 @@ HomeFragment : BaseFragment(), DialogssInterface, NotifyWorkStatus {
     private lateinit var homeViewModel: HomeViewModel
     val PERMISSION_ID = 42
     lateinit var mFusedLocationClient: FusedLocationProviderClient
-    var currentLat = ""
-    var currentLong = ""
+    var currentLat: Double? = 0.0
+    var currentLong: Double? = 0.0
     private lateinit var fragmentHomeBinding: FragmentHomeBinding
     private var orderList: ArrayList<OrderListModel.Body>? = null
     private var homeOrdersAdapter: HomeOrdersAdapter? = null
@@ -73,19 +83,23 @@ HomeFragment : BaseFragment(), DialogssInterface, NotifyWorkStatus {
     private var orderId: String? = null
     private var regionId: String? = null
     private var available: String? = null
+    private var locationCallback: LocationCallback? = null
+    private var locationRequest: LocationRequest? = null
 
     override fun initView() {
         fragmentHomeBinding = viewDataBinding as FragmentHomeBinding
         homeViewModel = ViewModelProviders.of(this).get(HomeViewModel::class.java)
         fragmentHomeBinding.homeViewModel = homeViewModel
-        mFusedLocationClass = FusedLocationClass(activity)
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(activity!!)
 
         sharedPrefValue()
         setToolbarTextIcons()
         viewClicks()
 
-        getOrderList(1)
+
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(baseActivity)
+        getLocationRequest()
+        setLocation()
+
         getOrderListObserver()
         acceptOrderObserver()
         cancelOrderObserver()
@@ -96,6 +110,7 @@ HomeFragment : BaseFragment(), DialogssInterface, NotifyWorkStatus {
 
         submitRegionObserver()
         subscribeWorkStatusReceiver()
+        subscribeWorkStatusButtonReceiver()
     }
 
     private fun loaderObserver() {
@@ -120,43 +135,22 @@ HomeFragment : BaseFragment(), DialogssInterface, NotifyWorkStatus {
                         startActivity(Intent(baseActivity, HelpScreenActivity::class.java))
                     }
                     "tv_resume_work" -> {
+                        val isAvailable = true
+                        SharedPrefClass().putObject(
+                            MyApplication.instance,
+                            GlobalConstants.AVAILABLE,
+                            isAvailable.toString()
+                        )
+                        fragmentHomeBinding.linTabsMain.visibility = View.VISIBLE
+                        fragmentHomeBinding.linNotWorking.visibility = View.GONE
+                        fragmentHomeBinding.linInProgress.visibility = View.GONE
 
+                        val workStatusData = Intent("workStatusButtonReceiver")
+                        LocalBroadcastManager.getInstance(baseActivity).sendBroadcast(workStatusData)
+                        getAvailableOrders()
                     }
                     "tv_available" -> {
-                        clearList()
-                        orderStatus = 1
-
-                        fragmentHomeBinding.tvAvailable.background.setColorFilter(
-                            ContextCompat.getColor(baseActivity, R.color.colorTextBlue),
-                            PorterDuff.Mode.SRC_ATOP
-                        )
-                        fragmentHomeBinding.tvAvailable.setTextColor(
-                            ContextCompat.getColor(
-                                baseActivity,
-                                R.color.colorWhite
-                            )
-                        )
-                        fragmentHomeBinding.tvActive.background.setColorFilter(
-                            ContextCompat.getColor(baseActivity, R.color.colorWhite),
-                            PorterDuff.Mode.SRC_ATOP
-                        )
-                        fragmentHomeBinding.tvActive.setTextColor(
-                            ContextCompat.getColor(
-                                baseActivity,
-                                R.color.colorBlack
-                            )
-                        )
-                        fragmentHomeBinding.tvCompleted.background.setColorFilter(
-                            ContextCompat.getColor(baseActivity, R.color.colorWhite),
-                            PorterDuff.Mode.SRC_ATOP
-                        )
-                        fragmentHomeBinding.tvCompleted.setTextColor(
-                            ContextCompat.getColor(
-                                baseActivity,
-                                R.color.colorBlack
-                            )
-                        )
-                        getOrderList(1)
+                        getAvailableOrders()
                     }
                     "tv_active" -> {
                         clearList()
@@ -234,10 +228,53 @@ HomeFragment : BaseFragment(), DialogssInterface, NotifyWorkStatus {
         )
     }
 
+    private fun getAvailableOrders() {
+        clearList()
+        orderStatus = 1
+
+        fragmentHomeBinding.tvAvailable.background.setColorFilter(
+            ContextCompat.getColor(baseActivity, R.color.colorTextBlue),
+            PorterDuff.Mode.SRC_ATOP
+        )
+        fragmentHomeBinding.tvAvailable.setTextColor(
+            ContextCompat.getColor(
+                baseActivity,
+                R.color.colorWhite
+            )
+        )
+        fragmentHomeBinding.tvActive.background.setColorFilter(
+            ContextCompat.getColor(baseActivity, R.color.colorWhite),
+            PorterDuff.Mode.SRC_ATOP
+        )
+        fragmentHomeBinding.tvActive.setTextColor(
+            ContextCompat.getColor(
+                baseActivity,
+                R.color.colorBlack
+            )
+        )
+        fragmentHomeBinding.tvCompleted.background.setColorFilter(
+            ContextCompat.getColor(baseActivity, R.color.colorWhite),
+            PorterDuff.Mode.SRC_ATOP
+        )
+        fragmentHomeBinding.tvCompleted.setTextColor(
+            ContextCompat.getColor(
+                baseActivity,
+                R.color.colorBlack
+            )
+        )
+        getOrderList(1)
+    }
+
     private fun subscribeWorkStatusReceiver() {
         val contractDetailsReceiver = WorkStatusBroadcastReceiver(this)
         LocalBroadcastManager.getInstance(baseActivity)
             .registerReceiver(contractDetailsReceiver, IntentFilter("workStatusReceiver"))
+    }
+
+    private fun subscribeWorkStatusButtonReceiver() {
+        val availablilityStatusReceiver = WorkStatusChangeAvailableButton()
+        LocalBroadcastManager.getInstance(baseActivity)
+            .registerReceiver(availablilityStatusReceiver, IntentFilter("workStatusButtonReceiver"))
     }
 
     override fun refreshWorkStatusData() {
@@ -253,6 +290,8 @@ HomeFragment : BaseFragment(), DialogssInterface, NotifyWorkStatus {
             fragmentHomeBinding.linTabsMain.visibility = View.VISIBLE
             fragmentHomeBinding.linNotWorking.visibility = View.GONE
             fragmentHomeBinding.linInProgress.visibility = View.GONE
+
+            getAvailableOrders()
         }
     }
 
@@ -265,7 +304,7 @@ HomeFragment : BaseFragment(), DialogssInterface, NotifyWorkStatus {
 
     //region API_CALL
     private fun getOrderList(orderStatus: Int) {
-        homeViewModel.orderList(orderStatus.toString(), "0.0", "0.0")
+        homeViewModel.orderList(orderStatus.toString(), currentLat.toString(), currentLong.toString())
     }
 
     fun acceptOrder(id: String?, adapterPosition: Int) {
@@ -371,17 +410,16 @@ HomeFragment : BaseFragment(), DialogssInterface, NotifyWorkStatus {
                         200 -> {
                             fragmentHomeBinding.linTabsMain.visibility = View.VISIBLE
                             fragmentHomeBinding.linInProgress.visibility = View.GONE
+                            fragmentHomeBinding.linNotWorking.visibility = View.GONE
 
-                            if (available == "false") {
-                                fragmentHomeBinding.linNotWorking.visibility = View.VISIBLE
-                                fragmentHomeBinding.linTabsMain.visibility = View.GONE
-                                fragmentHomeBinding.linInProgress.visibility = View.GONE
-                            } else {
-                                fragmentHomeBinding.linTabsMain.visibility = View.VISIBLE
-                                fragmentHomeBinding.linNotWorking.visibility = View.GONE
-                                fragmentHomeBinding.linInProgress.visibility = View.GONE
-                            }
-
+                            val isAvailable = true
+                            SharedPrefClass().putObject(
+                                MyApplication.instance,
+                                GlobalConstants.AVAILABLE,
+                                isAvailable.toString()
+                            )
+                            val workStatusData = Intent("workStatusButtonReceiver")
+                            LocalBroadcastManager.getInstance(baseActivity).sendBroadcast(workStatusData)
 
                             if (response.body!!.isNotEmpty()) {
                                 orderList = response.body
@@ -394,7 +432,14 @@ HomeFragment : BaseFragment(), DialogssInterface, NotifyWorkStatus {
                         400 -> {
                             fragmentHomeBinding.linInProgress.visibility = View.VISIBLE
                             fragmentHomeBinding.linTabsMain.visibility = View.GONE
+                            fragmentHomeBinding.linNotWorking.visibility = View.GONE
                             // account under review
+                        }
+                        206->
+                        {
+                            fragmentHomeBinding.linNotWorking.visibility = View.VISIBLE
+                            fragmentHomeBinding.linInProgress.visibility = View.GONE
+                            fragmentHomeBinding.linTabsMain.visibility = View.GONE
                         }
                         else -> UtilsFunctions.showToastError(message!!)
                     }
@@ -662,94 +707,144 @@ HomeFragment : BaseFragment(), DialogssInterface, NotifyWorkStatus {
         fragmentHomeBinding.toolbarCommon.imgToolbarText.text = getString(R.string.home)
     }
 
-    @SuppressLint("MissingPermission")
-    private fun getLastLocation() {
-        if (checkPermissions()) {
-            if (isLocationEnabled()) {
-                mFusedLocationClient.lastLocation.addOnCompleteListener(activity!!) { task ->
-                    var location: Location? = task.result
-                    if (location == null) {
-                        requestNewLocationData()
-                    } else {
-                        currentLat = location.latitude.toString()
-                        currentLong = location.longitude.toString()
-                        /*  Handler().postDelayed({
-                              callSocketMethods("updateVehicleLocation")
-                          }, 2000)
-  */
-                    }
-                }
-            } else {
-                Toast.makeText(activity, "Turn on location", Toast.LENGTH_LONG).show()
-                val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
-                startActivity(intent)
+    //region CURRENT_LOCATION
+    private fun getLocationRequest() {
+        locationRequest = LocationRequest()
+        locationRequest!!.interval = 10000
+        locationRequest!!.fastestInterval = 3000
+        locationRequest!!.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+    }
+
+    private fun setLocation() {
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(baseActivity)
+        locationRequest = LocationRequest.create()
+        locationRequest!!.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+        locationRequest!!.interval = 10 * 1000.toLong() // 10 seconds
+        locationRequest!!.fastestInterval = 5 * 1000.toLong() // 5 seconds
+
+        locationCallback = object : LocationCallback() {
+            override fun onLocationAvailability(locationAvailability: LocationAvailability?) {
             }
-        } else {
-            requestPermissions()
+
+            override fun onLocationResult(locationResult: LocationResult?) {
+                if (locationResult == null) {
+                    return
+                }
+                for (location in locationResult.locations) {
+                        currentLat = location.latitude
+                        currentLong = location.longitude
+                }
+                //show location on map
+                showCurrentLocationOnMap()
+                //Location fetched, update listener can be removed
+                //fusedLocationProviderClient!!.removeLocationUpdates(locationCallback!!)
+            }
+        }
+        startLocationUpdates()
+    }
+
+    private fun showCurrentLocationOnMap() {
+        if (baseActivity.checkAndRequestPermissions()) {
+            @SuppressLint("MissingPermission")
+            val lastLocation = mFusedLocationClient!!.lastLocation
+            lastLocation.addOnSuccessListener(baseActivity) { location ->
+                if (location != null) {
+                    //  mGoogleMap!!.clear()
+
+                    //Go to Current Location
+                    currentLat = location.latitude
+                    currentLong = location.longitude
+                } else {
+                    //Gps not enabled if loc is null
+                    getSettingsLocation()
+                }
+            }
+            lastLocation.addOnFailureListener {
+                //If perm provided then gps not enabled
+                //                getSettingsLocation();
+            }
         }
     }
 
-    private fun checkPermissions(): Boolean {
-        if (ActivityCompat.checkSelfPermission(
-                activity!!,
+    private fun getSettingsLocation() {
+        val builder = LocationSettingsRequest.Builder()
+            .addLocationRequest(locationRequest!!)
+        val result = LocationServices.getSettingsClient(baseActivity).checkLocationSettings(builder.build())
+
+        result.addOnCompleteListener { task ->
+            try {
+                val response = task.getResult(ApiException::class.java)
+                // All location settings are satisfied. The client can initialize location
+                // requests here.
+                //...
+                if (response != null) {
+                    val locationSettingsStates = response.locationSettingsStates
+                    Log.d("TAG", "getSettingsLocation: $locationSettingsStates")
+                    this.startLocationUpdates()
+
+                }
+            } catch (exception: ApiException) {
+                Log.d("TAG", "getSettingsLocation: $exception")
+                when (exception.statusCode) {
+                    LocationSettingsStatusCodes.RESOLUTION_REQUIRED ->
+                        // Location settings are not satisfied. But could be fixed by showing the
+                        // user a dialog.
+                        try {
+                            // Cast to a resolvable exception.
+                            val resolvable = exception as ResolvableApiException
+                            // Show the dialog by calling startResolutionForResult(),
+                            // and check the result in onActivityResult().
+                            resolvable.startResolutionForResult(
+                                baseActivity,
+                                REQUEST_CHECK_SETTINGS
+                            )
+                        } catch (e: IntentSender.SendIntentException) {
+                            // Ignore the error.
+                        } catch (e: ClassCastException) {
+                            // Ignore, should be an impossible error.
+                        }
+                    LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE -> {
+                        // If unavailable
+                    }
+                }// Location settings are not satisfied. However, we have no way to fix the
+                // settings so we won't show the dialog.
+                //...
+            }
+        }
+    }
+
+    companion object {
+        private const val REQUEST_CHECK_SETTINGS = 265
+    }
+
+    private fun startLocationUpdates() {
+        if (ContextCompat.checkSelfPermission(
+                baseActivity,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(
+                baseActivity,
                 Manifest.permission.ACCESS_COARSE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED &&
-            ActivityCompat.checkSelfPermission(
-                activity!!,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED
+            ) != PackageManager.PERMISSION_GRANTED
         ) {
-            return true
+            return
         }
-        return false
-    }
-
-    private fun requestPermissions() {
-        ActivityCompat.requestPermissions(
-            activity!!,
-            arrayOf(
-                Manifest.permission.ACCESS_COARSE_LOCATION,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ),
-            PERMISSION_ID
-        )
-    }
-
-    private fun isLocationEnabled(): Boolean {
-        var locationManager: LocationManager =
-            activity!!.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(
-            LocationManager.NETWORK_PROVIDER
-        )
-    }
-
-    @SuppressLint("MissingPermission", "RestrictedApi")
-    private fun requestNewLocationData() {
-        var mLocationRequest = LocationRequest()
-        mLocationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-        mLocationRequest.interval = 0
-        mLocationRequest.fastestInterval = 0
-        mLocationRequest.numUpdates = 1
-
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(activity!!)
         mFusedLocationClient!!.requestLocationUpdates(
-            mLocationRequest, mLocationCallback,
-            Looper.myLooper()
+            locationRequest,
+            locationCallback!!, null/* Looper */
         )
-
+            .addOnSuccessListener { Log.d("TAG", "startLocationUpdates: onSuccess: ") }
+            .addOnFailureListener { e ->
+                Log.d("TAG", "startLocationUpdates: " + e.message)
+            }
     }
 
-    private
-    val mLocationCallback = object : LocationCallback() {
-        override fun onLocationResult(locationResult: LocationResult) {
-            var mLastLocation: Location = locationResult.lastLocation
-            currentLat = mLastLocation.latitude.toString()
-            currentLong = mLastLocation.longitude.toString()
-            /*Handler().postDelayed({
-                callSocketMethods("updateVehicleLocation")
-            }, 2000)*/
 
-        }
+    //endregion
+
+    override fun onResume() {
+        super.onResume()
+        if(orderStatus==1)
+        getAvailableOrders()
     }
 
     override fun getLayoutResId(): Int {

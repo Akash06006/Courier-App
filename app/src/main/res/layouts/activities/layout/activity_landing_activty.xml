@@ -41,10 +41,11 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:weightSum="4"
                 android:orientation="horizontal">
 
                 <RelativeLayout
-                    android:layout_width="@dimen/dp_80"
+                    android:layout_width="@dimen/dp_60"
                     android:layout_height="match_parent"
                     android:layout_weight="1">
 
@@ -79,12 +80,13 @@
                             android:layout_marginTop="@dimen/dp_5"
                             android:text="@string/orders"
                             app:font="@{`regular`}"
+                            android:textSize="@dimen/sp_12"
                             android:textColor="@color/colorWhite" />
                     </RelativeLayout>
                 </RelativeLayout>
 
                 <RelativeLayout
-                    android:layout_width="@dimen/dp_80"
+                    android:layout_width="@dimen/dp_60"
                     android:layout_height="match_parent"
                     android:layout_weight="1">
 
@@ -118,6 +120,7 @@
                             android:layout_centerInParent="true"
                             android:layout_marginTop="@dimen/dp_5"
                             android:text="@string/profile"
+                            android:textSize="@dimen/sp_12"
                             app:font="@{`regular`}"
                             android:textColor="@color/colorLiteWhite" />
                     </RelativeLayout>
@@ -161,6 +164,7 @@
                             android:layout_marginTop="@dimen/dp_5"
                             android:text="@string/notifications"
                             app:font="@{`regular`}"
+                            android:textSize="@dimen/sp_12"
                             android:textColor="@color/colorLiteWhite" />
                     </RelativeLayout>
                 </RelativeLayout>
@@ -201,6 +205,7 @@
                             android:layout_marginTop="@dimen/dp_5"
                             android:text="Not Working"
                             app:font="@{`regular`}"
+                            android:textSize="@dimen/sp_12"
                             android:textColor="@color/colorRed" />
                     </RelativeLayout>
                 </RelativeLayout>

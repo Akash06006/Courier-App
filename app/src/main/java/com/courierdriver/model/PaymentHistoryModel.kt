@@ -20,6 +20,9 @@ class PaymentHistoryModel {
         @SerializedName("orderId")
         val orderId: String? = null
 
+        @SerializedName("orderNo")
+        val orderNo: String? = null
+
         @SerializedName("orderPrice")
         val orderPrice: String? = null
 

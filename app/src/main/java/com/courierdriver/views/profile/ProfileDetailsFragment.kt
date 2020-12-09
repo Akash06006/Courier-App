@@ -3,8 +3,11 @@ package com.courierdriver.views.profile
 import android.app.Activity
 import android.app.Dialog
 import android.content.Intent
+import android.net.Uri
+import android.os.Environment
 import android.provider.MediaStore
 import android.view.View
+import androidx.core.content.FileProvider
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.courierdriver.R
@@ -24,6 +27,9 @@ import com.theartofdev.edmodo.cropper.CropImage
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import java.io.File
+import java.io.IOException
+import java.text.SimpleDateFormat
+import java.util.*
 
 class ProfileDetailsFragment : BaseFragment(), DialogssInterface, SelfieCallBack {
     private var binding: ActivityProfileDetailsBinding? = null
@@ -36,6 +42,7 @@ class ProfileDetailsFragment : BaseFragment(), DialogssInterface, SelfieCallBack
     private var fileUri = ""
     private var imageFile: File? = null
     private var model: ProfileDetailsModel.Body? = null
+    private var todaySelfieImage=""
 
     override fun initView() {
         binding = viewDataBinding as ActivityProfileDetailsBinding
@@ -96,6 +103,48 @@ class ProfileDetailsFragment : BaseFragment(), DialogssInterface, SelfieCallBack
     }
 
     override fun selfieFromCamera(mKey: String) {
+        Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
+            // Ensure that there's a camera activity to handle the intent
+            takePictureIntent.resolveActivity(baseActivity.packageManager)?.also {
+                // Create the File where the photo should go
+                val photoFile: File? = try {
+                    createImageFile()
+                } catch (ex: IOException) {
+                    // Error occurred while creating the File
+                    null
+                }
+                // Continue only if the File was successfully created
+                photoFile?.also {
+                    val photoURI: Uri =
+                        FileProvider.getUriForFile(
+                            baseActivity,
+                            baseActivity.packageName + ".fileprovider",
+                            it
+                        )
+                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
+                    startActivityForResult(takePictureIntent, CAMERA_REQUEST)
+                }
+            }
+        }
+    }
+
+    private fun createImageFile(): File {
+        // Create an image file name
+        val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
+        val storageDir: File = baseActivity.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        //currentPhotoPath = File(baseActivity?.cacheDir, fileName)
+        return File.createTempFile(
+            "JPEG_${timeStamp}_", /* prefix */
+            ".jpg", /* suffix */
+            storageDir /* directory */
+        ).apply {
+            // Save a file: path for use with ACTION_VIEW intents
+            todaySelfieImage = absolutePath
+        }
+    }
+
+/*
+    override fun selfieFromCamera(mKey: String) {
 
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         if (intent.resolveActivity(baseActivity.packageManager) == null) {
@@ -108,11 +157,14 @@ class ProfileDetailsFragment : BaseFragment(), DialogssInterface, SelfieCallBack
         intent.putExtra(MediaStore.EXTRA_OUTPUT, uri)
         startActivityForResult(intent, CAMERA_REQUEST)
     }
+*/
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-
         if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
+            fileUri = todaySelfieImage
+
+/*
             if (data != null && data.data != null) {
 
                 CropImage.activity(data.data)
@@ -125,7 +177,8 @@ class ProfileDetailsFragment : BaseFragment(), DialogssInterface, SelfieCallBack
                         .start(baseActivity);
                 }
             }
-        } else if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+*/
+        } /*else if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             val result = CropImage.getActivityResult(data)
             if (result != null) {
                 val resultUri = result.uri
@@ -135,7 +188,7 @@ class ProfileDetailsFragment : BaseFragment(), DialogssInterface, SelfieCallBack
 
                 uploadSelfieApi()
             }
-        }
+        }*/
     }
 
     private fun uploadSelfieApi() {

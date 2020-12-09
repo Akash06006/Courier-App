@@ -362,6 +362,7 @@
     <string name="week">week</string>
     <string name="days">days</string>
     <string name="ago">ago</string>
+    <string name="msg_token_fmt">InstanceID Token: %s</string>
 
     <string-array name="Languages">
         <item>Java</item>

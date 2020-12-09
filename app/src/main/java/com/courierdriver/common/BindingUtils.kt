@@ -263,11 +263,10 @@ object BindingUtils {
 
     @JvmStatic
     fun setDecimalText(text: String?): String {
-        var text = ""
+        var formattedText = ""
         if (!TextUtils.isEmpty(text)) {
-            text =
-                GlobalConstants.CURRENCY_SIGN + DecimalFormat("##.##").format(text.toDouble())
-            return text
+            formattedText = DecimalFormat("##.##").format(text!!.toDouble())
+            return formattedText
         } else
             return ""
     }

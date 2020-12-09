@@ -767,7 +767,8 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
             activityCreateOrderBinding.llCompleteOrder.visibility = View.GONE
         } else if (orderStatus.equals("2")) {
             if (orderStatusName.equals("Picked Up")) {
-                activityCreateOrderBinding.linChatHelp.visibility = View.GONE
+                activityCreateOrderBinding.linChatHelp.visibility = View.VISIBLE
+                activityCreateOrderBinding.tvTimer.visibility = View.GONE
                 activityCreateOrderBinding.llAvailable.visibility = View.GONE
                 activityCreateOrderBinding.llAcceptedTakeOrder.visibility = View.GONE
                 activityCreateOrderBinding.llCompleteOrder.visibility = View.VISIBLE
@@ -780,7 +781,7 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
             }
 
         } else if (orderStatus.equals("3")) {
-            activityCreateOrderBinding.linChatHelp.visibility = View.VISIBLE
+            activityCreateOrderBinding.linChatHelp.visibility = View.GONE
             activityCreateOrderBinding.tvTimer.visibility = View.GONE
             activityCreateOrderBinding.llAvailable.visibility = View.GONE
             activityCreateOrderBinding.llAcceptedTakeOrder.visibility = View.GONE

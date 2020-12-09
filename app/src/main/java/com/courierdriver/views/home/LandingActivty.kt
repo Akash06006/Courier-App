@@ -15,13 +15,15 @@ import com.courierdriver.databinding.ActivityLandingActivtyBinding
 import com.courierdriver.model.CommonModel
 import com.courierdriver.sharedpreference.SharedPrefClass
 import com.courierdriver.utils.BaseActivity
+import com.courierdriver.utils.broadcastReceiver.NotifyWorkStatusButtons
 import com.courierdriver.utils.broadcastReceiver.WorkStatusBroadcastReceiver
+import com.courierdriver.utils.broadcastReceiver.WorkStatusChangeAvailableButton
 import com.courierdriver.viewmodels.home.HomeViewModel
 import com.courierdriver.views.home.fragments.HomeFragment
 import com.courierdriver.views.notification.NotificationChatActivity
 import com.courierdriver.views.profile.ProfileHomeActivity
 
-class LandingActivty : BaseActivity(), View.OnClickListener {
+class LandingActivty : BaseActivity(), View.OnClickListener, NotifyWorkStatusButtons {
     private lateinit var activityOtpVerificationBinding: ActivityLandingActivtyBinding
     private lateinit var homeViewModel: HomeViewModel
     private var isAvailable = false
@@ -46,6 +48,7 @@ class LandingActivty : BaseActivity(), View.OnClickListener {
         loaderObserver()
         updateAvailabilityObserver()
         subscribeWorkStatusReceiver()
+        subscribeWorkStatusButtonReceiver()
     }
 
     override fun onClick(v: View?) {
@@ -87,6 +90,12 @@ class LandingActivty : BaseActivity(), View.OnClickListener {
     private fun subscribeWorkStatusReceiver() {
         val contractDetailsReceiver = WorkStatusBroadcastReceiver()
         LocalBroadcastManager.getInstance(this).registerReceiver(contractDetailsReceiver, IntentFilter("workStatusReceiver"))
+    }
+
+    private fun subscribeWorkStatusButtonReceiver() {
+        val availaibilityStatusReceiver = WorkStatusChangeAvailableButton(this)
+        LocalBroadcastManager.getInstance(this)
+            .registerReceiver(availaibilityStatusReceiver, IntentFilter("workStatusButtonReceiver"))
     }
 
     private fun setAvailabilityColor() {
@@ -219,5 +228,13 @@ class LandingActivty : BaseActivity(), View.OnClickListener {
                 stopProgressDialog()
             }
         })
+    }
+
+    override fun refreshWorkStatusData() {
+        available =
+            SharedPrefClass().getPrefValue(this, GlobalConstants.AVAILABLE)
+                .toString()
+        isAvailable = available.toBoolean()
+        homeViewModel.updateAvailability(isAvailable)
     }
 }

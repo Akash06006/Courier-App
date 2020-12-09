@@ -4,6 +4,8 @@
 
     <data>
 
+        <import type="com.courierdriver.common.BindingUtils" />
+
         <variable
             name="viewModel"
             type="com.courierdriver.viewmodels.profile.ProfileViewModel" />
@@ -114,7 +116,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/dp_10"
-                            android:text="@{currencySign+model.all.myIncome}"
+                            android:text="@{currencySign+BindingUtils.setDecimalText(model.all.myIncome)}"
                             android:textColor="@color/colorPrimary"
                             android:textSize="@dimen/sp_14"
                             app:font="@{`bold`}" />
@@ -305,7 +307,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentEnd="true"
-                            android:text="@{currencySign+model.commissionData.totalCommission}"
+                            android:text="@{currencySign+BindingUtils.setDecimalText(model.commissionData.totalCommission)}"
                             android:textColor="@color/colorBlack"
                             android:textSize="@dimen/sp_14"
                             app:font="@{`bold`}" />
@@ -338,7 +340,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentRight="true"
-                            android:text="@{`-`+currencySign+model.commissionData.earnedCash}"
+                            android:text="@{`-`+currencySign+BindingUtils.setDecimalText(model.commissionData.earnedCash)}"
                             android:textColor="@color/colorSuccess"
                             android:textSize="@dimen/sp_14"
                             app:font="@{`bold`}" />
@@ -371,7 +373,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentRight="true"
-                            android:text="@{`+`+currencySign+model.commissionData.payableCommission}"
+                            android:text="@{`+`+currencySign+BindingUtils.setDecimalText(model.commissionData.payableCommission)}"
                             android:textColor="@color/colorRed"
                             android:textSize="@dimen/sp_14"
                             app:font="@{`bold`}" />
@@ -404,7 +406,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentRight="true"
-                            android:text="@{currencySign+model.commissionData.totalCommission}"
+                            android:text="@{currencySign+BindingUtils.setDecimalText(model.commissionData.totalCommission)}"
                             android:textColor="@color/colorRed"
                             android:textSize="@dimen/sp_14"
                             app:font="@{`bold`}" />
@@ -464,11 +466,11 @@
 
                     <Spinner
                         android:id="@+id/sp_weeks"
-                        android:layout_marginLeft="@dimen/dp_10"
-                        android:backgroundTint="@color/colorPrimary"
                         android:layout_width="@dimen/dp_120"
-                        android:layout_height="@dimen/dp_50" />
-<!--                    style="@style/SpinnerTheme"-->
+                        android:layout_height="@dimen/dp_50"
+                        android:layout_marginLeft="@dimen/dp_10"
+                        android:backgroundTint="@color/colorPrimary" />
+                    <!--                    style="@style/SpinnerTheme"-->
 
                     <!--
                                         <TextView
@@ -573,7 +575,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/dp_10"
-                                android:text="@{currencySign+model.week.myIncome}"
+                                android:text="@{currencySign+BindingUtils.setDecimalText(model.week.myIncome)}"
                                 android:textColor="@color/colorPrimary"
                                 android:textSize="@dimen/sp_14"
                                 app:font="@{`bold`}" />
@@ -617,16 +619,16 @@
 
                         <Spinner
                             android:id="@+id/sp_years"
-                            android:backgroundTint="@color/colorPrimary"
                             android:layout_width="@dimen/dp_120"
-                            android:layout_height="@dimen/dp_50" />
+                            android:layout_height="@dimen/dp_50"
+                            android:backgroundTint="@color/colorPrimary" />
 
                         <Spinner
                             android:id="@+id/sp_months"
-                            android:backgroundTint="@color/colorPrimary"
                             android:layout_width="@dimen/dp_120"
                             android:layout_height="@dimen/dp_50"
-                            android:layout_marginLeft="@dimen/dp_20" />
+                            android:layout_marginLeft="@dimen/dp_20"
+                            android:backgroundTint="@color/colorPrimary" />
                     </LinearLayout>
 
                     <androidx.recyclerview.widget.RecyclerView

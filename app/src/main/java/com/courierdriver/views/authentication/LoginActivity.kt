@@ -29,7 +29,9 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
+import com.google.firebase.iid.FirebaseInstanceId
 import com.google.gson.JsonObject
 import org.json.JSONObject
 import java.util.*
@@ -42,6 +44,7 @@ class LoginActivity : BaseActivity() {
     val mOtpJsonObject = JsonObject()
     private val RC_SIGN_IN: Int = 0
     lateinit var mGoogleSignInClient: GoogleSignInClient
+    private var token = ""
 
     override fun getLayoutId(): Int {
         return R.layout.activity_login
@@ -59,6 +62,7 @@ class LoginActivity : BaseActivity() {
                 .requestIdToken("6946227711-va1qdqpru77knadr33pnseqnn9l89hgf.apps.googleusercontent.com")
                 .requestEmail()
                 .build()
+        firebaseToken()
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
         loginViewModel.getLoginRes().observe(this,
             Observer<LoginResponse> { loginResponse ->
@@ -223,14 +227,11 @@ class LoginActivity : BaseActivity() {
                                     "countryCode",
                                     "+" +  activityLoginbinding.btCountryCode.selectedCountryCode
                                 )
-                                val android_id: String = Settings.Secure.getString(
-                                    applicationContext.contentResolver,
-                                    Settings.Secure.ANDROID_ID)
                                 /*mJsonObject.addProperty("email", email)
                                 mJsonObject.addProperty("password", password)*/
                                 mJsonObject.addProperty("isSocial", false)
                                 mJsonObject.addProperty("socialId", "")
-                                mJsonObject.addProperty("deviceToken", android_id)
+                                mJsonObject.addProperty("deviceToken", token)
                                 mJsonObject.addProperty("platform", "android")
                                 if (UtilsFunctions.isNetworkConnected()) {
                                     loginViewModel.callLoginApi(mJsonObject)
@@ -332,6 +333,26 @@ class LoginActivity : BaseActivity() {
             })
         )
     }
+
+    private fun firebaseToken() {
+        FirebaseInstanceId.getInstance().instanceId
+            .addOnCompleteListener(OnCompleteListener { task ->
+                if (!task.isSuccessful) {
+                    Log.w("", "getInstanceId failed", task.exception)
+                    return@OnCompleteListener
+                }
+
+                // Get new Instance ID token
+                token = task.result?.token.toString()
+                Log.d("", "token $token")
+                // Log and toast
+                val msg = getString(R.string.msg_token_fmt, token)
+                //enableNotification(token)
+                Log.d("", msg)
+                //Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
+            })
+    }
+
 
     private fun loaderObserver() {
         loginViewModel.isLoading().observe(this, Observer<Boolean> { aBoolean ->

@@ -62,6 +62,13 @@ class PaymentButtonActivity : BaseActivity() {
         binding!!.price = payableAmount
     }
 
+    override fun onBackPressed() {
+        val intent = Intent()
+        intent.putExtra("paymentId", "0")
+        setResult(PAYMENT_CODE, intent)
+        finish()
+    }
+
     //region PAYMENT
     private fun makePayment() {
         val payUmoneyConfig = PayUmoneyConfig.getInstance()

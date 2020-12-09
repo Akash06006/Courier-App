@@ -7,6 +7,7 @@ import androidx.annotation.NonNull
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.courierdriver.R
+import com.courierdriver.constants.GlobalConstants
 import com.courierdriver.databinding.RowPaymentHistoryBinding
 import com.courierdriver.model.PaymentHistoryModel
 import com.courierdriver.utils.BaseActivity
@@ -32,6 +33,7 @@ class PaymentHistoryAdapter(
     override fun onBindViewHolder(@NonNull holder: ViewHolder, position: Int) {
         viewHolder = holder
         holder.binding!!.model = paymentsList!![position]
+        holder.binding.currencySign = GlobalConstants.CURRENCY_SIGN
     }
 
     override fun getItemCount(): Int {

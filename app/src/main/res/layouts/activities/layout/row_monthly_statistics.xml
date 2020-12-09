@@ -4,6 +4,7 @@
 
     <data>
 
+        <import type="com.courierdriver.common.BindingUtils" />
         <variable
             name="model"
             type="com.courierdriver.model.StatisticsModel.Body.Year" />
@@ -88,7 +89,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dp_10"
-                    android:text="@{model.myIncome}"
+                    android:text="@{currencySign+BindingUtils.setDecimalText(model.myIncome)}"
                     android:textColor="@color/colorBlack"
                     android:textSize="@dimen/sp_14"
                     app:font="@{`bold`}" />

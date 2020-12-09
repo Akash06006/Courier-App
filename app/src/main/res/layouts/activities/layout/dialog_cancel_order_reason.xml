@@ -11,27 +11,40 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/dp_10"
-            android:layout_marginRight="@dimen/dp_10"
+            android:layout_marginLeft="@dimen/dp_20"
+            android:layout_marginRight="@dimen/dp_20"
             android:background="@drawable/round_layout"
             android:orientation="vertical"
             android:paddingBottom="@dimen/dp_30"
             tools:ignore="UselessParent">
 
+            <ImageView
+                android:id="@+id/img_cross"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:paddingLeft="@dimen/dp_15"
+                android:paddingTop="@dimen/dp_15"
+                android:paddingRight="@dimen/dp_15"
+                android:src="@drawable/ic__cross_round" />
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/shape_upper_round"
-                android:backgroundTint="@color/colorPrimary"
-                android:gravity="center"
-                android:padding="@dimen/dp_15"
-                android:text="Please specify reason for withdrawing this order!"
-                android:textColor="@color/colorWhite" />
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_horizontal"
+                android:paddingLeft="@dimen/dp_15"
+                android:paddingRight="@dimen/dp_15"
+                android:text="@string/please_specify_reason_for_withdrawing_this_order"
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/sp_16"
+                app:font="@{`bold`}" />
 
-
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -43,7 +56,7 @@
                     android:paddingLeft="@dimen/dp_15"
                     android:paddingRight="@dimen/dp_15"
                     android:text="@string/cancellation_charges"
-                    android:textColor="@color/colorBlack"
+                    android:textColor="@color/colorGrey"
                     android:textSize="@dimen/sp_14"
                     app:font="@{`regular`}" />
 
@@ -53,14 +66,17 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_marginTop="@dimen/dp_20"
+                    android:drawableLeft="@drawable/ic_cash"
+                    android:drawableTint="@color/colorTextBlue"
                     android:gravity="end"
                     android:paddingLeft="@dimen/dp_15"
+                    android:paddingTop="@dimen/dp_3"
                     android:paddingRight="@dimen/dp_15"
-                    android:text="$ 25"
-                    android:textColor="@color/colorHomeTabRed"
+                    android:text="₹50"
+                    android:textColor="@color/colorTextBlue"
                     android:textSize="@dimen/sp_14"
                     app:font="@{`bold`}" />
-            </RelativeLayout>
+            </LinearLayout>
 
             <Spinner
                 android:id="@+id/sp_cancellation_reason"
@@ -116,12 +132,12 @@
                     android:layout_marginLeft="@dimen/dp_10"
                     android:layout_marginRight="@dimen/dp_10"
                     android:background="@drawable/round_corners_home_tab"
-                    android:backgroundTint="@color/colorHomeTabRed"
+                    android:backgroundTint="@color/colorPrimary"
                     android:paddingLeft="@dimen/dp_40"
                     android:paddingTop="@dimen/dp_10"
                     android:paddingRight="@dimen/dp_40"
                     android:paddingBottom="@dimen/dp_10"
-                    android:text="@string/submit"
+                    android:text="@string/send"
                     android:textAlignment="center"
                     android:textColor="@color/colorWhite"
                     android:textSize="@dimen/sp_14"
@@ -143,6 +159,7 @@
                     android:textAlignment="center"
                     android:textColor="@color/colorBlack"
                     android:textSize="@dimen/sp_14"
+                    android:visibility="gone"
                     app:font="@{`bold`}" />
 
 

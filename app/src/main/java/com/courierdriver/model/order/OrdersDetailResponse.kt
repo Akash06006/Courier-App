@@ -118,6 +118,14 @@ class OrdersDetailResponse {
         @Expose
         var createdAt: String? = null
 
+        @SerializedName("driverEarning")
+        @Expose
+        var driverEarning: String? = null
+
+        @SerializedName("driverCCharges")
+        @Expose
+        var driverCCharges: String? = null
+
         @SerializedName("weight")
         @Expose
         var weight: WeightData? = null
@@ -165,6 +173,10 @@ class OrdersDetailResponse {
         @SerializedName("totalOrderPrice")
         @Expose
         var totalOrderPrice: String? = null
+
+        @SerializedName("adminComission")
+        @Expose
+        var adminComission: String? = null
 
         @SerializedName("companyId")
         @Expose
@@ -275,6 +287,10 @@ class OrdersDetailResponse {
         @Expose
         var address: String? = null
 
+        @SerializedName("id")
+        @Expose
+        var id: String? = null
+
         @SerializedName("lat")
         @Expose
         var lat: String? = null
@@ -295,6 +311,11 @@ class OrdersDetailResponse {
         @Expose
         var time: String? = null
 
+        @SerializedName("isComplete")
+        @Expose
+        var isComplete: Boolean? = null
+
+        var isSelected = false
     }
 
     class VehicleData {

@@ -7,8 +7,7 @@ import com.courierdriver.api.ApiResponse
 import com.courierdriver.api.ApiService
 import com.courierdriver.application.MyApplication
 import com.courierdriver.common.UtilsFunctions
-import com.courierdriver.model.CommonModel
-import com.courierdriver.model.GetSubjectsModel
+import com.courierdriver.model.*
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonObject
 import okhttp3.MultipartBody
@@ -101,5 +100,109 @@ class HelpRepository {
         return logoutData!!
     }
 
+    fun paymentHistory(
+        paymentData: MutableLiveData<PaymentHistoryModel>?
+    ): MutableLiveData<PaymentHistoryModel> {
+        if (UtilsFunctions.isNetworkConnected()) {
+            val mApiService = ApiService<JsonObject>()
+            mApiService.get(
+                object : ApiResponse<JsonObject> {
+                    override fun onResponse(mResponse: Response<JsonObject>) {
+                        if (mResponse.body() != null) {
+                            val data = gson.fromJson<PaymentHistoryModel>(
+                                "" + mResponse.body()!!,
+                                PaymentHistoryModel::class.java
+                            )
+                            paymentData!!.postValue(data)
+                        } else {
+                            paymentData!!.postValue(null)
+                        }
+                    }
 
+                    override fun onError(mKey: String) {
+                        paymentData!!.value = null
+                        UtilsFunctions.showToastError(MyApplication.instance.getString(R.string.internal_server_error))
+                    }
+                }, ApiClient.getApiInterface().paymentHistory()
+            )
+        }
+        return paymentData!!
+    }
+
+    fun getNotifications(
+        notificationData: MutableLiveData<NotificationListModel>?
+    ): MutableLiveData<NotificationListModel> {
+        if (UtilsFunctions.isNetworkConnected()) {
+            val mApiService = ApiService<JsonObject>()
+            mApiService.get(
+                object : ApiResponse<JsonObject> {
+                    override fun onResponse(mResponse: Response<JsonObject>) {
+                        val data = gson.fromJson<NotificationListModel>(
+                            "" + mResponse.body()!!,
+                            NotificationListModel::class.java
+                        )
+                        notificationData!!.postValue(data)
+                    }
+
+                    override fun onError(mKey: String) {
+                        notificationData!!.value = null
+                        UtilsFunctions.showToastError(MyApplication.instance.getString(R.string.internal_server_error))
+                    }
+                }, ApiClient.getApiInterface().notification()
+            )
+        }
+        return notificationData!!
+    }
+
+    fun tutorialQuestions(
+        page: Int?,
+        workData: MutableLiveData<DefineWorkModel>?
+    ): MutableLiveData<DefineWorkModel> {
+        if (UtilsFunctions.isNetworkConnected() && page != null) {
+            val mApiService = ApiService<JsonObject>()
+            mApiService.get(
+                object : ApiResponse<JsonObject> {
+                    override fun onResponse(mResponse: Response<JsonObject>) {
+                        val data = gson.fromJson<DefineWorkModel>(
+                            "" + mResponse.body()!!,
+                            DefineWorkModel::class.java
+                        )
+                        workData!!.postValue(data)
+                    }
+
+                    override fun onError(mKey: String) {
+                        workData!!.value = null
+                        UtilsFunctions.showToastError(MyApplication.instance.getString(R.string.internal_server_error))
+                    }
+                }, ApiClient.getApiInterface().tutorialQue(page!!)
+            )
+        }
+        return workData!!
+    }
+
+    fun saveTutorialQuestions(
+        jsonObject: JsonObject?,
+        workData: MutableLiveData<CommonModel>?
+    ): MutableLiveData<CommonModel> {
+        if (UtilsFunctions.isNetworkConnected() && jsonObject != null) {
+            val mApiService = ApiService<JsonObject>()
+            mApiService.get(
+                object : ApiResponse<JsonObject> {
+                    override fun onResponse(mResponse: Response<JsonObject>) {
+                        val data = gson.fromJson<CommonModel>(
+                            "" + mResponse.body()!!,
+                            CommonModel::class.java
+                        )
+                        workData!!.postValue(data)
+                    }
+
+                    override fun onError(mKey: String) {
+                        workData!!.value = null
+                        UtilsFunctions.showToastError(MyApplication.instance.getString(R.string.internal_server_error))
+                    }
+                }, ApiClient.getApiInterface().saveTutorialAns(jsonObject)
+            )
+        }
+        return workData!!
+    }
 }

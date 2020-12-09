@@ -12,6 +12,7 @@ import com.courierdriver.model.order.ListsResponse
 import com.courierdriver.model.order.OrdersDetailResponse
 import com.courierdriver.model.order.OrdersListResponse
 import com.courierdriver.repositories.order.OrderDetailRepository
+import com.courierdriver.repositories.profile.ProfileRepository
 import com.courierdriver.viewmodels.BaseViewModel
 import com.example.courier.model.order.ApplyCouponResponse
 import com.example.courier.model.order.CalculatePriceResponse
@@ -42,6 +43,8 @@ class OrderDetailViewModel : BaseViewModel() {
     private var cancelReasonList: MutableLiveData<CancelReasonModel>? = MutableLiveData()
     private val mIsUpdating = MutableLiveData<Boolean>()
     private val btnClick = MutableLiveData<String>()
+    private var uploadSelfieList: MutableLiveData<CommonModel>? = MutableLiveData()
+    private var profileRepository = ProfileRepository()
 
     init {
         if (UtilsFunctions.isNetworkConnectedReturn()) {
@@ -60,8 +63,22 @@ class OrderDetailViewModel : BaseViewModel() {
             createOrder = orderRepository.createOrder(null)
             paymentStatus = orderRepository.updatePaymentStatus(null)
             cancelReasonList = orderRepository.cancellationReason(cancelReasonList)
+            cancelOrderList = orderRepository.cancelOrder(null, cancelOrderList)
+            uploadSelfieList = profileRepository.uploadSelfie(null, null,null,null,uploadSelfieList)
         }
+    }
 
+    fun uploadSelfie(
+        userImage: MultipartBody.Part?,
+        type: String?,
+        orderId: String?,
+        addressId: String?) {
+        uploadSelfieList = profileRepository.uploadSelfie(userImage, type,orderId,addressId,uploadSelfieList)
+        mIsUpdating.postValue(true)
+    }
+
+    fun uploadSelfieListData(): LiveData<CommonModel> {
+        return uploadSelfieList!!
     }
 
     fun acceptOrderData(): LiveData<CommonModel> {
@@ -102,7 +119,7 @@ class OrderDetailViewModel : BaseViewModel() {
     }
 
     fun cancelOrderRes(): LiveData<CommonModel> {
-        return cancelOrder
+        return  cancelOrderList!!
     }
 
     fun cancelReasonData(): LiveData<CancelReasonModel> {
@@ -191,11 +208,18 @@ class OrderDetailViewModel : BaseViewModel() {
         }
     }
 
-    fun completeOrder(id: String, addressId: String) {
+    fun completeOrder(
+        id: String,
+        addressId: String,
+        driverEarning: String?,
+        adminComission: String?
+    ) {
         if (UtilsFunctions.isNetworkConnected()) {
             val jsonObject = JsonObject()
             jsonObject.addProperty("orderId", id)
             jsonObject.addProperty("addressId", addressId)
+            jsonObject.addProperty("driverEarning", driverEarning)
+            jsonObject.addProperty("adminComission", adminComission)
             completeOrder = orderRepository.completeOrder(jsonObject, completeOrder)
             mIsUpdating.postValue(true)
         }
@@ -269,5 +293,4 @@ class OrderDetailViewModel : BaseViewModel() {
 
         }
     }
-
 }

@@ -7,9 +7,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginLeft="@dimen/dp_30"
-        android:layout_marginRight="@dimen/dp_30"
-        android:background="@drawable/round_layout"
+        android:layout_marginLeft="@dimen/dp_60"
+        android:layout_marginRight="@dimen/dp_60"
+        android:background="@drawable/inset_margin"
         android:orientation="vertical"
         android:paddingBottom="@dimen/dp_10">
 
@@ -62,7 +62,6 @@
                 android:paddingRight="@dimen/dp_10"
                 tools:ignore="UseCompoundDrawables">
 
-
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -77,7 +76,7 @@
                     android:layout_gravity="center_vertical"
                     android:gravity="center"
                     android:text="@string/take_a_photo"
-                    android:textColor="@color/colorHomeTabRed"
+                    android:textColor="@color/colorTextBlue"
                     android:textSize="@dimen/sp_14"
                     app:font="@{`bold`}" />
             </LinearLayout>
@@ -126,9 +125,9 @@
                     android:layout_gravity="center_vertical"
                     android:gravity="center"
                     android:text="@string/choose_from_album"
-                    android:textColor="@color/colorHomeTabRed"
+                    android:textColor="@color/colorTextBlue"
                     android:textSize="@dimen/sp_14"
-                    app:font="@{`regular`}" />
+                    app:font="@{`bold`}" />
             </LinearLayout>
             <!--            </androidx.cardview.widget.CardView>-->
 

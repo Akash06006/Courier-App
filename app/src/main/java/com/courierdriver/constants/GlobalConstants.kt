@@ -24,6 +24,9 @@ object GlobalConstants {
     val REGION_ID = "region_id"
 
     @JvmStatic
+    val AVAILABLE = "AVAILABLE"
+
+    @JvmStatic
     val PHONE_NUMBER = "phone_number"
 
     @JvmStatic
@@ -55,6 +58,9 @@ object GlobalConstants {
 
     @JvmStatic
     val USER_LOCATION = "USERLOCATION"
+
+    @JvmStatic
+    val IS_DOC_UPLOADED = "isDocUploaded"
 
     @JvmStatic
     var NOTIFICATION_TOKEN = "notification_token"
@@ -105,4 +111,58 @@ object GlobalConstants {
     @JvmStatic
     var VERIFICATION_TYPE = "VERIFICATION_TYPE"
 
+    @JvmStatic
+    var PROFILE_DETAILS = "1"
+
+    @JvmStatic
+    var STATISTICS = "2"
+
+    @JvmStatic
+    var ACCOUNT = "3"
+
+    @JvmStatic
+    var DOCUMENTS_TAB = "4"
+
+    @JvmStatic
+    var CURRENCY_SIGN = "₹"
+
+
+    @JvmStatic
+    var MONEY_HASH = "https://debajyotibasak.000webhostapp.com/PayUMoneyHash.php"
+
+    @JvmStatic
+    var SURL =
+        "https://www.payumoney.com/mobileapp/payumoney/success.php"/*"https://www.payumoney.com/mobileapp/payumoney/success.php"*/
+
+    @JvmStatic
+    var FURL =
+        "https://www.payumoney.com/mobileapp/payumoney/failure.php"/*"https://www.payumoney.com/mobileapp/payumoney/failure.php"*/
+
+    @JvmStatic
+    var MERCHANT_KEY = "2n0gOgRt"
+
+    @JvmStatic
+    var MERCHANT_ID = "7305291"
+
+    @JvmStatic
+    var SALT = "hyi6zkm3XS"
+
+    @JvmStatic
+    var FIRST_NAME = "Navjeet"
+
+    @JvmStatic
+    var MOBILE = "7986607564"
+
+    @JvmStatic
+    var PAYUMONEY_EMAIL = "saininavjeet@seasia.in"
+
+    @JvmStatic
+    var DEBUG = true
+
+    @JvmStatic
+//    val SOCKET_URL = "http://51.79.40.224:9062"   // lIVE
+    val SOCKET_URL = "http://stgcerb.cerebruminfotech.com:9067/"   // TESTING
+
+    @JvmStatic
+    val TERMS_AND_CONDITIONS = "https://www.cerebruminfotech.com/"
 }

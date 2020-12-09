@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.PorterDuff
@@ -22,6 +23,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.courierdriver.R
@@ -39,12 +41,14 @@ import com.courierdriver.sharedpreference.SharedPrefClass
 import com.courierdriver.utils.BaseFragment
 import com.courierdriver.utils.DialogClass
 import com.courierdriver.utils.DialogssInterface
+import com.courierdriver.utils.broadcastReceiver.NotifyWorkStatus
+import com.courierdriver.utils.broadcastReceiver.WorkStatusBroadcastReceiver
 import com.courierdriver.viewmodels.home.HomeViewModel
 import com.courierdriver.views.profile.HelpScreenActivity
 import com.google.android.gms.location.*
 
 class
-HomeFragment : BaseFragment(), DialogssInterface {
+HomeFragment : BaseFragment(), DialogssInterface, NotifyWorkStatus {
     private var mFusedLocationClass: FusedLocationClass? = null
     private lateinit var homeViewModel: HomeViewModel
     val PERMISSION_ID = 42
@@ -68,6 +72,7 @@ HomeFragment : BaseFragment(), DialogssInterface {
     private var selectedRegion: String? = null
     private var orderId: String? = null
     private var regionId: String? = null
+    private var available: String? = null
 
     override fun initView() {
         fragmentHomeBinding = viewDataBinding as FragmentHomeBinding
@@ -84,11 +89,23 @@ HomeFragment : BaseFragment(), DialogssInterface {
         getOrderListObserver()
         acceptOrderObserver()
         cancelOrderObserver()
-        cancelReasonObserver()
+        // cancelReasonObserver()
+        loaderObserver()
         if (TextUtils.isEmpty(regionId))
             getRegionListObserver()
 
         submitRegionObserver()
+        subscribeWorkStatusReceiver()
+    }
+
+    private fun loaderObserver() {
+        homeViewModel.isLoading().observe(viewLifecycleOwner, Observer<Boolean> { aBoolean ->
+            if (aBoolean!!) {
+                baseActivity.startProgressDialog()
+            } else {
+                baseActivity.stopProgressDialog()
+            }
+        })
     }
 
     private fun viewClicks() {
@@ -100,14 +117,17 @@ HomeFragment : BaseFragment(), DialogssInterface {
                         startActivity(Intent(baseActivity, HelpScreenActivity::class.java))
                     }
                     "tv_how_to_work" -> {
-                        UtilsFunctions.showToastSuccess(getString(R.string.coming_soon))
+                        startActivity(Intent(baseActivity, HelpScreenActivity::class.java))
+                    }
+                    "tv_resume_work" -> {
+
                     }
                     "tv_available" -> {
                         clearList()
                         orderStatus = 1
 
                         fragmentHomeBinding.tvAvailable.background.setColorFilter(
-                            ContextCompat.getColor(baseActivity, R.color.colorHomeTabRed),
+                            ContextCompat.getColor(baseActivity, R.color.colorTextBlue),
                             PorterDuff.Mode.SRC_ATOP
                         )
                         fragmentHomeBinding.tvAvailable.setTextColor(
@@ -142,7 +162,7 @@ HomeFragment : BaseFragment(), DialogssInterface {
                         clearList()
                         orderStatus = 2
                         fragmentHomeBinding.tvActive.background.setColorFilter(
-                            ContextCompat.getColor(baseActivity, R.color.colorHomeTabRed),
+                            ContextCompat.getColor(baseActivity, R.color.colorTextBlue),
                             PorterDuff.Mode.SRC_ATOP
                         )
                         fragmentHomeBinding.tvActive.setTextColor(
@@ -178,7 +198,7 @@ HomeFragment : BaseFragment(), DialogssInterface {
                         orderStatus = 3
 
                         fragmentHomeBinding.tvCompleted.background.setColorFilter(
-                            ContextCompat.getColor(baseActivity, R.color.colorHomeTabRed),
+                            ContextCompat.getColor(baseActivity, R.color.colorTextBlue),
                             PorterDuff.Mode.SRC_ATOP
                         )
                         fragmentHomeBinding.tvCompleted.setTextColor(
@@ -214,13 +234,34 @@ HomeFragment : BaseFragment(), DialogssInterface {
         )
     }
 
+    private fun subscribeWorkStatusReceiver() {
+        val contractDetailsReceiver = WorkStatusBroadcastReceiver(this)
+        LocalBroadcastManager.getInstance(baseActivity)
+            .registerReceiver(contractDetailsReceiver, IntentFilter("workStatusReceiver"))
+    }
+
+    override fun refreshWorkStatusData() {
+        available =
+            SharedPrefClass().getPrefValue(activity!!, GlobalConstants.AVAILABLE)
+                .toString()
+
+        if (available == "false") {
+            fragmentHomeBinding.linNotWorking.visibility = View.VISIBLE
+            fragmentHomeBinding.linTabsMain.visibility = View.GONE
+            fragmentHomeBinding.linInProgress.visibility = View.GONE
+        } else {
+            fragmentHomeBinding.linTabsMain.visibility = View.VISIBLE
+            fragmentHomeBinding.linNotWorking.visibility = View.GONE
+            fragmentHomeBinding.linInProgress.visibility = View.GONE
+        }
+    }
+
     private fun clearList() {
         if (orderList != null)
             orderList!!.clear()
         if (homeOrdersAdapter != null)
             homeOrdersAdapter!!.notifyDataSetChanged()
     }
-
 
     //region API_CALL
     private fun getOrderList(orderStatus: Int) {
@@ -319,18 +360,35 @@ HomeFragment : BaseFragment(), DialogssInterface {
         homeViewModel.getOrderListData().observe(
             this,
             Observer<OrderListModel> { response ->
+                baseActivity.stopProgressDialog()
                 if (response != null) {
                     fragmentHomeBinding.linTabsMain.visibility = View.VISIBLE
                     fragmentHomeBinding.linInProgress.visibility = View.GONE
+                    fragmentHomeBinding.tvNoRecord.visibility = View.GONE
+                    fragmentHomeBinding.rvOrderList.visibility = View.VISIBLE
                     val message = response.message
                     when (response.code) {
                         200 -> {
                             fragmentHomeBinding.linTabsMain.visibility = View.VISIBLE
                             fragmentHomeBinding.linInProgress.visibility = View.GONE
 
+                            if (available == "false") {
+                                fragmentHomeBinding.linNotWorking.visibility = View.VISIBLE
+                                fragmentHomeBinding.linTabsMain.visibility = View.GONE
+                                fragmentHomeBinding.linInProgress.visibility = View.GONE
+                            } else {
+                                fragmentHomeBinding.linTabsMain.visibility = View.VISIBLE
+                                fragmentHomeBinding.linNotWorking.visibility = View.GONE
+                                fragmentHomeBinding.linInProgress.visibility = View.GONE
+                            }
+
+
                             if (response.body!!.isNotEmpty()) {
                                 orderList = response.body
                                 setAdapter()
+                            } else {
+                                fragmentHomeBinding.tvNoRecord.visibility = View.VISIBLE
+                                fragmentHomeBinding.rvOrderList.visibility = View.GONE
                             }
                         }
                         400 -> {
@@ -349,6 +407,7 @@ HomeFragment : BaseFragment(), DialogssInterface {
     private fun acceptOrderObserver() {
         homeViewModel.acceptOrderData().observe(this,
             Observer<CommonModel> { response ->
+                baseActivity.stopProgressDialog()
                 if (response != null) {
                     val message = response.message
                     when (response.code) {
@@ -368,6 +427,7 @@ HomeFragment : BaseFragment(), DialogssInterface {
     private fun cancelOrderObserver() {
         homeViewModel.cancelOrderData().observe(this,
             Observer<CommonModel> { response ->
+                baseActivity.stopProgressDialog()
                 if (response != null) {
                     val message = response.message
                     when (response.code) {
@@ -389,6 +449,7 @@ HomeFragment : BaseFragment(), DialogssInterface {
         homeViewModel.cancelReason()
         homeViewModel.cancelReasonData().observe(this,
             Observer<CancelReasonModel> { response ->
+                baseActivity.stopProgressDialog()
                 if (response != null) {
                     when (response.code) {
                         200 -> {
@@ -407,6 +468,7 @@ HomeFragment : BaseFragment(), DialogssInterface {
         getRegionList()
         homeViewModel.regionListData().observe(this,
             Observer<RegionListModel> { response ->
+                baseActivity.stopProgressDialog()
                 if (response != null) {
                     when (response.code) {
                         200 -> {
@@ -426,10 +488,14 @@ HomeFragment : BaseFragment(), DialogssInterface {
     private fun submitRegionObserver() {
         homeViewModel.profileSetupListData().observe(this,
             Observer<CommonModel> { response ->
+                baseActivity.stopProgressDialog()
                 if (response != null) {
                     when (response.code) {
                         200 -> {
                             UtilsFunctions.showToastSuccess(response.message!!)
+
+                            if (submitCancelReasonDialog != null)
+                                submitCancelReasonDialog!!.dismiss()
 
                             SharedPrefClass().putObject(
                                 MyApplication.instance,
@@ -446,7 +512,6 @@ HomeFragment : BaseFragment(), DialogssInterface {
                 }
             })
     }
-
     //endregion
 
     private fun setAdapter() {
@@ -496,6 +561,7 @@ HomeFragment : BaseFragment(), DialogssInterface {
             }
         }
     }
+
 
     private fun showSelectRegionDialog() {
         submitCancelReasonDialog = Dialog(baseActivity)
@@ -579,11 +645,20 @@ HomeFragment : BaseFragment(), DialogssInterface {
         regionId =
             SharedPrefClass().getPrefValue(activity!!, GlobalConstants.REGION_ID)
                 .toString()
+        available =
+            SharedPrefClass().getPrefValue(activity!!, GlobalConstants.AVAILABLE)
+                .toString()
     }
 
     private fun setToolbarTextIcons() {
         fragmentHomeBinding.toolbarCommon.toolbar.setImageResource(R.drawable.ic_back)
         fragmentHomeBinding.toolbarCommon.imgRight.visibility = View.VISIBLE
+        fragmentHomeBinding.toolbarCommon.imgRight.setImageDrawable(
+            ContextCompat.getDrawable(
+                baseActivity,
+                R.drawable.ic_help
+            )
+        )
         fragmentHomeBinding.toolbarCommon.imgToolbarText.text = getString(R.string.home)
     }
 

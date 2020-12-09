@@ -1,0 +1,449 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="com.courierdriver.common.BindingUtils" />
+        <import type="android.view.View" />
+
+        <variable
+            name="docVerifyViewModel"
+            type="com.courierdriver.viewmodels.DocVerifyViewModel" />
+
+        <variable
+            name="model"
+            type="com.courierdriver.model.ProfileDocumentModel.Body" />
+    </data>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/ic_top_circle"
+        android:backgroundTint="@color/colorWhite">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/dp_5"
+            app:hideKeyBoardOnClick="@{`back` }">
+
+            <ImageView
+                android:id="@+id/img_edit"
+                android:layout_width="@dimen/dp_40"
+                android:layout_height="@dimen/dp_40"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="@dimen/dp_15"
+                android:layout_marginEnd="@dimen/dp_20"
+                android:onClick="@{(v) -> docVerifyViewModel.clickListener(v)}"
+                android:src="@drawable/ic_edit_profile" />
+
+            <TextView
+                android:id="@+id/proof_address_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/img_edit"
+                android:layout_marginLeft="@dimen/dp_20"
+                android:layout_marginTop="@dimen/dp_15"
+                android:text="@string/proof_of_address"
+                android:textAllCaps="false"
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/sp_15"
+                android:textStyle="bold"
+                app:font="@{`bold`}"
+                tools:ignore="AllCaps" />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cv_aadhar_front"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/proof_address_tv"
+                android:layout_marginLeft="@dimen/dp_20"
+                android:layout_marginRight="@dimen/dp_5"
+                android:layout_marginTop="@dimen/dp_10"
+                app:cardCornerRadius="@dimen/dp_10"
+                app:cardElevation="@dimen/dp_2">
+
+                <RelativeLayout
+                    android:layout_width="150dp"
+                    android:layout_height="160dp">
+
+                    <com.makeramen.roundedimageview.RoundedImageView
+                        android:id="@+id/front_adahar_iv"
+                        android:layout_width="150dp"
+                        android:layout_height="160dp"
+                        android:scaleType="centerCrop"
+                        android:src="@{model.poaFront!=null ?  model.poaFront.toString():@string/todo,default=@drawable/round_layout}"
+                        app:riv_corner_radius_bottom_left="@dimen/dp_10"
+                        app:riv_corner_radius_bottom_right="@dimen/dp_10"
+                        app:riv_corner_radius_top_left="@dimen/dp_10"
+                        app:riv_corner_radius_top_right="@dimen/dp_10" />
+
+                    <LinearLayout
+                        android:id="@+id/ll_front_aadhar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:onClick="@{(v) -> docVerifyViewModel.clickListener(v)}"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/add_icon" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="@dimen/dp_2"
+                            android:textColor="@color/colorTextBlue"
+                            android:text="@string/front" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:visibility="@{(!model.poaFApproved) ? View.GONE : View.VISIBLE}"
+                        android:src="@drawable/ic_check_mark" />
+                </RelativeLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cv_adadhr_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/proof_address_tv"
+                android:layout_alignParentRight="true"
+                android:layout_marginLeft="@dimen/dp_5"
+                android:layout_marginRight="@dimen/dp_20"
+                android:layout_marginTop="@dimen/dp_10"
+                app:cardCornerRadius="@dimen/dp_10"
+                app:cardElevation="@dimen/dp_2">
+
+                <RelativeLayout
+                    android:layout_width="150dp"
+                    android:layout_height="160dp">
+
+                    <com.makeramen.roundedimageview.RoundedImageView
+                        android:id="@+id/back_adahar_iv"
+                        android:layout_width="150dp"
+                        android:layout_height="160dp"
+                        android:scaleType="centerCrop"
+                        android:src="@{model.poaBack!=null ?  model.poaBack.toString():@string/todo,default=@drawable/round_layout}"
+                        app:riv_corner_radius_bottom_left="@dimen/dp_10"
+                        app:riv_corner_radius_bottom_right="@dimen/dp_10"
+                        app:riv_corner_radius_top_left="@dimen/dp_10"
+                        app:riv_corner_radius_top_right="@dimen/dp_10" />
+
+                    <LinearLayout
+                        android:id="@+id/ll_back_aadhar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:onClick="@{(v) -> docVerifyViewModel.clickListener(v)}"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/add_icon" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="@dimen/dp_2"
+                            android:textColor="@color/colorTextBlue"
+                            android:text="@string/back" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:src="@drawable/ic_check_mark"
+                        android:visibility="@{(!model.poaBApproved) ? View.GONE : View.VISIBLE}" />
+                </RelativeLayout>
+            </androidx.cardview.widget.CardView>
+
+            <TextView
+                android:id="@+id/pan_card_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/cv_adadhr_back"
+                android:layout_marginLeft="@dimen/dp_20"
+                android:layout_marginTop="@dimen/dp_15"
+                android:text="@string/pan_card"
+                android:textAllCaps="false"
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/sp_15"
+                android:textStyle="bold"
+                app:font="@{`bold`}"
+                tools:ignore="AllCaps" />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cv_pan_card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/pan_card_tv"
+                android:layout_marginLeft="@dimen/dp_20"
+                android:layout_marginTop="@dimen/dp_10"
+                android:layout_marginRight="@dimen/dp_20"
+                app:cardCornerRadius="@dimen/dp_10"
+                app:cardElevation="@dimen/dp_2">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="160dp">
+
+                    <com.makeramen.roundedimageview.RoundedImageView
+                        android:id="@+id/pan_card_iv"
+                        android:layout_width="match_parent"
+                        android:layout_height="160dp"
+                        android:scaleType="centerCrop"
+                        android:src="@{model.panCard!=null ?  model.panCard.toString():@string/todo,default=@drawable/round_layout}"
+                        app:riv_corner_radius_bottom_left="@dimen/dp_10"
+                        app:riv_corner_radius_bottom_right="@dimen/dp_10"
+                        app:riv_corner_radius_top_left="@dimen/dp_10"
+                        app:riv_corner_radius_top_right="@dimen/dp_10" />
+
+                    <LinearLayout
+                        android:id="@+id/ll_pan_card"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:onClick="@{(v) -> docVerifyViewModel.clickListener(v)}"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/add_icon" />
+
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:visibility="@{(!model.panApproved) ? View.GONE : View.VISIBLE}"
+                        android:src="@drawable/ic_check_mark" />
+                </RelativeLayout>
+            </androidx.cardview.widget.CardView>
+
+            <TextView
+                android:id="@+id/vehicle_info__tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/cv_pan_card"
+                android:layout_marginLeft="@dimen/dp_20"
+                android:layout_marginTop="@dimen/dp_15"
+                android:text="@string/vehicle_informatio"
+                android:textAllCaps="false"
+                android:textColor="@color/appGrey"
+                android:textSize="@dimen/sp_15"
+                android:textStyle="bold"
+                app:font="@{`bold`}"
+                tools:ignore="AllCaps" />
+
+            <Spinner
+                android:id="@+id/sp_transport"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_40"
+                android:layout_below="@+id/vehicle_info__tv"
+                android:layout_marginLeft="20dp"
+                style="@style/SpinnerTheme"
+                android:layout_marginTop="@dimen/dp_15"
+                android:layout_marginRight="20dp" />
+
+            <View
+                android:id="@+id/view_transport"
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_below="@+id/sp_transport"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:background="@color/colorGrey" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/license_no_tf"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/view_transport"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="20dp"
+                android:hint="@string/driving_license_no"
+                android:textColorHint="@color/colorGrey">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_driving_license_no"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:maxLength="30"
+                    android:singleLine="true"
+                    android:text="@{model.dlNumber}"
+                    android:textColor="@color/colorblack"
+                    android:textColorHint="@color/colorGrey"
+                    android:textSize="14sp"
+                    app:font="@{`regular`}"
+                    tools:ignore="MissingConstraints" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/driver_license_photo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/license_no_tf"
+                android:layout_marginLeft="@dimen/dp_20"
+                android:layout_marginTop="@dimen/dp_15"
+                android:text="@string/driver_license_photo"
+                android:textAllCaps="false"
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/sp_15"
+                android:textStyle="bold"
+                app:font="@{`bold`}"
+                tools:ignore="AllCaps" />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cv_driving_front"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/driver_license_photo"
+                android:layout_marginLeft="@dimen/dp_20"
+                android:layout_marginRight="@dimen/dp_5"
+                android:layout_marginTop="@dimen/dp_10"
+                app:cardCornerRadius="@dimen/dp_10"
+                app:cardElevation="@dimen/dp_2">
+
+                <RelativeLayout
+                    android:layout_width="150dp"
+                    android:layout_height="160dp">
+
+                    <com.makeramen.roundedimageview.RoundedImageView
+                        android:id="@+id/front_driving_iv"
+                        android:layout_width="150dp"
+                        android:layout_height="160dp"
+                        android:scaleType="centerCrop"
+                        android:src="@{model.licenseFront!=null ?  model.licenseFront.toString():@string/todo,default=@drawable/round_layout}"
+                        app:riv_corner_radius_bottom_left="@dimen/dp_10"
+                        app:riv_corner_radius_bottom_right="@dimen/dp_10"
+                        app:riv_corner_radius_top_left="@dimen/dp_10"
+                        app:riv_corner_radius_top_right="@dimen/dp_10" />
+
+                    <LinearLayout
+                        android:id="@+id/ll_front_driving"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:onClick="@{(v) -> docVerifyViewModel.clickListener(v)}"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/add_icon" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="@dimen/dp_2"
+                            android:textColor="@color/colorTextBlue"
+                            android:text="@string/front" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:visibility="@{(!model.licenseFApproved) ? View.GONE : View.VISIBLE}"
+                        android:src="@drawable/ic_check_mark" />
+                </RelativeLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cv_driving_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/driver_license_photo"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="@dimen/dp_10"
+                android:layout_marginLeft="@dimen/dp_5"
+                android:layout_marginRight="@dimen/dp_20"
+                android:onClick="@{(v) -> docVerifyViewModel.clickListener(v)}"
+                app:cardCornerRadius="@dimen/dp_10"
+                app:cardElevation="@dimen/dp_2">
+
+                <RelativeLayout
+                    android:layout_width="150dp"
+                    android:layout_height="160dp">
+
+                    <com.makeramen.roundedimageview.RoundedImageView
+                        android:id="@+id/back_driving_iv"
+                        android:layout_width="150dp"
+                        android:layout_height="160dp"
+                        android:scaleType="centerCrop"
+                        android:src="@{model.licenseBack!=null ?  model.licenseBack.toString():@string/todo,default=@drawable/round_layout}"
+                        app:riv_corner_radius_bottom_left="@dimen/dp_10"
+                        app:riv_corner_radius_bottom_right="@dimen/dp_10"
+                        app:riv_corner_radius_top_left="@dimen/dp_10"
+                        app:riv_corner_radius_top_right="@dimen/dp_10" />
+
+                    <LinearLayout
+                        android:id="@+id/ll_back_driving"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:onClick="@{(v) -> docVerifyViewModel.clickListener(v)}"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/add_icon" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="@dimen/dp_2"
+                            android:textColor="@color/colorTextBlue"
+                            android:text="@string/back" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:visibility="@{(!model.licenseBApproved) ? View.GONE : View.VISIBLE}"
+                        android:src="@drawable/ic_check_mark" />
+                </RelativeLayout>
+            </androidx.cardview.widget.CardView>
+
+            <Button
+                android:id="@+id/btn_submit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/cv_driving_back"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="25dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="@dimen/dp_25"
+                android:background="@drawable/shape_button_back"
+                android:onClick="@{(v) -> docVerifyViewModel.clickListener(v)}"
+                android:text="@string/update"
+                android:textAllCaps="false"
+                android:textColor="@color/colorWhite"
+                android:textSize="@dimen/button_text_size"
+                app:font="@{`regular`}" />
+
+        </RelativeLayout>
+    </ScrollView>
+
+</layout>

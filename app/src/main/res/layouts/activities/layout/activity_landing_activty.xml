@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
@@ -26,6 +27,8 @@
             android:id="@+id/tabParent"
             android:layout_width="match_parent"
             android:layout_height="90dp"
+            android:layout_marginLeft="@dimen/dp_2"
+            android:layout_marginRight="@dimen/dp_2"
             android:layout_alignParentBottom="true"
             android:background="@drawable/ic_tab_background">
 
@@ -61,8 +64,8 @@
 
                         <ImageView
                             android:id="@+id/imgOrder"
-                            android:layout_width="@dimen/dp_25"
-                            android:layout_height="@dimen/dp_25"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:layout_centerInParent="true"
                             android:src="@drawable/ic_tab_order"
                             android:tint="@color/colorWhite" />
@@ -75,6 +78,7 @@
                             android:layout_centerInParent="true"
                             android:layout_marginTop="@dimen/dp_5"
                             android:text="@string/orders"
+                            app:font="@{`regular`}"
                             android:textColor="@color/colorWhite" />
                     </RelativeLayout>
                 </RelativeLayout>
@@ -100,8 +104,8 @@
 
                         <ImageView
                             android:id="@+id/imgProfile"
-                            android:layout_width="@dimen/dp_25"
-                            android:layout_height="@dimen/dp_25"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:layout_centerInParent="true"
                             android:src="@drawable/ic_tab_profile"
                             android:tint="@color/colorLiteWhite" />
@@ -114,6 +118,7 @@
                             android:layout_centerInParent="true"
                             android:layout_marginTop="@dimen/dp_5"
                             android:text="@string/profile"
+                            app:font="@{`regular`}"
                             android:textColor="@color/colorLiteWhite" />
                     </RelativeLayout>
 
@@ -141,10 +146,10 @@
 
                         <ImageView
                             android:id="@+id/imgMessage"
-                            android:layout_width="@dimen/dp_25"
-                            android:layout_height="@dimen/dp_25"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:layout_centerInParent="true"
-                            android:src="@drawable/ic_tab_message"
+                            android:src="@drawable/ic_notification_tab"
                             android:tint="@color/colorLiteWhite" />
 
                         <TextView
@@ -154,7 +159,8 @@
                             android:layout_below="@+id/imgMessage"
                             android:layout_centerInParent="true"
                             android:layout_marginTop="@dimen/dp_5"
-                            android:text="@string/message"
+                            android:text="@string/notifications"
+                            app:font="@{`regular`}"
                             android:textColor="@color/colorLiteWhite" />
                     </RelativeLayout>
                 </RelativeLayout>
@@ -181,11 +187,10 @@
 
                         <ImageView
                             android:id="@+id/imgAvailable"
-                            android:layout_width="@dimen/dp_25"
-                            android:layout_height="@dimen/dp_25"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:layout_centerInParent="true"
-                            android:src="@drawable/ic_tab_available"
-                            android:tint="@color/colorGrey1" />
+                            android:src="@drawable/ic_not_available" />
 
                         <TextView
                             android:id="@+id/txtAvailble"
@@ -194,8 +199,9 @@
                             android:layout_below="@+id/imgAvailable"
                             android:layout_centerInParent="true"
                             android:layout_marginTop="@dimen/dp_5"
-                            android:text="@string/available"
-                            android:textColor="@color/colorLiteWhite" />
+                            android:text="Not Working"
+                            app:font="@{`regular`}"
+                            android:textColor="@color/colorRed" />
                     </RelativeLayout>
                 </RelativeLayout>
             </LinearLayout>

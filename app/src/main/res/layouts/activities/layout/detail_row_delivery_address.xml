@@ -18,29 +18,31 @@
             android:id="@+id/view_route"
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
-            android:layout_marginLeft="@dimen/dp_20"
-            android:background="@color/colorGrey" />
+            android:layout_marginLeft="@dimen/dp_10"
+            android:background="@color/colorGreyLight" />
 
         <ImageView
             android:id="@+id/img_route"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/lin_route"
             android:layout_alignBottom="@+id/lin_route"
             android:layout_alignParentLeft="true"
-            android:layout_marginLeft="@dimen/dp_10"
-            android:src="@drawable/order_line" />
+            android:src="@drawable/ic_route" />
 
         <LinearLayout
             android:id="@+id/lin_route"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/img_completed"
             android:layout_marginLeft="@dimen/dp_20"
             android:layout_marginTop="@dimen/dp_10"
             android:layout_toRightOf="@+id/img_route"
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/tv_delivery_address"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/delivery_address"
@@ -56,6 +58,18 @@
                 android:textSize="@dimen/sp_14"
                 app:font="@{`semibold`}" />
         </LinearLayout>
+
+        <ImageView
+            android:id="@+id/img_completed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/view_route"
+            android:layout_alignParentRight="true"
+            android:visibility="gone"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/dp_10"
+            android:layout_marginRight="@dimen/dp_20"
+            android:src="@drawable/ic_check_mark" />
     </RelativeLayout>
 
 </layout>

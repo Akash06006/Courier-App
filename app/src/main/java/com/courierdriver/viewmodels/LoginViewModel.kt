@@ -9,6 +9,9 @@ import com.courierdriver.model.LoginResponse
 import com.courierdriver.repositories.LoginRepository
 import com.courierdriver.sharedpreference.SharedPrefClass
 import com.google.gson.JsonObject
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import java.util.HashMap
 
 class LoginViewModel : BaseViewModel() {
     private val isClick = MutableLiveData<String>()
@@ -23,7 +26,7 @@ class LoginViewModel : BaseViewModel() {
 
     init {
         loginResponse = loginRepository.getLoginData(null)
-        signupResponse = loginRepository.callSignupApi(null)
+        signupResponse = loginRepository.callSignupApi(null, null)
         verifyUserResponse = loginRepository.callVerifyUserApi(null)
     }
 
@@ -74,10 +77,13 @@ class LoginViewModel : BaseViewModel() {
 
     }
 
-    fun callSignupApi(mJsonObject: JsonObject) {
+    fun callSignupApi(
+        mJsonObject: HashMap<String, RequestBody>,
+        userImage: MultipartBody.Part?
+    ) {
         if (UtilsFunctions.isNetworkConnected()) {
             //emialExistenceResponse = loginRepository.checkPhoneExistence(mJsonObject)
-            signupResponse = loginRepository.callSignupApi(mJsonObject)
+            signupResponse = loginRepository.callSignupApi(mJsonObject,userImage)
             mIsUpdating.postValue(true)
         }
 

@@ -17,9 +17,11 @@ import com.courierdriver.views.authentication.LoginActivity
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Response
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.IOException
+import java.util.concurrent.TimeUnit
 
 object ApiClient {
 
@@ -58,16 +60,18 @@ object ApiClient {
             ).toString()
         }
 
-
         val httpClient = OkHttpClient.Builder()
-        //.connectTimeout(1, TimeUnit.MINUTES)
-        // .readTimeout(1, TimeUnit.MINUTES)
-        // .writeTimeout(1, TimeUnit.MINUTES)
+            .connectTimeout(1, TimeUnit.HOURS)
+            .readTimeout(1, TimeUnit.HOURS)
+            .writeTimeout(1, TimeUnit.HOURS)
 
         val mBuilder = Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
 
+        val logging = HttpLoggingInterceptor()
+        logging.level = HttpLoggingInterceptor.Level.BODY
+        httpClient.interceptors().add(logging)
 
         if (!TextUtils.isEmpty(mAuthToken)) {
 
@@ -89,7 +93,7 @@ object ApiClient {
                         .header("lang", lang)
                     val request = builder.build()
                     val response = chain.proceed(request)
-                    return if (response.code() == 401) {
+                    return if (response.code == 401) {
                         val i = Intent(
                             MyApplication.instance.applicationContext,
                             LoginActivity::class.java

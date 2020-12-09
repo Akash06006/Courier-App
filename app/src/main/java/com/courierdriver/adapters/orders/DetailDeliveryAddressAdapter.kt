@@ -32,6 +32,16 @@ class DetailDeliveryAddressAdapter(
     override fun onBindViewHolder(@NonNull holder: ViewHolder, position: Int) {
         viewHolder = holder
         holder.binding!!.model = deliveryAddress!![position]
+        if (position == 0)
+            holder.binding.tvDeliveryAddress.visibility = View.VISIBLE
+        else
+            holder.binding.tvDeliveryAddress.visibility = View.GONE
+
+
+        if(deliveryAddress!![position].isComplete!!)
+            holder.binding.imgCompleted.visibility = View.VISIBLE
+        else
+            holder.binding.imgCompleted.visibility = View.GONE
     }
 
     override fun getItemCount(): Int {

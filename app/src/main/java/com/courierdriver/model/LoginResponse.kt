@@ -65,6 +65,10 @@ class LoginResponse {
         @Expose
         var address: String? = null
 
+        @SerializedName("isDocUploaded")
+        @Expose
+        var isDocUploaded: String? = null
+
         @SerializedName("image")
         @Expose
         var image: String? = null

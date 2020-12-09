@@ -6,19 +6,20 @@
 
         <variable
             name="model"
-            type="com.courierdriver.model.order.OrderListModel.Body.DeliveryAddress" />
+            type="com.courierdriver.model.order.OrdersDetailResponse.PickupAddress" />
     </data>
 
     <RelativeLayout
+        android:id="@+id/rel_main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dp_10">
+        android:paddingTop="@dimen/dp_10">
 
         <View
             android:id="@+id/view_route"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_1"
-            android:background="@color/colorGrey" />
+            android:background="@color/colorGreyLight" />
 
         <ImageView
             android:id="@+id/img_route"
@@ -38,6 +39,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/dp_20"
             android:layout_marginTop="@dimen/dp_10"
+            android:layout_toLeftOf="@+id/img_completed"
             android:layout_toRightOf="@+id/img_route"
             android:orientation="vertical">
 
@@ -47,6 +49,7 @@
                 android:text="@string/delivery_address"
                 android:textColor="@color/colorGrey"
                 android:textSize="@dimen/sp_12"
+                android:visibility="gone"
                 app:font="@{`regular`}" />
 
             <TextView
@@ -57,6 +60,7 @@
                 android:textSize="@dimen/sp_14"
                 app:font="@{`semibold`}" />
         </LinearLayout>
+
     </RelativeLayout>
 
 </layout>

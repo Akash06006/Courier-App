@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-        //TODO change this below variale
         <!--<variable
             name="model"
             type="com.courierdriver.model.order.OrderListModel.Body" />-->
@@ -16,6 +15,9 @@
             name="orderDetailModel"
             type="com.courierdriver.model.order.OrdersDetailResponse.Data" />
 
+        <variable
+            name="currencySign"
+            type="String" />
     </data>
 
     <LinearLayout
@@ -47,489 +49,641 @@
                         android:id="@+id/map_view"
                         android:name="com.google.android.gms.maps.SupportMapFragment"
                         android:layout_width="match_parent"
-                        android:layout_height="250dp"
+                        android:layout_height="270dp"
                         android:background="#ffffff" />
 
-
-                    <androidx.cardview.widget.CardView
+                    <LinearLayout
+                        android:id="@+id/lin_chat_help"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/dp_10"
-                        app:cardCornerRadius="@dimen/dp_20"
-                        app:cardElevation="@dimen/dp_5">
+                        android:layout_below="@+id/map_view"
+                        android:layout_marginTop="-25dp"
+                        android:background="@drawable/shape_top_circle"
+                        android:backgroundTint="@color/colorTextBlue"
+                        android:orientation="vertical">
 
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:orientation="vertical"
-                            android:padding="@dimen/dp_15">
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:paddingStart="@dimen/dp_30"
+                            android:paddingTop="@dimen/dp_20"
+                            android:paddingEnd="@dimen/dp_30"
+                            android:paddingBottom="@dimen/dp_40"
+                            android:weightSum="3">
 
-                            <RelativeLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content">
-                                <!-- android:text="@{`Order #`+model.orderNo}"-->
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_alignParentLeft="true"
-                                    android:text="Order Details"
-                                    android:textColor="@color/colorBlack"
-                                    android:textSize="@dimen/sp_14"
-                                    app:font="@{`bold`}" />
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_alignParentRight="true"
-                                    android:drawableLeft="@drawable/ic_cash"
-                                    android:text="@{`$ `+orderDetailModel.totalOrderPrice}"
-                                    android:textColor="@color/colorBlack"
-                                    android:textSize="@dimen/sp_14"
-                                    app:font="@{`bold`}" />
-                            </RelativeLayout>
-
-                            <View
-                                android:layout_width="match_parent"
-                                android:layout_height="0.5dp"
-                                android:layout_marginTop="@dimen/dp_10"
-                                android:background="@color/colorGrey" />
-
-                            <RelativeLayout
-                                android:id="@+id/rel_route"
-                                android:layout_width="match_parent"
+                            <TextView
+                                android:id="@+id/tv_chat"
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/dp_10">
+                                android:layout_weight="1"
+                                android:drawableLeft="@drawable/ic_chat"
+                                android:drawablePadding="@dimen/dp_5"
+                                android:gravity="start|center_vertical"
+                                android:text="@string/chat"
+                                android:textColor="@color/colorWhite"
+                                android:textSize="@dimen/sp_14"
+                                app:font="@{`bold`}" />
 
-                                <ImageView
-                                    android:id="@+id/img_route"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_alignTop="@+id/lin_route"
-                                    android:layout_alignBottom="@+id/lin_route"
-                                    android:layout_alignParentLeft="true"
-                                    android:layout_marginLeft="@dimen/dp_10"
-                                    android:src="@drawable/ic_route" />
+                            <TextView
+                                android:id="@+id/tv_help"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:drawableLeft="@drawable/ic_help"
+                                android:drawablePadding="@dimen/dp_5"
+                                android:gravity="start|center_vertical"
+                                android:text="@string/help"
+                                android:textColor="@color/colorWhite"
+                                android:textSize="@dimen/sp_14"
+                                app:font="@{`bold`}" />
 
-                                <LinearLayout
-                                    android:id="@+id/lin_route"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginLeft="@dimen/dp_20"
-                                    android:layout_toRightOf="@+id/img_route"
-                                    android:orientation="vertical">
+                            <TextView
+                                android:id="@+id/tv_timer"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="end"
+                                android:layout_weight="1"
+                                android:drawableLeft="@drawable/ic_timer"
+                                android:drawablePadding="@dimen/dp_5"
+                                android:gravity="start|center_vertical"
+                                android:text="00:00:00"
+                                android:textColor="@color/colorWhite"
+                                android:textSize="@dimen/sp_14"
+                                app:font="@{`bold`}" />
 
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text="@string/pickup_address"
-                                        android:textColor="@color/colorGrey"
-                                        android:textSize="@dimen/sp_12"
-                                        app:font="@{`regular`}" />
+                        </LinearLayout>
+                    </LinearLayout>
 
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text="@{orderDetailModel.pickupAddress.address}"
-                                        android:textColor="@color/colorBlack"
-                                        android:textSize="@dimen/sp_14"
-                                        app:font="@{`semibold`}" />
-                                </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="-20dp"
+                        android:background="@drawable/shape_top_circle"
+                        android:backgroundTint="@color/colorWhite">
 
-                                <androidx.recyclerview.widget.RecyclerView
-                                    android:id="@+id/rv_delivery_address"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_below="@+id/img_route" />
-                            </RelativeLayout>
-
-                            <View
-                                android:layout_width="match_parent"
-                                android:layout_height="0.5dp"
-                                android:layout_marginTop="@dimen/dp_10"
-                                android:background="@color/colorGrey" />
+                        <androidx.cardview.widget.CardView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/dp_10"
+                            app:cardCornerRadius="@dimen/dp_30"
+                            app:cardElevation="@dimen/dp_5">
 
                             <LinearLayout
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal"
-                                android:weightSum="2">
+                                android:layout_height="match_parent"
+                                android:orientation="vertical"
+                                android:padding="@dimen/dp_15">
 
-                                <LinearLayout
+                                <RelativeLayout
                                     android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="@dimen/dp_10"
-                                    android:layout_weight="1"
-                                    android:orientation="vertical">
-
+                                    android:layout_height="wrap_content">
+                                    <!-- android:text="@{`Order #`+model.orderNo}"-->
                                     <TextView
+                                        android:id="@+id/tv_order_details"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:text="@string/order_no"
-                                        android:textColor="@color/colorGrey"
-                                        android:textSize="@dimen/sp_11"
-                                        app:font="@{`regular`}" />
-
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_marginTop="@dimen/dp_5"
-                                        android:drawableLeft="@drawable/order_no"
-                                        android:drawablePadding="@dimen/dp_2"
+                                        android:layout_alignParentLeft="true"
                                         android:text="@{orderDetailModel.orderNo}"
                                         android:textColor="@color/colorBlack"
-                                        android:textSize="@dimen/sp_12"
-                                        app:font="@{`semibold`}" />
+                                        android:textSize="@dimen/sp_14"
+                                        app:font="@{`bold`}" />
 
-                                </LinearLayout>
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_below="@+id/tv_order_details"
+                                        android:layout_alignParentLeft="true"
+                                        android:text="@{orderDetailModel.pickupAddress.date}"
+                                        android:textColor="@color/colorGrey"
+                                        android:textSize="@dimen/sp_12"
+                                        app:font="@{`bold`}" />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_alignParentRight="true"
+                                        android:drawableLeft="@drawable/ic_cash"
+                                        android:paddingLeft="@dimen/dp_10"
+                                        android:paddingTop="@dimen/dp_5"
+                                        android:paddingRight="@dimen/dp_10"
+                                        android:paddingBottom="@dimen/dp_5"
+                                        android:text="@{currencySign+orderDetailModel.totalOrderPrice}"
+                                        android:textColor="@color/colorTextBlue"
+                                        android:textSize="@dimen/sp_16"
+                                        app:font="@{`bold`}" />
+                                </RelativeLayout>
+
+                                <View
+                                    android:layout_width="match_parent"
+                                    android:layout_height="0.5dp"
+                                    android:layout_marginTop="@dimen/dp_10"
+                                    android:background="@color/colorGrey" />
+
+                                <RelativeLayout
+                                    android:id="@+id/rel_route"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="@dimen/dp_10">
+
+                                    <ImageView
+                                        android:id="@+id/img_route"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_alignTop="@+id/lin_route"
+                                        android:layout_alignBottom="@+id/lin_route"
+                                        android:layout_alignParentLeft="true"
+                                        android:layout_marginLeft="@dimen/dp_10"
+                                        android:src="@drawable/ic_route" />
+
+                                    <LinearLayout
+                                        android:id="@+id/lin_route"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginLeft="@dimen/dp_20"
+                                        android:layout_toRightOf="@+id/img_route"
+                                        android:orientation="vertical">
+
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="@string/pickup_address"
+                                            android:textColor="@color/colorGrey"
+                                            android:textSize="@dimen/sp_12"
+                                            app:font="@{`regular`}" />
+
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="@{orderDetailModel.pickupAddress.address}"
+                                            android:textColor="@color/colorBlack"
+                                            android:textSize="@dimen/sp_14"
+                                            app:font="@{`semibold`}" />
+                                    </LinearLayout>
+
+                                    <androidx.recyclerview.widget.RecyclerView
+                                        android:id="@+id/rv_delivery_address"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_below="@+id/img_route"
+                                        android:layout_alignStart="@+id/img_route"
+                                        android:layout_alignLeft="@+id/img_route" />
+                                </RelativeLayout>
+
+                                <View
+                                    android:layout_width="match_parent"
+                                    android:layout_height="0.5dp"
+                                    android:layout_marginTop="@dimen/dp_10"
+                                    android:background="@color/colorGrey" />
 
                                 <LinearLayout
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginTop="@dimen/dp_10"
-                                    android:layout_weight="1"
-                                    android:orientation="vertical">
-
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text="@string/weight"
-                                        android:textColor="@color/colorGrey"
-                                        android:textSize="@dimen/sp_11"
-                                        app:font="@{`regular`}" />
-
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_marginTop="@dimen/dp_5"
-                                        android:drawableLeft="@drawable/ic_weight_home"
-                                        android:drawablePadding="@dimen/dp_2"
-                                        android:text="@{orderDetailModel.weight.name}"
-                                        android:textColor="@color/colorBlack"
-                                        android:textSize="@dimen/sp_12"
-                                        app:font="@{`semibold`}" />
-
-                                </LinearLayout>
-                            </LinearLayout>
-
-                            <View
-                                android:id="@+id/view_route"
-                                android:layout_width="match_parent"
-                                android:layout_height="0.5dp"
-                                android:layout_marginTop="@dimen/dp_10"
-                                android:background="@color/colorGrey" />
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal"
-                                android:weightSum="2">
-
-                                <LinearLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="@dimen/dp_10"
-                                    android:layout_weight="1"
-                                    android:orientation="vertical">
-
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text="@string/delivery_options"
-                                        android:textColor="@color/colorGrey"
-                                        android:textSize="@dimen/sp_11"
-                                        app:font="@{`regular`}" />
-
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_marginTop="@dimen/dp_5"
-                                        android:drawableLeft="@drawable/ic_delivery_options_home"
-                                        android:drawablePadding="@dimen/dp_2"
-                                        android:text="@{orderDetailModel.deliveryoption.title}"
-                                        android:textColor="@color/colorBlack"
-                                        android:textSize="@dimen/sp_12"
-                                        app:font="@{`semibold`}" />
-
-                                </LinearLayout>
-
-                                <LinearLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="@dimen/dp_10"
-                                    android:layout_weight="1"
-                                    android:orientation="vertical">
-
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text="@string/value"
-                                        android:textColor="@color/colorGrey"
-                                        android:textSize="@dimen/sp_11"
-                                        app:font="@{`regular`}" />
+                                    android:orientation="horizontal"
+                                    android:weightSum="2">
 
                                     <LinearLayout
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
-                                        android:layout_marginTop="5dp"
-                                        android:orientation="horizontal">
+                                        android:layout_marginTop="@dimen/dp_10"
+                                        android:layout_weight="1"
+                                        android:orientation="vertical">
 
                                         <TextView
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
-                                            android:text="$"
-                                            android:textColor="@color/colorHomeTabRed"
-                                            android:textSize="@dimen/sp_14" />
+                                            android:text="@string/pickup_time"
+                                            android:textColor="@color/colorGrey"
+                                            android:textSize="@dimen/sp_11"
+                                            app:font="@{`regular`}" />
 
                                         <TextView
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
-                                            android:text="@{orderDetailModel.parcelValue}"
+                                            android:layout_marginTop="@dimen/dp_5"
+                                            android:drawableLeft="@drawable/ic_time"
+                                            android:drawablePadding="@dimen/dp_5"
+                                            android:drawableTint="@color/colorPrimary"
+                                            android:text="@{orderDetailModel.pickupAddress.time}"
                                             android:textColor="@color/colorBlack"
                                             android:textSize="@dimen/sp_12"
                                             app:font="@{`semibold`}" />
+
                                     </LinearLayout>
-                                </LinearLayout>
-                            </LinearLayout>
-
-                            <View
-                                android:layout_width="match_parent"
-                                android:layout_height="0.5dp"
-                                android:layout_marginTop="@dimen/dp_10"
-                                android:background="@color/colorGrey" />
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal"
-                                android:weightSum="2">
-
-                                <LinearLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="@dimen/dp_10"
-                                    android:layout_weight="1"
-                                    android:orientation="vertical">
-
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text="@string/vehicle_type"
-                                        android:textColor="@color/colorGrey"
-                                        android:textSize="@dimen/sp_11"
-                                        app:font="@{`regular`}" />
-
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_marginTop="@dimen/dp_5"
-                                        android:drawableLeft="@drawable/vehicle_type"
-                                        android:drawablePadding="@dimen/dp_2"
-                                        android:text="@{orderDetailModel.vehicle.name}"
-                                        android:textColor="@color/colorBlack"
-                                        android:textSize="@dimen/sp_12"
-                                        app:font="@{`semibold`}" />
-
-                                </LinearLayout>
-
-                                <LinearLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="@dimen/dp_10"
-                                    android:layout_weight="1"
-                                    android:orientation="vertical">
-
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text="@string/fare_to_be_collected"
-                                        android:textColor="@color/colorGrey"
-                                        android:textSize="@dimen/sp_11"
-                                        app:font="@{`regular`}" />
-
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_marginTop="@dimen/dp_5"
-                                        android:drawableLeft="@drawable/fare_collected"
-                                        android:drawablePadding="@dimen/dp_2"
-                                        android:text="@{orderDetailModel.fareCollected}"
-                                        android:textColor="@color/colorBlack"
-                                        android:textSize="@dimen/sp_12"
-                                        app:font="@{`semibold`}" />
-
-                                </LinearLayout>
-
-                            </LinearLayout>
-
-                            <View
-                                android:layout_width="match_parent"
-                                android:layout_height="0.5dp"
-                                android:layout_marginTop="@dimen/dp_10"
-                                android:background="@color/colorGrey" />
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal"
-                                android:weightSum="3">
-
-                                <LinearLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="@dimen/dp_10"
-                                    android:layout_weight="1"
-                                    android:orientation="vertical">
-
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text="@string/total_order_price"
-                                        android:textColor="@color/colorGrey"
-                                        android:textSize="@dimen/sp_11"
-                                        app:font="@{`regular`}" />
 
                                     <LinearLayout
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
-                                        android:layout_marginTop="5dp"
-                                        android:orientation="horizontal">
+                                        android:layout_marginTop="@dimen/dp_10"
+                                        android:layout_weight="1"
+                                        android:orientation="vertical">
 
                                         <TextView
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
-                                            android:text="$"
-                                            android:textColor="@color/colorHomeTabRed"
-                                            android:textSize="@dimen/sp_14" />
+                                            android:text="@string/weight"
+                                            android:textColor="@color/colorGrey"
+                                            android:textSize="@dimen/sp_11"
+                                            app:font="@{`regular`}" />
 
                                         <TextView
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
-                                            android:text="@{orderDetailModel.totalOrderPrice}"
+                                            android:layout_marginTop="@dimen/dp_5"
+                                            android:drawableLeft="@drawable/ic_weight_home"
+                                            android:drawablePadding="@dimen/dp_5"
+                                            android:drawableTint="@color/colorPrimary"
+                                            android:text="@{orderDetailModel.weight.name}"
                                             android:textColor="@color/colorBlack"
                                             android:textSize="@dimen/sp_12"
                                             app:font="@{`semibold`}" />
+
                                     </LinearLayout>
                                 </LinearLayout>
+
+                                <View
+                                    android:id="@+id/view_route"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="0.5dp"
+                                    android:layout_marginTop="@dimen/dp_10"
+                                    android:background="@color/colorGrey" />
 
                                 <LinearLayout
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginTop="@dimen/dp_10"
-                                    android:layout_weight="1"
-                                    android:orientation="vertical">
-
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text="@string/your_earning"
-                                        android:textColor="@color/colorGrey"
-                                        android:textSize="@dimen/sp_11"
-                                        app:font="@{`regular`}" />
+                                    android:orientation="horizontal"
+                                    android:weightSum="2">
 
                                     <LinearLayout
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
-                                        android:layout_marginTop="5dp"
-                                        android:orientation="horizontal">
+                                        android:layout_marginTop="@dimen/dp_10"
+                                        android:layout_weight="1"
+                                        android:orientation="vertical">
 
                                         <TextView
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
-                                            android:text="$"
-                                            android:textColor="@color/colorHomeTabRed"
-                                            android:textSize="@dimen/sp_14" />
+                                            android:text="@string/delivery_options"
+                                            android:textColor="@color/colorGrey"
+                                            android:textSize="@dimen/sp_11"
+                                            app:font="@{`regular`}" />
 
                                         <TextView
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
-                                            android:text="@{orderDetailModel.totalOrderPrice}"
+                                            android:layout_marginTop="@dimen/dp_5"
+                                            android:drawableLeft="@drawable/ic_delivery_options_home"
+                                            android:drawablePadding="@dimen/dp_5"
+                                            android:text="@{orderDetailModel.deliveryoption.title}"
                                             android:textColor="@color/colorBlack"
                                             android:textSize="@dimen/sp_12"
                                             app:font="@{`semibold`}" />
+
+                                    </LinearLayout>
+
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="@dimen/dp_10"
+                                        android:layout_weight="1"
+                                        android:orientation="vertical">
+
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="@string/fare_to_be_collected"
+                                            android:textColor="@color/colorGrey"
+                                            android:textSize="@dimen/sp_11"
+                                            app:font="@{`regular`}" />
+
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginTop="@dimen/dp_5"
+                                            android:backgroundTint="@color/colorPrimary"
+                                            android:drawableLeft="@drawable/fare_collected"
+                                            android:drawablePadding="@dimen/dp_5"
+                                            android:drawableTint="@color/colorPrimary"
+                                            android:text="@{orderDetailModel.fareCollected}"
+                                            android:textColor="@color/colorBlack"
+                                            android:textSize="@dimen/sp_12"
+                                            app:font="@{`semibold`}" />
+
+                                    </LinearLayout>
+                                </LinearLayout>
+
+                                <View
+                                    android:layout_width="match_parent"
+                                    android:layout_height="0.5dp"
+                                    android:layout_marginTop="@dimen/dp_10"
+                                    android:background="@color/colorGrey" />
+
+                                <LinearLayout
+                                    android:id="@+id/lin_values_earnings_available"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical">
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:orientation="horizontal"
+                                        android:weightSum="2">
+
+                                        <LinearLayout
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginTop="@dimen/dp_10"
+                                            android:layout_weight="1"
+                                            android:orientation="vertical"
+                                            android:visibility="gone">
+
+                                            <TextView
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:text="@string/vehicle_type"
+                                                android:textColor="@color/colorGrey"
+                                                android:textSize="@dimen/sp_11"
+                                                app:font="@{`regular`}" />
+
+                                            <TextView
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:layout_marginTop="@dimen/dp_5"
+                                                android:drawableLeft="@drawable/vehicle_type"
+                                                android:drawablePadding="@dimen/dp_5"
+                                                android:text="@{orderDetailModel.vehicle.name}"
+                                                android:textColor="@color/colorBlack"
+                                                android:textSize="@dimen/sp_12"
+                                                app:font="@{`semibold`}" />
+
+                                        </LinearLayout>
+
+                                        <LinearLayout
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginTop="@dimen/dp_10"
+                                            android:layout_weight="1"
+                                            android:orientation="vertical">
+
+                                            <TextView
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:text="@string/your_earning"
+                                                android:textColor="@color/colorGrey"
+                                                android:textSize="@dimen/sp_11"
+                                                app:font="@{`regular`}" />
+
+                                            <LinearLayout
+                                                android:layout_width="match_parent"
+                                                android:layout_height="wrap_content"
+                                                android:layout_marginTop="5dp"
+                                                android:orientation="horizontal">
+
+                                                <TextView
+                                                    android:layout_width="wrap_content"
+                                                    android:layout_height="wrap_content"
+                                                    android:text="@{currencySign}"
+                                                    android:textColor="@color/colorPrimary"
+                                                    android:textSize="@dimen/sp_14" />
+
+                                                <TextView
+                                                    android:layout_width="wrap_content"
+                                                    android:layout_height="wrap_content"
+                                                    android:paddingLeft="@dimen/dp_5"
+                                                    android:text="@{orderDetailModel.driverEarning}"
+                                                    android:textColor="@color/colorBlack"
+                                                    android:textSize="@dimen/sp_12"
+                                                    app:font="@{`semibold`}" />
+                                            </LinearLayout>
+                                        </LinearLayout>
+
+                                        <LinearLayout
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginTop="@dimen/dp_10"
+                                            android:layout_weight="1"
+                                            android:orientation="vertical">
+
+                                            <TextView
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:text="Collect from customer"
+                                                android:textColor="@color/colorGrey"
+                                                android:textSize="@dimen/sp_11"
+                                                app:font="@{`regular`}" />
+
+                                            <LinearLayout
+                                                android:layout_width="match_parent"
+                                                android:layout_height="wrap_content"
+                                                android:layout_marginTop="5dp"
+                                                android:orientation="horizontal">
+
+                                                <TextView
+                                                    android:layout_width="wrap_content"
+                                                    android:layout_height="wrap_content"
+                                                    android:text="@{currencySign}"
+                                                    android:textColor="@color/colorTextBlue"
+                                                    android:textSize="@dimen/sp_14" />
+
+                                                <TextView
+                                                    android:layout_width="wrap_content"
+                                                    android:layout_height="wrap_content"
+                                                    android:paddingLeft="@dimen/dp_5"
+                                                    android:text="@{orderDetailModel.driverEarning}"
+                                                    android:textColor="@color/colorTextBlue"
+                                                    android:textSize="@dimen/sp_14"
+                                                    app:font="@{`semibold`}" />
+                                            </LinearLayout>
+                                        </LinearLayout>
+
+
+                                    </LinearLayout>
+
+                                    <View
+                                        android:layout_width="match_parent"
+                                        android:layout_height="0.5dp"
+                                        android:layout_marginTop="@dimen/dp_10"
+                                        android:background="@color/colorGrey" />
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:orientation="horizontal"
+                                        android:weightSum="2">
+
+                                        <LinearLayout
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginTop="@dimen/dp_10"
+                                            android:layout_weight="1"
+                                            android:orientation="vertical">
+
+                                            <TextView
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:text="@string/pay_to_locomo"
+                                                android:textColor="@color/colorGrey"
+                                                android:textSize="@dimen/sp_11"
+                                                app:font="@{`regular`}" />
+
+                                            <LinearLayout
+                                                android:layout_width="match_parent"
+                                                android:layout_height="wrap_content"
+                                                android:layout_marginTop="5dp"
+                                                android:orientation="horizontal">
+
+                                                <TextView
+                                                    android:layout_width="wrap_content"
+                                                    android:layout_height="wrap_content"
+                                                    android:text="@{currencySign}"
+                                                    android:textColor="@color/colorPrimary"
+                                                    android:textSize="@dimen/sp_14" />
+
+                                                <TextView
+                                                    android:layout_width="wrap_content"
+                                                    android:layout_height="wrap_content"
+                                                    android:paddingLeft="@dimen/dp_5"
+                                                    android:text="@{orderDetailModel.parcelValue}"
+                                                    android:textColor="@color/colorBlack"
+                                                    android:textSize="@dimen/sp_12"
+                                                    app:font="@{`semibold`}" />
+                                            </LinearLayout>
+                                        </LinearLayout>
+
+                                        <LinearLayout
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginTop="@dimen/dp_10"
+                                            android:layout_weight="1"
+                                            android:orientation="vertical">
+
+                                            <LinearLayout
+                                                android:layout_width="match_parent"
+                                                android:layout_height="wrap_content"
+                                                android:orientation="horizontal">
+
+                                                <TextView
+                                                    android:layout_width="wrap_content"
+                                                    android:layout_height="wrap_content"
+                                                    android:text="Additional Charges"
+                                                    android:textColor="@color/colorGrey"
+                                                    android:textSize="@dimen/sp_11"
+                                                    app:font="@{`regular`}" />
+
+                                                <LinearLayout
+                                                    android:layout_width="match_parent"
+                                                    android:layout_height="wrap_content"
+                                                    android:layout_marginLeft="5dp"
+                                                    android:orientation="horizontal">
+
+                                                    <TextView
+                                                        android:layout_width="wrap_content"
+                                                        android:layout_height="wrap_content"
+                                                        android:text="@{currencySign}"
+                                                        android:textColor="@color/colorPrimary"
+                                                        android:textSize="@dimen/sp_12" />
+
+                                                    <TextView
+                                                        android:layout_width="wrap_content"
+                                                        android:layout_height="wrap_content"
+                                                        android:paddingLeft="@dimen/dp_5"
+                                                        android:text="@{orderDetailModel.adminComission}"
+                                                        android:textColor="@color/colorBlack"
+                                                        android:textSize="@dimen/sp_12"
+                                                        app:font="@{`semibold`}" />
+                                                </LinearLayout>
+
+                                            </LinearLayout>
+                                            <LinearLayout
+                                                android:layout_width="match_parent"
+                                                android:layout_height="wrap_content"
+                                                android:orientation="horizontal">
+
+                                                <TextView
+                                                    android:layout_width="wrap_content"
+                                                    android:layout_height="wrap_content"
+                                                    android:text="Secuirty Charges"
+                                                    android:textColor="@color/colorGrey"
+                                                    android:textSize="@dimen/sp_11"
+                                                    app:font="@{`regular`}" />
+
+                                                <LinearLayout
+                                                    android:layout_width="match_parent"
+                                                    android:layout_height="wrap_content"
+                                                    android:layout_marginLeft="5dp"
+                                                    android:orientation="horizontal">
+
+                                                    <TextView
+                                                        android:layout_width="wrap_content"
+                                                        android:layout_height="wrap_content"
+                                                        android:text="@{currencySign}"
+                                                        android:textColor="@color/colorPrimary"
+                                                        android:textSize="@dimen/sp_12" />
+
+                                                    <TextView
+                                                        android:layout_width="wrap_content"
+                                                        android:layout_height="wrap_content"
+                                                        android:paddingLeft="@dimen/dp_5"
+                                                        android:text="@{orderDetailModel.driverCCharges}"
+                                                        android:textColor="@color/colorBlack"
+                                                        android:textSize="@dimen/sp_12"
+                                                        app:font="@{`semibold`}" />
+                                                </LinearLayout>
+
+                                            </LinearLayout>
+                                        </LinearLayout>
+
                                     </LinearLayout>
                                 </LinearLayout>
 
                                 <LinearLayout
+                                    android:id="@+id/lin_active_order"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginTop="@dimen/dp_10"
-                                    android:layout_weight="1"
                                     android:orientation="vertical">
 
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text="@string/pay_to_locomo"
-                                        android:textColor="@color/colorGrey"
-                                        android:textSize="@dimen/sp_11"
-                                        app:font="@{`regular`}" />
+                                    <!-- <View
+                                         android:layout_width="match_parent"
+                                         android:layout_height="0.5dp"
+                                         android:layout_marginTop="@dimen/dp_10"
+                                         android:background="@color/colorGrey" />-->
 
-                                    <LinearLayout
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:layout_marginTop="5dp"
-                                        android:orientation="horizontal">
 
-                                        <TextView
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:text="$"
-                                            android:textColor="@color/colorHomeTabRed"
-                                            android:textSize="@dimen/sp_14" />
-
-                                        <TextView
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:text="@{orderDetailModel.parcelValue}"
-                                            android:textColor="@color/colorBlack"
-                                            android:textSize="@dimen/sp_12"
-                                            app:font="@{`semibold`}" />
-                                    </LinearLayout>
                                 </LinearLayout>
                             </LinearLayout>
-
-
-                            <LinearLayout
-                                android:id="@+id/lin_active_order"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="vertical">
-
-                                <!-- <View
-                                     android:layout_width="match_parent"
-                                     android:layout_height="0.5dp"
-                                     android:layout_marginTop="@dimen/dp_10"
-                                     android:background="@color/colorGrey" />-->
-
-
-                            </LinearLayout>
-                        </LinearLayout>
-                    </androidx.cardview.widget.CardView>
+                        </androidx.cardview.widget.CardView>
+                    </LinearLayout>
 
                     <LinearLayout
                         android:id="@+id/ll_available"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/dp_20"
+                        android:background="@color/colorWhite"
                         android:gravity="center"
                         android:orientation="horizontal"
+                        android:paddingTop="@dimen/dp_20"
+                        android:paddingBottom="@dimen/dp_20"
                         android:visibility="gone">
 
                         <TextView
                             android:id="@+id/tv_available_accept_order"
-                            android:layout_width="@dimen/dp_100"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="@dimen/dp_10"
                             android:layout_marginRight="@dimen/dp_10"
                             android:background="@drawable/round_corners_home_tab"
-                            android:backgroundTint="@color/colorHomeTabRed"
+                            android:backgroundTint="@color/colorPrimary"
+                            android:gravity="center"
                             android:onClick="@{(v) -> orderDetailViewModel.clickListener(v)}"
-                            android:padding="@dimen/dp_10"
-                            android:paddingLeft="@dimen/dp_20"
+                            android:paddingLeft="@dimen/dp_30"
                             android:paddingTop="@dimen/dp_10"
-                            android:paddingRight="@dimen/dp_20"
+                            android:paddingRight="@dimen/dp_30"
                             android:paddingBottom="@dimen/dp_10"
-                            android:text="@string/accept"
+                            android:text="@string/take_order"
                             android:textAlignment="center"
                             android:textColor="@color/colorWhite"
                             android:textSize="@dimen/sp_14"
@@ -552,6 +706,7 @@
                             android:textAlignment="center"
                             android:textColor="@color/colorBlack"
                             android:textSize="@dimen/sp_14"
+                            android:visibility="gone"
                             app:font="@{`bold`}" />
 
                     </LinearLayout>
@@ -560,9 +715,9 @@
                         android:id="@+id/ll_accepted_take_order"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/dp_20"
                         android:gravity="center"
                         android:orientation="horizontal"
+                        android:paddingBottom="@dimen/dp_20"
                         android:visibility="gone">
 
                         <TextView
@@ -572,14 +727,14 @@
                             android:layout_marginLeft="@dimen/dp_10"
                             android:layout_marginRight="@dimen/dp_10"
                             android:background="@drawable/round_corners_home_tab"
-                            android:backgroundTint="@color/colorHomeTabRed"
+                            android:backgroundTint="@color/colorPrimary"
                             android:onClick="@{(v) -> orderDetailViewModel.clickListener(v)}"
                             android:padding="@dimen/dp_10"
                             android:paddingLeft="@dimen/dp_20"
                             android:paddingTop="@dimen/dp_10"
                             android:paddingRight="@dimen/dp_20"
                             android:paddingBottom="@dimen/dp_10"
-                            android:text="@string/take_order"
+                            android:text="@string/start_order"
                             android:textAlignment="center"
                             android:textColor="@color/colorWhite"
                             android:textSize="@dimen/sp_14"
@@ -609,9 +764,10 @@
                         android:id="@+id/ll_complete_order"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/dp_20"
+                        android:background="@color/colorWhite"
                         android:gravity="center"
                         android:orientation="horizontal"
+                        android:paddingBottom="@dimen/dp_20"
                         android:visibility="gone">
 
                         <TextView
@@ -621,14 +777,14 @@
                             android:layout_marginLeft="@dimen/dp_10"
                             android:layout_marginRight="@dimen/dp_10"
                             android:background="@drawable/round_corners_home_tab"
-                            android:backgroundTint="@color/colorHomeTabRed"
+                            android:backgroundTint="@color/colorPrimary"
                             android:onClick="@{(v) -> orderDetailViewModel.clickListener(v)}"
                             android:padding="@dimen/dp_10"
                             android:paddingLeft="@dimen/dp_20"
                             android:paddingTop="@dimen/dp_10"
                             android:paddingRight="@dimen/dp_20"
                             android:paddingBottom="@dimen/dp_10"
-                            android:text="@string/completed"
+                            android:text="Complete"
                             android:textAlignment="center"
                             android:textColor="@color/colorWhite"
                             android:textSize="@dimen/sp_14"

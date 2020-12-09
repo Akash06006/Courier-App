@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.courierdriver.viewmodels.HelpScreenViewModel" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorWhite"
+        android:backgroundTint="@color/colorPrimary"
+        android:orientation="vertical">
+
+        <include
+            android:id="@+id/toolbarCommon"
+            layout="@layout/common_toolbar_back" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/dp_10"
+            android:background="@drawable/ic_top_circle"
+            android:backgroundTint="@color/colorWhite"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dp_15"
+                android:layout_marginTop="@dimen/dp_20"
+                android:layout_marginRight="@dimen/dp_15"
+                android:text="@string/select_date_range"
+                android:textColor="@color/colorGrey"
+                android:visibility="gone"
+                android:textSize="@dimen/sp_16"
+                app:font="@{`bold`}" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                android:paddingBottom="@dimen/dp_5">
+
+                <TextView
+                    android:id="@+id/tv_from"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dp_15"
+                    android:onClick="@{(v) -> viewModel.clickListener(v)}"
+                    android:paddingTop="@dimen/dp_10"
+                    android:hint="From"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="@dimen/sp_12"
+                    app:font="@{`regular`}" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dp_2"
+                    android:layout_marginRight="@dimen/dp_2"
+                    android:paddingTop="@dimen/dp_10"
+                    android:text=" ~ "
+                    android:textColor="@color/colorBlack"
+                    android:textSize="@dimen/sp_16"
+                    app:font="@{`regular`}" />
+
+                <TextView
+                    android:id="@+id/tv_to_date"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/dp_15"
+                    android:drawableRight="@drawable/ic_cal"
+                    android:gravity="center_vertical"
+                    android:onClick="@{(v) -> viewModel.clickListener(v)}"
+                    android:paddingTop="@dimen/dp_10"
+                    android:hint="To"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="@dimen/sp_12"
+                    app:font="@{`regular`}" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_1"
+                android:visibility="gone"
+                android:layout_marginLeft="@dimen/dp_10"
+                android:layout_marginRight="@dimen/dp_10"
+                android:background="@color/colorPrimary" />
+
+            <TextView
+                android:id="@+id/tv_submit"
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="@dimen/dp_60"
+                android:layout_marginTop="@dimen/dp_20"
+                android:layout_marginRight="@dimen/dp_60"
+                android:layout_marginBottom="@dimen/dp_10"
+                android:background="@drawable/round_corners_home_tab"
+                android:backgroundTint="@color/colorPrimary"
+                android:onClick="@{(v) -> viewModel.clickListener(v)}"
+                android:paddingLeft="@dimen/dp_40"
+                android:paddingTop="@dimen/dp_10"
+                android:paddingRight="@dimen/dp_40"
+                android:paddingBottom="@dimen/dp_10"
+                android:text="@string/submit"
+                android:textAlignment="center"
+                android:textColor="@color/colorWhite"
+                android:textSize="@dimen/sp_14"
+                app:font="@{`bold`}" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_payments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_20" />
+        </LinearLayout>
+    </LinearLayout>
+
+</layout>

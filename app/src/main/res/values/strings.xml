@@ -3,7 +3,7 @@
     <string name="app_name">&app_name;</string>
     <string name="facebook_app_id">630169387861716</string>
     <string name="fb_login_protocol_scheme">fb630169387861716</string>
-    <string name="maps_api_key">AIzaSyDBBLtvW2kqoNiPXOuDBzlk5V_QmRXJLKg</string>
+    <string name="maps_api_key">AIzaSyD9A-jAewYGLoXKBJtOTSpxrd5VvUSU9js</string>
 
     <string name="internal_server_error">Internal server error, so please try after some time!</string>
     <string name="internet_connection">Please check your internet connection and try after some time!</string>
@@ -227,7 +227,7 @@
     <string name="signup_with">Or Sign up with</string>
     <string name="dont_have_account">Don\'t have an account?</string>
     <string name="signup">Sign up</string>
-    <string name="done">done</string>
+    <string name="done">Done</string>
     <string name="pan_card">Pan Card (Photo)</string>
     <string name="vehicle_informatio">Vehicle Information</string>
     <string name="driver_license_photo">Driver License Photo</string>
@@ -238,7 +238,7 @@
     <string name="vehicle_type">Vehicle Type</string>
     <string name="total_order_price">Total order price</string>
 
-    <string name="fare_to_be_collected">Fare To be collected</string>
+    <string name="fare_to_be_collected">Fare To be collected at</string>
     <string name="delivery_option">Delivery option</string>
     <string name="pickup_location">Pickup Location</string>
     <string name="mob_no">Mobile No</string>
@@ -279,7 +279,6 @@
     <string name="delivery_address">Delivery Address</string>
     <string name="delivery_options">Delivery Options</string>
     <string name="your_earning">Your Earning</string>
-    <string name="pay_to_locomo">Pay To Locomo</string>
     <string name="value">Value</string>
     <string name="take_order">Take Order</string>
     <string name="orders">Orders</string>
@@ -304,8 +303,65 @@
     <string name="enter_message">Enter message</string>
     <string name="select_image">Select Image</string>
     <string name="please_select_subject">Please select subject</string>
-    <string name="please_enter_description">Please enter description</string>
-
+    <string name="please_enter_description">Please enter description</string> <string name="verification_in_progress">Verification in Progress</string>
+    <string name="meanwhile_you_can_read_informationabout_working_with_locomo">Meanwhile you can read information about working with LOCOMO</string>
+    <string name="dear_user_we_have_received_your_n_documents_we_are_working_on_verifying_n_your_document">Dear user, we have received your documents we are working on verifying your document</string>
+    <string name="how_to_work">How to work</string>
+    <string name="select_subject">Select Subject</string>
+    <string name="take_a_photo">Take a photo</string>
+    <string name="choose_from_album">Choose from album</string>
+    <string name="select_date_range">Select date range</string>
+    <string name="total_orders">Total Orders</string>
+    <string name="reference_contact">Reference Contact</string>
+    <string name="avg_review">Avg. Review</string>
+    <string name="approved_by_system_administrator">Documents are Approved</string>
+    <string name="blocked_by_system_administrator">Blocked by system administrator</string>
+    <string name="approval_inprogress">Verification inProgress</string>
+    <string name="locomo">LOCOMO</string>
+    <string name="delivery_of_essential_goods">Delivery of essential goods</string>
+    <string name="city">City</string>
+    <string name="locomo_contact">LOCOMO Contact</string>
+    <string name="courier_mobile">Courier Mobile</string>
+    <string name="please_select_region">Please select region</string>
+    <string name="your_rating">Your Rating</string>
+    <string name="invite_friend">Invite Friend</string>
+    <string name="check_autostart_settings_to_make_sure_you_will_receive_all_notifications">Check autostart settings to make sure you will receive all notifications</string>
+    <string name="orders_without_lateness_within_current_week_0">Orders without lateness within current week : 0</string>
+    <string name="no_completed_orders">No Completed Orders</string>
+    <string name="rating">Rating</string>
+    <string name="my_income">My Income</string>
+    <string name="earned_points">Earned Points</string>
+    <string name="convert_to_cash">Convert to cash</string>
+    <string name="invited_friends">Invited Friends</string>
+    <string name="pay_to_locomo">Pay to LOCOMO</string>
+    <string name="earned_cash">Earned Cash</string>
+    <string name="payable_commission">Payable Commission</string>
+    <string name="pay_now">Pay Now</string>
+    <string name="monthly">Monthly</string>
+    <string name="your_local_delivery_partner">Your Local Delivery Partner</string>
+    <string name="id_card">ID Card</string>
+    <string name="select_vehicle">Select Vehicle</string>
+    <string name="reference_name">Reference Name</string>
+    <string name="logout_alert">Are you sure you want to Logout?</string>
+    <string name="number">Number</string>
+    <string name="payment_options_error">Please enter atleast two account\'s mobile number.</string>
+    <string name="please_select_one_address_to_drop_the_order">Please select one address to drop the order.</string>
+    <string name="notification_chat">Notification/Chat</string>
+    <string name="enough_points_error">You don\'t have points to convert in cash.</string>
+    <string name="convert_to_cash_alert">Are you sure you want to convert all points in cash</string>
+    <string name="or_login_with">Or Login with</string>
+    <string name="new_user">New User?</string>
+    <string name="paytm">Paytm</string>
+    <string name="google_pay">Google Pay</string>
+    <string name="phone_pe">PhonePe</string>
+    <string name="seconds">seconds</string>
+    <string name="minutes">minutes</string>
+    <string name="hours">hours</string>
+    <string name="years">years</string>
+    <string name="months">months</string>
+    <string name="week">week</string>
+    <string name="days">days</string>
+    <string name="ago">ago</string>
 
     <string-array name="Languages">
         <item>Java</item>

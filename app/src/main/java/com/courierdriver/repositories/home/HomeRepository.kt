@@ -9,6 +9,7 @@ import com.courierdriver.application.MyApplication
 import com.courierdriver.common.UtilsFunctions
 import com.courierdriver.model.CancelReasonModel
 import com.courierdriver.model.CommonModel
+import com.courierdriver.model.PaymentOptionsModel
 import com.courierdriver.model.RegionListModel
 import com.courierdriver.model.order.OrderListModel
 import com.google.gson.GsonBuilder
@@ -105,11 +106,15 @@ class HomeRepository {
             mApiService.get(
                 object : ApiResponse<JsonObject> {
                     override fun onResponse(mResponse: Response<JsonObject>) {
-                        val data = gson.fromJson<CancelReasonModel>(
-                            "" + mResponse.body()!!,
-                            CancelReasonModel::class.java
-                        )
-                        cancellationReasonData!!.postValue(data)
+                        if (mResponse.body() != null) {
+                            val data = gson.fromJson<CancelReasonModel>(
+                                "" + mResponse.body()!!,
+                                CancelReasonModel::class.java
+                            )
+                            cancellationReasonData!!.postValue(data)
+                        } else {
+                            cancellationReasonData!!.postValue(null)
+                        }
                     }
 
                     override fun onError(mKey: String) {
@@ -145,7 +150,6 @@ class HomeRepository {
         return regionListModel!!
     }
 
-
     fun profileSetup(
         jsonObject: JsonObject?,
         dataList: MutableLiveData<CommonModel>?
@@ -172,4 +176,54 @@ class HomeRepository {
         return dataList!!
     }
 
+    fun paymentOptions(
+        dataList: MutableLiveData<PaymentOptionsModel>?
+    ): MutableLiveData<PaymentOptionsModel> {
+        if (UtilsFunctions.isNetworkConnected()) {
+            val mApiService = ApiService<JsonObject>()
+            mApiService.get(
+                object : ApiResponse<JsonObject> {
+                    override fun onResponse(mResponse: Response<JsonObject>) {
+                        val data = gson.fromJson<PaymentOptionsModel>(
+                            "" + mResponse.body()!!,
+                            PaymentOptionsModel::class.java
+                        )
+                        dataList!!.postValue(data)
+                    }
+
+                    override fun onError(mKey: String) {
+                        dataList!!.value = null
+                        UtilsFunctions.showToastError(MyApplication.instance.getString(R.string.internal_server_error))
+                    }
+                }, ApiClient.getApiInterface().paymentOptions()
+            )
+        }
+        return dataList!!
+    }
+
+    fun updateAvailability(
+        jsonObject: JsonObject?,
+        availableData: MutableLiveData<CommonModel>?
+    ): MutableLiveData<CommonModel> {
+        if (UtilsFunctions.isNetworkConnected() && jsonObject != null) {
+            val mApiService = ApiService<JsonObject>()
+            mApiService.get(
+                object : ApiResponse<JsonObject> {
+                    override fun onResponse(mResponse: Response<JsonObject>) {
+                        val data = gson.fromJson<CommonModel>(
+                            "" + mResponse.body()!!,
+                            CommonModel::class.java
+                        )
+                        availableData!!.postValue(data)
+                    }
+
+                    override fun onError(mKey: String) {
+                        availableData!!.value = null
+                        UtilsFunctions.showToastError(MyApplication.instance.getString(R.string.internal_server_error))
+                    }
+                }, ApiClient.getApiInterface().availability(jsonObject)
+            )
+        }
+        return availableData!!
+    }
 }

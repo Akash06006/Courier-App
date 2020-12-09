@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dp_20"
+            android:layout_marginRight="@dimen/dp_20"
+            android:background="@drawable/round_layout"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/dp_30"
+            tools:ignore="UselessParent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/dp_20"
+                android:paddingLeft="@dimen/dp_15"
+                android:paddingRight="@dimen/dp_15"
+                android:text="@string/please_select_one_address_to_drop_the_order"
+                android:textAlignment="center"
+                android:textColor="@color/colorGrey"
+                android:textSize="@dimen/sp_14"
+                app:font="@{`regular`}" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_address_list"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:layout_marginLeft="@dimen/dp_15"
+                android:layout_marginTop="@dimen/dp_10"
+                android:layout_marginRight="@dimen/dp_15" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_30"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/tv_submit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="@dimen/dp_10"
+                    android:layout_marginRight="@dimen/dp_10"
+                    android:background="@drawable/round_corners_home_tab"
+                    android:backgroundTint="@color/colorPrimary"
+                    android:paddingLeft="@dimen/dp_40"
+                    android:paddingTop="@dimen/dp_10"
+                    android:paddingRight="@dimen/dp_40"
+                    android:paddingBottom="@dimen/dp_10"
+                    android:text="@string/submit"
+                    android:textAlignment="center"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="@dimen/sp_14"
+                    app:font="@{`bold`}" />
+
+                <TextView
+                    android:id="@+id/tv_cancel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="@dimen/dp_10"
+                    android:layout_marginRight="@dimen/dp_10"
+                    android:background="@drawable/shape_round_stroke"
+                    android:paddingLeft="@dimen/dp_40"
+                    android:paddingTop="@dimen/dp_10"
+                    android:paddingRight="@dimen/dp_40"
+                    android:paddingBottom="@dimen/dp_10"
+                    android:text="@string/cancel"
+                    android:textAlignment="center"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="@dimen/sp_14"
+                    app:font="@{`bold`}" />
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </FrameLayout>
+</layout>

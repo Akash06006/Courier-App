@@ -59,8 +59,20 @@ class SpotAndErrorActivity : BaseActivity(), ChoiceCallBack {
         setToolbarTextIcons()
         getSubjectListObserver()
         addComplaintObserver()
+        loaderObserver()
         viewClicks()
     }
+
+    private fun loaderObserver() {
+        viewModel!!.isLoading().observe(this, Observer<Boolean> { aBoolean ->
+            if (aBoolean!!) {
+                startProgressDialog()
+            } else {
+                stopProgressDialog()
+            }
+        })
+    }
+
 
     private fun sharedPrefValue() {
         email = SharedPrefClass().getPrefValue(this, GlobalConstants.EMAIL)
@@ -71,8 +83,8 @@ class SpotAndErrorActivity : BaseActivity(), ChoiceCallBack {
 
     private fun setToolbarTextIcons() {
         binding!!.toolbarCommon.toolbar.setImageResource(R.drawable.ic_back)
-        binding!!.toolbarCommon.imgRight.visibility = View.VISIBLE
-        binding!!.toolbarCommon.imgToolbarText.text = getString(R.string.home)
+        binding!!.toolbarCommon.imgRight.visibility = View.GONE
+        binding!!.toolbarCommon.imgToolbarText.text = "Spot and error"
     }
 
     private fun viewClicks() {
@@ -121,6 +133,7 @@ class SpotAndErrorActivity : BaseActivity(), ChoiceCallBack {
     private fun addComplaintObserver() {
         viewModel!!.addComplaintListData().observe(this,
             Observer<CommonModel> { response ->
+                stopProgressDialog()
                 if (response != null) {
                     when (response.code) {
                         200 -> {
@@ -143,6 +156,7 @@ class SpotAndErrorActivity : BaseActivity(), ChoiceCallBack {
         viewModel!!.subjectListData().observe(
             this,
             Observer<GetSubjectsModel> { response ->
+                stopProgressDialog()
                 if (response != null) {
                     when (response.code) {
                         200 -> {

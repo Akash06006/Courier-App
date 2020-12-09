@@ -7,9 +7,9 @@ import com.courierdriver.api.ApiResponse
 import com.courierdriver.api.ApiService
 import com.courierdriver.application.MyApplication
 import com.courierdriver.common.UtilsFunctions
-import com.courierdriver.model.CommonModel
-import com.courierdriver.model.LoginResponse
-import com.courierdriver.model.profile.RegionResponse
+import com.courierdriver.model.*
+import com.courierdriver.model.profile.AccountDetailsModel
+import com.courierdriver.model.profile.ProfileDetailsModel
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonObject
 import okhttp3.MultipartBody
@@ -18,97 +18,268 @@ import retrofit2.Response
 import java.util.*
 
 class ProfileRepository {
-    private var data: MutableLiveData<LoginResponse>? = null
-    private var data1: MutableLiveData<LoginResponse>? = null
-    private var data2: MutableLiveData<CommonModel>? = null
     private val gson = GsonBuilder().serializeNulls().create()
-    private var data3: MutableLiveData<RegionResponse>? = null
 
-    init {
-        data = MutableLiveData()
-        data1 = MutableLiveData()
-        data2 = MutableLiveData()
-        data3 = MutableLiveData()
 
+    fun getProfileDetails(
+        tab: String?,
+        profileDetails: MutableLiveData<ProfileDetailsModel>?
+    ): MutableLiveData<ProfileDetailsModel>? {
+
+        if (UtilsFunctions.isNetworkConnected() && tab != null) {
+            val mApiService = ApiService<JsonObject>()
+            mApiService.get(
+                object : ApiResponse<JsonObject> {
+                    override fun onResponse(mResponse: Response<JsonObject>) {
+                        val data = gson.fromJson<ProfileDetailsModel>(
+                            "" + mResponse.body()!!,
+                            ProfileDetailsModel::class.java
+                        )
+                        profileDetails!!.postValue(data)
+                    }
+
+                    override fun onError(mKey: String) {
+                        profileDetails!!.value = null
+                        UtilsFunctions.showToastError(MyApplication.instance.getString(R.string.internal_server_error))
+                    }
+                }, ApiClient.getApiInterface().profileDetails(tab, "", "", "")
+            )
+        }
+
+        return profileDetails
     }
 
-    fun getLoginData(jsonObject: JsonObject?): MutableLiveData<LoginResponse> {
+
+    fun accountDetails(
+        tab: String?,
+        accountDetails: MutableLiveData<AccountDetailsModel>?
+    ): MutableLiveData<AccountDetailsModel>? {
+        if (UtilsFunctions.isNetworkConnected() && tab != null) {
+            val mApiService = ApiService<JsonObject>()
+            mApiService.get(
+                object : ApiResponse<JsonObject> {
+                    override fun onResponse(mResponse: Response<JsonObject>) {
+                        val data = gson.fromJson<AccountDetailsModel>(
+                            "" + mResponse.body()!!,
+                            AccountDetailsModel::class.java
+                        )
+                        accountDetails!!.postValue(data)
+                    }
+
+                    override fun onError(mKey: String) {
+                        accountDetails!!.value = null
+                        UtilsFunctions.showToastError(MyApplication.instance.getString(R.string.internal_server_error))
+                    }
+                }, ApiClient.getApiInterface().profileDetails(tab, "", "", "")
+            )
+        }
+
+        return accountDetails
+    }
+
+    fun statisticsData(
+        tab: String?, year: String?,
+        month: String?, week: String?,
+        statisticsData: MutableLiveData<StatisticsModel>?
+    ): MutableLiveData<StatisticsModel>? {
+        if (UtilsFunctions.isNetworkConnected() && tab != null) {
+            val mApiService = ApiService<JsonObject>()
+            mApiService.get(
+                object : ApiResponse<JsonObject> {
+                    override fun onResponse(mResponse: Response<JsonObject>) {
+                        val data = gson.fromJson<StatisticsModel>(
+                            "" + mResponse.body()!!,
+                            StatisticsModel::class.java
+                        )
+                        statisticsData!!.postValue(data)
+                    }
+
+                    override fun onError(mKey: String) {
+                        statisticsData!!.value = null
+                        UtilsFunctions.showToastError(MyApplication.instance.getString(R.string.internal_server_error))
+                    }
+                }, ApiClient.getApiInterface().profileDetails(tab, year!!, month!!, week!!)
+            )
+        }
+
+        return statisticsData
+    }
+
+    fun locomoIdData(
+        tab: String?,
+        statisticsData: MutableLiveData<LocomoIdModel>?
+    ): MutableLiveData<LocomoIdModel>? {
+        if (UtilsFunctions.isNetworkConnected() && tab != null) {
+            val mApiService = ApiService<JsonObject>()
+            mApiService.get(
+                object : ApiResponse<JsonObject> {
+                    override fun onResponse(mResponse: Response<JsonObject>) {
+                        if (mResponse.body() != null) {
+                            val data = gson.fromJson<LocomoIdModel>(
+                                "" + mResponse.body()!!,
+                                LocomoIdModel::class.java
+                            )
+                            statisticsData!!.postValue(data)
+                        } else
+                            statisticsData!!.postValue(null)
+                    }
+
+                    override fun onError(mKey: String) {
+                        statisticsData!!.value = null
+                        UtilsFunctions.showToastError(MyApplication.instance.getString(R.string.internal_server_error))
+                    }
+                }, ApiClient.getApiInterface().profileDetails(tab, "", "", "")
+            )
+        }
+
+        return statisticsData
+    }
+
+    fun documentsData(
+        tab: String?,
+        statisticsData: MutableLiveData<ProfileDocumentModel>?
+    ): MutableLiveData<ProfileDocumentModel>? {
+        if (UtilsFunctions.isNetworkConnected() && tab != null) {
+            val mApiService = ApiService<JsonObject>()
+            mApiService.get(
+                object : ApiResponse<JsonObject> {
+                    override fun onResponse(mResponse: Response<JsonObject>) {
+                        val data = gson.fromJson<ProfileDocumentModel>(
+                            "" + mResponse.body()!!,
+                            ProfileDocumentModel::class.java
+                        )
+                        statisticsData!!.postValue(data)
+                    }
+
+                    override fun onError(mKey: String) {
+                        statisticsData!!.value = null
+                        UtilsFunctions.showToastError(MyApplication.instance.getString(R.string.internal_server_error))
+                    }
+                }, ApiClient.getApiInterface().profileDetails(tab, "", "", "")
+            )
+        }
+
+        return statisticsData
+    }
+
+    fun getVehicles(
+        vehiclesData: MutableLiveData<GetVehiclesModel>?
+    ): MutableLiveData<GetVehiclesModel>? {
+        if (UtilsFunctions.isNetworkConnected()) {
+            val mApiService = ApiService<JsonObject>()
+            mApiService.get(
+                object : ApiResponse<JsonObject> {
+                    override fun onResponse(mResponse: Response<JsonObject>) {
+                        val data = gson.fromJson<GetVehiclesModel>(
+                            "" + mResponse.body()!!,
+                            GetVehiclesModel::class.java
+                        )
+                        vehiclesData!!.postValue(data)
+                    }
+
+                    override fun onError(mKey: String) {
+                        vehiclesData!!.value = null
+                        UtilsFunctions.showToastError(MyApplication.instance.getString(R.string.internal_server_error))
+                    }
+                }, ApiClient.getApiInterface().getVehicleList()
+            )
+        }
+        return vehiclesData
+    }
+
+    fun updateProfile(
+        mHashMap: HashMap<String, RequestBody>?,
+        userImage: MultipartBody.Part?,
+        updateProfile: MutableLiveData<CommonModel>?
+    ): MutableLiveData<CommonModel>? {
+        if (UtilsFunctions.isNetworkConnected() && mHashMap != null) {
+            val mApiService = ApiService<JsonObject>()
+            mApiService.get(
+                object : ApiResponse<JsonObject> {
+                    override fun onResponse(mResponse: Response<JsonObject>) {
+                        val data = gson.fromJson<CommonModel>(
+                            "" + mResponse.body()!!,
+                            CommonModel::class.java
+                        )
+                        updateProfile!!.postValue(data)
+                    }
+
+                    override fun onError(mKey: String) {
+                        updateProfile!!.value = null
+                        UtilsFunctions.showToastError(MyApplication.instance.getString(R.string.internal_server_error))
+                    }
+                }, ApiClient.getApiInterface().updateProfile(mHashMap, userImage)
+            )
+        }
+        return updateProfile
+    }
+
+    fun convertPoints(
+        updateProfile: MutableLiveData<CommonModel>?
+    ): MutableLiveData<CommonModel>? {
+        if (UtilsFunctions.isNetworkConnected()) {
+            val mApiService = ApiService<JsonObject>()
+            mApiService.get(
+                object : ApiResponse<JsonObject> {
+                    override fun onResponse(mResponse: Response<JsonObject>) {
+                        val data = gson.fromJson<CommonModel>(
+                            "" + mResponse.body()!!,
+                            CommonModel::class.java
+                        )
+                        updateProfile!!.postValue(data)
+                    }
+
+                    override fun onError(mKey: String) {
+                        updateProfile!!.value = null
+                        UtilsFunctions.showToastError(MyApplication.instance.getString(R.string.internal_server_error))
+                    }
+                }, ApiClient.getApiInterface().convertPoints()
+            )
+        }
+        return updateProfile
+    }
+
+
+    fun uploadSelfie(
+        userImage: MultipartBody.Part?,
+        type: String?,
+        orderId: String?,
+        addressId: String?,
+        uploadSelfieList: MutableLiveData<CommonModel>?
+    ): MutableLiveData<CommonModel>? {
+        if (UtilsFunctions.isNetworkConnected() && orderId != null) {
+            val mApiService = ApiService<JsonObject>()
+            mApiService.get(
+                object : ApiResponse<JsonObject> {
+                    override fun onResponse(mResponse: Response<JsonObject>) {
+                        val data = gson.fromJson<CommonModel>(
+                            "" + mResponse.body()!!,
+                            CommonModel::class.java
+                        )
+                        uploadSelfieList!!.postValue(data)
+                    }
+
+                    override fun onError(mKey: String) {
+                        uploadSelfieList!!.value = null
+                        UtilsFunctions.showToastError(MyApplication.instance.getString(R.string.internal_server_error))
+                    }
+                }, ApiClient.getApiInterface().uploadSelfie(userImage,type!!,orderId,addressId!!)
+            )
+        }
+        return uploadSelfieList
+    }
+
+
+    fun payComission(
+        jsonObject: JsonObject?,
+        responseData: MutableLiveData<CommonModel>?
+    ): MutableLiveData<CommonModel> {
         if (jsonObject != null) {
             val mApiService = ApiService<JsonObject>()
             mApiService.get(
                 object : ApiResponse<JsonObject> {
                     override fun onResponse(mResponse: Response<JsonObject>) {
                         val loginResponse = if (mResponse.body() != null)
-                            gson.fromJson<LoginResponse>(
-                                "" + mResponse.body(),
-                                LoginResponse::class.java
-                            )
-                        else {
-                            gson.fromJson<LoginResponse>(
-                                mResponse.errorBody()!!.charStream(),
-                                LoginResponse::class.java
-                            )
-                        }
-
-
-                        data!!.postValue(loginResponse)
-
-                    }
-
-                    override fun onError(mKey: String) {
-                        UtilsFunctions.showToastError(MyApplication.instance.getString(R.string.internal_server_error))
-                        data!!.postValue(null)
-
-                    }
-
-                }, ApiClient.getApiInterface().calldriverLogin(jsonObject)
-            )
-
-        }
-        return data!!
-
-    }
-
-    fun getUserProfile(jsonObject: JsonObject?): MutableLiveData<LoginResponse> {
-        if (jsonObject != null) {
-            val mApiService = ApiService<JsonObject>()
-            mApiService.get(
-                object : ApiResponse<JsonObject> {
-                    override fun onResponse(mResponse: Response<JsonObject>) {
-                        val loginResponse = if (mResponse.body() != null)
-                            gson.fromJson<LoginResponse>(
-                                "" + mResponse.body(),
-                                LoginResponse::class.java
-                            )
-                        else {
-                            gson.fromJson<LoginResponse>(
-                                mResponse.errorBody()!!.charStream(),
-                                LoginResponse::class.java
-                            )
-                        }
-                        data1!!.postValue(loginResponse)
-                    }
-
-                    override fun onError(mKey: String) {
-                        UtilsFunctions.showToastError(MyApplication.instance.getString(R.string.internal_server_error))
-                        data1!!.postValue(null)
-                    }
-
-                }, ApiClient.getApiInterface().getProfile(/*jsonObject*/)
-            )
-
-        }
-        return data1!!
-
-    }
-
-    fun getLogoutResonse(jsonObject: JsonObject?): MutableLiveData<CommonModel> {
-        if (jsonObject != null) {
-            val mApiService = ApiService<JsonObject>()
-            mApiService.get(
-                object : ApiResponse<JsonObject> {
-                    override fun onResponse(mResponse: Response<JsonObject>) {
-                        val logoutResponse = if (mResponse.body() != null)
                             gson.fromJson<CommonModel>(
                                 "" + mResponse.body(),
                                 CommonModel::class.java
@@ -119,99 +290,16 @@ class ProfileRepository {
                                 CommonModel::class.java
                             )
                         }
-
-                        data2!!.postValue(logoutResponse)
-
+                        responseData!!.postValue(loginResponse)
                     }
 
                     override fun onError(mKey: String) {
                         UtilsFunctions.showToastError(MyApplication.instance.getString(R.string.internal_server_error))
-                        data1!!.postValue(null)
-
+                        responseData!!.postValue(null)
                     }
-
-                }, ApiClient.getApiInterface().callLogout(jsonObject)
-            )
-
-        }
-        return data2!!
-
-    }
-
-    fun updateUserProfile(
-        hashMap: HashMap<String, RequestBody>?,
-        image: MultipartBody.Part?
-    ): MutableLiveData<LoginResponse> {
-        if (hashMap != null) {
-            val mApiService = ApiService<JsonObject>()
-            mApiService.get(
-                object : ApiResponse<JsonObject> {
-                    override fun onResponse(mResponse: Response<JsonObject>) {
-                        val loginResponse = if (mResponse.body() != null)
-                            gson.fromJson<LoginResponse>(
-                                "" + mResponse.body(),
-                                LoginResponse::class.java
-                            )
-                        else {
-                            gson.fromJson<LoginResponse>(
-                                mResponse.errorBody()!!.charStream(),
-                                LoginResponse::class.java
-                            )
-                        }
-
-
-                        data!!.postValue(loginResponse)
-
-                    }
-
-                    override fun onError(mKey: String) {
-                        UtilsFunctions.showToastError(MyApplication.instance.getString(R.string.internal_server_error))
-                        data!!.postValue(null)
-
-                    }
-
-                }, ApiClient.getApiInterface().callUpdateProfile(hashMap, image)
+                }, ApiClient.getApiInterface().payComission(jsonObject)
             )
         }
-        return data!!
-
+        return responseData!!
     }
-
-    fun getRegoins(
-    ): MutableLiveData<RegionResponse> {
-        //if (hashMap != null) {
-        val mApiService = ApiService<JsonObject>()
-        mApiService.get(
-            object : ApiResponse<JsonObject> {
-                override fun onResponse(mResponse: Response<JsonObject>) {
-                    val loginResponse = if (mResponse.body() != null)
-                        gson.fromJson<RegionResponse>(
-                            "" + mResponse.body(),
-                            RegionResponse::class.java
-                        )
-                    else {
-                        gson.fromJson<RegionResponse>(
-                            mResponse.errorBody()!!.charStream(),
-                            RegionResponse::class.java
-                        )
-                    }
-
-
-                    data3!!.postValue(loginResponse)
-
-                }
-
-                override fun onError(mKey: String) {
-                    UtilsFunctions.showToastError(MyApplication.instance.getString(R.string.internal_server_error))
-                    data3!!.postValue(null)
-
-                }
-
-            }, ApiClient.getApiInterface().getRegions()
-        )
-        // }
-        return data3!!
-
-    }
-
 }

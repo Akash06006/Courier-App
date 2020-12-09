@@ -9,6 +9,7 @@ import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -23,7 +24,7 @@ object BindingAdapters {
     @BindingAdapter("android:src")
     @JvmStatic
     fun setImageViewResource(imageView: ImageView, resource: String) {
-        var drawable1 = MyApplication.instance.resources.getDrawable(R.drawable.user)
+        var drawable1 = (ContextCompat.getDrawable(MyApplication.instance,R.drawable.ic_user))
 
         if (resource.contains("set_default")) {
             drawable1 = try {
@@ -40,7 +41,7 @@ object BindingAdapters {
         Glide.with(imageView.context)
             .load(resource)
             .diskCacheStrategy(DiskCacheStrategy.ALL)
-            .placeholder(drawable1)
+            .placeholder(R.drawable.loading_image)
             .into(imageView)
     }
 

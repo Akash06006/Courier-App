@@ -60,7 +60,4 @@ class SpotAndErrorViewModel : BaseViewModel() {
     override fun clickListener(v: View) {
         isClick.value = v.resources.getResourceName(v.id).split("/")[1]
     }
-
-    val loading: LiveData<Boolean>
-        get() = mIsUpdating
 }

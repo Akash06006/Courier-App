@@ -6,17 +6,25 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Environment
 import android.provider.MediaStore
+import android.text.TextUtils
 import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.EditText
+import android.widget.Spinner
 import androidx.core.content.FileProvider
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.courierdriver.R
+import com.courierdriver.application.MyApplication
 import com.courierdriver.callbacks.ChoiceCallBack
 import com.courierdriver.callbacks.SelfieCallBack
 import com.courierdriver.common.UtilsFunctions
 import com.courierdriver.constants.GlobalConstants
 import com.courierdriver.databinding.ActivityDocumentVerificatonBinding
+import com.courierdriver.model.GetVehiclesModel
 import com.courierdriver.model.LoginResponse
 import com.courierdriver.sharedpreference.SharedPrefClass
 import com.courierdriver.utils.BaseActivity
@@ -47,7 +55,16 @@ class DocumentVerificatonActivity : BaseActivity(), ChoiceCallBack, SelfieCallBa
     private var panCardImage = ""
     private var dlNumber = ""
     private var transportType = ""
+    private var vehicleList: ArrayList<GetVehiclesModel.Body>? = ArrayList()
+    private var vehicleStringList: ArrayList<String>? = ArrayList()
+    private var vehicleId = "0"
     var userId = ""
+    private var isPaytmVisible = false
+    private var isPhonePeVisible = false
+    private var isGooglePayVisible = false
+    private var count = 0
+    private var paymentType = ""
+
     override fun getLayoutId(): Int {
         return R.layout.activity_document_verificaton
     }
@@ -61,72 +78,195 @@ class DocumentVerificatonActivity : BaseActivity(), ChoiceCallBack, SelfieCallBa
         userId =
             SharedPrefClass().getPrefValue(this, GlobalConstants.USER_ID).toString()
 
+        loaderObserver()
+        getVehicleListObserver()
 
         docVerifyViewModel.isClick().observe(
             this, Observer<String>(function =
             fun(it: String?) {
                 buttonClickedId = it.toString()
                 when (it) {
+
+                    "rel_phone_pe" -> {
+                        if (isPhonePeVisible) {
+                            isPhonePeVisible = false
+                            activityDocVeribinding!!.linPhonePe.visibility = View.GONE
+                            activityDocVeribinding!!.imgArrowPhonePe.setImageDrawable(
+                                getDrawable(
+                                    R.drawable.ic_small_arrow_down
+                                )
+                            )
+                        } else {
+                            isPhonePeVisible = true
+                            activityDocVeribinding!!.linPhonePe.visibility = View.VISIBLE
+                            activityDocVeribinding!!.imgArrowPhonePe.setImageDrawable(
+                                getDrawable(
+                                    R.drawable.ic_up_arrow
+                                )
+                            )
+                        }
+                    }
+                    "rel_google_pay" -> {
+                        if (isGooglePayVisible) {
+                            isGooglePayVisible = false
+                            activityDocVeribinding!!.linGooglePay.visibility = View.GONE
+                            activityDocVeribinding!!.imgArrowGooglePay.setImageDrawable(
+                                getDrawable(
+                                    R.drawable.ic_small_arrow_down
+                                )
+                            )
+                        } else {
+                            isGooglePayVisible = true
+                            activityDocVeribinding!!.linGooglePay.visibility = View.VISIBLE
+                            activityDocVeribinding!!.imgArrowGooglePay.setImageDrawable(
+                                getDrawable(
+                                    R.drawable.ic_up_arrow
+                                )
+                            )
+                        }
+                    }
+                    "rel_paytm" -> {
+                        if (isPaytmVisible) {
+                            isPaytmVisible = false
+                            activityDocVeribinding!!.linPaytm.visibility = View.GONE
+                            activityDocVeribinding!!.imgArrowPaytm.setImageDrawable(
+                                getDrawable(
+                                    R.drawable.ic_small_arrow_down
+                                )
+                            )
+                        } else {
+                            isPaytmVisible = true
+                            activityDocVeribinding!!.linPaytm.visibility = View.VISIBLE
+                            activityDocVeribinding!!.imgArrowPaytm.setImageDrawable(
+                                getDrawable(
+                                    R.drawable.ic_up_arrow
+                                )
+                            )
+                        }
+                    }
                     "btn_submit" -> {
                         dlNumber = activityDocVeribinding.etDrivingLicenseNo.text.toString()
-                        dlNumber = activityDocVeribinding.etLastname.text.toString()
-                        val mHashMap = HashMap<String, RequestBody>()
-                        mHashMap["dlNumber"] =
-                            Utils(this).createPartFromString(dlNumber)
-                        mHashMap["transportType"] =
-                            Utils(this).createPartFromString(transportType)
+                        count = 0
+                        paymentType = ""
+                        if (!TextUtils.isEmpty(activityDocVeribinding.etPhonePaytm.text.toString())) {
+                            count += 1
+                            paymentType = "Paytm"
+                        }
+                        if (!TextUtils.isEmpty(activityDocVeribinding.etPhoneGooglePay.text.toString())) {
+                            count += 1
+                            paymentType = "Google Pay"
+                        }
+                        if (!TextUtils.isEmpty(activityDocVeribinding.etPhonePhonePe.text.toString())) {
+                            count += 1
+                            paymentType = "PhonePe"
+                        }
+
                         //  mHashMap["password"] = Utils(this).createPartFromString(password)
-                        var poaFront: MultipartBody.Part? = null
-                        if (!aadharFrontImg.isEmpty()) {
-                            val f1 = File(aadharFrontImg)
-                            poaFront =
-                                Utils(this).prepareFilePart(
-                                    "poaFront",
-                                    f1
-                                )
-                        }
+                        if (TextUtils.isEmpty(aadharFrontImg)) {
+                            showToastError("Please select Aadhar front photo")
+                        } else if (TextUtils.isEmpty(aadharBackImg)) {
+                            showToastError("Please select Aadhar back photo")
+                        } else if (TextUtils.isEmpty(panCardImage)) {
+                            showToastError("Please select PAN card image")
+                        } else if (TextUtils.isEmpty(transportType)) {
+                            showToastError("Please select vehicle type")
+                        } else if (TextUtils.isEmpty(dlNumber)) {
+                            showToastError("Please enter driving license number")
+                        } else if (TextUtils.isEmpty(drivingFrontImg)) {
+                            showToastError("Please select Driving license front image")
+                        } else if (TextUtils.isEmpty(drivingBackImg)) {
+                            showToastError("Please select Driving license back image")
+                        } else if (!TextUtils.isEmpty(activityDocVeribinding.etPhonePaytm.text.toString())
+                            && (activityDocVeribinding.etPhonePaytm.text.toString()).length < 10
+                        ) {
+                            showError(
+                                activityDocVeribinding.etPhonePaytm,
+                                getString(R.string.paytm) + " " + getString(R.string.phone_number)
+                                        + " " + getString(R.string.phone_min)
+                            )
+                        } else if (!TextUtils.isEmpty(activityDocVeribinding.etPhoneGooglePay.text.toString())
+                            && (activityDocVeribinding.etPhoneGooglePay.text.toString()).length < 10
+                        ) {
+                            showError(
+                                activityDocVeribinding.etPhoneGooglePay,
+                                getString(R.string.google_pay) + " " + getString(R.string.phone_number)
+                                        + " " + getString(R.string.phone_min)
+                            )
+                        } else if (!TextUtils.isEmpty(activityDocVeribinding.etPhonePhonePe.text.toString())
+                            && (activityDocVeribinding.etPhonePhonePe.text.toString()).length < 10
+                        ) {
+                            showError(
+                                activityDocVeribinding.etPhonePhonePe,
+                                getString(R.string.phone_pe) + " " + getString(R.string.phone_number)
+                                        + " " + getString(R.string.phone_min)
+                            )
+                        } else if (count < 2) {
+                            UtilsFunctions.showToastError(getString(R.string.payment_options_error))
+                        } else {
+                            val mHashMap = HashMap<String, RequestBody>()
+                            mHashMap["dlNumber"] =
+                                Utils(this).createPartFromString(dlNumber)
+                            mHashMap["transportType"] =
+                                Utils(this).createPartFromString(transportType)
+                            mHashMap["paymentType"] =
+                                Utils(this).createPartFromString(paymentType)
+                            mHashMap["gpayNo"] =
+                                Utils(this).createPartFromString(activityDocVeribinding.etPhoneGooglePay.text.toString())
+                            mHashMap["phonePayNo"] =
+                                Utils(this).createPartFromString(activityDocVeribinding.etPhonePhonePe.text.toString())
+                            mHashMap["paytmNo"] =
+                                Utils(this).createPartFromString(activityDocVeribinding.etPhonePaytm.text.toString())
 
-                        var poaBack: MultipartBody.Part? = null
-                        if (!aadharBackImg.isEmpty()) {
-                            val f1 = File(aadharBackImg)
-                            poaBack =
-                                Utils(this).prepareFilePart(
-                                    "poaBack",
-                                    f1
-                                )
-                        }
-                        var licenseFront: MultipartBody.Part? = null
-                        if (!drivingFrontImg.isEmpty()) {
-                            val f1 = File(drivingFrontImg)
-                            licenseFront =
-                                Utils(this).prepareFilePart(
-                                    "licenseFront",
-                                    f1
-                                )
-                        }
+                            var poaFront: MultipartBody.Part? = null
+                            if (aadharFrontImg.isNotEmpty()) {
+                                val f1 = File(aadharFrontImg)
+                                poaFront =
+                                    Utils(this).prepareFilePart(
+                                        "poaFront",
+                                        f1
+                                    )
+                            }
 
-                        var licenseBack: MultipartBody.Part? = null
-                        if (!drivingBackImg.isEmpty()) {
-                            val f1 = File(drivingBackImg)
-                            licenseBack =
-                                Utils(this).prepareFilePart(
-                                    "licenseBack",
-                                    f1
-                                )
-                        }
+                            var poaBack: MultipartBody.Part? = null
+                            if (aadharBackImg.isNotEmpty()) {
+                                val f1 = File(aadharBackImg)
+                                poaBack =
+                                    Utils(this).prepareFilePart(
+                                        "poaBack",
+                                        f1
+                                    )
+                            }
+                            var licenseFront: MultipartBody.Part? = null
+                            if (drivingFrontImg.isNotEmpty()) {
+                                val f1 = File(drivingFrontImg)
+                                licenseFront =
+                                    Utils(this).prepareFilePart(
+                                        "licenseFront",
+                                        f1
+                                    )
+                            }
 
-                        var panCard: MultipartBody.Part? = null
-                        if (!panCardImage.isEmpty()) {
-                            val f1 = File(panCardImage)
-                            panCard =
-                                Utils(this).prepareFilePart(
-                                    "panCard",
-                                    f1
-                                )
-                        }
+                            var licenseBack: MultipartBody.Part? = null
+                            if (drivingBackImg.isNotEmpty()) {
+                                val f1 = File(drivingBackImg)
+                                licenseBack =
+                                    Utils(this).prepareFilePart(
+                                        "licenseBack",
+                                        f1
+                                    )
+                            }
 
-                        if (UtilsFunctions.isNetworkConnected()) {
-                            startProgressDialog()
+                            var panCard: MultipartBody.Part? = null
+                            if (panCardImage.isNotEmpty()) {
+                                val f1 = File(panCardImage)
+                                panCard =
+                                    Utils(this).prepareFilePart(
+                                        "panCard",
+                                        f1
+                                    )
+                            }
+
+
                             docVerifyViewModel.hitDocVerifyApi(
                                 mHashMap,
                                 poaFront,
@@ -195,7 +335,6 @@ class DocumentVerificatonActivity : BaseActivity(), ChoiceCallBack, SelfieCallBa
                                     "gallery"
                                 )
                         }
-
                     }
                 }
             })
@@ -205,10 +344,16 @@ class DocumentVerificatonActivity : BaseActivity(), ChoiceCallBack, SelfieCallBa
                 stopProgressDialog()
                 if (response != null) {
                     val message = response.message
-                    when {
-                        response.code == 200 -> {
+                    when (response.code) {
+                        200 -> {
+                            SharedPrefClass().putObject(
+                                MyApplication.instance,
+                                GlobalConstants.IS_DOC_UPLOADED,
+                                "true"
+                            )
                             Intent(this, LandingActivty::class.java)
                             startActivity(intent)
+                            finish()
                             message?.let { UtilsFunctions.showToastSuccess(it) }
                         }
                         else -> message?.let { UtilsFunctions.showToastError(it) }
@@ -218,6 +363,79 @@ class DocumentVerificatonActivity : BaseActivity(), ChoiceCallBack, SelfieCallBa
             })
 
     }
+
+    private fun showError(textView: EditText, error: String) {
+        textView.requestFocus()
+        textView.error = error
+    }
+
+    private fun getVehicleListObserver() {
+        docVerifyViewModel.transporterList()
+        docVerifyViewModel.transporterListData().observe(this,
+            Observer<GetVehiclesModel> { response ->
+                stopProgressDialog()
+                if (response != null) {
+                    when (response.code) {
+                        200 -> {
+                            if (response.body!!.isNotEmpty()) {
+                                vehicleList = response.body
+                                if (vehicleList!!.isNotEmpty())
+                                    setVehiclesSpinner(activityDocVeribinding.spTransport)
+                            }
+                        }
+                    }
+                } else {
+                    UtilsFunctions.showToastError(resources.getString(R.string.internal_server_error))
+                }
+            })
+    }
+
+    private fun setVehiclesSpinner(spRegions: Spinner) {
+        if (vehicleStringList!!.isNotEmpty())
+            vehicleStringList!!.clear()
+
+        vehicleList?.let {
+            for (item in 0 until vehicleList!!.size) {
+                vehicleStringList!!.add(vehicleList!![item].name!!)
+            }
+        }
+
+        val adapter = ArrayAdapter<String>(this, R.layout.spinner_item)
+        adapter.add(getString(R.string.select_vehicle))
+        adapter.addAll(vehicleStringList!!)
+        adapter.setDropDownViewResource(R.layout.spinner_item)
+        spRegions.adapter = adapter
+
+        spRegions.post {
+            vehicleStringList?.let {
+                for (item in 0 until vehicleStringList!!.size) {
+                    if (vehicleStringList!![item] == transportType) {
+                        spRegions.setSelection(item + 1)
+                    }
+                }
+            }
+        }
+
+        spRegions.onItemSelectedListener = object :
+            AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>,
+                view: View, position: Int, id: Long
+            ) {
+                if (position != 0) {
+                    vehicleId = vehicleList!![position - 1].id!!
+                    transportType = vehicleList!![position - 1].name!!
+                } else {
+                    transportType = ""
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>) {
+                // write code to perform some action
+            }
+        }
+    }
+
 
     override fun photoFromCamera(mKey: String) {
         Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
@@ -338,35 +556,40 @@ class DocumentVerificatonActivity : BaseActivity(), ChoiceCallBack, SelfieCallBa
     private fun setImageAadharFront(path: String) {
         Glide.with(this)
             .load(path)
-            .placeholder(R.drawable.ic_person)
+            .diskCacheStrategy(DiskCacheStrategy.ALL)
+            .placeholder(R.drawable.loading_image)
             .into(activityDocVeribinding.frontAdaharIv)
     }
 
     private fun setImageAadharBack(path: String) {
         Glide.with(this)
             .load(path)
-            .placeholder(R.drawable.ic_person)
+            .diskCacheStrategy(DiskCacheStrategy.ALL)
+            .placeholder(R.drawable.loading_image)
             .into(activityDocVeribinding.backAdaharIv)
     }
 
     private fun setImagePanCard(path: String) {
         Glide.with(this)
             .load(path)
-            .placeholder(R.drawable.ic_person)
+            .diskCacheStrategy(DiskCacheStrategy.ALL)
+            .placeholder(R.drawable.loading_image)
             .into(activityDocVeribinding.panCardIv)
     }
 
     private fun setImageDrivingFront(path: String) {
         Glide.with(this)
             .load(path)
-            .placeholder(R.drawable.ic_person)
+            .diskCacheStrategy(DiskCacheStrategy.ALL)
+            .placeholder(R.drawable.loading_image)
             .into(activityDocVeribinding.frontDrivingIv)
     }
 
     private fun setImageDrivingBack(path: String) {
         Glide.with(this)
             .load(path)
-            .placeholder(R.drawable.ic_person)
+            .diskCacheStrategy(DiskCacheStrategy.ALL)
+            .placeholder(R.drawable.loading_image)
             .into(activityDocVeribinding.backDrivingIv)
     }
 
@@ -374,4 +597,13 @@ class DocumentVerificatonActivity : BaseActivity(), ChoiceCallBack, SelfieCallBa
 
     }
 
+    private fun loaderObserver() {
+        docVerifyViewModel!!.isLoading().observe(this, Observer<Boolean> { aBoolean ->
+            if (aBoolean!!) {
+                startProgressDialog()
+            } else {
+                stopProgressDialog()
+            }
+        })
+    }
 }

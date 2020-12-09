@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.courierdriver.common.UtilsFunctions
 import com.courierdriver.model.CommonModel
+import com.courierdriver.model.PaymentHistoryModel
 import com.courierdriver.repositories.HelpRepository
 
 class HelpScreenViewModel : BaseViewModel() {
@@ -12,6 +13,7 @@ class HelpScreenViewModel : BaseViewModel() {
     private val mIsUpdating = MutableLiveData<Boolean>()
     private var helpRepository: HelpRepository = HelpRepository()
     private var logoutList: MutableLiveData<CommonModel>? = MutableLiveData()
+    private var paymentHistory: MutableLiveData<PaymentHistoryModel>? = MutableLiveData()
 
     fun logout() {
         if (UtilsFunctions.isNetworkConnected()) {
@@ -22,6 +24,17 @@ class HelpScreenViewModel : BaseViewModel() {
 
     fun logoutData(): LiveData<CommonModel> {
         return logoutList!!
+    }
+
+    fun paymentHistory() {
+        if (UtilsFunctions.isNetworkConnected()) {
+            paymentHistory = helpRepository.paymentHistory(paymentHistory)
+            mIsUpdating.postValue(true)
+        }
+    }
+
+    fun paymentHistoryData(): LiveData<PaymentHistoryModel> {
+        return paymentHistory!!
     }
 
     override fun isLoading(): LiveData<Boolean> {

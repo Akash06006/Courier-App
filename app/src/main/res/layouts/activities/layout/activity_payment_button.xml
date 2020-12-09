@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.courierdriver.viewmodels.profile.ProfileViewModel" />
+
+        <variable
+            name="price"
+            type="String" />
+    </data>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimary"
+        android:orientation="vertical">
+
+        <include
+            android:id="@+id/toolbarCommon"
+            layout="@layout/common_toolbar_back"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_50"
+            android:onClick="@{(v) -> viewModel.clickListener(v)}"
+            android:visibility="visible" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/ic_top_circle"
+            android:backgroundTint="@color/colorWhite"
+            android:orientation="vertical"
+            android:paddingTop="@dimen/dp_10">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_30"
+                android:text="@{`Total : `+price}"
+                android:layout_gravity="center_horizontal"
+                android:textColor="@color/colorTextBlue"
+                android:textSize="@dimen/sp_18"
+                app:font="@{`bold`}" />
+
+            <TextView
+                android:id="@+id/tv_pay"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dp_45"
+                android:layout_marginTop="@dimen/dp_50"
+                android:layout_marginRight="@dimen/dp_45"
+                android:background="@drawable/round_corners_home_tab"
+                android:backgroundTint="@color/colorPrimary"
+                android:onClick="@{(v) -> viewModel.clickListener(v)}"
+                android:padding="@dimen/dp_10"
+                android:paddingLeft="@dimen/dp_20"
+                android:paddingTop="@dimen/dp_10"
+                android:paddingRight="@dimen/dp_20"
+                android:paddingBottom="@dimen/dp_10"
+                android:text="@string/pay_now"
+                android:gravity="center"
+                android:textAlignment="center"
+                android:textColor="@color/colorWhite"
+                android:textSize="@dimen/sp_14"
+                app:font="@{`bold`}" />
+
+        </LinearLayout>
+    </LinearLayout>
+</layout>

@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
         <import type="com.courierdriver.common.BindingUtils" />
-
 
         <variable
             name="onClick"
@@ -38,72 +36,125 @@
             android:id="@+id/lin_in_progress"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="20dp"
             android:background="@drawable/ic_top_circle"
+            android:backgroundTint="@color/colorWhite"
+            android:orientation="vertical"
+            android:visibility="visible">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/ic_top_circle"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/shape_top_circle"
+                    android:backgroundTint="@color/colorTextBlue"
+                    android:orientation="vertical"
+                    android:paddingBottom="@dimen/dp_40">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="@dimen/dp_60"
+                        android:src="@drawable/ic_inprogress" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_20"
+                        android:gravity="center_horizontal"
+                        android:text="@string/verification_in_progress"
+                        android:textAlignment="center"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="@dimen/sp_22"
+                        app:font="@{`bold`}" />
+
+                    <View
+                        android:layout_width="@dimen/dp_30"
+                        android:layout_height="6dp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="@dimen/dp_20"
+                        android:background="@color/colorWhite" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/dp_40"
+                        android:layout_marginTop="@dimen/dp_20"
+                        android:layout_marginRight="@dimen/dp_40"
+                        android:gravity="center_horizontal"
+                        android:text="@string/dear_user_we_have_received_your_n_documents_we_are_working_on_verifying_n_your_document"
+                        android:textAlignment="center"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="@dimen/sp_14"
+                        app:font="@{`regular`}" />
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dp_40"
+                    android:layout_marginTop="@dimen/dp_20"
+                    android:layout_marginRight="@dimen/dp_40"
+                    android:gravity="center_horizontal"
+                    android:text="@string/meanwhile_you_can_read_informationabout_working_with_locomo"
+                    android:textAlignment="center"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="@dimen/sp_14"
+                    app:font="@{`regular`}" />
+
+                <TextView
+                    android:id="@+id/tv_how_to_work"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="@dimen/dp_40"
+                    android:layout_marginTop="@dimen/dp_60"
+                    android:layout_marginRight="@dimen/dp_40"
+                    android:background="@drawable/round_layout"
+                    android:backgroundTint="@color/colorPrimary"
+                    android:onClick="@{(v) -> homeViewModel.clickListener(v)}"
+                    android:paddingLeft="@dimen/dp_30"
+                    android:paddingTop="@dimen/dp_10"
+                    android:paddingRight="@dimen/dp_30"
+                    android:paddingBottom="@dimen/dp_10"
+                    android:text="@string/how_to_work"
+                    android:textAlignment="center"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="@dimen/sp_14"
+                    app:font="@{`regular`}" />
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/lin_not_working"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/ic_top_circle"
+            android:gravity="center"
             android:orientation="vertical"
             android:visibility="gone">
 
-            <!--  <LinearLayout
-                  android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  android:background="@drawable/ic_top_circle"
-                  android:paddingTop="@dimen/dp_30"
-                  android:layout_weight="1"
-                  android:paddingBottom="@dimen/dp_20"
-                  android:backgroundTint="@color/colorHomeTabRed"
-                  android:orientation="vertical">-->
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="@dimen/dp_60"
-                android:src="@drawable/ic_inprogress" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp_20"
-                android:text="@string/verification_in_progress"
-                android:textAlignment="center"
-                android:textColor="@color/colorBlack"
-                android:textSize="@dimen/sp_22"
-                app:font="@{`bold`}" />
-
-            <View
-                android:layout_width="@dimen/dp_30"
-                android:layout_height="6dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="@dimen/dp_20"
-                android:background="@color/colorTabsRed" />
-
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/dp_40"
                 android:layout_marginTop="@dimen/dp_20"
                 android:layout_marginRight="@dimen/dp_40"
-                android:text="@string/dear_user_we_have_received_your_n_documents_we_are_working_on_verifying_n_your_document"
+                android:gravity="center_horizontal"
+                android:text="@string/you_are_not_working"
                 android:textAlignment="center"
                 android:textColor="@color/colorBlack"
-                android:textSize="@dimen/sp_14"
-                app:font="@{`regular`}" />
-            <!--            </LinearLayout>-->
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/dp_40"
-                android:layout_marginTop="@dimen/dp_20"
-                android:layout_marginRight="@dimen/dp_40"
-                android:text="@string/meanwhile_you_can_read_informationabout_working_with_locomo"
-                android:textAlignment="center"
-                android:textColor="@color/colorBlack"
-                android:textSize="@dimen/sp_14"
+                android:textSize="@dimen/sp_16"
                 app:font="@{`regular`}" />
 
             <TextView
-                android:id="@+id/tv_how_to_work"
+                android:id="@+id/tv_resume_work"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
@@ -111,28 +162,27 @@
                 android:layout_marginTop="@dimen/dp_60"
                 android:layout_marginRight="@dimen/dp_40"
                 android:background="@drawable/round_layout"
-                android:backgroundTint="@color/colorTabsRed"
+                android:backgroundTint="@color/colorPrimary"
                 android:onClick="@{(v) -> homeViewModel.clickListener(v)}"
                 android:paddingLeft="@dimen/dp_30"
                 android:paddingTop="@dimen/dp_10"
                 android:paddingRight="@dimen/dp_30"
                 android:paddingBottom="@dimen/dp_10"
-                android:text="@string/how_to_work"
+                android:text="Resume work"
                 android:textAlignment="center"
                 android:textColor="@color/colorWhite"
                 android:textSize="@dimen/sp_14"
+                android:visibility="gone"
                 app:font="@{`regular`}" />
-
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/lin_tabs_main"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="20dp"
             android:background="@drawable/ic_top_circle"
             android:orientation="vertical"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -151,7 +201,7 @@
                     android:layout_marginRight="@dimen/dp_10"
                     android:layout_weight="1"
                     android:background="@drawable/round_corners_home_tab"
-                    android:backgroundTint="@color/colorHomeTabRed"
+                    android:backgroundTint="@color/colorTextBlue"
                     android:onClick="@{(v) -> homeViewModel.clickListener(v)}"
                     android:padding="@dimen/dp_10"
                     android:text="@string/available"
@@ -168,7 +218,6 @@
                     android:layout_marginRight="@dimen/dp_10"
                     android:layout_weight="1"
                     android:background="@drawable/round_corners_home_tab"
-                    android:backgroundTint="@color/colorWhite"
                     android:onClick="@{(v) -> homeViewModel.clickListener(v)}"
                     android:padding="@dimen/dp_10"
                     android:text="@string/active"
@@ -185,7 +234,6 @@
                     android:layout_marginRight="@dimen/dp_10"
                     android:layout_weight="1"
                     android:background="@drawable/round_corners_home_tab"
-                    android:backgroundTint="@color/colorWhite"
                     android:onClick="@{(v) -> homeViewModel.clickListener(v)}"
                     android:padding="@dimen/dp_10"
                     android:text="@string/completed"
@@ -209,12 +257,32 @@
                 android:paddingTop="@dimen/dp_10"
                 android:paddingRight="@dimen/dp_20"
                 android:paddingBottom="@dimen/dp_10"
-                android:textSize="@dimen/sp_16" />
+                android:textSize="@dimen/sp_16"
+                android:visibility="gone" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_order_list"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/dp_10"
+                android:background="@drawable/ic_top_circle"
+                android:backgroundTint="@color/colorWhite">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_order_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <TextView
+                    android:id="@+id/tv_no_record"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="No Record Found"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="@dimen/sp_18"
+                    app:font="@{`regular`}" />
+            </RelativeLayout>
+
 
             <!--
                         <TextView
@@ -230,7 +298,6 @@
                                 android:textSize="22sp"
                                 android:textStyle="bold"
                                 app:font="@{`semibold`}" />
-
 
                         <ImageView
                                 android:layout_width="wrap_content"

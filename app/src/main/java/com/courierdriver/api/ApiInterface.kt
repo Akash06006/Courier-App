@@ -24,11 +24,11 @@ interface ApiInterface {
     fun callverifyDoc(
         @PartMap mHashMap: HashMap<String,
                 RequestBody>,
-        poaFront: MultipartBody.Part?,
-        poaBack: MultipartBody.Part?,
-        licenseFront: MultipartBody.Part?,
-        licenseBack: MultipartBody.Part?,
-        panCard: MultipartBody.Part?
+        @Part poaFront: MultipartBody.Part?,
+        @Part poaBack: MultipartBody.Part?,
+        @Part licenseFront: MultipartBody.Part?,
+        @Part licenseBack: MultipartBody.Part?,
+        @Part panCard: MultipartBody.Part?
     ): Call<JsonObject>
 
     @GET("delivery/auth/profile")
@@ -49,8 +49,12 @@ interface ApiInterface {
     @POST("mobile/auth/signup")
     fun callSignup(@Body jsonObject: JsonObject): Call<JsonObject>
 
+    @Multipart
     @POST("delivery/auth/signup")
-    fun calldriverSignup(@Body jsonObject: JsonObject): Call<JsonObject>
+    fun calldriverSignup(
+        @PartMap mHashMap: HashMap<String,
+                RequestBody>, @Part image: MultipartBody.Part?
+    ): Call<JsonObject>
 
     @POST("delivery/auth/verify")
     fun callVerifyUser(@Body jsonObject: JsonObject): Call<JsonObject>
@@ -185,10 +189,57 @@ interface ApiInterface {
     @GET("delivery/auth/logout")
     fun logout(): Call<JsonObject>
 
+    @GET("delivery/orders/paymentHistory")
+    fun paymentHistory(): Call<JsonObject>
+
     @Multipart
     @POST("delivery/orders/addComplaints")
     fun addComplaints(
         @PartMap mHashMap: HashMap<String, RequestBody>,
         @Part image: MultipartBody.Part?
     ): Call<JsonObject>
+
+    @Multipart
+    @POST("delivery/orders/uploadSelfie")
+    fun uploadSelfie(
+        @Part image: MultipartBody.Part?, @Query("type") type: String
+        , @Query("orderId") orderId: String, @Query("addressId") addressId: String
+    ): Call<JsonObject>
+
+    @GET("delivery/auth/profile")
+    fun profileDetails(
+        @Query("tab") tab: String, @Query("year") year: String,
+        @Query("month") month: String, @Query("week") week: String
+    ): Call<JsonObject>
+
+    @GET("delivery/orders/getVehicleList")
+    fun getVehicleList(): Call<JsonObject>
+
+    @GET("delivery/profile/convertPoints")
+    fun convertPoints(): Call<JsonObject>
+
+    @Multipart
+    @POST("/api/delivery/auth/update")
+    fun updateProfile(
+        @PartMap mHashMap: HashMap<String,
+                RequestBody>, @Part image: MultipartBody.Part?
+    ): Call<JsonObject>
+
+    @GET("delivery/profile/paymentOptions")
+    fun paymentOptions(): Call<JsonObject>
+
+    @GET("delivery/notification")
+    fun notification(): Call<JsonObject>
+
+    @POST("delivery/profile/availability")
+    fun availability(@Body jsonObject: JsonObject): Call<JsonObject>
+
+    @GET("delivery/auth/tutorialQue")
+    fun tutorialQue(@Query("page") page: Int?): Call<JsonObject>
+
+    @POST("delivery/auth/saveTutorialAns")
+    fun saveTutorialAns(@Body jsonObject: JsonObject): Call<JsonObject>
+
+    @POST("delivery/orders/payComission")
+    fun payComission(@Body jsonObject: JsonObject): Call<JsonObject>
 }

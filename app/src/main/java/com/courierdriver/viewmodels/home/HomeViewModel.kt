@@ -19,6 +19,7 @@ class HomeViewModel : BaseViewModel() {
     private var getOrderList: MutableLiveData<OrderListModel>? = MutableLiveData()
     private var acceptOrderList: MutableLiveData<CommonModel>? = MutableLiveData()
     private var cancelOrderList: MutableLiveData<CommonModel>? = MutableLiveData()
+    private var availabilityList: MutableLiveData<CommonModel>? = MutableLiveData()
     private var cancelReasonList: MutableLiveData<CancelReasonModel>? = MutableLiveData()
     private var regionList: MutableLiveData<RegionListModel>? = MutableLiveData()
     private var profileSetupList: MutableLiveData<CommonModel>? = MutableLiveData()
@@ -28,6 +29,7 @@ class HomeViewModel : BaseViewModel() {
         acceptOrderList = homeRepository.acceptOrder(null, acceptOrderList)
         cancelOrderList = homeRepository.cancelOrder(null, cancelOrderList)
         cancelReasonList = homeRepository.cancellationReason(cancelReasonList)
+        availabilityList = homeRepository.updateAvailability(null, availabilityList)
     }
 
     fun orderList(orderStatus: String, driverLat: String, driverLong: String) {
@@ -108,6 +110,19 @@ class HomeViewModel : BaseViewModel() {
 
     fun regionListData(): LiveData<RegionListModel> {
         return regionList!!
+    }
+
+    fun updateAvailability(availability: Boolean) {
+        if (UtilsFunctions.isNetworkConnected()) {
+            val jsonObject = JsonObject()
+            jsonObject.addProperty("availability", availability)
+            availabilityList = homeRepository.updateAvailability(jsonObject, availabilityList)
+            mIsUpdating.postValue(true)
+        }
+    }
+
+    fun updateAvailabilityData(): LiveData<CommonModel> {
+        return availabilityList!!
     }
 
     override fun isLoading(): LiveData<Boolean> {

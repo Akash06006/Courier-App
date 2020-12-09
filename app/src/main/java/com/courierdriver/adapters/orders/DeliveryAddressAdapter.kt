@@ -4,18 +4,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.NonNull
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.courierdriver.R
 import com.courierdriver.databinding.RowDeliveryAddressBinding
-import com.courierdriver.model.order.OrderListModel
-import com.courierdriver.views.home.fragments.HomeFragment
+import com.courierdriver.model.order.OrdersDetailResponse
+import com.courierdriver.views.orders.OrderDetailsActivity
 
 class DeliveryAddressAdapter(
-    var mContext: HomeFragment,
-    var deliveryAddress: ArrayList<OrderListModel.Body.DeliveryAddress>?,
-    var orderStatus: Int
-) : RecyclerView.Adapter<DeliveryAddressAdapter.ViewHolder>() {
+    var mContext: OrderDetailsActivity,
+    var deliveryAddress: ArrayList<OrdersDetailResponse.PickupAddress>?
+) :
+    RecyclerView.Adapter<DeliveryAddressAdapter.ViewHolder>() {
 
     private var viewHolder: ViewHolder? = null
 
@@ -33,6 +34,28 @@ class DeliveryAddressAdapter(
     override fun onBindViewHolder(@NonNull holder: ViewHolder, position: Int) {
         viewHolder = holder
         holder.binding!!.model = deliveryAddress!![position]
+
+        holder.binding.relMain.setBackgroundColor(
+            ContextCompat.getColor(
+                mContext,
+                R.color.colorWhite
+            )
+        )
+
+        if (deliveryAddress!![position].isSelected)
+            holder.binding.relMain.setBackgroundColor(
+                ContextCompat.getColor(
+                    mContext,
+                    R.color.colorGreyLight
+                )
+            )
+        else
+            holder.binding.relMain.setBackgroundColor(
+                ContextCompat.getColor(
+                    mContext,
+                    R.color.colorWhite
+                )
+            )
     }
 
     override fun getItemCount(): Int {
@@ -43,10 +66,30 @@ class DeliveryAddressAdapter(
         (
         v: View, val viewType: Int, //These are the general elements in the RecyclerView
         val binding: RowDeliveryAddressBinding?,
-        mContext: HomeFragment,
-        orderList: ArrayList<OrderListModel.Body.DeliveryAddress>?
+        mContext: OrderDetailsActivity,
+        orderList: ArrayList<OrdersDetailResponse.PickupAddress>?
     ) : RecyclerView.ViewHolder(v) {
+        var lastChecked = 0
+
         init {
+
+            binding!!.relMain.setOnClickListener {
+                for(i in 0 until orderList!!.size)
+                {
+                    orderList[i].isSelected = false
+                   // notifyDataSetChanged()
+                }
+                binding.relMain.setBackgroundColor(
+                    ContextCompat.getColor(
+                        mContext,
+                        R.color.colorGreyLight
+                    )
+                )
+                orderList[adapterPosition].isSelected = true
+                orderList[adapterPosition].isComplete = true
+                mContext.completeOrder(orderList[adapterPosition].id)
+                notifyDataSetChanged()
+            }
         }
     }
 }

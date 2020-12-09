@@ -4,15 +4,28 @@ import android.os.Build
 import android.text.Html
 import android.text.Spanned
 import android.text.TextUtils
+import android.util.Log
+import com.courierdriver.R
 import com.courierdriver.application.MyApplication
 import com.courierdriver.constants.GlobalConstants
 import com.courierdriver.model.LoginResponse
 import com.courierdriver.sharedpreference.SharedPrefClass
 import com.google.gson.Gson
+import java.text.DecimalFormat
+import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 object BindingUtils {
+    val secondStaticText = MyApplication.instance.getString(R.string.seconds)
+    val minutesStaticText = MyApplication.instance.getString(R.string.minutes)
+    val hoursStaticText = MyApplication.instance.getString(R.string.hours)
+    val yearsStaticText = MyApplication.instance.getString(R.string.years)
+    val monthsStaticText = MyApplication.instance.getString(R.string.months)
+    val weekStaticText = MyApplication.instance.getString(R.string.week)
+    val daysStaticText = MyApplication.instance.getString(R.string.days)
+
     // @SuppressLint("SimpleDateFormat")
 //    @JvmStatic
 //    fun getDate(responseDate: String): String {
@@ -249,6 +262,17 @@ object BindingUtils {
     }
 
     @JvmStatic
+    fun setDecimalText(text: String?): String {
+        var text = ""
+        if (!TextUtils.isEmpty(text)) {
+            text =
+                GlobalConstants.CURRENCY_SIGN + DecimalFormat("##.##").format(text.toDouble())
+            return text
+        } else
+            return ""
+    }
+
+    @JvmStatic
     fun getHtml(desc: String?): Spanned {
         //  var newDesc = desc!!.replace("<div>", "");
         //  newDesc = newDesc.replace("</div>", "\n");
@@ -267,30 +291,35 @@ object BindingUtils {
         // Display a date in day, month, year format
         var today = ""
         if (!TextUtils.isEmpty(date)) {
-            val datee = Date.parse(date)
+            try {
+                val dateFormat = SimpleDateFormat("dd-MM-yyyy")
+                val datee = dateFormat.parse(date)
 
-            when (format) {
-                "DayMonthDate" -> {
-                    val formatter = SimpleDateFormat("EEEE, MMMM dd")
-                    today = formatter.format(datee)
-                }
+                when (format) {
+                    "DayMonthDate" -> {
+                        val formatter = SimpleDateFormat("EEEE, MMMM dd")
+                        today = formatter.format(datee)
+                    }
 
-                "Day" -> {
-                    val formatter = SimpleDateFormat("EEEE")
-                    today = formatter.format(datee)
+                    "Day" -> {
+                        val formatter = SimpleDateFormat("EEEE")
+                        today = formatter.format(datee)
+                    }
+                    "Date" -> {
+                        val formatter = SimpleDateFormat("dd")
+                        today = formatter.format(datee)
+                    }
+                    "Month" -> {
+                        val formatter = SimpleDateFormat("MMM")
+                        today = formatter.format(datee)
+                    }
+                    "MonthDate" -> {
+                        val formatter = SimpleDateFormat("MMM dd")
+                        today = formatter.format(datee)
+                    }
                 }
-                "Date" -> {
-                    val formatter = SimpleDateFormat("dd")
-                    today = formatter.format(datee)
-                }
-                "Month" -> {
-                    val formatter = SimpleDateFormat("MMM")
-                    today = formatter.format(datee)
-                }
-                "MonthDate" -> {
-                    val formatter = SimpleDateFormat("MMM dd")
-                    today = formatter.format(datee)
-                }
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
         }
         return today
@@ -310,4 +339,46 @@ object BindingUtils {
         return time.toLowerCase()
     }
 
+    @JvmStatic
+    fun covertTimeAgoToText(dataString: String?): String {
+        var convTime = ""
+        val suffix = MyApplication.instance.getString(R.string.ago)
+
+        if (dataString != null) {
+            try {
+                //val dataDate = dataString.replace("IST", " GMT+0530")
+                Log.d("BindingUtils", "utc time=---- $dataString")
+
+                val dateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm")
+//                val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+                // val dateFormat = SimpleDateFormat("EEE MMM dd HH:mm:ss Z yyyy", Locale.US)
+                val pasTime = dateFormat.parse(dataString)
+
+                Log.d("BindingUtils", "parseTime=---- $pasTime")
+                val nowTime = Date()
+                var dateDiff = nowTime.time - pasTime.time
+                if (dateDiff < 0)
+                    dateDiff = 0
+                val second = TimeUnit.MILLISECONDS.toSeconds(dateDiff)
+                val minute = TimeUnit.MILLISECONDS.toMinutes(dateDiff)
+                val hour = TimeUnit.MILLISECONDS.toHours(dateDiff)
+                val day = TimeUnit.MILLISECONDS.toDays(dateDiff)
+
+                when {
+                    second < 60 -> convTime = "$second $secondStaticText $suffix"
+                    minute < 60 -> convTime = "$minute $minutesStaticText $suffix"
+                    hour < 24 -> convTime = "$hour $hoursStaticText $suffix"
+                    day >= 7 -> convTime = when {
+                        day > 360 -> (day / 30).toString() + " $yearsStaticText " + suffix
+                        day > 30 -> (day / 360).toString() + " $monthsStaticText " + suffix
+                        else -> (day / 7).toString() + " $weekStaticText " + suffix
+                    }
+                    day < 7 -> convTime = "$day $daysStaticText $suffix"
+                }
+            } catch (e: ParseException) {
+                e.printStackTrace()
+            }
+        }
+        return convTime
+    }
 }

@@ -7,10 +7,11 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Environment
 import android.provider.MediaStore
-import android.text.TextUtils
+import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.Spinner
 import android.widget.TextView
 import androidx.core.content.FileProvider
 import androidx.lifecycle.Observer
@@ -24,7 +25,10 @@ import com.courierdriver.common.UtilsFunctions.showToastError
 import com.courierdriver.common.UtilsFunctions.showToastSuccess
 import com.courierdriver.constants.GlobalConstants
 import com.courierdriver.databinding.ActivityProfileBinding
-import com.courierdriver.model.LoginResponse
+import com.courierdriver.model.CommonModel
+import com.courierdriver.model.GetVehiclesModel
+import com.courierdriver.model.RegionListModel
+import com.courierdriver.model.profile.AccountDetailsModel
 import com.courierdriver.model.profile.RegionResponse
 import com.courierdriver.sharedpreference.SharedPrefClass
 import com.courierdriver.utils.BaseFragment
@@ -32,7 +36,6 @@ import com.courierdriver.utils.DialogClass
 import com.courierdriver.utils.Utils
 import com.courierdriver.utils.ValidationsClass
 import com.courierdriver.viewmodels.profile.ProfileViewModel
-import com.google.gson.JsonObject
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import java.io.File
@@ -43,201 +46,55 @@ import kotlin.collections.HashMap
 
 class ProfileFragment : BaseFragment(), ChoiceCallBack {
     private var reginRes = ArrayList<RegionResponse.Data>()
-    private lateinit var profileBinding: ActivityProfileBinding
-    private lateinit var profieViewModel: ProfileViewModel
-    private var sharedPrefClass: SharedPrefClass? = null
+    private var binding: ActivityProfileBinding? = null
+    private lateinit var viewModel: ProfileViewModel
     private var confirmationDialog: Dialog? = null
     private var mDialogClass = DialogClass()
-    private val mJsonObject = JsonObject()
     private val RESULT_LOAD_IMAGE = 100
     private val CAMERA_REQUEST = 1888
     private var profileImage = ""
     private var regionPos = 0
     private var regionId = "0"
-    var region = ArrayList<String>()
-    override fun getLayoutResId(): Int {
-        return R.layout.activity_profile
-    }
+    private var selectedRegion: String? = null
+    private var vehicleId = "0"
+    private var selectedVehicle: String? = null
+    private var regionList: ArrayList<RegionListModel.Body>? = ArrayList()
+    private var regionStringList: ArrayList<String>? = ArrayList()
+    private var vehicleList: ArrayList<GetVehiclesModel.Body>? = ArrayList()
+    private var vehicleStringList: ArrayList<String>? = ArrayList()
 
     override fun initView() {
-        profileBinding = viewDataBinding as ActivityProfileBinding
-        profieViewModel = ViewModelProviders.of(this).get(ProfileViewModel::class.java)
-        profileBinding.profileViewModel = profieViewModel
-        profileBinding.toolbarCommon.imgRight.visibility = View.VISIBLE
-        //profileBinding.toolbarCommon.topToolbar.visibility = View.GONE
-        profileBinding.toolbarCommon.imgRight.setImageResource(R.drawable.ic_nav_edit_icon)
-        profileBinding.toolbarCommon.toolbar.setImageResource(R.drawable.ic_side_menu)
-        //  profileBinding.toolbarCommon.imgToolbarText.text =  resources.getString(R.string.view_profile)
-        val languages = resources.getStringArray(R.array.Languages)
-        /*  profileBinding.btnSubmit.setBackgroundTintList(
-              ColorStateList.valueOf(
-                  Color.parseColor(
-                      GlobalConstants.COLOR_CODE
-                  )
-              )*//*mContext.getResources().getColorStateList(R.color.colorOrange)*//*
-        )*/
-        region.add("Select Region")
-        val userId =
-            SharedPrefClass().getPrefValue(activity!!, GlobalConstants.USERID).toString()
-        val name = SharedPrefClass().getPrefValue(
-            MyApplication.instance.applicationContext,
-            getString(R.string.fname)
-        )
-        /* if (TextUtils.isEmpty(name.toString()) || name.toString().equals("null")) {
-             makeEnableDisableViews(true)
-         } else {*/
+        binding = viewDataBinding as ActivityProfileBinding
+        viewModel = ViewModelProviders.of(this).get(ProfileViewModel::class.java)
+        binding!!.profileViewModel = viewModel
+
+        getRegionListObserver()
+        getVehicleListObserver()
+        updateProfileDetailsObserver()
+        viewModel.accountDetails(GlobalConstants.ACCOUNT)
+        getProfileDetailsObserver()
+        loaderObserver()
+        sharedPrefValue()
         makeEnableDisableViews(false)
-        //}
-        mJsonObject.addProperty(
-            "userId", userId
-        )
+        viewClicks()
+    }
 
-
-
-        profieViewModel.getDetail().observe(this,
-            Observer<LoginResponse> { response ->
+    private fun loaderObserver() {
+        viewModel.isLoading().observe(viewLifecycleOwner, Observer<Boolean> { aBoolean ->
+            if (aBoolean!!) {
+                baseActivity.startProgressDialog()
+            } else {
                 baseActivity.stopProgressDialog()
-                if (response != null) {
-                    val message = response.message
-                    when {
-                        response.code == 200 -> {
-                            profileBinding.model = response.data
+            }
+        })
+    }
 
-                            SharedPrefClass().putObject(
-                                activity!!,
-                                GlobalConstants.USER_IMAGE,
-                                response.data!!.image
-                            )
-                            SharedPrefClass().putObject(
-                                activity!!,
-                                getString(R.string.fname),
-                                response.data!!.firstName + " " + response.data!!.lastName
-                            )
-                            if (!TextUtils.isEmpty(response.data?.regionId)) {
-                                regionId = response.data?.regionId!!
-                                if (region.size > 0) {
-                                    for (i in 0 until region.count())
-                                        if (regionId.equals(reginRes[i].id)) {
-                                            profileBinding.spinner.setSelection(i)
-                                        }
-                                }
-                            }
-                            profileBinding.txtEmail.setText(response.data?.email)
-                            profileBinding.txtUsername.setText(response.data?.firstName + " " + response.data?.lastName)
-
-                        }
-                        else -> message?.let { showToastError(it) }
-                    }
-                }
-            })
-
-        profieViewModel.getRegionsRes().observe(this,
-            Observer<RegionResponse> { response ->
-                baseActivity.stopProgressDialog()
-                if (UtilsFunctions.isNetworkConnected()) {
-                    baseActivity.startProgressDialog()
-                    profieViewModel.getProfileDetail(mJsonObject)
-                }
-                if (response != null) {
-                    val message = response.message
-                    when {
-                        response.code == 200 -> {
-                            val data = RegionResponse.Data()
-                            data.id = "0"
-                            data.name = "Select Region"
-                            reginRes.add(data)
-                            reginRes.addAll(response.data!!)
-                            // profileBinding.model = response.data
-                            for (count in 0 until response.data!!.count()) {
-                                region.add(response.data!![count].name!!)
-
-                            }
-
-                            if (profileBinding.spinner != null) {
-                                val adapter = ArrayAdapter(
-                                    activity!!,
-                                    android.R.layout.simple_spinner_item, region
-                                )
-                                profileBinding.spinner.adapter = adapter
-                                profileBinding.spinner.onItemSelectedListener = object :
-                                    AdapterView.OnItemSelectedListener {
-                                    override fun onItemSelected(
-                                        parent: AdapterView<*>,
-                                        view: View, position: Int, id: Long
-                                    ) {
-                                        if (position != 0) {
-                                            regionId = reginRes[position].id!!
-                                            regionPos = position
-                                        } else {
-                                            regionId = "0"
-                                            regionPos = position
-                                        }
-
-                                    }
-
-                                    override fun onNothingSelected(parent: AdapterView<*>) {
-                                        // write code to perform some action
-                                    }
-                                }
-                            }
-
-                        }
-                        else -> message?.let { showToastError(it) }
-                    }
-                }
-            })
-
-        profieViewModel.getUpdateDetail().observe(this,
-            Observer<LoginResponse> { response ->
-                baseActivity.stopProgressDialog()
-                if (response != null) {
-                    val message = response.message
-                    when {
-                        response.code == 200 -> {
-                            // profileBinding.model = response.data
-                            message?.let { showToastSuccess(it) }
-                            if (UtilsFunctions.isNetworkConnected()) {
-                                baseActivity.startProgressDialog()
-                                profieViewModel.getProfileDetail(mJsonObject)
-                            }
-                            /*SharedPrefClass().putObject(
-                                activity!!,
-                                GlobalConstants.USER_IMAGE,
-                                response.data!!.image
-                            )
-                            SharedPrefClass().putObject(
-                                activity!!,
-                                getString(R.string.fname),
-                                response.data!!.firstName + " " + response.data!!.lastName
-                            )
-*/
-                            makeEnableDisableViews(false)
-                        }
-                        else -> message?.let { showToastError(it) }
-                    }
-
-                }
-            })
-
-
-        profieViewModel.isClick().observe(
+    private fun viewClicks() {
+        viewModel.isClick().observe(
             this, Observer<String>(function =
             fun(it: String?) {
-
                 when (it) {
-                    "toolbar" -> {
-                        showToastError("clicked")
-                    }
-                    "iv_edit" -> {
-                        // editImage = 0
-                        //  showPictureDialog()
-                    }
-                    "img_right" -> {
-                        // isEditable = true
-                        //  profileBinding.commonToolBar.imgToolbarText.text = resources.getString(R.string.edit_profile)
-                        makeEnableDisableViews(true)
-                    }
-                    "upload_profile_layer" -> {
+                    "img_profile" -> {
                         if (baseActivity.checkAndRequestPermissions()) {
                             confirmationDialog =
                                 mDialogClass.setUploadConfirmationDialog(
@@ -246,51 +103,51 @@ class ProfileFragment : BaseFragment(), ChoiceCallBack {
                                     "gallery"
                                 )
                         }
-
+                    }
+                    "iv_edit" -> {
+                        makeEnableDisableViews(true)
                     }
                     "btn_submit" -> {
-                        val fname = profileBinding.etFirstname.text.toString()
-                        val lname = profileBinding.etLastname.text.toString()
-                        val email = profileBinding.etEmail.text.toString()
-                        val phone = profileBinding.etPhone.text.toString()
+                        val fname = binding!!.etFirstname.text.toString()
+                        val lname = binding!!.etLastname.text.toString()
+                        val email = binding!!.etEmail.text.toString()
+                        val phone = binding!!.etPhone.text.toString()
                         when {
                             fname.isEmpty() -> showError(
-                                profileBinding.etFirstname,
+                                binding!!.etFirstname,
                                 getString(R.string.empty) + " " + getString(
                                     R.string.fname
                                 )
                             )
                             lname.isEmpty() -> showError(
-                                profileBinding.etLastname,
+                                binding!!.etLastname,
                                 getString(R.string.empty) + " " + getString(
                                     R.string.lname
                                 )
                             )
                             email.isEmpty() -> showError(
-                                profileBinding.etEmail,
+                                binding!!.etEmail,
                                 getString(R.string.empty) + " " + getString(
                                     R.string.email
                                 )
                             )
                             !email.matches((ValidationsClass.EMAIL_PATTERN).toRegex()) ->
                                 showError(
-                                    profileBinding.etEmail,
+                                    binding!!.etEmail,
                                     getString(R.string.invalid) + " " + getString(
                                         R.string.email
                                     )
                                 )
-                            regionId.equals("0") -> {
-                                showToastError("Please select region")
+                            phone.isEmpty() -> showError(
+                                binding!!.etLastname,
+                                getString(R.string.empty) + " " + getString(
+                                    R.string.phone_number
+                                )
+                            )
+                            regionId == "0" -> {
+                                showToastError(getString(R.string.please_select_region))
                             }
                             else -> {
-                                /* val phonenumber = SharedPrefClass().getPrefValue(
-                                     MyApplication.instance,
-                                     getString(R.string.key_phone)
-                                 ) as String
-                                 val countrycode = SharedPrefClass().getPrefValue(
-                                     MyApplication.instance,
-                                     getString(R.string.key_country_code)
-                                 ) as String*/
                                 val androidId = UtilsFunctions.getAndroidID()
                                 val mHashMap = HashMap<String, RequestBody>()
                                 mHashMap["firstName"] =
@@ -302,10 +159,11 @@ class ProfileFragment : BaseFragment(), ChoiceCallBack {
                                 mHashMap["phoneNumber"] =
                                     Utils(activity!!).createPartFromString(phone)
                                 mHashMap["regionId"] =
-                                    Utils(activity!!).createPartFromString(reginRes[regionPos].id!!)
-                                //  mHashMap["password"] = Utils(this).createPartFromString(password)
+                                    Utils(activity!!).createPartFromString(regionId)
+                                mHashMap["vehicleId"] =
+                                    Utils(activity!!).createPartFromString(vehicleId)
                                 var userImage: MultipartBody.Part? = null
-                                if (!profileImage.isEmpty()) {
+                                if (profileImage.isNotEmpty()) {
                                     val f1 = File(profileImage)
                                     userImage =
                                         Utils(activity!!).prepareFilePart(
@@ -313,38 +171,91 @@ class ProfileFragment : BaseFragment(), ChoiceCallBack {
                                             f1
                                         )
                                 }
-                                if (UtilsFunctions.isNetworkConnected()) {
-                                    baseActivity.startProgressDialog()
-                                    profieViewModel.updateProfile(mHashMap, userImage)
-                                }
-
+                                    viewModel.updateProfile(mHashMap, userImage)
                             }
                         }
-
                     }
                 }
             })
         )
+    }
 
+    private fun updateProfileDetailsObserver() {
+        viewModel.updateProfileData().observe(this,
+            Observer<CommonModel> { response ->
+                baseActivity.stopProgressDialog()
+                if (response != null) {
+                    when (response.code) {
+                        200 -> {
+                            showToastSuccess(response.message!!)
+                            makeEnableDisableViews(false)
+                        }
+                        else -> {
+                            showToastError(response.message!!)
+                        }
+                    }
+                } else {
+                    showToastError(resources.getString(R.string.internal_server_error))
+                }
+            })
+    }
+
+    private fun getProfileDetailsObserver() {
+        viewModel.accountDetailsData().observe(this,
+            Observer<AccountDetailsModel> { response ->
+                baseActivity.stopProgressDialog()
+                if (response != null) {
+                    when (response.code) {
+                        200 -> {
+                            showToastSuccess(response.message!!)
+
+                            binding!!.model = response.body
+                            regionId = response.body!!.regionId!!
+                            vehicleId = response.body.transportId!!
+                            selectedRegion = response.body.regionName!!
+                            selectedVehicle = response.body.transportName!!
+                        }
+                        else -> {
+                            showToastError(response.message!!)
+                        }
+                    }
+                } else {
+                    showToastError(resources.getString(R.string.internal_server_error))
+                }
+            })
+    }
+
+    private fun sharedPrefValue() {
+        val userId =
+            SharedPrefClass().getPrefValue(activity!!, GlobalConstants.USERID).toString()
+        val name = SharedPrefClass().getPrefValue(
+            MyApplication.instance.applicationContext,
+            getString(R.string.fname)
+        )
+        /*  val userImage =
+              SharedPrefClass().getPrefValue(activity!!, GlobalConstants.USER_IMAGE).toString()
+  */
+//        setImage(userImage)
     }
 
     private fun makeEnableDisableViews(isEnable: Boolean) {
-        profileBinding.etFirstname.isEnabled = isEnable
-        profileBinding.etLastname.isEnabled = isEnable
-        profileBinding.etEmail.isEnabled = false
-        profileBinding.etPhone.isEnabled = false
-        profileBinding.spinner.isEnabled = isEnable
-        // profileBinding.etAddress.isEnabled = isEnable
-        if (!isEnable) {
-            profileBinding.ivEdit.visibility = View.GONE
-            profileBinding.btnSubmit.visibility = View.GONE
-            profileBinding.commonToolBar.imgRight.visibility = View.VISIBLE
-        } else {
-            profileBinding.ivEdit.visibility = View.VISIBLE
-            profileBinding.commonToolBar.imgRight.visibility = View.GONE
-            profileBinding.btnSubmit.visibility = View.VISIBLE
-        }
+        binding!!.etFirstname.isEnabled = isEnable
+        binding!!.etLastname.isEnabled = isEnable
+        binding!!.etEmail.isEnabled = false
+        binding!!.etPhone.isEnabled = false
+        binding!!.etPassword.isEnabled = false
+        binding!!.etReferenceName.isEnabled = isEnable
+        binding!!.etReferenceContact.isEnabled = isEnable
+        binding!!.spRegion.isEnabled = isEnable
+        binding!!.spTransport.isEnabled = isEnable
 
+        if (!isEnable) {
+            binding!!.ivEdit.visibility = View.VISIBLE
+            binding!!.btnSubmit.visibility = View.GONE
+        } else {
+            binding!!.ivEdit.visibility = View.GONE
+            binding!!.btnSubmit.visibility = View.VISIBLE
+        }
     }
 
     private fun showError(textView: TextView, error: String) {
@@ -440,6 +351,143 @@ class ProfileFragment : BaseFragment(), ChoiceCallBack {
         Glide.with(this)
             .load(path)
             .placeholder(R.drawable.ic_person)
-            .into(profileBinding.imgProfile)
+            .into(binding!!.imgProfile)
+    }
+
+    private fun getRegionListObserver() {
+        viewModel.regionList()
+        viewModel.regionListData().observe(this,
+            Observer<RegionListModel> { response ->
+                baseActivity.stopProgressDialog()
+                if (response != null) {
+                    when (response.code) {
+                        200 -> {
+                            if (response.body!!.isNotEmpty()) {
+                                regionList = response.body
+                                if (regionList!!.isNotEmpty())
+                                    setRegionsSpinner(binding!!.spRegion)
+                            }
+                        }
+                    }
+                } else {
+                    showToastError(resources.getString(R.string.internal_server_error))
+                }
+            })
+    }
+
+    private fun setRegionsSpinner(spRegions: Spinner) {
+        if (regionStringList!!.isNotEmpty())
+            regionStringList!!.clear()
+
+        regionList?.let {
+            for (item in 0 until regionList!!.size) {
+                regionStringList!!.add(regionList!![item].name!!)
+            }
+        }
+
+        val adapter = ArrayAdapter<String>(baseActivity, R.layout.spinner_item)
+        adapter.add(getString(R.string.select_region))
+        adapter.addAll(regionStringList!!)
+        adapter.setDropDownViewResource(R.layout.spinner_item)
+        spRegions.adapter = adapter
+
+        spRegions.post {
+            regionStringList?.let {
+                for (item in 0 until regionStringList!!.size) {
+                    if (regionStringList!![item] == selectedRegion) {
+                        spRegions.setSelection(item+1)
+                    }
+                }
+            }
+        }
+
+        spRegions.onItemSelectedListener = object :
+            AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>,
+                view: View, position: Int, id: Long
+            ) {
+                if (position != 0) {
+                    regionId = regionList!![position - 1].id!!
+                } else {
+                    regionId = ""
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>) {
+                // write code to perform some action
+            }
+        }
+    }
+
+    private fun getVehicleListObserver() {
+        viewModel.transporterList()
+        viewModel.transporterListData().observe(this,
+            Observer<GetVehiclesModel> { response ->
+                baseActivity.stopProgressDialog()
+                if (response != null) {
+                    when (response.code) {
+                        200 -> {
+                            if (response.body!!.isNotEmpty()) {
+                                vehicleList = response.body
+                                if (vehicleList!!.isNotEmpty())
+                                    setVehiclesSpinner(binding!!.spTransport)
+                            }
+                        }
+                    }
+                } else {
+                    showToastError(resources.getString(R.string.internal_server_error))
+                }
+            })
+    }
+
+    private fun setVehiclesSpinner(spRegions: Spinner) {
+        if (vehicleStringList!!.isNotEmpty())
+            vehicleStringList!!.clear()
+
+        vehicleList?.let {
+            for (item in 0 until vehicleList!!.size) {
+                vehicleStringList!!.add(vehicleList!![item].name!!)
+            }
+        }
+
+        val adapter = ArrayAdapter<String>(baseActivity, R.layout.spinner_item)
+        adapter.add(getString(R.string.select_vehicle))
+        adapter.addAll(vehicleStringList!!)
+        adapter.setDropDownViewResource(R.layout.spinner_item)
+        spRegions.adapter = adapter
+
+        spRegions.post {
+            vehicleStringList?.let {
+                for (item in 0 until vehicleStringList!!.size) {
+                    if (vehicleStringList!![item] == selectedVehicle) {
+                        spRegions.setSelection(item+1)
+                    }
+                }
+            }
+        }
+
+        spRegions.onItemSelectedListener = object :
+            AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>,
+                view: View, position: Int, id: Long
+            ) {
+                if (position != 0) {
+                    vehicleId = vehicleList!![position - 1].id!!
+                    selectedVehicle = vehicleList!![position - 1].name!!
+                } else {
+                    selectedVehicle = null
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>) {
+                // write code to perform some action
+            }
+        }
+    }
+
+    override fun getLayoutResId(): Int {
+        return R.layout.activity_profile
     }
 }

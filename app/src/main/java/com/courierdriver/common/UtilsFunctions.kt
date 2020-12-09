@@ -205,4 +205,36 @@ object UtilsFunctions {
         imm.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
+
+    fun getTimeDifference(startDate: Date, endDate: Date): String {
+        //milliseconds
+        var different = endDate.time - startDate.time
+
+        println("startDate : $startDate");
+        println("endDate : $endDate");
+        println("different : $different");
+
+        val secondsInMilli = 1000
+        val minutesInMilli = secondsInMilli * 60
+        val hoursInMilli = minutesInMilli * 60
+        val daysInMilli = hoursInMilli * 24
+
+        val elapsedDays = different / daysInMilli
+        different %= daysInMilli
+
+        val elapsedHours = different / hoursInMilli
+        different %= hoursInMilli
+
+        val elapsedMinutes = different / minutesInMilli
+        different %= minutesInMilli
+
+        val elapsedSeconds = different / secondsInMilli
+
+        System.out.printf(
+            "%d days, %d hours, %d minutes, %d seconds%n",
+            elapsedDays, elapsedHours, elapsedMinutes, elapsedSeconds
+        )
+
+        return different.toString()
+    }
 }

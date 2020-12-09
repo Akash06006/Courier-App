@@ -11,7 +11,10 @@ import com.courierdriver.model.CommonModel
 import com.courierdriver.model.LoginResponse
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonObject
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Response
+import java.util.HashMap
 
 class LoginRepository {
     private var data: MutableLiveData<LoginResponse>? = null
@@ -65,7 +68,10 @@ class LoginRepository {
 
     }
 
-    fun callSignupApi(jsonObject: JsonObject?): MutableLiveData<LoginResponse> {
+    fun callSignupApi(
+        jsonObject: HashMap<String, RequestBody>?,
+        userImage: MultipartBody.Part?
+    ): MutableLiveData<LoginResponse> {
         if (jsonObject != null) {
             val mApiService = ApiService<JsonObject>()
             mApiService.get(
@@ -94,7 +100,7 @@ class LoginRepository {
 
                     }
 
-                }, ApiClient.getApiInterface().calldriverSignup(jsonObject)
+                }, ApiClient.getApiInterface().calldriverSignup(jsonObject,userImage)
             )
 
         }

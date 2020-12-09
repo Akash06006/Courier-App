@@ -2,27 +2,34 @@ package com.courierdriver.views.authentication
 
 import android.content.Intent
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import android.widget.EditText
+import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.courierdriver.R
 import com.courierdriver.application.MyApplication
+import com.courierdriver.common.FirebaseFunctions
 import com.courierdriver.common.UtilsFunctions
 import com.courierdriver.constants.GlobalConstants
 import com.courierdriver.databinding.ActivityLoginBinding
 import com.courierdriver.model.LoginResponse
 import com.courierdriver.sharedpreference.SharedPrefClass
 import com.courierdriver.utils.BaseActivity
-import com.courierdriver.utils.ValidationsClass
 import com.courierdriver.viewmodels.LoginViewModel
-import com.courierdriver.views.home.LandingActivty
 import com.facebook.CallbackManager
 import com.facebook.FacebookCallback
 import com.facebook.FacebookException
 import com.facebook.GraphRequest
 import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.tasks.Task
 import com.google.gson.JsonObject
 import org.json.JSONObject
 import java.util.*
@@ -32,6 +39,10 @@ class LoginActivity : BaseActivity() {
     private lateinit var loginViewModel: LoginViewModel
     private var callbackManager: CallbackManager? = null
     private val EMAIL = "email"
+    val mOtpJsonObject = JsonObject()
+    private val RC_SIGN_IN: Int = 0
+    lateinit var mGoogleSignInClient: GoogleSignInClient
+
     override fun getLayoutId(): Int {
         return R.layout.activity_login
     }
@@ -43,6 +54,12 @@ class LoginActivity : BaseActivity() {
         activityLoginbinding.loginViewModel = loginViewModel
         //  Logger.logPurchase(BigDecimal.valueOf(4.32), Currency.getInstance("USD"));
         // activityLoginbinding.tvForgotPassword.paintFlags = Paint.UNDERLINE_TEXT_FLAG
+        val gso: GoogleSignInOptions =
+            GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken("6946227711-va1qdqpru77knadr33pnseqnn9l89hgf.apps.googleusercontent.com")
+                .requestEmail()
+                .build()
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
         loginViewModel.getLoginRes().observe(this,
             Observer<LoginResponse> { loginResponse ->
                 stopProgressDialog()
@@ -51,10 +68,11 @@ class LoginActivity : BaseActivity() {
                     val message = loginResponse.message
 
                     if (loginResponse.code == 200) {
+                        GlobalConstants.VERIFICATION_TYPE = "login"
                         SharedPrefClass().putObject(
                             MyApplication.instance,
                             "isLogin",
-                            true
+                            false
                         )
                         SharedPrefClass().putObject(
                             MyApplication.instance,
@@ -75,6 +93,11 @@ class LoginActivity : BaseActivity() {
                             MyApplication.instance,
                             GlobalConstants.USER_IMAGE,
                             loginResponse.data!!.image
+                        )
+                        SharedPrefClass().putObject(
+                            MyApplication.instance,
+                            GlobalConstants.IS_DOC_UPLOADED,
+                            loginResponse.data!!.isDocUploaded
                         )
                         SharedPrefClass().putObject(
                             MyApplication.instance,
@@ -107,12 +130,22 @@ class LoginActivity : BaseActivity() {
                             loginResponse.data!!.email
                         )
 
+                        mOtpJsonObject.addProperty(
+                            "countryCode",
+                            "+" + activityLoginbinding.btCountryCode.selectedCountryCode
+                        )
+                        mOtpJsonObject.addProperty(
+                            "phoneNumber",
+                            activityLoginbinding.edtPhone.text.toString()
+                        )
 
                         showToastSuccess(message)
-                        val intent = Intent(this, LandingActivty::class.java)
-                        //intent.putExtra("catId", ""/*categoriesList[position].id*/)
+                        GlobalConstants.VERIFICATION_TYPE = "signup"
+                        FirebaseFunctions.sendOTP("login", mOtpJsonObject, this)
+
+                        /*val intent = Intent(this, LandingActivty::class.java)
                         startActivity(intent)
-                        finish()
+                        finish()*/
 
                     } else {
                         showToastError(message)
@@ -120,52 +153,39 @@ class LoginActivity : BaseActivity() {
 
                 }
             })
-        /*loginViewModel.getEmailError().observe(this, Observer<String> { emailError->
-            activityLoginbinding.etEmail.error = emailError
-            activityLoginbinding.etEmail.requestFocus()
-        })
 
+        loaderObserver()
+        viewClicks()
+    }
 
-        loginViewModel.getPasswordError().observe(this, Observer<String> { passError->
-            activityLoginbinding.etPassword.requestFocus()
-            activityLoginbinding.etPassword.error = passError
-        })*/
-
-
-
-        loginViewModel.isLoading().observe(this, Observer<Boolean> { aBoolean ->
-            if (aBoolean!!) {
-                startProgressDialog()
-            } else {
-                stopProgressDialog()
-            }
-        })
-
+    private fun viewClicks() {
         loginViewModel.isClick().observe(
             this, Observer<String>(function =
             fun(it: String?) {
                 when (it) {
+                    "google_login" -> {
+                        val signInIntent: Intent = mGoogleSignInClient.getSignInIntent()
+                        startActivityForResult(signInIntent, RC_SIGN_IN)
+                    }
                     "txtSignup" -> {
                         val intent = Intent(this, SignupActivity::class.java)
                         intent.putExtra("social", "false"/*categoriesList[position].id*/)
                         intent.putExtra("fbSocial", "false"/*categoriesList[position].id*/)
                         intent.putExtra("googleSocial", "false"/*categoriesList[position].id*/)
-
                         startActivity(intent)
-
                     }
                     "txtForgot" -> {
                         val intent = Intent(this, ForgotPasswrodActivity::class.java)
                         //intent.putExtra("catId", ""/*categoriesList[position].id*/)
                         startActivity(intent)
-
                     }
                     "btnLogin" -> {
                         val email = activityLoginbinding.edtEmail.text.toString()
                         val password = activityLoginbinding.edtPassword.text.toString()
+                        val phoneNumber = activityLoginbinding.edtPhone.text.toString()
 
                         when {
-                            email.isEmpty() -> showError(
+                            /*email.isEmpty() -> showError(
                                 activityLoginbinding.edtEmail,
                                 getString(R.string.empty) + " " + getString(
                                     R.string.email
@@ -183,20 +203,38 @@ class LoginActivity : BaseActivity() {
                                 getString(R.string.empty) + " " + getString(
                                     R.string.password
                                 )
+                            )*/
+                            phoneNumber.isEmpty() -> showError(
+                                activityLoginbinding.edtPhone,
+                                getString(R.string.empty) + " " + getString(
+                                    R.string.phone_number
+                                )
+                            )
+                            phoneNumber.length < 10 -> showError(
+                                activityLoginbinding.edtPhone,
+                                getString(R.string.phone_number) + " " + getString(
+                                    R.string.phone_min
+                                )
                             )
                             else -> {
                                 val mJsonObject = JsonObject()
-                                mJsonObject.addProperty("email", email)
-                                mJsonObject.addProperty("password", password)
+                                mJsonObject.addProperty("phoneNumber", phoneNumber)
+                                mJsonObject.addProperty(
+                                    "countryCode",
+                                    "+" +  activityLoginbinding.btCountryCode.selectedCountryCode
+                                )
+                                val android_id: String = Settings.Secure.getString(
+                                    applicationContext.contentResolver,
+                                    Settings.Secure.ANDROID_ID)
+                                /*mJsonObject.addProperty("email", email)
+                                mJsonObject.addProperty("password", password)*/
                                 mJsonObject.addProperty("isSocial", false)
                                 mJsonObject.addProperty("socialId", "")
-                                mJsonObject.addProperty("deviceToken", "deivce_token")
+                                mJsonObject.addProperty("deviceToken", android_id)
                                 mJsonObject.addProperty("platform", "android")
                                 if (UtilsFunctions.isNetworkConnected()) {
                                     loginViewModel.callLoginApi(mJsonObject)
                                 }
-//                                val intent = Intent(this, LandingActivty::class.java)
-//                                startActivity(intent)
                             }
                         }
                     }
@@ -295,6 +333,16 @@ class LoginActivity : BaseActivity() {
         )
     }
 
+    private fun loaderObserver() {
+        loginViewModel.isLoading().observe(this, Observer<Boolean> { aBoolean ->
+            if (aBoolean!!) {
+                startProgressDialog()
+            } else {
+                stopProgressDialog()
+            }
+        })
+    }
+
     private fun handleSignInResultFacebook(jsonObject: JSONObject?) {
         val intent = Intent(this, SignupActivity::class.java)
         intent.putExtra("social", "false")
@@ -312,8 +360,40 @@ class LoginActivity : BaseActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == RC_SIGN_IN) {
+                val task: Task<GoogleSignInAccount> =
+                    GoogleSignIn.getSignedInAccountFromIntent(data)
+                handleSignInResult(task)
+        }
+        else {
+            callbackManager?.onActivityResult(requestCode, resultCode, data)
+        }
+    }
 
-        callbackManager?.onActivityResult(requestCode, resultCode, data)
+    private fun handleSignInResult(completedTask: Task<GoogleSignInAccount>) {
+        try {
+            val account = completedTask.getResult<ApiException>(ApiException::class.java)
+            if (account == null) {
+                 Toast.makeText(this, "Somthing went wrong", Toast.LENGTH_LONG).show()
+
+                return
+            }
+            val input = JsonObject()
+            input.addProperty("email",account!!.email)
+            input.addProperty("socialId",account!!.id)
+            input.addProperty("firstName",account!!.givenName)
+            input.addProperty("lastName",account!!.familyName)
+
+            val intent = Intent(this, SignupActivity::class.java)
+            intent.putExtra("social", "false")
+            intent.putExtra("fbSocial", "false")
+            intent.putExtra("googleSocial", "true")
+            intent.putExtra("fbData", input.toString())
+            startActivity(intent)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            //Toast.makeText(this, "Somthing went wrong", Toast.LENGTH_LONG).show()
+        }
     }
 
 }

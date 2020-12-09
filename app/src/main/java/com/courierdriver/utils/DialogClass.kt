@@ -9,10 +9,7 @@ import android.app.Dialog
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import android.view.LayoutInflater
-import android.view.View
-import android.view.Window
-import android.view.WindowManager
+import android.view.*
 import android.widget.*
 import android.widget.RatingBar.OnRatingBarChangeListener
 import androidx.databinding.DataBindingUtil
@@ -46,8 +43,8 @@ class DialogClass {
         dialogView.setCancelable(false)
         dialogView.window!!.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
         dialogView.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        val yes = dialogView.findViewById<Button>(R.id.yes)
-        val no = dialogView.findViewById<Button>(R.id.no)
+        val yes = dialogView.findViewById<TextView>(R.id.yes)
+        val no = dialogView.findViewById<TextView>(R.id.no)
         val tvLogout = dialogView.findViewById<TextView>(R.id.tv_dialog_logout)
         if (mKey.equals("logout"))
             tvLogout.visibility = View.VISIBLE
@@ -223,11 +220,9 @@ class DialogClass {
 
         dialogView.setContentView(binding.root)
         dialogView.setCancelable(true)
-        dialogView.window!!.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
-        dialogView.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         val camera = dialogView.findViewById<LinearLayout>(R.id.ll_camera)
         val gallery = dialogView.findViewById<LinearLayout>(R.id.ll_gallery)
-        val imgCross = dialogView.findViewById<LinearLayout>(R.id.img_cross)
+        val imgCross = dialogView.findViewById<ImageView>(R.id.img_cross)
         // Create the AlertDialog object and return it
         camera.setOnClickListener {
             mInterface.photoFromCamera(mKey)
@@ -241,7 +236,12 @@ class DialogClass {
             dialogView.dismiss()
         }
 
-
+        dialogView.window!!.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
+        dialogView.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialogView.window!!.setLayout(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
         dialogView.show()
 
         return dialogView
@@ -282,8 +282,5 @@ class DialogClass {
         dialogView.show()
 
         return dialogView
-
     }
-
-
 }

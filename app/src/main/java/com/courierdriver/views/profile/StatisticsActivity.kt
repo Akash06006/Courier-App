@@ -3,6 +3,7 @@ package com.courierdriver.views.profile
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Intent
+import android.text.TextUtils
 import android.util.Log
 import android.view.View
 import android.widget.AdapterView
@@ -75,9 +76,15 @@ class StatisticsActivity : BaseFragment(), DialogssInterface {
                 when (it) {
                     "tv_pay_now" -> {
                         //  makePayment()
-                        val intent = Intent(baseActivity, PaymentButtonActivity::class.java)
-                        intent.putExtra("amount", "20")
-                        startActivityForResult(intent, PAYMENT_CODE)
+                        if (!TextUtils.isEmpty(payableAmount) && !payableAmount.equals("0")) {
+                            binding!!.tvPayNow.isEnabled = true
+                            val intent = Intent(baseActivity, PaymentButtonActivity::class.java)
+                            intent.putExtra("amount", payableAmount)
+                            startActivityForResult(intent, PAYMENT_CODE)
+                        } else {
+                            binding!!.tvPayNow.isEnabled = false
+                        }
+
                     }
                     "tv_convert_to_cash" -> {
                         val count = invitedPoints + earnedPoints
@@ -166,7 +173,7 @@ class StatisticsActivity : BaseFragment(), DialogssInterface {
                 baseActivity.stopProgressDialog()
                 if (response != null) {
                     when (response.code) {
-                         200 -> {
+                        200 -> {
                             binding!!.model = response.body
                             invitedPoints = response.body!!.pointsData!!.invitedFriends!!.toInt()
                             earnedPoints = response.body.pointsData!!.earnedPoints!!.toInt()
@@ -382,11 +389,14 @@ class StatisticsActivity : BaseFragment(), DialogssInterface {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == PAYMENT_CODE) {
             // baseActivity.showToastSuccess("Success")
-            if (data!!.hasExtra("paymentId")) {
-                val paymentId = data.getStringExtra("paymentId")
-                Log.d("TAG", "paymentIdStats=--- $paymentId")
-                viewModel!!.payComission(paymentId, payableAmount)
+            if (data != null) {
+                if (data!!.hasExtra("paymentId")) {
+                    val paymentId = data.getStringExtra("paymentId")
+                    Log.d("TAG", "paymentIdStats=--- $paymentId")
+                    viewModel!!.payComission(paymentId, payableAmount)
+                }
             }
+
         }
     }
 

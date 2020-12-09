@@ -303,7 +303,8 @@
     <string name="enter_message">Enter message</string>
     <string name="select_image">Select Image</string>
     <string name="please_select_subject">Please select subject</string>
-    <string name="please_enter_description">Please enter description</string> <string name="verification_in_progress">Verification in Progress</string>
+    <string name="please_enter_description">Please enter description</string>
+    <string name="verification_in_progress">Verification in Progress</string>
     <string name="meanwhile_you_can_read_informationabout_working_with_locomo">Meanwhile you can read information about working with LOCOMO</string>
     <string name="dear_user_we_have_received_your_n_documents_we_are_working_on_verifying_n_your_document">Dear user, we have received your documents we are working on verifying your document</string>
     <string name="how_to_work">How to work</string>
@@ -362,7 +363,8 @@
     <string name="week">week</string>
     <string name="days">days</string>
     <string name="ago">ago</string>
-
+    <string name="folder">Folder</string>
+    <string name="gallery_select_title_msg">Tap to select</string>
     <string-array name="Languages">
         <item>Java</item>
         <item>Kotlin</item>

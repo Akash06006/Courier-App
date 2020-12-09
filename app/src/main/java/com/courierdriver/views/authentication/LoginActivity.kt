@@ -221,11 +221,12 @@ class LoginActivity : BaseActivity() {
                                 mJsonObject.addProperty("phoneNumber", phoneNumber)
                                 mJsonObject.addProperty(
                                     "countryCode",
-                                    "+" +  activityLoginbinding.btCountryCode.selectedCountryCode
+                                    "+" + activityLoginbinding.btCountryCode.selectedCountryCode
                                 )
                                 val android_id: String = Settings.Secure.getString(
                                     applicationContext.contentResolver,
-                                    Settings.Secure.ANDROID_ID)
+                                    Settings.Secure.ANDROID_ID
+                                )
                                 /*mJsonObject.addProperty("email", email)
                                 mJsonObject.addProperty("password", password)*/
                                 mJsonObject.addProperty("isSocial", false)
@@ -361,11 +362,10 @@ class LoginActivity : BaseActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == RC_SIGN_IN) {
-                val task: Task<GoogleSignInAccount> =
-                    GoogleSignIn.getSignedInAccountFromIntent(data)
-                handleSignInResult(task)
-        }
-        else {
+            val task: Task<GoogleSignInAccount> =
+                GoogleSignIn.getSignedInAccountFromIntent(data)
+            handleSignInResult(task)
+        } else {
             callbackManager?.onActivityResult(requestCode, resultCode, data)
         }
     }
@@ -374,15 +374,15 @@ class LoginActivity : BaseActivity() {
         try {
             val account = completedTask.getResult<ApiException>(ApiException::class.java)
             if (account == null) {
-                 Toast.makeText(this, "Somthing went wrong", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, "Somthing went wrong", Toast.LENGTH_LONG).show()
 
                 return
             }
             val input = JsonObject()
-            input.addProperty("email",account!!.email)
-            input.addProperty("socialId",account!!.id)
-            input.addProperty("firstName",account!!.givenName)
-            input.addProperty("lastName",account!!.familyName)
+            input.addProperty("email", account!!.email)
+            input.addProperty("socialId", account!!.id)
+            input.addProperty("firstName", account!!.givenName)
+            input.addProperty("lastName", account!!.familyName)
 
             val intent = Intent(this, SignupActivity::class.java)
             intent.putExtra("social", "false")

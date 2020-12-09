@@ -22,7 +22,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
     sourceSets {
         main {
             res.srcDirs =
@@ -81,7 +84,7 @@ dependencies {
     //Google Dependencies
 
     //noinspection UseOfBundledGooglePlayServices
-    implementation 'com.google.android.gms:play-services:12.0.1'
+   // implementation 'com.google.android.gms:play-services:12.0.1'
 
     //firebase
     //noinspection UseOfBundledGooglePlayServices
@@ -116,5 +119,12 @@ dependencies {
     implementation 'com.payumoney.core:payumoney-sdk:7.4.4'
     //SOCKET
     implementation('com.github.nkzawa:socket.io-client:0.6.0')
+    implementation('io.socket:socket.io-client:1.0.0') {
+        // excluding org.json which is provided by Android
+        exclude group: 'org.json', module: 'json'
+    }
+
+    //Image Picker
+    implementation 'com.github.esafirm.android-image-picker:imagepicker:2.2.0'
 }
 apply plugin: 'com.google.gms.google-services'

@@ -431,7 +431,7 @@ HomeFragment : BaseFragment(), DialogssInterface, NotifyWorkStatus {
 
                             if (response.body!!.isNotEmpty()) {
                                 orderList = response.body
-                                setAdapter()
+                                                                setAdapter()
                             } else {
                                 fragmentHomeBinding.tvNoRecord.visibility = View.VISIBLE
                                 fragmentHomeBinding.rvOrderList.visibility = View.GONE

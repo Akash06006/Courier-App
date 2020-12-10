@@ -101,6 +101,15 @@ class LandingActivty : BaseActivity(), View.OnClickListener, NotifyWorkStatusBut
     }
 
     private fun setAvailabilityColor() {
+
+        SharedPrefClass().putObject(
+            MyApplication.instance,
+            GlobalConstants.AVAILABLE,
+            isAvailable.toString()
+        )
+        val workStatusData = Intent("workStatusReceiver")
+        LocalBroadcastManager.getInstance(this).sendBroadcast(workStatusData)
+
         if (isAvailable) {
             available = "false"
             isAvailable = false
@@ -128,14 +137,6 @@ class LandingActivty : BaseActivity(), View.OnClickListener, NotifyWorkStatusBut
             )
             activityOtpVerificationBinding.txtAvailble.text = "Working"
         }
-
-            SharedPrefClass().putObject(
-                MyApplication.instance,
-                GlobalConstants.AVAILABLE,
-                isAvailable.toString()
-            )
-            val workStatusData = Intent("workStatusReceiver")
-            LocalBroadcastManager.getInstance(this).sendBroadcast(workStatusData)
     }
 
     private fun updateAvailabilityObserver() {

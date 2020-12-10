@@ -71,6 +71,8 @@ import com.google.maps.DirectionsApi
 import com.google.maps.GeoApiContext
 import com.theartofdev.edmodo.cropper.CropImage
 import com.courierdriver.utils.service.NetworkChangeCallback
+import com.courierdriver.views.chat.ChatActivity
+import com.courierdriver.views.chat.CustomerChatActivity
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import org.json.JSONArray
@@ -90,7 +92,7 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
     GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
     GoogleMap.OnCameraIdleListener, DialogssInterface, SelfieCallBack,
     NetworkChangeCallback, NotiFyRestartTrackingReceiver {
-    private var deliveryList: ArrayList<OrdersDetailResponse.PickupAddress>?=ArrayList()
+    private var deliveryList: ArrayList<OrdersDetailResponse.PickupAddress>? = ArrayList()
     private var orderDetail: OrdersDetailResponse.Data? = OrdersDetailResponse.Data()
     private lateinit var activityCreateOrderBinding: ActivityOrderDetailsBinding
     private lateinit var orderViewModel: OrderDetailViewModel
@@ -142,6 +144,7 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
     private var TRACK_RIDE = 0
     private var isConnected = false
 
+    var customerId = ""
     override fun getLayoutId(): Int {
         return R.layout.activity_order_details
     }
@@ -308,7 +311,7 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
           {
               Toast.makeText(this, "socket disconnected", Toast.LENGTH_SHORT).show()
           }*/
-        Log.d("TAG","emitingSocket")
+        Log.d("TAG", "emitingSocket")
         val mJsonObject = JSONObject()
         mJsonObject.put("driverId", userId)
 
@@ -318,7 +321,7 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
         val latLngArray = JSONArray()
         latLngArray.put(jsonObjectLatLng)
 
-        mJsonObject.put("latLong",latLngArray)
+        mJsonObject.put("latLong", latLngArray)
         mJsonObject.put("methodName", "updateLocation")
         mJsonObject.put("orderId", orderId)
         mJsonObject.put("empId", userId)
@@ -360,6 +363,17 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
                         /* selfieAction = 2
                          showTakeSelfieAlert("complete_order")*/
                     }
+                    "tv_chat" -> {
+                        val intent = Intent(this, CustomerChatActivity::class.java)
+                        intent.putExtra("cust_id", customerId)
+                        intent.putExtra("orderId", orderId)
+                        startActivity(intent)
+                    }
+                    "tv_help" -> {
+                        val intent = Intent(this, ChatActivity::class.java)
+                        intent.putExtra("orderId", orderId)
+                        startActivity(intent)
+                    }
                 }
             })
         )
@@ -378,7 +392,7 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
                             if (mSocket!!.connected()) {
                                 mSocket!!.disconnect()
                             }
-                            if(deliveryList!!.size>1) {
+                            if (deliveryList!!.size > 1) {
                                 for (i in 0 until deliveryList!!.size) {
                                     if (!deliveryList!![i].isComplete!!) {
                                         initiateSocket()
@@ -480,6 +494,7 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
                             }
 
                             deliveryList = response.data!!.deliveryAddress!!
+                            customerId = response.data!!.userId!!
                             dialogDelAddressList = ArrayList()
                             if (dialogDelAddressList!!.size > 0)
                                 dialogDelAddressList!!.clear()
@@ -528,7 +543,7 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
                     return
                 }
                 for (location in locationResult.locations) {
-                    if (location != null && currentLatitude!= location.latitude) {
+                    if (location != null && currentLatitude != location.latitude) {
                         currentLatitude = location.latitude
                         currentLongitude = location.longitude
                         if (orderId != "0")
@@ -756,6 +771,39 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
     override fun onDialogCancelAction(mView: View?, mKey: String) {
         cancelOrderAlertDialog!!.dismiss()
     }
+
+    /*private fun hideUnhideButtons(data: OrdersDetailResponse.Data) {
+        val orderStatus = data.orderStatus?.status // 1 available, 2 active, 3 completed
+        val orderStatusName = data.orderStatus?.statusName
+        if (orderStatus.equals("1")) {
+            activityCreateOrderBinding.linChatHelp.visibility = View.GONE
+            activityCreateOrderBinding.llAvailable.visibility = View.VISIBLE
+            activityCreateOrderBinding.llAcceptedTakeOrder.visibility = View.GONE
+            activityCreateOrderBinding.llCompleteOrder.visibility = View.GONE
+        } else if (orderStatus.equals("2")) {
+            if (orderStatusName.equals("Picked Up")) {
+                activityCreateOrderBinding.linChatHelp.visibility = View.VISIBLE
+                activityCreateOrderBinding.tvTimer.visibility = View.GONE
+                activityCreateOrderBinding.llAvailable.visibility = View.GONE
+                activityCreateOrderBinding.llAcceptedTakeOrder.visibility = View.GONE
+                activityCreateOrderBinding.llCompleteOrder.visibility = View.VISIBLE
+            } else {
+                activityCreateOrderBinding.linChatHelp.visibility = View.VISIBLE
+                activityCreateOrderBinding.tvTimer.visibility = View.VISIBLE
+                activityCreateOrderBinding.llAvailable.visibility = View.GONE
+                activityCreateOrderBinding.llAcceptedTakeOrder.visibility = View.VISIBLE
+                activityCreateOrderBinding.llCompleteOrder.visibility = View.GONE
+            }
+
+        } else if (orderStatus.equals("3")) {
+            activityCreateOrderBinding.linChatHelp.visibility = View.GONE
+            activityCreateOrderBinding.tvTimer.visibility = View.GONE
+            activityCreateOrderBinding.llAvailable.visibility = View.GONE
+            activityCreateOrderBinding.llAcceptedTakeOrder.visibility = View.GONE
+            activityCreateOrderBinding.llCompleteOrder.visibility = View.GONE
+        }
+
+    }*/
 
     private fun hideUnhideButtons(data: OrdersDetailResponse.Data) {
         val orderStatus = data.orderStatus?.status // 1 available, 2 active, 3 completed

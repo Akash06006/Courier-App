@@ -67,7 +67,7 @@
         <activity
             android:name=".views.authentication.ForgotPasswrodActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden"  />
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".views.authentication.OTPVerificationActivity"
             android:screenOrientation="portrait"
@@ -75,31 +75,31 @@
         <activity
             android:name=".views.authentication.ResetPasswrodActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden"  />
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".views.authentication.ChangePasswrodActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden"  />
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".views.contactus.ContactUsActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden"  />
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".views.authentication.MyAccountsActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden"  />
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".views.profile.HelpScreenActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden"  />
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".views.profile.SpotAndErrorActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden"  />
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".views.profile.PaymentHistoryActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden"  />
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".views.notification.ChatActivity"
             android:screenOrientation="portrait"
@@ -118,6 +118,14 @@
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".views.profile.TermsAndConditionsActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".views.chat.ChatActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".views.chat.CustomerChatActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
 

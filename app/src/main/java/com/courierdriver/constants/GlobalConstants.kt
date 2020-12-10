@@ -66,6 +66,9 @@ object GlobalConstants {
     var NOTIFICATION_TOKEN = "notification_token"
 
     @JvmStatic
+    var NOTIFICATION_TOKENPref = "notification_token"
+
+    @JvmStatic
     var SESSION_TOKEN = "session_token"
 
     @JvmStatic //http://stgcerb.cerebruminfotech.com:9067/

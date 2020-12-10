@@ -167,10 +167,11 @@
             </intent-filter>
         </service>
 
-
+<!--
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
             android:value="@string/app_name" />
+-->
 
         <activity
             android:name="com.facebook.CustomTabActivity"

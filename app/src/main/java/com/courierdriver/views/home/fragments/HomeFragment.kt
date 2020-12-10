@@ -431,7 +431,8 @@ HomeFragment : BaseFragment(), DialogssInterface, NotifyWorkStatus {
 
                             if (response.body!!.isNotEmpty()) {
                                 orderList = response.body
-                                                                setAdapter()
+                                baseActivity.showToastSuccess("Updated! \nAvailable ${orderList!!.size} orders")
+                                setAdapter()
                             } else {
                                 fragmentHomeBinding.tvNoRecord.visibility = View.VISIBLE
                                 fragmentHomeBinding.rvOrderList.visibility = View.GONE
@@ -698,7 +699,6 @@ HomeFragment : BaseFragment(), DialogssInterface, NotifyWorkStatus {
         }
     }
 
-
     private fun sharedPrefValue() {
         val name =
             SharedPrefClass().getPrefValue(activity!!, GlobalConstants.USERNAME).toString()
@@ -740,6 +740,7 @@ HomeFragment : BaseFragment(), DialogssInterface, NotifyWorkStatus {
         locationRequest!!.interval = 10 * 1000.toLong() // 10 seconds
         locationRequest!!.fastestInterval = 5 * 1000.toLong() // 5 seconds
 
+
         locationCallback = object : LocationCallback() {
             override fun onLocationAvailability(locationAvailability: LocationAvailability?) {
             }
@@ -754,18 +755,20 @@ HomeFragment : BaseFragment(), DialogssInterface, NotifyWorkStatus {
                 }
                 Log.e("Home", "onLocation $currentLat $currentLong")
                 //show location on map
-                showCurrentLocationOnMap()
                 //Location fetched, update listener can be removed
                 //fusedLocationProviderClient!!.removeLocationUpdates(locationCallback!!)
             }
         }
+
+        showCurrentLocationOnMap()
         startLocationUpdates()
+
     }
 
     private fun showCurrentLocationOnMap() {
         if (baseActivity.checkAndRequestPermissions()) {
             @SuppressLint("MissingPermission")
-            val lastLocation = mFusedLocationClient!!.lastLocation
+            val lastLocation = mFusedLocationClient.lastLocation
             lastLocation.addOnSuccessListener(baseActivity) { location ->
                 if (location != null) {
                     //  mGoogleMap!!.clear()
@@ -773,6 +776,7 @@ HomeFragment : BaseFragment(), DialogssInterface, NotifyWorkStatus {
                     //Go to Current Location
                     currentLat = location.latitude
                     currentLong = location.longitude
+                    getAvailableOrders()
 
                     Log.e("Home", "showCurrentLocationOnMap $currentLat $currentLong")
                 } else {
@@ -850,7 +854,7 @@ HomeFragment : BaseFragment(), DialogssInterface, NotifyWorkStatus {
         ) {
             return
         }
-        mFusedLocationClient!!.requestLocationUpdates(
+        mFusedLocationClient.requestLocationUpdates(
             locationRequest,
             locationCallback!!, null/* Looper */
         )

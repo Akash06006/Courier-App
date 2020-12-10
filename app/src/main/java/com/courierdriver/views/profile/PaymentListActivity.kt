@@ -40,7 +40,7 @@ class PaymentListActivity : BaseFragment() {
                 if (response != null) {
                     when (response.code) {
                         200 -> {
-                            baseActivity.showToastSuccess(response.message)
+                         //   baseActivity.showToastSuccess(response.message)
                             binding!!.model = response
                         }
                         else -> {

@@ -50,10 +50,13 @@ import com.courierdriver.model.order.OrdersDetailResponse
 import com.courierdriver.sharedpreference.SharedPrefClass
 import com.courierdriver.utils.*
 import com.courierdriver.utils.offlineSyncing.NetworkChangeReceiver
+import com.courierdriver.utils.service.NetworkChangeCallback
 import com.courierdriver.utils.service.NotiFyRestartTrackingReceiver
 import com.courierdriver.utils.service.RestartTrackingBroadcastReceiver
 import com.courierdriver.utils.service.TrackingService
 import com.courierdriver.viewmodels.order.OrderDetailViewModel
+import com.courierdriver.views.chat.ChatActivity
+import com.courierdriver.views.chat.CustomerChatActivity
 import com.github.nkzawa.emitter.Emitter
 import com.github.nkzawa.socketio.client.Socket
 import com.google.android.gms.common.ConnectionResult
@@ -70,9 +73,6 @@ import com.google.android.libraries.places.api.Places
 import com.google.maps.DirectionsApi
 import com.google.maps.GeoApiContext
 import com.theartofdev.edmodo.cropper.CropImage
-import com.courierdriver.utils.service.NetworkChangeCallback
-import com.courierdriver.views.chat.ChatActivity
-import com.courierdriver.views.chat.CustomerChatActivity
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import org.json.JSONArray
@@ -474,6 +474,23 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
 
                             getTimeDifference()
 
+                            if (response.data!!.deliveryoption!!.title == "Regular") {
+                                activityCreateOrderBinding.tvDeliveryOption.setTextColor(
+                                    ContextCompat.getColor(
+                                        this,
+                                        R.color.colorPrimary
+                                    )
+                                )
+                            } else if (response.data!!.deliveryoption!!.title == "Express") {
+                                activityCreateOrderBinding.tvDeliveryOption.setTextColor(
+                                    ContextCompat.getColor(
+                                        this,
+                                        R.color.colorRed
+                                    )
+                                )
+                            }
+
+
                             val icDestination = bitmapDescriptorFromVector(
                                 this,
                                 R.drawable.ic_loc_dest
@@ -584,8 +601,8 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
 
                     builder.include(marker.position)
                     val bounds = builder.build()
-                    val padding = 20; // offset from edges of the map in pixels
-                    val cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
+                    val padding = 20 // offset from edges of the map in pixels
+                    val cu = CameraUpdateFactory.newLatLngBounds(bounds, padding)
                     mGoogleMap!!.moveCamera(cu)
 //                    mGoogleMap?.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(currentLatitude, currentLongitude), 15f))
                 } else {
@@ -834,8 +851,15 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
             activityCreateOrderBinding.llAvailable.visibility = View.GONE
             activityCreateOrderBinding.llAcceptedTakeOrder.visibility = View.GONE
             activityCreateOrderBinding.llCompleteOrder.visibility = View.GONE
+        } else if (orderStatus.equals("4")) {
+            if (orderStatusName.equals("Cancelled-Driver")) {
+                activityCreateOrderBinding.linChatHelp.visibility = View.GONE
+                activityCreateOrderBinding.tvTimer.visibility = View.GONE
+                activityCreateOrderBinding.llAvailable.visibility = View.GONE
+                activityCreateOrderBinding.llAcceptedTakeOrder.visibility = View.GONE
+                activityCreateOrderBinding.llCompleteOrder.visibility = View.GONE
+            }
         }
-
     }
 
     private fun setDeliveryAddressAdapter(deliveryAddressList: ArrayList<OrdersDetailResponse.PickupAddress>?) {
@@ -1034,7 +1058,7 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
         @DrawableRes vectorDrawableResourceId: Int
     ): BitmapDescriptor {
         val background =
-            ContextCompat.getDrawable(this, vectorDrawableResourceId);
+            ContextCompat.getDrawable(this, vectorDrawableResourceId)
         background?.setBounds(
             0,
             0,
@@ -1269,7 +1293,7 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
     override fun selfieFromCamera(mKey: String) {
 
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        if (intent.resolveActivity(this.getPackageManager()) == null) {
+        if (intent.resolveActivity(this.packageManager) == null) {
             return
         }
         val fileName = "CAMERA_" + "img" + ".jpg"
@@ -1302,19 +1326,19 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
         if (selfieAction == 1) {
             type = "pickup"
             mHashMap["type"] =
-                Utils(this!!).createPartFromString("pickup")
+                Utils(this).createPartFromString("pickup")
         } else {
             type = "delivery"
             mHashMap["type"] =
-                Utils(this!!).createPartFromString("delivery")
+                Utils(this).createPartFromString("delivery")
         }
         mHashMap["orderId"] =
-            Utils(this!!).createPartFromString(orderId)
+            Utils(this).createPartFromString(orderId)
         var userImage: MultipartBody.Part? = null
         if (fileUri.isNotEmpty()) {
             val f1 = File(fileUri)
             userImage =
-                Utils(this!!).prepareFilePart(
+                Utils(this).prepareFilePart(
                     "image",
                     f1
                 )
@@ -1323,7 +1347,8 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
     }
 
     private fun uploadSelfieObserver() {
-        orderViewModel!!.uploadSelfieListData().observe(this,
+        orderViewModel.uploadSelfieListData().observe(
+            this,
             Observer<CommonModel> { response ->
                 stopProgressDialog()
                 if (response != null) {
@@ -1368,13 +1393,13 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
             if (data != null && data.data != null) {
 
                 CropImage.activity(data.data)
-                    .start(this);
+                    .start(this)
             } else {
                 if (photoFile != null) {
                     val data1 = Intent()
                     data1.data = UtilsFunctions.getValidUri(photoFile!!, this)
                     CropImage.activity(data1.data)
-                        .start(this);
+                        .start(this)
                 }
             }
         } else if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {

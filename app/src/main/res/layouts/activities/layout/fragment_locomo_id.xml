@@ -31,7 +31,7 @@
             android:background="@drawable/shape_top_circle"
             android:backgroundTint="@color/colorTextBlue"
             android:orientation="vertical"
-            android:paddingTop="@dimen/dp_20"
+            android:paddingTop="@dimen/dp_40"
             android:paddingBottom="@dimen/dp_80">
 
             <RelativeLayout
@@ -40,11 +40,10 @@
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/img_profile"
-                    android:layout_width="90dp"
-                    android:layout_height="90dp"
+                    android:layout_width="110dp"
+                    android:layout_height="110dp"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginLeft="@dimen/dp_20"
-                    android:layout_marginTop="@dimen/dp_40"
                     android:layout_marginRight="@dimen/dp_15"
                     android:contentDescription="@string/todo"
                     android:src="@{model.image!=null ?  model.image.toString():@string/todo,default=@drawable/ic_user}"
@@ -55,7 +54,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginTop="@dimen/dp_60"
                     android:layout_toRightOf="@+id/img_profile"
                     android:orientation="vertical">
 

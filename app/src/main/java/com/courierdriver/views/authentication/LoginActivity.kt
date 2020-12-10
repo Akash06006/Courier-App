@@ -2,7 +2,6 @@ package com.courierdriver.views.authentication
 
 import android.content.Intent
 import android.os.Bundle
-import android.provider.Settings
 import android.util.Log
 import android.widget.EditText
 import android.widget.Toast
@@ -10,7 +9,6 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.courierdriver.R
 import com.courierdriver.application.MyApplication
-import com.courierdriver.common.FirebaseFunctions
 import com.courierdriver.common.UtilsFunctions
 import com.courierdriver.constants.GlobalConstants
 import com.courierdriver.databinding.ActivityLoginBinding
@@ -18,6 +16,7 @@ import com.courierdriver.model.LoginResponse
 import com.courierdriver.sharedpreference.SharedPrefClass
 import com.courierdriver.utils.BaseActivity
 import com.courierdriver.viewmodels.LoginViewModel
+import com.courierdriver.views.home.LandingActivty
 import com.facebook.CallbackManager
 import com.facebook.FacebookCallback
 import com.facebook.FacebookException
@@ -76,7 +75,7 @@ class LoginActivity : BaseActivity() {
                         SharedPrefClass().putObject(
                             MyApplication.instance,
                             "isLogin",
-                            false
+                            true
                         )
                         SharedPrefClass().putObject(
                             MyApplication.instance,
@@ -143,13 +142,13 @@ class LoginActivity : BaseActivity() {
                             activityLoginbinding.edtPhone.text.toString()
                         )
 
-                        showToastSuccess(message)
-                        GlobalConstants.VERIFICATION_TYPE = "signup"
-                        FirebaseFunctions.sendOTP("login", mOtpJsonObject, this)
-
-                        /*val intent = Intent(this, LandingActivty::class.java)
+                        /* showToastSuccess(message)
+                         GlobalConstants.VERIFICATION_TYPE = "signup"
+                         FirebaseFunctions.sendOTP("login", mOtpJsonObject, this)
+ */
+                        val intent = Intent(this, LandingActivty::class.java)
                         startActivity(intent)
-                        finish()*/
+                        finish()
 
                     } else {
                         showToastError(message)
@@ -168,7 +167,7 @@ class LoginActivity : BaseActivity() {
             fun(it: String?) {
                 when (it) {
                     "google_login" -> {
-                        val signInIntent: Intent = mGoogleSignInClient.getSignInIntent()
+                        val signInIntent: Intent = mGoogleSignInClient.signInIntent
                         startActivityForResult(signInIntent, RC_SIGN_IN)
                     }
                     "txtSignup" -> {
@@ -231,7 +230,10 @@ class LoginActivity : BaseActivity() {
                                 mJsonObject.addProperty("password", password)*/
                                 mJsonObject.addProperty("isSocial", false)
                                 mJsonObject.addProperty("socialId", "")
-                                mJsonObject.addProperty("deviceToken", token)
+                                mJsonObject.addProperty(
+                                    "deviceToken",
+                                    GlobalConstants.NOTIFICATION_TOKEN
+                                )
                                 mJsonObject.addProperty("platform", "android")
                                 if (UtilsFunctions.isNetworkConnected()) {
                                     loginViewModel.callLoginApi(mJsonObject)
@@ -395,15 +397,15 @@ class LoginActivity : BaseActivity() {
         try {
             val account = completedTask.getResult<ApiException>(ApiException::class.java)
             if (account == null) {
-                 Toast.makeText(this, "Somthing went wrong", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, "Somthing went wrong", Toast.LENGTH_LONG).show()
 
                 return
             }
             val input = JsonObject()
-            input.addProperty("email",account!!.email)
-            input.addProperty("socialId",account!!.id)
-            input.addProperty("firstName",account!!.givenName)
-            input.addProperty("lastName",account!!.familyName)
+            input.addProperty("email", account.email)
+            input.addProperty("socialId", account.id)
+            input.addProperty("firstName", account.givenName)
+            input.addProperty("lastName", account.familyName)
 
             val intent = Intent(this, SignupActivity::class.java)
             intent.putExtra("social", "false")

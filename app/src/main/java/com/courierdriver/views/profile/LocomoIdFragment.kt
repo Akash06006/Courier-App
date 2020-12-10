@@ -133,7 +133,7 @@ class LocomoIdFragment : BaseFragment(), DownloadFileCallback {
                 if (response != null) {
                     when (response.code) {
                         200 -> {
-                            UtilsFunctions.showToastSuccess(response.message!!)
+                            //UtilsFunctions.showToastSuccess(response.message!!)
                             binding!!.model = response.body
                             model = response.body
                             downloadUrl = response.body!!.locomoIdUrl!!

@@ -78,12 +78,14 @@ class HomeOrdersAdapter(
                 /*  binding.tvTakeOrder.text = mContext.getString(R.string.accept)
                   binding.linActiveOrder.visibility = View.VISIBLE*/
                 binding.relRoute.visibility = View.VISIBLE
+                binding.tvDate.visibility = View.VISIBLE
                 //   binding.viewRoute.visibility = View.VISIBLE
             }
             2 -> {
                 /* binding.tvTakeOrder.text = mContext.getString(R.string.take_order)
                  binding.linActiveOrder.visibility = View.VISIBLE*/
                 binding.relRoute.visibility = View.VISIBLE
+                binding.tvDate.visibility = View.VISIBLE
                 // binding.viewRoute.visibility = View.VISIBLE
             }
             3 -> {
@@ -91,6 +93,7 @@ class HomeOrdersAdapter(
                 binding.relRoute.visibility = View.GONE
                 binding.viewRoute.visibility = View.GONE
                 binding.viewItems.visibility = View.GONE
+                binding.tvDate.visibility = View.GONE
             }
         }
     }

@@ -51,7 +51,7 @@ class StatisticsActivity : BaseFragment(), DialogssInterface {
     var PAYMENT_CODE = 857
     private var selectedMonth = "0"
     private var selectedYear = "2020"
-    private var selectedWeek = "today"
+    private var selectedWeek = "1"
 
     override fun initView() {
         binding = viewDataBinding as ActivityStatisticsBinding
@@ -296,13 +296,13 @@ class StatisticsActivity : BaseFragment(), DialogssInterface {
 
                 when (position) {
                     0 -> {
-                        selectedWeek = "today"
+                        selectedWeek = "1"
                     }
                     1 -> {
-                        selectedWeek = "7 days"
+                        selectedWeek = "2"
                     }
                     2 -> {
-                        selectedWeek = "15 days"
+                        selectedWeek = "3"
                     }
                 }
                 viewModel!!.statistics(
@@ -390,7 +390,7 @@ class StatisticsActivity : BaseFragment(), DialogssInterface {
         if (requestCode == PAYMENT_CODE) {
             // baseActivity.showToastSuccess("Success")
             if (data != null) {
-                if (data!!.hasExtra("paymentId")) {
+                if (data.hasExtra("paymentId")) {
                     val paymentId = data.getStringExtra("paymentId")
                     Log.d("TAG", "paymentIdStats=--- $paymentId")
                     viewModel!!.payComission(paymentId, payableAmount)

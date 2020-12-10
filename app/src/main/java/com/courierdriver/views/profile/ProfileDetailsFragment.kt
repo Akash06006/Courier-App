@@ -12,7 +12,6 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.courierdriver.R
 import com.courierdriver.callbacks.SelfieCallBack
-import com.courierdriver.common.UtilsFunctions
 import com.courierdriver.common.UtilsFunctions.showToastError
 import com.courierdriver.common.UtilsFunctions.showToastSuccess
 import com.courierdriver.constants.GlobalConstants
@@ -20,12 +19,13 @@ import com.courierdriver.databinding.ActivityProfileDetailsBinding
 import com.courierdriver.model.CommonModel
 import com.courierdriver.model.profile.ProfileDetailsModel
 import com.courierdriver.sharedpreference.SharedPrefClass
-import com.courierdriver.utils.*
+import com.courierdriver.utils.BaseFragment
+import com.courierdriver.utils.DialogClass
+import com.courierdriver.utils.DialogssInterface
+import com.courierdriver.utils.Utils
 import com.courierdriver.viewmodels.profile.ProfileViewModel
 import com.courierdriver.views.authentication.LoginActivity
-import com.theartofdev.edmodo.cropper.CropImage
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
 import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
@@ -42,7 +42,8 @@ class ProfileDetailsFragment : BaseFragment(), DialogssInterface, SelfieCallBack
     private var fileUri = ""
     private var imageFile: File? = null
     private var model: ProfileDetailsModel.Body? = null
-    private var todaySelfieImage=""
+    private var todaySelfieImage = ""
+    private var notificationToken = ""
 
     override fun initView() {
         binding = viewDataBinding as ActivityProfileDetailsBinding
@@ -50,21 +51,29 @@ class ProfileDetailsFragment : BaseFragment(), DialogssInterface, SelfieCallBack
         binding!!.viewModel = viewModel
 
         viewModel!!.profileDetails("1")
+        sharedPrefValue()
         getProfileDetailsObserver()
         uploadSelfieObserver()
         loaderObserver()
         viewClicks()
     }
 
+    private fun sharedPrefValue() {
+        notificationToken =
+            SharedPrefClass().getPrefValue(baseActivity, GlobalConstants.NOTIFICATION_TOKENPref)
+                .toString()
+    }
+
     private fun viewClicks() {
         viewModel!!.isClick().observe(
-            this, Observer<String>(function =
-            fun(it: String?) {
-                when (it) {
-                    "tv_sign_out" -> {
-                        confirmationDialog = mDialogClass.setDefaultDialog(
-                            baseActivity,
-                            this,
+            this, Observer<String>(
+                function =
+                fun(it: String?) {
+                    when (it) {
+                        "tv_sign_out" -> {
+                            confirmationDialog = mDialogClass.setDefaultDialog(
+                                baseActivity,
+                                this,
                             "logout",
                             getString(R.string.logout),
                             getString(R.string.want_to_logout),
@@ -75,7 +84,10 @@ class ProfileDetailsFragment : BaseFragment(), DialogssInterface, SelfieCallBack
                     "tv_invite_friend" -> {
                         val shareIntent: Intent = Intent().apply {
                             action = Intent.ACTION_SEND
-                            putExtra(Intent.EXTRA_TEXT, "Please download app from ${GlobalConstants.TERMS_AND_CONDITIONS} Use my referral code to earn points ${model!!.referralCode}")
+                            putExtra(
+                                Intent.EXTRA_TEXT,
+                                "Please download app from ${GlobalConstants.TERMS_AND_CONDITIONS} Use my referral code to earn points ${model!!.referralCode}"
+                            )
                             type = "text/plain"
                         }
                         startActivity(
@@ -163,7 +175,7 @@ class ProfileDetailsFragment : BaseFragment(), DialogssInterface, SelfieCallBack
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
             fileUri = todaySelfieImage
-
+            uploadSelfieApi()
 /*
             if (data != null && data.data != null) {
 
@@ -204,7 +216,7 @@ class ProfileDetailsFragment : BaseFragment(), DialogssInterface, SelfieCallBack
                     f1
                 )
         }
-        viewModel!!.uploadSelfie(userImage,"today selfie","","")
+        viewModel!!.uploadSelfie(userImage, "today selfie", "", "")
     }
 
     private fun uploadSelfieObserver() {
@@ -242,10 +254,17 @@ class ProfileDetailsFragment : BaseFragment(), DialogssInterface, SelfieCallBack
                                 "isLogin",
                                 false
                             )
+                            SharedPrefClass().clearAll(baseActivity)
+                            SharedPrefClass().putObject(
+                                baseActivity,
+                                GlobalConstants.NOTIFICATION_TOKENPref,
+                                notificationToken
+                            )
+                            GlobalConstants.NOTIFICATION_TOKEN = notificationToken
+
                             val intent1 = Intent(baseActivity, LoginActivity::class.java)
                             startActivity(intent1)
                             baseActivity.finish()
-                            SharedPrefClass().clearAll(baseActivity)
                         }
                         else -> {
                             showToastError(response.message!!)

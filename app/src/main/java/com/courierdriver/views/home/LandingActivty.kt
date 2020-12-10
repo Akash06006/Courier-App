@@ -47,6 +47,7 @@ class LandingActivty : BaseActivity(), View.OnClickListener, NotifyWorkStatusBut
         activityOtpVerificationBinding.relAvailable.setOnClickListener(this)
 
         loaderObserver()
+        setButtonsWithSharePref()
         updateAvailabilityObserver()
         subscribeWorkStatusReceiver()
         subscribeWorkStatusButtonReceiver()
@@ -205,19 +206,19 @@ class LandingActivty : BaseActivity(), View.OnClickListener, NotifyWorkStatusBut
         activityOtpVerificationBinding.imgOrder.setColorFilter(
             ContextCompat.getColor(this, orderColor),
             android.graphics.PorterDuff.Mode.SRC_IN
-        );
+        )
         activityOtpVerificationBinding.imgProfile.setColorFilter(
             ContextCompat.getColor(this, profileColor),
             android.graphics.PorterDuff.Mode.SRC_IN
-        );
+        )
         activityOtpVerificationBinding.imgMessage.setColorFilter(
             ContextCompat.getColor(this, notificationColor),
             android.graphics.PorterDuff.Mode.SRC_IN
-        );
+        )
         activityOtpVerificationBinding.imgAvailable.setColorFilter(
             ContextCompat.getColor(this, availbleColor),
             android.graphics.PorterDuff.Mode.SRC_IN
-        );
+        )
 
 
         //activityOtpVerificationBinding.imgProfile.setColorFilter(ContextCompat.getColor(this, R.color.colorWhite), android.graphics.PorterDuff.Mode.MULTIPLY);
@@ -234,28 +235,19 @@ class LandingActivty : BaseActivity(), View.OnClickListener, NotifyWorkStatusBut
     }
 
     override fun refreshWorkStatusData() {
+        setButtonsWithSharePref()
+        //  homeViewModel.updateAvailability(isAvailable)
+    }
+
+    private fun setButtonsWithSharePref() {
         available =
             SharedPrefClass().getPrefValue(this, GlobalConstants.AVAILABLE)
                 .toString()
-        isAvailable = available != "true"
         isAvailable = available.toBoolean()
 
         if (isAvailable) {
             available = "false"
             isAvailable = false
-            activityOtpVerificationBinding.imgAvailable.setImageDrawable(
-                ContextCompat.getDrawable(this, R.drawable.ic_not_available)
-            )
-            activityOtpVerificationBinding.txtAvailble.setTextColor(
-                ContextCompat.getColor(
-                    this,
-                    R.color.colorRed
-                )
-            )
-            activityOtpVerificationBinding.txtAvailble.text = "Not Working"
-        } else {
-            isAvailable = true
-            available = "true"
             activityOtpVerificationBinding.imgAvailable.setImageDrawable(
                 ContextCompat.getDrawable(this, R.drawable.ic_available)
             )
@@ -266,7 +258,19 @@ class LandingActivty : BaseActivity(), View.OnClickListener, NotifyWorkStatusBut
                 )
             )
             activityOtpVerificationBinding.txtAvailble.text = "Working"
+        } else {
+            available = "true"
+            isAvailable = true
+            activityOtpVerificationBinding.imgAvailable.setImageDrawable(
+                ContextCompat.getDrawable(this, R.drawable.ic_not_available)
+            )
+            activityOtpVerificationBinding.txtAvailble.setTextColor(
+                ContextCompat.getColor(
+                    this,
+                    R.color.colorRed
+                )
+            )
+            activityOtpVerificationBinding.txtAvailble.text = "Not Working"
         }
-      //  homeViewModel.updateAvailability(isAvailable)
     }
 }

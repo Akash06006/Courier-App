@@ -98,8 +98,8 @@
 
                 <ImageView
                     android:id="@+id/img_View"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/dp_120"
+                    android:layout_height="@dimen/dp_120"
                     android:scaleType="fitXY" />
             </androidx.cardview.widget.CardView>
         </RelativeLayout>

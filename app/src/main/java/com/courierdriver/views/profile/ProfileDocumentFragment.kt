@@ -73,7 +73,7 @@ class ProfileDocumentFragment : BaseFragment(), ChoiceCallBack, SelfieCallBack {
     }
 
     private fun loaderObserver() {
-        docVerifyViewModel!!.isLoading().observe(viewLifecycleOwner, Observer<Boolean> { aBoolean ->
+        docVerifyViewModel.isLoading().observe(viewLifecycleOwner, Observer<Boolean> { aBoolean ->
             if (aBoolean!!) {
                 baseActivity.startProgressDialog()
             } else {
@@ -114,10 +114,10 @@ class ProfileDocumentFragment : BaseFragment(), ChoiceCallBack, SelfieCallBack {
                 if (response != null) {
                     when (response.code) {
                         200 -> {
-                            UtilsFunctions.showToastSuccess(response.message!!)
+                            // UtilsFunctions.showToastSuccess(response.message!!)
                             activityDocVeribinding.model = response.body
                             response.body!!.transport?.let {
-                                vehicleId = response.body!!.transport!!.id.toString()
+                                vehicleId = response.body.transport!!.id.toString()
                                 transportType = response.body.transport!!.name!!
                             }
                         }

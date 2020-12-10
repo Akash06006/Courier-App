@@ -7,7 +7,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Environment
 import android.provider.MediaStore
-import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -171,7 +170,7 @@ class ProfileFragment : BaseFragment(), ChoiceCallBack {
                                             f1
                                         )
                                 }
-                                    viewModel.updateProfile(mHashMap, userImage)
+                                viewModel.updateProfile(mHashMap, userImage)
                             }
                         }
                     }
@@ -207,8 +206,7 @@ class ProfileFragment : BaseFragment(), ChoiceCallBack {
                 if (response != null) {
                     when (response.code) {
                         200 -> {
-                            showToastSuccess(response.message!!)
-
+                            //  showToastSuccess(response.message!!)
                             binding!!.model = response.body
                             regionId = response.body!!.regionId!!
                             vehicleId = response.body.transportId!!
@@ -395,7 +393,7 @@ class ProfileFragment : BaseFragment(), ChoiceCallBack {
             regionStringList?.let {
                 for (item in 0 until regionStringList!!.size) {
                     if (regionStringList!![item] == selectedRegion) {
-                        spRegions.setSelection(item+1)
+                        spRegions.setSelection(item + 1)
                     }
                 }
             }
@@ -461,7 +459,7 @@ class ProfileFragment : BaseFragment(), ChoiceCallBack {
             vehicleStringList?.let {
                 for (item in 0 until vehicleStringList!!.size) {
                     if (vehicleStringList!![item] == selectedVehicle) {
-                        spRegions.setSelection(item+1)
+                        spRegions.setSelection(item + 1)
                     }
                 }
             }

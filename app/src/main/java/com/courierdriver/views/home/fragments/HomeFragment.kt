@@ -3,7 +3,6 @@ package com.courierdriver.views.home.fragments
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Dialog
-import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.IntentSender
@@ -11,16 +10,10 @@ import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.drawable.ColorDrawable
-import android.location.Location
-import android.location.LocationManager
-import android.os.Build
-import android.os.Looper
-import android.provider.Settings
 import android.text.TextUtils
 import android.util.Log
 import android.view.*
 import android.widget.*
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
@@ -52,10 +45,6 @@ import com.courierdriver.views.profile.HelpScreenActivity
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
 
 class
 HomeFragment : BaseFragment(), DialogssInterface, NotifyWorkStatus {
@@ -100,6 +89,7 @@ HomeFragment : BaseFragment(), DialogssInterface, NotifyWorkStatus {
         getLocationRequest()
         setLocation()
 
+        getAvailableOrders()
         getOrderListObserver()
         acceptOrderObserver()
         cancelOrderObserver()
@@ -111,6 +101,7 @@ HomeFragment : BaseFragment(), DialogssInterface, NotifyWorkStatus {
         submitRegionObserver()
         subscribeWorkStatusReceiver()
         subscribeWorkStatusButtonReceiver()
+        updateAvailabilityObserver()
     }
 
     private fun loaderObserver() {
@@ -136,18 +127,8 @@ HomeFragment : BaseFragment(), DialogssInterface, NotifyWorkStatus {
                     }
                     "tv_resume_work" -> {
                         val isAvailable = true
-                        SharedPrefClass().putObject(
-                            MyApplication.instance,
-                            GlobalConstants.AVAILABLE,
-                            isAvailable.toString()
-                        )
-                        fragmentHomeBinding.linTabsMain.visibility = View.VISIBLE
-                        fragmentHomeBinding.linNotWorking.visibility = View.GONE
-                        fragmentHomeBinding.linInProgress.visibility = View.GONE
 
-                        val workStatusData = Intent("workStatusButtonReceiver")
-                        LocalBroadcastManager.getInstance(baseActivity).sendBroadcast(workStatusData)
-                        getAvailableOrders()
+                        homeViewModel.updateAvailability(isAvailable)
                     }
                     "tv_available" -> {
                         getAvailableOrders()
@@ -228,6 +209,39 @@ HomeFragment : BaseFragment(), DialogssInterface, NotifyWorkStatus {
         )
     }
 
+    private fun updateAvailabilityObserver() {
+        homeViewModel.updateAvailabilityData().observe(
+            this,
+            Observer<CommonModel> { response ->
+                baseActivity.stopProgressDialog()
+                if (response != null) {
+                    val message = response.message
+                    when (response.code) {
+                        200 -> {
+                            var isAvailable = true
+                            SharedPrefClass().putObject(
+                                MyApplication.instance,
+                                GlobalConstants.AVAILABLE,
+                                isAvailable.toString()
+                            )
+                            fragmentHomeBinding.linTabsMain.visibility = View.VISIBLE
+                            fragmentHomeBinding.linNotWorking.visibility = View.GONE
+                            fragmentHomeBinding.linInProgress.visibility = View.GONE
+
+                            val workStatusData = Intent("workStatusButtonReceiver")
+                            LocalBroadcastManager.getInstance(baseActivity)
+                                .sendBroadcast(workStatusData)
+                            getAvailableOrders()
+                        }
+                        else -> UtilsFunctions.showToastError(message!!)
+                    }
+                } else {
+                    UtilsFunctions.showToastError(resources.getString(R.string.internal_server_error))
+                }
+            })
+    }
+
+
     private fun getAvailableOrders() {
         clearList()
         orderStatus = 1
@@ -278,21 +292,20 @@ HomeFragment : BaseFragment(), DialogssInterface, NotifyWorkStatus {
     }
 
     override fun refreshWorkStatusData() {
-        available =
-            SharedPrefClass().getPrefValue(activity!!, GlobalConstants.AVAILABLE)
-                .toString()
+        /* available =
+             SharedPrefClass().getPrefValue(activity!!, GlobalConstants.AVAILABLE)
+                 .toString()
 
-        if (available == "false") {
-            fragmentHomeBinding.linNotWorking.visibility = View.VISIBLE
-            fragmentHomeBinding.linTabsMain.visibility = View.GONE
-            fragmentHomeBinding.linInProgress.visibility = View.GONE
-        } else {
-            fragmentHomeBinding.linTabsMain.visibility = View.VISIBLE
-            fragmentHomeBinding.linNotWorking.visibility = View.GONE
-            fragmentHomeBinding.linInProgress.visibility = View.GONE
-
-            getAvailableOrders()
-        }
+         if (available == "false") {
+             fragmentHomeBinding.linNotWorking.visibility = View.VISIBLE
+             fragmentHomeBinding.linTabsMain.visibility = View.GONE
+             fragmentHomeBinding.linInProgress.visibility = View.GONE
+         } else {
+             fragmentHomeBinding.linTabsMain.visibility = View.VISIBLE
+             fragmentHomeBinding.linNotWorking.visibility = View.GONE
+             fragmentHomeBinding.linInProgress.visibility = View.GONE
+ */
+        getAvailableOrders()
     }
 
     private fun clearList() {
@@ -304,7 +317,11 @@ HomeFragment : BaseFragment(), DialogssInterface, NotifyWorkStatus {
 
     //region API_CALL
     private fun getOrderList(orderStatus: Int) {
-        homeViewModel.orderList(orderStatus.toString(), currentLat.toString(), currentLong.toString())
+        homeViewModel.orderList(
+            orderStatus.toString(),
+            currentLat.toString(),
+            currentLong.toString()
+        )
     }
 
     fun acceptOrder(id: String?, adapterPosition: Int) {
@@ -412,15 +429,6 @@ HomeFragment : BaseFragment(), DialogssInterface, NotifyWorkStatus {
                             fragmentHomeBinding.linInProgress.visibility = View.GONE
                             fragmentHomeBinding.linNotWorking.visibility = View.GONE
 
-                            val isAvailable = true
-                            SharedPrefClass().putObject(
-                                MyApplication.instance,
-                                GlobalConstants.AVAILABLE,
-                                isAvailable.toString()
-                            )
-                            val workStatusData = Intent("workStatusButtonReceiver")
-                            LocalBroadcastManager.getInstance(baseActivity).sendBroadcast(workStatusData)
-
                             if (response.body!!.isNotEmpty()) {
                                 orderList = response.body
                                 setAdapter()
@@ -435,8 +443,17 @@ HomeFragment : BaseFragment(), DialogssInterface, NotifyWorkStatus {
                             fragmentHomeBinding.linNotWorking.visibility = View.GONE
                             // account under review
                         }
-                        206->
-                        {
+                        206 -> {
+                            val isAvailable = false
+                            SharedPrefClass().putObject(
+                                MyApplication.instance,
+                                GlobalConstants.AVAILABLE,
+                                isAvailable.toString()
+                            )
+                            val workStatusData = Intent("workStatusButtonReceiver")
+                            LocalBroadcastManager.getInstance(baseActivity)
+                                .sendBroadcast(workStatusData)
+
                             fragmentHomeBinding.linNotWorking.visibility = View.VISIBLE
                             fragmentHomeBinding.linInProgress.visibility = View.GONE
                             fragmentHomeBinding.linTabsMain.visibility = View.GONE
@@ -448,6 +465,7 @@ HomeFragment : BaseFragment(), DialogssInterface, NotifyWorkStatus {
                 }
             })
     }
+
 
     private fun acceptOrderObserver() {
         homeViewModel.acceptOrderData().observe(this,
@@ -731,9 +749,10 @@ HomeFragment : BaseFragment(), DialogssInterface, NotifyWorkStatus {
                     return
                 }
                 for (location in locationResult.locations) {
-                        currentLat = location.latitude
-                        currentLong = location.longitude
+                    currentLat = location.latitude
+                    currentLong = location.longitude
                 }
+                Log.e("Home", "onLocation $currentLat $currentLong")
                 //show location on map
                 showCurrentLocationOnMap()
                 //Location fetched, update listener can be removed
@@ -754,6 +773,8 @@ HomeFragment : BaseFragment(), DialogssInterface, NotifyWorkStatus {
                     //Go to Current Location
                     currentLat = location.latitude
                     currentLong = location.longitude
+
+                    Log.e("Home", "showCurrentLocationOnMap $currentLat $currentLong")
                 } else {
                     //Gps not enabled if loc is null
                     getSettingsLocation()
@@ -769,7 +790,8 @@ HomeFragment : BaseFragment(), DialogssInterface, NotifyWorkStatus {
     private fun getSettingsLocation() {
         val builder = LocationSettingsRequest.Builder()
             .addLocationRequest(locationRequest!!)
-        val result = LocationServices.getSettingsClient(baseActivity).checkLocationSettings(builder.build())
+        val result =
+            LocationServices.getSettingsClient(baseActivity).checkLocationSettings(builder.build())
 
         result.addOnCompleteListener { task ->
             try {
@@ -841,11 +863,13 @@ HomeFragment : BaseFragment(), DialogssInterface, NotifyWorkStatus {
 
     //endregion
 
+/*
     override fun onResume() {
         super.onResume()
         if(orderStatus==1)
         getAvailableOrders()
     }
+*/
 
     override fun getLayoutResId(): Int {
         return R.layout.fragment_home

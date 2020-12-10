@@ -28,6 +28,7 @@ class LandingActivty : BaseActivity(), View.OnClickListener, NotifyWorkStatusBut
     private lateinit var homeViewModel: HomeViewModel
     private var isAvailable = false
     private var available = "false"
+    private var callFromHome = false
 
     override fun getLayoutId(): Int {
         return R.layout.activity_landing_activty
@@ -89,7 +90,8 @@ class LandingActivty : BaseActivity(), View.OnClickListener, NotifyWorkStatusBut
 
     private fun subscribeWorkStatusReceiver() {
         val contractDetailsReceiver = WorkStatusBroadcastReceiver()
-        LocalBroadcastManager.getInstance(this).registerReceiver(contractDetailsReceiver, IntentFilter("workStatusReceiver"))
+        LocalBroadcastManager.getInstance(this)
+            .registerReceiver(contractDetailsReceiver, IntentFilter("workStatusReceiver"))
     }
 
     private fun subscribeWorkStatusButtonReceiver() {
@@ -127,13 +129,13 @@ class LandingActivty : BaseActivity(), View.OnClickListener, NotifyWorkStatusBut
             activityOtpVerificationBinding.txtAvailble.text = "Working"
         }
 
-        SharedPrefClass().putObject(
-            MyApplication.instance,
-            GlobalConstants.AVAILABLE,
-            isAvailable.toString()
-        )
-        val workStatusData = Intent("workStatusReceiver")
-        LocalBroadcastManager.getInstance(this).sendBroadcast(workStatusData)
+            SharedPrefClass().putObject(
+                MyApplication.instance,
+                GlobalConstants.AVAILABLE,
+                isAvailable.toString()
+            )
+            val workStatusData = Intent("workStatusReceiver")
+            LocalBroadcastManager.getInstance(this).sendBroadcast(workStatusData)
     }
 
     private fun updateAvailabilityObserver() {
@@ -234,7 +236,36 @@ class LandingActivty : BaseActivity(), View.OnClickListener, NotifyWorkStatusBut
         available =
             SharedPrefClass().getPrefValue(this, GlobalConstants.AVAILABLE)
                 .toString()
+        isAvailable = available != "true"
         isAvailable = available.toBoolean()
-        homeViewModel.updateAvailability(isAvailable)
+
+        if (isAvailable) {
+            available = "false"
+            isAvailable = false
+            activityOtpVerificationBinding.imgAvailable.setImageDrawable(
+                ContextCompat.getDrawable(this, R.drawable.ic_not_available)
+            )
+            activityOtpVerificationBinding.txtAvailble.setTextColor(
+                ContextCompat.getColor(
+                    this,
+                    R.color.colorRed
+                )
+            )
+            activityOtpVerificationBinding.txtAvailble.text = "Not Working"
+        } else {
+            isAvailable = true
+            available = "true"
+            activityOtpVerificationBinding.imgAvailable.setImageDrawable(
+                ContextCompat.getDrawable(this, R.drawable.ic_available)
+            )
+            activityOtpVerificationBinding.txtAvailble.setTextColor(
+                ContextCompat.getColor(
+                    this,
+                    R.color.colorSuccess
+                )
+            )
+            activityOtpVerificationBinding.txtAvailble.text = "Working"
+        }
+      //  homeViewModel.updateAvailability(isAvailable)
     }
 }

@@ -31,42 +31,56 @@
             android:background="@drawable/shape_top_circle"
             android:backgroundTint="@color/colorTextBlue"
             android:orientation="vertical"
+            android:paddingTop="@dimen/dp_20"
             android:paddingBottom="@dimen/dp_80">
 
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/img_profile"
-                android:layout_width="90dp"
-                android:layout_height="90dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginLeft="@dimen/dp_15"
-                android:layout_marginTop="@dimen/dp_40"
-                android:layout_marginRight="@dimen/dp_15"
-                android:contentDescription="@string/todo"
-                android:src="@{model.image!=null ?  model.image.toString():@string/todo,default=@drawable/ic_user}"
-                app:civ_border_color="@color/colorLightPink"
-                app:civ_border_width="3dp" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="@dimen/dp_10"
-                android:src="@drawable/locomo_small_icon" />
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/img_profile"
+                    android:layout_width="90dp"
+                    android:layout_height="90dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="@dimen/dp_20"
+                    android:layout_marginTop="@dimen/dp_40"
+                    android:layout_marginRight="@dimen/dp_15"
+                    android:contentDescription="@string/todo"
+                    android:src="@{model.image!=null ?  model.image.toString():@string/todo,default=@drawable/ic_user}"
+                    app:civ_border_color="@color/colorLightPink"
+                    app:civ_border_width="3dp" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginLeft="@dimen/dp_10"
-                android:layout_marginTop="@dimen/dp_5"
-                android:layout_marginRight="@dimen/dp_10"
-                android:text="@string/your_local_delivery_partner"
-                android:textAlignment="center"
-                android:textColor="@color/colorWhite"
-                android:textSize="@dimen/sp_13"
-                app:font="@{`semibold`}" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginTop="@dimen/dp_60"
+                    android:layout_toRightOf="@+id/img_profile"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="@dimen/dp_10"
+                        android:src="@drawable/locomo_small_icon" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginLeft="@dimen/dp_10"
+                        android:layout_marginTop="@dimen/dp_5"
+                        android:layout_marginRight="@dimen/dp_10"
+                        android:text="@string/your_local_delivery_partner"
+                        android:textAlignment="center"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="@dimen/sp_13"
+                        app:font="@{`semibold`}" />
+                </LinearLayout>
+            </RelativeLayout>
         </LinearLayout>
-
 
         <ScrollView
             android:layout_width="match_parent"

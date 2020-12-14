@@ -70,8 +70,7 @@ class ChatActivity : BaseActivity(),
     override fun initViews() {
         chatBinding = viewDataBinding as ActivityChatBinding
         chatBinding.commonToolBar.imgRight.visibility = View.GONE
-        chatBinding.commonToolBar.imgToolbarText.text =
-            resources.getString(R.string.chat)
+        chatBinding.commonToolBar.imgToolbarText.text = "Help"
         chatList = ArrayList()
         orderId = intent.extras?.get("orderId").toString()
         mMessageAdapter = MessageListAdapter(
@@ -110,7 +109,7 @@ class ChatActivity : BaseActivity(),
                         ).toString()
                     )
                     objectChatHistory.put(
-                        "groupId",   GlobalConstants.ROOM_ID/* sharedPrefClass.getPrefValue(
+                        "groupId", GlobalConstants.ROOM_ID/* sharedPrefClass.getPrefValue(
                             MyApplication.instance,
                             GlobalConstants.ROOM_ID
                         ).toString()*/
@@ -175,6 +174,10 @@ class ChatActivity : BaseActivity(),
                 objectChatHistory.put("message", chatBinding.edittextChatbox.text.toString())
                 objectChatHistory.put("userType", "user")
                 objectChatHistory.put("receiverId", GlobalConstants.ADMIN_ID)
+                objectChatHistory.put(
+                    "orderId",
+                    orderId/*GlobalConstants.ADMIN_ID*/
+                )
                 SocketConnectionManager.getInstance()
                     .socket.emit("sendMessage", objectChatHistory)
 
@@ -357,6 +360,10 @@ class ChatActivity : BaseActivity(),
             objectChatHistory.put("userType", "user")
 
             objectChatHistory.put("receiverId", GlobalConstants.ADMIN_ID)
+            objectChatHistory.put(
+                "orderId",
+                orderId/*GlobalConstants.ADMIN_ID*/
+            )
             SocketConnectionManager.getInstance()
                 .socket.emit("sendMessage", objectChatHistory)
             val objChatHistory = JSONObject()
@@ -425,6 +432,10 @@ class ChatActivity : BaseActivity(),
         objectChatHistory.put("type", 1)
         objectChatHistory.put("message", message)
         objectChatHistory.put("userType", "user")
+        objectChatHistory.put(
+            "orderId",
+            orderId/*GlobalConstants.ADMIN_ID*/
+        )
         SocketConnectionManager.getInstance()
             .socket.emit("sendMessage", objectChatHistory)
         chatBinding!!.boatMessageView.visibility = View.GONE

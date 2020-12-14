@@ -114,5 +114,17 @@ object GlobalConstants {
     var discountApplied = ""
     @JvmStatic
     var isUsableLoyalty = false
+    @JvmStatic
+    val JOBID = "JOBID"
+    @JvmStatic
+    var REFERRAL_POINT_EARN = "0"
+    @JvmStatic
+    var ADMIN_MOB_NUMBER = "+91-9530606006"
+    @JvmStatic
+    var REFERRAL_POINT_GIVE = "0"
+    @JvmStatic
+    var ANDROID_LINK = "https://www.cerebruminfotech.com/"
+    @JvmStatic
+    var IOS_LINK = "https://www.cerebruminfotech.com/"
 
 }

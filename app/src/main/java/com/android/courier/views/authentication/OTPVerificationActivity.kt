@@ -222,7 +222,7 @@ class OTPVerificationActivity : BaseActivity() {
                             "isLogin",
                             true
                         )
-                        showToastSuccess("OTP Verified")
+                        //showToastSuccess("OTP Verified")
                         if (GlobalConstants.VERIFICATION_TYPE.equals("signup")) {
                             callVerifyUserApi()
                         } else {

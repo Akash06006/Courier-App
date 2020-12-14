@@ -22,6 +22,9 @@ class MyApplication : MultiDexApplication() {
         customFontFamily!!.addFont("regular", "Montserrat-Regular_0.ttf")
         customFontFamily!!.addFont("semibold", "Montserrat-Medium_0.ttf")
         customFontFamily!!.addFont("bold", "Montserrat-SemiBold_0.ttf")
+        /*customFontFamily!!.addFont("regular", "OpenSans-Regular.ttf")
+        customFontFamily!!.addFont("semibold", "OpenSans-SemiBold.ttf")
+        customFontFamily!!.addFont("bold", "OpenSans-Bold.ttf")*/
         //val createOrdersInput = CreateOrdersInput()
     }
 

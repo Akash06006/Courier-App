@@ -16,6 +16,7 @@ import android.provider.Settings
 import android.text.TextUtils
 import android.view.View
 import android.view.Window
+import android.view.animation.AnimationUtils
 import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
@@ -92,7 +93,7 @@ OrdersFragment : BaseFragment() {
         if (UtilsFunctions.isNetworkConnected()) {
             // baseActivity.startProgressDialog()
             // orderViewModel.getOrderList(orderType)
-            orderViewModel.cancelReason("reason")
+            // orderViewModel.cancelReason("reason")
         }
         orderViewModel.orderListRes().observe(this,
             Observer<OrdersListResponse> { response->
@@ -108,6 +109,7 @@ OrdersFragment : BaseFragment() {
                                 fragmentOrdersBinding.rvOrders.visibility = View.VISIBLE
                                 //fragmentOrdersBinding.edtSearch.visibility = View.VISIBLE
                                 fragmentOrdersBinding.txtNoRecord.visibility = View.GONE
+                                fragmentOrdersBinding.noRecordAnimation.visibility = View.GONE
                                 fragmentOrdersBinding.llOrderList.visibility = View.VISIBLE
                                 /*if (isActive.equals("false")) {
                                     fragmentOrdersBinding.txtActiveOrders.setText("Total Orders: " + orderList.size)
@@ -119,6 +121,7 @@ OrdersFragment : BaseFragment() {
 
                                 initOrdersAdapter()
                             } else {
+                                fragmentOrdersBinding.noRecordAnimation.visibility = View.VISIBLE
                                 fragmentOrdersBinding.txtNoRecord.visibility = View.VISIBLE
                                 fragmentOrdersBinding.edtSearch.visibility = View.GONE
                                 fragmentOrdersBinding.rvOrders.visibility = View.GONE
@@ -138,12 +141,13 @@ OrdersFragment : BaseFragment() {
                               initVehiclesAdapter()
                               initDeliveryTypeAdapter()*/
                         }
-                        else -> message?.let {
+                        else -> /*message?.let*/ {
+                            fragmentOrdersBinding.noRecordAnimation.visibility = View.VISIBLE
                             fragmentOrdersBinding.txtNoRecord.visibility = View.VISIBLE
                             fragmentOrdersBinding.edtSearch.visibility = View.GONE
                             fragmentOrdersBinding.rvOrders.visibility = View.GONE
                             fragmentOrdersBinding.txtActiveOrders.setText("")
-                            UtilsFunctions.showToastError(it)
+                            //UtilsFunctions.showToastError(it)
                         }
                     }
                 }
@@ -343,6 +347,10 @@ OrdersFragment : BaseFragment() {
                 activity!!,
                 isActive
             )
+        val controller =
+            AnimationUtils.loadLayoutAnimation(activity, R.anim.layout_animation_from_left)
+        fragmentOrdersBinding.rvOrders.setLayoutAnimation(controller);
+        fragmentOrdersBinding.rvOrders.scheduleLayoutAnimation();
         val linearLayoutManager = LinearLayoutManager(activity!!)
         linearLayoutManager.orientation = RecyclerView.VERTICAL
         fragmentOrdersBinding.rvOrders.layoutManager = linearLayoutManager

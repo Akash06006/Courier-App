@@ -2,6 +2,7 @@ package com.android.courier.views
 
 import android.content.Context
 import android.content.Intent
+import android.text.TextUtils
 import androidx.databinding.DataBindingUtil
 import com.android.courier.R
 import com.android.courier.application.MyApplication
@@ -48,15 +49,31 @@ class SplashActivity : BaseActivity() {
         }
 
         sharedPrefClass = SharedPrefClass()
-        val token : String? = "sd"
-
-        if (token != null) {
+        // val token : String? = "sd"
+        GlobalConstants.NOTIFICATION_TOKEN = "" + SharedPrefClass().getPrefValue(
+            MyApplication.instance,
+            GlobalConstants.NOTIFICATION_TOKEN
+        )
+        if (TextUtils.isEmpty(GlobalConstants.NOTIFICATION_TOKEN) || GlobalConstants.NOTIFICATION_TOKEN.equals(
+                "null"
+            )
+        ) {
+            //  token = "sd"
+            GlobalConstants.NOTIFICATION_TOKEN = "sd"
+        }
+        //if (GlobalConstants.NOTIFICATION_TOKEN != null) {
+        sharedPrefClass!!.putObject(
+            applicationContext,
+            GlobalConstants.NOTIFICATION_TOKEN,
+            GlobalConstants.NOTIFICATION_TOKEN
+        )
+        /*if (token != null) {
             sharedPrefClass!!.putObject(
                 applicationContext,
                 GlobalConstants.NOTIFICATION_TOKEN,
                 token
             )
-        }
+        }*/
 
         Timer().schedule(object : TimerTask() {
             override fun run() {

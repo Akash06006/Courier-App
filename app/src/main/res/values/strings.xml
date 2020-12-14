@@ -277,7 +277,7 @@
     <string name="reschedule">Reschedule</string>
 
     <string name="del_boy">Delivery Boy</string>
-    <string name="cancel_reason">Please specify for withdrawing the order</string>
+    <string name="cancel_reason">Please specify a reason for withdrawing the order</string>
     <string name="enter_reason">Enter reason...</string>
     <string name="send">Send</string>
     <string name="done">Done</string>

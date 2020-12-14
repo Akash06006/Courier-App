@@ -1,9 +1,12 @@
 package com.android.courier.model.order
 
+import android.os.Parcel
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import com.google.gson.annotations.Expose
+import java.io.Serializable
 
-class OrdersDetailResponse {
+class OrdersDetailResponse() : Serializable {
     @SerializedName("body")
     @Expose
     var data : Data? = null
@@ -12,7 +15,7 @@ class OrdersDetailResponse {
     var code : Int? = null
 
     /*deliveryOption -> {JsonPrimitive@8505} ""51b1c365-b88b-4ca4-bf01-4361c0a1ee3c""*/
-    class Data {
+    class Data : Serializable {
         @SerializedName("pickupAddress")
         @Expose
         var pickupAddress : PickupAddress? = null
@@ -133,7 +136,7 @@ class OrdersDetailResponse {
 
     }
 
-    class OrderStatus {
+    class OrderStatus : Serializable {
         @SerializedName("statusName")
         @Expose
         var statusName : String? = null
@@ -145,7 +148,7 @@ class OrdersDetailResponse {
         var parentStatus : String? = null
     }
 
-    class PickupAddress {
+    class PickupAddress : Serializable {
         @SerializedName("address")
         @Expose
         var address : String? = null
@@ -164,10 +167,13 @@ class OrdersDetailResponse {
         @SerializedName("time")
         @Expose
         var time : String? = null
+        @SerializedName("isComplete")
+        @Expose
+        var isComplete : String? = null
 
     }
 
-    class VehicleData {
+    class VehicleData : Serializable {
         @SerializedName("icon")
         @Expose
         var icon : String? = null
@@ -186,7 +192,7 @@ class OrdersDetailResponse {
 
     }
 
-    class WeightData {
+    class WeightData : Serializable {
         @SerializedName("icon")
         @Expose
         var icon : String? = null
@@ -204,7 +210,7 @@ class OrdersDetailResponse {
         var price : String? = null
     }
 
-    class DeliveryOptionData {
+    class DeliveryOptionData : Serializable {
         @SerializedName("id")
         @Expose
         var id : String? = null
@@ -220,7 +226,7 @@ class OrdersDetailResponse {
 
     }
 
-    class BannersData {
+    class BannersData : Serializable {
         @SerializedName("url")
         @Expose
         var url : String? = null
@@ -233,7 +239,7 @@ class OrdersDetailResponse {
 
     }
 
-    class AssignedEmployees {
+    class AssignedEmployees : Serializable {
         @SerializedName("id")
         @Expose
         var id : String? = null
@@ -259,4 +265,5 @@ class OrdersDetailResponse {
         @Expose
         var payVia : ArrayList<String>? = null
     }
+
 }

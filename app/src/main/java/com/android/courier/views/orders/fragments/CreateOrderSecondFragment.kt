@@ -152,10 +152,14 @@ CreateOrderSecondFragment : BaseFragment() {
                             }
 
 
-                            MyApplication.createOrdersInput.deliveryCharges = payableAmount
-                            MyApplication.createOrdersInput.totalOrderPrice = payableAmount
-                            MyApplication.createOrdersInput.orderPrice = orderPrice
-                            MyApplication.createOrdersInput.offerPrice = payableAmount
+                            MyApplication.createOrdersInput.deliveryCharges =
+                                response.data?.deliveryFee + ""
+                            MyApplication.createOrdersInput.totalOrderPrice = orderPrice
+                            MyApplication.createOrdersInput.orderPrice = payableAmount
+                            MyApplication.createOrdersInput.offerPrice =
+                                response.data?.discountPrice + ""
+                            MyApplication.createOrdersInput.securityFee =
+                                response.data?.securityFee + ""
                             MyApplication.createOrdersInput.pendingCCharges =
                                 totalCancellationCharges
                             MyApplication.createOrdersInput.cancelOrderIds = cancelOrderIds
@@ -166,7 +170,8 @@ CreateOrderSecondFragment : BaseFragment() {
                                 response.data?.weightFee + "",
                                 response.data?.securityFee + "",
                                 response.data?.discountPrice + "",
-                                totalCancellationCharges, "second"
+                                totalCancellationCharges, "second",
+                                response.data?.deliveryTypeCharges + ""
                             )
                         }
                         else -> message?.let {
@@ -191,6 +196,11 @@ CreateOrderSecondFragment : BaseFragment() {
                 imm.hideSoftInputFromWindow(v.windowToken, 0)
                 MyApplication.createOrdersInput.parcelValue =
                     fragmentCreateOrdersSecondBinding.edtParcelValue.text.toString()
+                fragmentCreateOrdersSecondBinding.edtPromoCode.setText("")
+                MyApplication.createOrdersInput.promoCode = ""
+                fragmentCreateOrdersSecondBinding.btnApplyCoupon.setText("Apply Now")
+                discountApplied = ""
+                GlobalConstants.discountApplied = ""
                 calculatePrice()
                 /* MyApplication.createOrdersInput.pickupAddress?.phoneNumber =
                      fragmentCreateOrdersSecondBinding.edtDelMob.text.toString()*/
@@ -267,6 +277,7 @@ CreateOrderSecondFragment : BaseFragment() {
                             fragmentCreateOrdersSecondBinding.edtPromoCode.isEnabled = false
                             MyApplication.createOrdersInput.promoCode =
                                 fragmentCreateOrdersSecondBinding.edtPromoCode.text.toString()
+
                             calculatePrice()
                         }
                         else -> message?.let {
@@ -319,6 +330,15 @@ CreateOrderSecondFragment : BaseFragment() {
             this, Observer<String>(function =
             fun(it : String?) {
                 when (it) {
+                    "imgParcelValue" -> {
+                        UtilsFunctions.showToastInfo("Info Regarding Insurance/Parcel Value")
+                    }
+                    "imgPaymentInfo" -> {
+                        UtilsFunctions.showToastInfo(
+                            "Amount for your order is to be paid to the Rider directly by means of Cash or Mobile wallets\n" +
+                                    "available with the Rider."
+                        )
+                    }
                     "btnProceed" -> {
                         if (TextUtils.isEmpty(
                                 MyApplication.createOrdersInput.itemName
@@ -440,7 +460,9 @@ CreateOrderSecondFragment : BaseFragment() {
         if (!TextUtils.isEmpty(MyApplication.createOrdersInput.promoCode)) {
             fragmentCreateOrdersSecondBinding.edtPromoCode.setText(MyApplication.createOrdersInput.promoCode)
             fragmentCreateOrdersSecondBinding.btnApplyCoupon.setText("Remove")
+            fragmentCreateOrdersSecondBinding.edtPromoCode.isEnabled = false
         }
+
 
         if (!TextUtils.isEmpty(MyApplication.createOrdersInput.paymentType)) {
             if (MyApplication.createOrdersInput.paymentType.equals("2")) {
@@ -496,6 +518,15 @@ CreateOrderSecondFragment : BaseFragment() {
             fragmentCreateOrdersSecondBinding.rlLoyaltyPoints.visibility =
                 View.GONE
         }
+
+        if (!TextUtils.isEmpty(MyApplication.createOrdersInput.orderId)) {
+            fragmentCreateOrdersSecondBinding.edtPromoCode.isEnabled = false
+            fragmentCreateOrdersSecondBinding.edtPromoCode.setFocusable(false)
+            fragmentCreateOrdersSecondBinding.txtLoyaltyPoints.visibility = View.GONE
+            //fragmentCreateOrdersSecondBinding.edtPromoCode.isEditable = false
+            fragmentCreateOrdersSecondBinding.btnApplyCoupon.isEnabled = false
+            fragmentCreateOrdersSecondBinding.chkLoyalty.isEnabled = false
+        }
         calculatePrice()
     }
 
@@ -506,18 +537,24 @@ CreateOrderSecondFragment : BaseFragment() {
                 MyApplication.createOrdersInput.weight
             ) /*&& !TextUtils.isEmpty(activityCreateOrderBinding.edtParcelValue.text.toString())*/
         ) {
-            val mJsonObject = JsonObject()
-            mJsonObject.addProperty(
-                "parcelValue",
-                MyApplication.createOrdersInput.parcelValue
-            )
             if (MyApplication.createOrdersInput.orderId.equals("null") || TextUtils.isEmpty(
                     MyApplication.createOrdersInput.orderId
                 )
             ) {
-                orderId = ""
+                MyApplication.createOrdersInput.orderId = ""
             }
-            mJsonObject.addProperty("orderId", orderId)
+            if (MyApplication.createOrdersInput.parcelValue.equals("null") || TextUtils.isEmpty(
+                    MyApplication.createOrdersInput.parcelValue
+                )
+            ) {
+                MyApplication.createOrdersInput.parcelValue = ""
+            }
+            val mJsonObject = JsonObject()
+            mJsonObject.addProperty(
+                "parcelValue",
+                MyApplication.createOrdersInput.parcelValue/* activityCreateOrderBinding.edtParcelValue.text.toString()*/
+            )
+            mJsonObject.addProperty("orderId", MyApplication.createOrdersInput.orderId)
             mJsonObject.addProperty("vehicleId", "9c9d2c0e-02d6-4095-a0b4-b267b736dd65")
             /*mJsonObject.addProperty("deliveryId", GlobalConstants.DELIVERY_TYPE)
             mJsonObject.addProperty("weightId", GlobalConstants.WEIGHT_ID)
@@ -546,7 +583,7 @@ CreateOrderSecondFragment : BaseFragment() {
         securityFee : String,
         couponDeduction : String,
         totalCancellationCharges : String,
-        from : String
+        from : String, deliveryTypeCharges : String?
     ) {
         /*if (from.equals("first")) {
             fragmentCreateOrdersSecondBinding.viewLine1.setAlpha(1f)
@@ -578,7 +615,7 @@ CreateOrderSecondFragment : BaseFragment() {
             fragmentCreateOrdersSecondBinding.rlWeight.visibility = View.GONE
             fragmentCreateOrdersSecondBinding.view2.visibility = View.GONE
         }
-        if (!securityFee.equals("0") && !securityFee.equals("")) {
+        if (!securityFee.equals("0") && !securityFee.equals("") && !securityFee.equals("null")) {
             fragmentCreateOrdersSecondBinding.txtSecurity.text = "₹ " + securityFee
             fragmentCreateOrdersSecondBinding.view3.visibility = View.VISIBLE
             fragmentCreateOrdersSecondBinding.rlSecurity.visibility = View.VISIBLE
@@ -601,6 +638,18 @@ CreateOrderSecondFragment : BaseFragment() {
         } else {
             fragmentCreateOrdersSecondBinding.rlCouponDeduction.visibility = View.GONE
         }
+
+        if (!deliveryTypeCharges.equals("0") && !deliveryTypeCharges.equals("")) {
+            fragmentCreateOrdersSecondBinding.view5.visibility = View.VISIBLE
+            fragmentCreateOrdersSecondBinding.txtDeliveryTypeCharges.text =
+                "₹ " + deliveryTypeCharges
+            fragmentCreateOrdersSecondBinding.rlDeliveryTypeCharges.visibility = View.VISIBLE
+        } else {
+            fragmentCreateOrdersSecondBinding.rlDeliveryTypeCharges.visibility = View.GONE
+            fragmentCreateOrdersSecondBinding.view5.visibility = View.GONE
+        }
+
+
 
         fragmentCreateOrdersSecondBinding.txtFare.text = "₹ " + payableAmount
     }

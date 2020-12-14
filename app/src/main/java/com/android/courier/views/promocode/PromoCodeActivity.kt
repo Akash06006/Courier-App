@@ -62,6 +62,7 @@ class PromoCodeActivity : BaseActivity() {
                         response.code == 200 -> {
                             promoList.addAll(response.data!!)
                             promoCodeBinding.rvPromo.visibility = View.VISIBLE
+                            promoCodeBinding.noRecordAnimation.visibility = View.GONE
                             promoCodeBinding.tvNoRecord.visibility = View.GONE
                             initRecyclerView()
                         }
@@ -69,6 +70,7 @@ class PromoCodeActivity : BaseActivity() {
                             UtilsFunctions.showToastError(it)
                             promoCodeBinding.rvPromo.visibility = View.GONE
                             promoCodeBinding.tvNoRecord.visibility = View.VISIBLE
+                            promoCodeBinding.noRecordAnimation.visibility = View.VISIBLE
                         }
                     }
 
@@ -93,6 +95,10 @@ class PromoCodeActivity : BaseActivity() {
         val linearLayoutManager = LinearLayoutManager(this)
         //val gridLayoutManager = GridLayoutManager(this, 2)
         //promoCodeBinding.rvFavorite.layoutManager = gridLayoutManager
+        val controller =
+            AnimationUtils.loadLayoutAnimation(this, R.anim.layout_animation_from_left)
+        promoCodeBinding.rvPromo.setLayoutAnimation(controller);
+        promoCodeBinding.rvPromo.scheduleLayoutAnimation();
         promoCodeBinding.rvPromo.setHasFixedSize(true)
         linearLayoutManager.orientation = RecyclerView.VERTICAL
         promoCodeBinding.rvPromo.layoutManager = linearLayoutManager

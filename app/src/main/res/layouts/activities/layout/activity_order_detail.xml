@@ -24,7 +24,10 @@
                 android:id="@+id/toolbarCommon"
                 layout="@layout/common_toolbar_back"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/dp_50"
+                android:layout_height="70dp"
+                android:layout_marginTop="-2dp"
+                android:layout_marginRight="-2dp"
+                android:onClick="@{(v) -> orderViewModel.clickListener(v)}"
                 android:visibility="visible" />
 
         <ScrollView
@@ -39,14 +42,28 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:orientation="vertical">
-
-                    <fragment
-                            android:id="@+id/map_view"
-                            android:name="com.google.android.gms.maps.SupportMapFragment"
+                    <!--ic_navigate-->
+                    <RelativeLayout
                             android:layout_width="match_parent"
-                            android:layout_height="250dp"
-                            android:background="#ffffff" />
+                            android:layout_height="250dp">
 
+                        <fragment
+                                android:id="@+id/map_view"
+                                android:name="com.google.android.gms.maps.SupportMapFragment"
+                                android:layout_width="match_parent"
+                                android:layout_height="250dp"
+                                android:background="#ffffff" />
+
+                        <ImageView
+                                android:id="@+id/imgNavigate"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentRight="true"
+                                android:layout_margin="5dp"
+                                android:onClick="@{(v) -> orderViewModel.clickListener(v)}"
+                                android:src="@drawable/ic_navigate"
+                                android:visibility="gone" />
+                    </RelativeLayout>
                     <!--  <androidx.cardview.widget.CardView
                               android:layout_width="match_parent"
                               android:layout_height="wrap_content"
@@ -105,16 +122,17 @@
                                     android:id="@+id/txtDelBoyName"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
+                                    android:layout_centerVertical="true"
                                     android:layout_marginTop="5dp"
                                     android:layout_marginRight="5dp"
                                     android:layout_toLeftOf="@+id/llCalls"
                                     android:layout_toRightOf="@+id/imgDriver"
-
                                     android:gravity="left"
                                     android:text="Akash Gharu"
                                     android:textColor="@color/colorWhite"
-                                    android:textSize="16sp"
+                                    android:textSize="17sp"
                                     android:textStyle="bold"
+
                                     app:font="@{`bold`}" />
 
                             <TextView
@@ -130,6 +148,7 @@
                                     android:textColor="@color/tabColor"
                                     android:textSize="12sp"
                                     android:textStyle="bold"
+                                    android:visibility="gone"
                                     app:font="@{`bold`}" />
 
                             <LinearLayout
@@ -271,13 +290,14 @@
 
                                     <androidx.recyclerview.widget.RecyclerView
                                             android:id="@+id/rvPaymentOptions"
-                                            android:layout_width="120dp"
+                                            android:layout_width="190dp"
+                                            android:gravity="right"
                                             android:layout_height="wrap_content"
                                             android:layout_alignParentRight="true"
                                             android:layout_marginLeft="@dimen/dp_5"
                                             android:layout_marginTop="@dimen/dp_5"
                                             android:layout_marginRight="@dimen/dp_5"
-                                            android:maxWidth="120dp"
+                                            android:maxWidth="190dp"
                                             android:padding="@dimen/dp_5"
                                             android:visibility="visible" />
 
@@ -352,14 +372,17 @@
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
                                             android:layout_alignParentRight="true"
-                                            android:layout_margin="5dp"
-                                            android:background="@drawable/shape_round_corner_primary"
+                                            android:layout_marginTop="5dp"
+                                            android:layout_marginRight="10dp"
+                                            android:layout_marginBottom="5dp"
                                             android:gravity="center"
-                                            android:minWidth="80dp"
                                             android:padding="5dp"
                                             android:text="100"
                                             android:textAllCaps="false"
-                                            android:textColor="@color/colorWhite" />
+                                            android:textColor="@color/colorPrimary"
+                                            android:textSize="16sp"
+                                            android:textStyle="bold"
+                                            app:font="@{`bold`}" />
                                 </RelativeLayout>
 
                                 <View

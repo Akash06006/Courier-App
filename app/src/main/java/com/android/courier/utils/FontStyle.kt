@@ -5,15 +5,14 @@ import android.util.Log
 import com.android.courier.application.MyApplication
 import java.util.*
 
-//* Created by Saira on 03/07/2019.
 class FontStyle {
     private var fontMap = HashMap<String, String>()
 
-    fun addFont(alias: String, fontName: String) {
+    fun addFont(alias : String, fontName : String) {
         fontMap[alias] = fontName
     }
 
-    fun getFont(alias: String): Typeface? {
+    fun getFont(alias : String) : Typeface? {
         val fontFilename = fontMap[alias]
         return if (fontFilename == null) {
             Log.e("", "Font not available with name $alias")
@@ -24,8 +23,8 @@ class FontStyle {
     }
 
     companion object {
-        private var customFontFamily: FontStyle? = null
-        val instance: FontStyle
+        private var customFontFamily : FontStyle? = null
+        val instance : FontStyle
             get() {
                 if (customFontFamily == null)
                     customFontFamily = FontStyle()

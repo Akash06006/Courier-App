@@ -38,9 +38,15 @@ class Body {
     @SerializedName("discountPrice")
     @Expose
     var discountPrice : String? = null
+    @SerializedName("deliveryTypeCharges")
+    @Expose
+    var deliveryTypeCharges : String? = null
+}
 
-
-
+class DeliveryTypeCharges {
+    @SerializedName("price")
+    @Expose
+    var price : String? = null
 }
 
 class LoyalityData {

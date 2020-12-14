@@ -318,8 +318,14 @@ class SignupActivity : BaseActivity() {
                                 mJsonObject.addProperty("phoneNumber", phone)
                                 mJsonObject.addProperty("email", email)
                                 // mJsonObject.addProperty("password", password)
-                                mJsonObject.addProperty("isSocial", isSocial)
-                                mJsonObject.addProperty("deviceToken", "deivce_token")
+                                mJsonObject.addProperty(
+                                    "isSocial",
+                                    isSocial
+                                )
+                                mJsonObject.addProperty(
+                                    "deviceToken",
+                                    GlobalConstants.NOTIFICATION_TOKEN
+                                )
                                 mJsonObject.addProperty("platform", "android")
                                 mJsonObject.addProperty("referralCode", referralCode)
 

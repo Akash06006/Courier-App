@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="com.android.courier.common.BindingUtils" />
+
+        <!--<variable
+            name="trackingViewModel"
+            type="com.example.services.viewmodels.tracking.TrackingViewModel" />
+-->
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".view.home1.TrackingFragment">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <fragment
+                android:id="@+id/map_view"
+                android:name="com.google.android.gms.maps.SupportMapFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/common_tool_bar"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <Button
+                android:id="@+id/btn_clear"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_40"
+                android:layout_alignParentBottom="true"
+                android:layout_gravity="center"
+                android:layout_marginLeft="@dimen/dp_10"
+                android:layout_marginRight="@dimen/dp_10"
+                android:layout_marginBottom="@dimen/dp_20"
+                android:elevation="@dimen/dp_10"
+                android:textAllCaps="true"
+                android:visibility="gone" />
+
+            <!--<TextView-->
+            <!--android:id="@+id/txt_average"-->
+            <!--android:text=""-->
+            <!--android:background="@drawable/round_button_layout"-->
+            <!--app:font="@{`regular`}"-->
+            <!--android:layout_margin="@dimen/dp_15"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:gravity="center"-->
+            <!--android:textSize="@dimen/sp_16"-->
+            <!--android:maxLines="3"-->
+            <!--android:textColor="@color/colorWhite"-->
+            <!--android:layout_width="@dimen/dp_130"-->
+            <!--android:layout_height="wrap_content" />-->
+
+            <!--<TextView-->
+            <!--android:id="@+id/txt_speed"-->
+            <!--android:text=""-->
+            <!--android:background="@drawable/round_button_layout"-->
+            <!--app:font="@{`regular`}"-->
+            <!--android:layout_margin="@dimen/dp_15"-->
+            <!--android:gravity="center"-->
+            <!--android:textSize="@dimen/sp_16"-->
+            <!--android:maxLines="3"-->
+            <!--android:textColor="@color/colorWhite"-->
+            <!--android:layout_width="@dimen/dp_130"-->
+            <!--android:layout_height="wrap_content" />-->
+
+            <!--<Button-->
+            <!--android:id="@+id/stop_ride"-->
+            <!--android:textColor="@color/colorWhite"-->
+            <!--android:layout_centerHorizontal="true"-->
+            <!--android:layout_alignParentBottom="true"-->
+            <!--android:layout_marginBottom="@dimen/dp_100"-->
+            <!--android:background="@drawable/stop_ride"-->
+            <!--android:text="@string/stop_ride"-->
+            <!--android:textAllCaps="false"-->
+            <!--android:maxLines="2"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content" />-->
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+</layout>

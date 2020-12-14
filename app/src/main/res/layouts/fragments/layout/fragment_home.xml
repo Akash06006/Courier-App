@@ -40,7 +40,6 @@
                     android:contentDescription="@string/todo"
                     android:onClick="@{(v) -> homeViewModel.clickListener(v)}"
                     android:padding="@dimen/dp_15"
-                    android:rotation="-180"
                     android:src="@drawable/ic_arrow_forward"
                     android:tint="@color/colorWhite" />
 

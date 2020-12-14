@@ -36,6 +36,9 @@ class OrdersListResponse {
         @SerializedName("orderStatus")
         @Expose
         var orderStatus : String? = null
+        @SerializedName("riderStatus")
+        @Expose
+        var riderStatus : String? = null
         @SerializedName("id")
         @Expose
         var id : String? = null

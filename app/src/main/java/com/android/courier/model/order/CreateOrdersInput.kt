@@ -103,6 +103,9 @@ class CreateOrdersInput {
     @SerializedName("offerPrice")
     @Expose
     var offerPrice : String? = null
+    @SerializedName("securityFee")
+    @Expose
+    var securityFee : String? = null
     @SerializedName("notifyRecipient")
     @Expose
     var notifyRecipient : String? = null

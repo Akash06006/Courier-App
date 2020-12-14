@@ -24,7 +24,46 @@ class ListsResponse {
         @SerializedName("bannersData")
         @Expose
         var bannersData : ArrayList<BannersData>? = null
+        @SerializedName("completedorder")
+        @Expose
+        var completedorder : CompletedOrder? = null
+        @SerializedName("referredToPoint")
+        @Expose
+        var referredToPoint : String? = null
+        @SerializedName("referredByPoint")
+        @Expose
+        var referredByPoint : String? = null
+        @SerializedName("adminNumber")
+        @Expose
+        var adminNumber : String? = null
+        @SerializedName("androidLink")
+        @Expose
+        var androidLink : String? = null
+        @SerializedName("iosLink")
+        @Expose
+        var iosLink : String? = null
 
+    }/**/
+
+    inner class CompletedOrder {
+        @SerializedName("empId")
+        @Expose
+        var empId : String? = null
+        @SerializedName("orderId")
+        @Expose
+        var orderId : String? = null
+        @SerializedName("firstName")
+        @Expose
+        var firstName : String? = null
+        @SerializedName("lastName")
+        @Expose
+        var lastName : String? = null
+        @SerializedName("image")
+        @Expose
+        var image : String? = null
+        @SerializedName("companyId")
+        @Expose
+        var companyId : String? = null
     }
 
     class VehicleData {
@@ -96,7 +135,6 @@ class ListsResponse {
         @SerializedName("type")
         @Expose
         var type : String? = null
-
 
     }
 

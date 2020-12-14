@@ -71,8 +71,7 @@ class DriverChatActivity : BaseActivity(),
     override fun initViews() {
         chatBinding = viewDataBinding as ActivityChatBinding
         chatBinding.commonToolBar.imgRight.visibility = View.GONE
-        chatBinding.commonToolBar.imgToolbarText.text =
-            resources.getString(R.string.chat)
+        chatBinding.commonToolBar.imgToolbarText.text = "Chat with Rider"
         chatList = ArrayList()
         orderId = intent.extras?.get("orderId").toString()
         driverId = intent.extras?.get("driverId").toString()
@@ -102,6 +101,7 @@ class DriverChatActivity : BaseActivity(),
                 val data = args[0] as JSONObject
                 try {
                     val roomId = data.getString("groupId")
+                    GlobalConstants.ROOM_ID = roomId
                     sharedPrefClass.putObject(this, GlobalConstants.ROOM_ID, roomId)
                     val objectChatHistory = JSONObject()
                     objectChatHistory.put(
@@ -114,13 +114,13 @@ class DriverChatActivity : BaseActivity(),
                         "userType", "user"
                     )
                     objectChatHistory.put(
-                        "orderId", "b21bc840-b682-4d84-a818-aa939760aea4"
+                        "orderId", orderId
                     )
                     objectChatHistory.put(
-                        "groupId", sharedPrefClass.getPrefValue(
+                        "groupId", GlobalConstants.ROOM_ID  /*sharedPrefClass.getPrefValue(
                             MyApplication.instance,
                             GlobalConstants.ROOM_ID
-                        ).toString()
+                        ).toString()*/
                     )
                     SocketConnectionManager.getInstance()
                         .socket.emit(
@@ -172,10 +172,10 @@ class DriverChatActivity : BaseActivity(),
                     ).toString()
                 )
                 objectChatHistory.put(
-                    "groupId", sharedPrefClass.getPrefValue(
+                    "groupId", GlobalConstants.ROOM_ID /*sharedPrefClass.getPrefValue(
                         MyApplication.instance,
                         GlobalConstants.ROOM_ID
-                    ).toString()
+                    ).toString()*/
                 )
                 objectChatHistory.put("type", 1)
                 objectChatHistory.put("message", chatBinding.edittextChatbox.text.toString())
@@ -183,6 +183,10 @@ class DriverChatActivity : BaseActivity(),
                 objectChatHistory.put(
                     "receiverId",
                     driverId/*GlobalConstants.ADMIN_ID*/
+                )
+                objectChatHistory.put(
+                    "orderId",
+                    orderId/*GlobalConstants.ADMIN_ID*/
                 )
                 SocketConnectionManager.getInstance()
                     .socket.emit("sendMessageUser", objectChatHistory)
@@ -221,6 +225,55 @@ class DriverChatActivity : BaseActivity(),
         runOnUiThread {
             Toast.makeText(this, "error", Toast.LENGTH_SHORT).show()
         }
+        /*try {
+            val socketConnectionManager : SocketConnectionManager =
+                SocketConnectionManager.getInstance()
+            socketConnectionManager.createConnection(
+                this,
+                HashMap<String, Emitter.Listener>()
+            )
+        } catch (e : URISyntaxException) {
+            e.printStackTrace()
+        }
+        //do heavy work on a background thread
+        SocketConnectionManager.getInstance()
+            .addEventListener("joinRoomUser") { args->
+                val data = args[0] as JSONObject
+                try {
+                    val roomId = data.getString("groupId")
+                    sharedPrefClass.putObject(this, GlobalConstants.ROOM_ID, roomId)
+                    val objectChatHistory = JSONObject()
+                    objectChatHistory.put(
+                        "authToken", sharedPrefClass.getPrefValue(
+                            MyApplication.instance,
+                            GlobalConstants.ACCESS_TOKEN
+                        ).toString()
+                    )
+                    objectChatHistory.put(
+                        "userType", "user"
+                    )
+                    objectChatHistory.put(
+                        "orderId", orderId
+                    )
+                    objectChatHistory.put(
+                        "groupId", sharedPrefClass.getPrefValue(
+                            MyApplication.instance,
+                            GlobalConstants.ROOM_ID
+                        ).toString()
+                    )
+                    SocketConnectionManager.getInstance()
+                        .socket.emit(
+                        "chatHistoryUser",
+                        objectChatHistory
+                    )
+                    Log.e("Socket", "Room join")
+
+                } catch (e : JSONException) {
+                }
+                runOnUiThread {
+                    // Toast.makeText(this, "roomJoined", Toast.LENGTH_SHORT).show()
+                }
+            }*/
     }
 
     override fun onConnected() {
@@ -241,7 +294,7 @@ class DriverChatActivity : BaseActivity(),
                 "userType", "user"
             )
             objectCreateRoom.put(
-                "orderId", "b21bc840-b682-4d84-a818-aa939760aea4"
+                "orderId", orderId
             )
             //objectCreateRoom.put("orderId", orderId)
             SocketConnectionManager.getInstance()
@@ -266,10 +319,10 @@ class DriverChatActivity : BaseActivity(),
             ).toString()
         )
         objectChatHistory.put(
-            "groupId", sharedPrefClass.getPrefValue(
+            "groupId", GlobalConstants.ROOM_ID /*sharedPrefClass.getPrefValue(
                 MyApplication.instance,
                 GlobalConstants.ROOM_ID
-            ).toString()
+            ).toString()*/
         )
         SocketConnectionManager.getInstance()
             .socket.emit("leaveRoom", objectChatHistory)
@@ -363,10 +416,10 @@ class DriverChatActivity : BaseActivity(),
                 ).toString()
             )
             objectChatHistory.put(
-                "groupId", sharedPrefClass.getPrefValue(
+                "groupId", GlobalConstants.ROOM_ID /*sharedPrefClass.getPrefValue(
                     MyApplication.instance,
                     GlobalConstants.ROOM_ID
-                ).toString()
+                ).toString()*/
             )
             objectChatHistory.put("type", 2)
             objectChatHistory.put("media", image)
@@ -376,6 +429,10 @@ class DriverChatActivity : BaseActivity(),
             objectChatHistory.put(
                 "receiverId",
                 driverId/*GlobalConstants.ADMIN_ID*/
+            )
+            objectChatHistory.put(
+                "orderId",
+                orderId/*GlobalConstants.ADMIN_ID*/
             )
             SocketConnectionManager.getInstance()
                 .socket.emit("sendMessageUser", objectChatHistory)
@@ -387,16 +444,16 @@ class DriverChatActivity : BaseActivity(),
                 ).toString()
             )
             objChatHistory.put(
-                "groupId", sharedPrefClass.getPrefValue(
+                "groupId", GlobalConstants.ROOM_ID /*sharedPrefClass.getPrefValue(
                     MyApplication.instance,
                     GlobalConstants.ROOM_ID
-                ).toString()
+                ).toString()*/
             )
-           /* SocketConnectionManager.getInstance()
-                .socket.emit(
-                "chatHistory",
-                objChatHistory
-            )*/
+            /* SocketConnectionManager.getInstance()
+                 .socket.emit(
+                 "chatHistory",
+                 objChatHistory
+             )*/
             Log.e("Socket", "Image Sent")
             dialog.dismiss()
         }
@@ -437,10 +494,10 @@ class DriverChatActivity : BaseActivity(),
             ).toString()
         )
         objectChatHistory.put(
-            "groupId", sharedPrefClass.getPrefValue(
+            "groupId", GlobalConstants.ROOM_ID /*sharedPrefClass.getPrefValue(
                 MyApplication.instance,
                 GlobalConstants.ROOM_ID
-            ).toString()
+            ).toString()*/
         )
         objectChatHistory.put("type", 1)
         objectChatHistory.put("message", message)

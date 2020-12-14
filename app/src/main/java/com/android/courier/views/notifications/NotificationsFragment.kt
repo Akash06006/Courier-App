@@ -1,6 +1,7 @@
 package com.android.courier.views.notifications
 
 import android.view.View
+import android.view.animation.AnimationUtils
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -60,14 +61,19 @@ NotificationsFragment : BaseFragment() {
                             if (notificationList.size > 0) {
                                 initNotificationsAdapter()
                                 fragmentNotificationsBinding.txtNoRecord.visibility = View.GONE
+                                fragmentNotificationsBinding.noRecordAnimation.visibility =
+                                    View.GONE
                             } else {
                                 fragmentNotificationsBinding.txtNoRecord.visibility = View.VISIBLE
+                                fragmentNotificationsBinding.noRecordAnimation.visibility =
+                                    View.VISIBLE
                             }
 
                         }
                         else -> message?.let {
                             UtilsFunctions.showToastError(it)
                             fragmentNotificationsBinding.txtNoRecord.visibility = View.VISIBLE
+                            fragmentNotificationsBinding.noRecordAnimation.visibility = View.VISIBLE
                         }
                     }
                 }
@@ -98,6 +104,10 @@ NotificationsFragment : BaseFragment() {
                 notificationList,
                 activity!!
             )
+        val controller =
+            AnimationUtils.loadLayoutAnimation(activity, R.anim.layout_animation_from_left)
+        fragmentNotificationsBinding.rvOrders.setLayoutAnimation(controller);
+        fragmentNotificationsBinding.rvOrders.scheduleLayoutAnimation();
         val linearLayoutManager = LinearLayoutManager(activity!!)
         linearLayoutManager.orientation = RecyclerView.VERTICAL
         fragmentNotificationsBinding.rvOrders.layoutManager = linearLayoutManager

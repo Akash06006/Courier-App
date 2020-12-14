@@ -6,8 +6,11 @@ package com.android.courier.api
 
 
 import android.content.Intent
-import androidx.annotation.NonNull
+import android.os.Handler
+import android.os.Looper
 import android.text.TextUtils
+import android.widget.Toast
+import androidx.annotation.NonNull
 import com.android.courier.application.MyApplication
 import com.android.courier.common.UtilsFunctions
 import com.android.courier.constants.GlobalConstants
@@ -75,17 +78,30 @@ object ApiClient {
                     val request = builder.build()
                     val response = chain.proceed(request)
                     return if (response.code() == 401) {
+/*                        SharedPrefClass().putObject(
+                            MyApplication.instance,
+                            "isLogin",
+                            false
+                        )*/
                         val i = Intent(
                             MyApplication.instance.applicationContext,
                             LoginActivity::class.java
                         )
                         i.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                         MyApplication.instance.applicationContext.startActivity(i)
+                        //MyApplication.instance.applicationContext.runOnUiThread(Runnable { })
+                       /* Handler(Looper.getMainLooper()).post(Runnable {
+                            // code goes here
+                            Toast.makeText(
+                                MyApplication.instance,
+                                response.message(),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        })*/
                         response
                     } else response
                 }
             }
-
 
 
             if (!httpClient.interceptors().contains(interceptor)) {

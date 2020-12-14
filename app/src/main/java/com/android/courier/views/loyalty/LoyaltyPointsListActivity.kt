@@ -2,6 +2,7 @@ package com.android.courier.views.refer
 
 import android.app.Dialog
 import android.view.View
+import android.view.animation.AnimationUtils
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -23,7 +24,7 @@ class LoyaltyPointsListActivity : BaseActivity() {
     private var confirmationDialog : Dialog? = null
     private var mDialogClass = DialogClass()
     private val mJsonObject = JsonObject()
-    var notificationList = ArrayList<User>()
+    var pointsList = ArrayList<User>()
     override fun getLayoutId() : Int {
         return R.layout.activity_loyalty
     }
@@ -47,10 +48,10 @@ class LoyaltyPointsListActivity : BaseActivity() {
                     val message = response.message
                     when {
                         response.code == 200 -> {
-                            notificationList.clear()
+                            pointsList.clear()
 
-                            notificationList.addAll(response.data?.users!!)
-                            if (notificationList.size > 0) {
+                            pointsList.addAll(response.data?.users!!)
+                            if (pointsList.size > 0) {
                                 initLoyaltyAdapter()
                                 loyaltyBinding.llPoints.visibility = View.VISIBLE
                                 if (response.data?.totalPoints!!.toInt() > 0) {
@@ -58,16 +59,18 @@ class LoyaltyPointsListActivity : BaseActivity() {
                                 } else {
                                     loyaltyBinding.txtPoints.text = "0"
                                 }
-
+                                loyaltyBinding.noRecordAnimation.visibility = View.GONE
                                 loyaltyBinding.txtNoRecord.visibility = View.GONE
                             } else {
                                 loyaltyBinding.llPoints.visibility = View.GONE
+                                loyaltyBinding.noRecordAnimation.visibility = View.VISIBLE
                                 loyaltyBinding.txtNoRecord.visibility = View.VISIBLE
                             }
 
                         }
                         else -> message?.let {
                             UtilsFunctions.showToastError(it)
+                            loyaltyBinding.noRecordAnimation.visibility = View.VISIBLE
                             loyaltyBinding.txtNoRecord.visibility = View.VISIBLE
                             loyaltyBinding.llPoints.visibility = View.GONE
                         }
@@ -91,9 +94,13 @@ class LoyaltyPointsListActivity : BaseActivity() {
         val ordersAdapter =
             LoyaltyListAdapter(
                 this@LoyaltyPointsListActivity,
-                notificationList,
+                pointsList,
                 this
             )
+        val controller =
+            AnimationUtils.loadLayoutAnimation(this, R.anim.layout_animation_from_left)
+        loyaltyBinding.rvLoyalty.setLayoutAnimation(controller);
+        loyaltyBinding.rvLoyalty.scheduleLayoutAnimation();
         val linearLayoutManager = LinearLayoutManager(this)
         linearLayoutManager.orientation = RecyclerView.VERTICAL
         loyaltyBinding.rvLoyalty.layoutManager = linearLayoutManager

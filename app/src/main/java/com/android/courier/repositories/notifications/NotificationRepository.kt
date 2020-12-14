@@ -35,22 +35,28 @@ class NotificationRepository {
         val mApiService = ApiService<JsonObject>()
         mApiService.get(
             object : ApiResponse<JsonObject> {
+                private var loginResponse : Any? = null
+
                 override fun onResponse(mResponse : Response<JsonObject>) {
-                    val loginResponse = if (mResponse.body() != null)
+                    loginResponse = if (mResponse.body() != null)
                         gson.fromJson<NotificationsResponse>(
                             "" + mResponse.body(),
                             NotificationsResponse::class.java
                         )
                     else {
-                        gson.fromJson<NotificationsResponse>(
-                            mResponse.errorBody()!!.charStream(),
-                            NotificationsResponse::class.java
-                        )
+                        if (mResponse.code() == 401) {
+                           // UtilsFunctions.showToastError(mResponse.message())
+                            paymentStatus!!.postValue(null)
+                        } else {
+                            gson.fromJson<NotificationsResponse>(
+                                mResponse.errorBody()!!.charStream(),
+                                NotificationsResponse::class.java
+                            )
+
+                        }
+
                     }
-
-
-                    paymentStatus!!.postValue(loginResponse)
-
+                    paymentStatus!!.postValue(loginResponse as NotificationsResponse?)
                 }
 
                 override fun onError(mKey : String) {

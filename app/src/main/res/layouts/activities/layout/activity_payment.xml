@@ -16,7 +16,7 @@
                 android:id="@+id/common_tool_bar"
                 layout="@layout/common_toolbar_back"
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
+                android:layout_height="70dp"
                 android:onClick="@{(v) -> addressViewModel.clickListener(v)}" />
 
         <LinearLayout

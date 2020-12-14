@@ -44,5 +44,11 @@ class Data {
     @SerializedName("updatedAt")
     @Expose
     var updatedAt : String? = null
+    @SerializedName("notificationType")
+    @Expose
+    var notificationType : String? = null
+    @SerializedName("senderId")
+    @Expose
+    var senderId : String? = null
 
 }

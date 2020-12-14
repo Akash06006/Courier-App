@@ -52,6 +52,12 @@ class LoginActivity : BaseActivity() {
         if (!checkAndRequestPermissions()) {
             checkAndRequestPermissions()
         }
+        val token = SharedPrefClass().getPrefValue(
+            MyApplication.instance,
+            GlobalConstants.NOTIFICATION_TOKEN
+        )
+
+
         activityLoginbinding =
             viewDataBinding as ActivityLoginBinding //DataBindingUtil.setContentView(this, R.layout.activity_login)
         loginViewModel = ViewModelProviders.of(this).get(LoginViewModel::class.java)
@@ -224,7 +230,10 @@ class LoginActivity : BaseActivity() {
                                 //mJsonObject.addProperty("password", password)
                                 mJsonObject.addProperty("isSocial", false)
                                 mJsonObject.addProperty("socialId", "")
-                                mJsonObject.addProperty("deviceToken", "deivce_token")
+                                mJsonObject.addProperty(
+                                    "deviceToken",
+                                    GlobalConstants.NOTIFICATION_TOKEN
+                                )
                                 mJsonObject.addProperty("platform", "android")
                                 if (UtilsFunctions.isNetworkConnected()) {
                                     loginViewModel.callLoginApi(mJsonObject)

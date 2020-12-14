@@ -2,6 +2,7 @@ package com.android.courier.views.home
 
 import android.app.Dialog
 import android.content.Intent
+import android.text.TextUtils
 import android.view.Gravity
 import android.view.View
 import androidx.core.view.GravityCompat
@@ -22,6 +23,7 @@ import com.android.courier.utils.DialogssInterface
 import com.android.courier.viewmodels.home.DashboardViewModel
 import com.android.courier.views.authentication.LoginActivity
 import com.android.courier.views.chat.ChatActivity
+import com.android.courier.views.contactus.ContactUsActivity
 import com.android.courier.views.home.fragments.HomeFragment
 import com.android.courier.views.notifications.NotificationsFragment
 import com.android.courier.views.orders.CreateOrderActivty
@@ -76,6 +78,7 @@ class LandingActivty : BaseActivity(), DialogssInterface {
         navigationView = landingBinding!!.navView
         // navigationView!!.alpha = 0.9f
         drawer = landingBinding!!.drawerLayout
+        drawer!!.closeDrawer(Gravity.LEFT)
         // ic_profile
         val userId = SharedPrefClass().getPrefValue(
             MyApplication.instance.applicationContext,
@@ -109,8 +112,33 @@ class LandingActivty : BaseActivity(), DialogssInterface {
         //val contacts : List<Contact> = Contacts.getQuery().find()
         landingBinding.tvName.text = name.toString()
         landingBinding.tvEmail.text = email.toString()
-        val fragment = HomeFragment()
-        callFragments(fragment, supportFragmentManager, false, "send_data", "")
+        var from = ""
+        if (intent.hasExtra("from")) {
+            from = "" + intent.extras.get("from")
+        }
+        if (!TextUtils.isEmpty(from) && from.equals("noti")) {
+            landingBinding!!.tablayout!!.getTabAt(0)!!
+                .setIcon(resources.getDrawable(R.drawable.ic_tab_home));
+            landingBinding!!.tablayout!!.getTabAt(1)!!
+                .setIcon(resources.getDrawable(R.drawable.ic_tab_order));
+            landingBinding!!.tablayout!!.getTabAt(2)!!
+                .setIcon(resources.getDrawable(R.drawable.ic_tab_create));
+            landingBinding!!.tablayout!!.getTabAt(3)!!
+                .setIcon(resources.getDrawable(R.drawable.ic_tab_notification));
+            landingBinding!!.tablayout!!.getTabAt(4)!!
+                .setIcon(resources.getDrawable(R.drawable.ic_tab_user));
+            landingBinding!!.tablayout.getTabAt(3)!!
+                .setIcon(resources.getDrawable(R.drawable.ic_tab_notification_selected));
+            pos = 2
+            //showToastSuccess("Coming Soon")
+            landingBinding!!.tablayout.getTabAt(3)?.select()
+            val fragment = NotificationsFragment()
+            callFragments(fragment, supportFragmentManager, false, "send_data", "")
+        } else {
+            val fragment = HomeFragment()
+            callFragments(fragment, supportFragmentManager, false, "send_data", "")
+        }
+
         landingBinding!!.tablayout.addOnTabSelectedListener(object :
             TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab : TabLayout.Tab?) {
@@ -261,7 +289,7 @@ class LandingActivty : BaseActivity(), DialogssInterface {
 
                     }
                     "tv_nav_support" -> {
-                        val intent = Intent(this, ChatActivity::class.java)
+                        val intent = Intent(this, ContactUsActivity::class.java)
                         startActivity(intent)
                         // showToastSuccess("Coming Soon")
                     }
@@ -387,11 +415,11 @@ class LandingActivty : BaseActivity(), DialogssInterface {
             .load(image)
             .placeholder(R.drawable.ic_user)
             .into(landingBinding!!.icProfile)
-        if (drawer!!.isDrawerOpen(GravityCompat.START)) {
-            drawer!!.closeDrawer(Gravity.LEFT) //CLOSE Nav Drawer!
-        } else {
-            drawer!!.openDrawer(Gravity.LEFT)
-        }
+        /* if (drawer!!.isDrawerOpen(GravityCompat.START)) {
+             drawer!!.closeDrawer(Gravity.LEFT) //CLOSE Nav Drawer!
+         } else {*/
+        drawer!!.openDrawer(Gravity.LEFT)
+        //}
     }
 
 }

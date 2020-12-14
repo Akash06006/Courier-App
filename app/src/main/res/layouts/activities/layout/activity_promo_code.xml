@@ -26,7 +26,9 @@
                 android:id="@+id/common_tool_bar"
                 layout="@layout/common_toolbar_back"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="70dp"
+                android:layout_marginTop="-2dp"
+                android:layout_marginRight="-2dp"
                 android:onClick="@{(v) -> promcodeViewModel.clickListener(v)}" />
 
         <RelativeLayout
@@ -34,6 +36,17 @@
                 android:layout_height="match_parent"
                 android:layout_marginTop="@dimen/dp_2"
                 android:paddingBottom="@dimen/dp_5">
+
+            <com.airbnb.lottie.LottieAnimationView
+                    android:id="@+id/noRecordAnimation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@+id/tv_no_record"
+                    android:layout_centerInParent="true"
+                    android:visibility="gone"
+                    app:lottie_autoPlay="true"
+                    app:lottie_loop="false"
+                    app:lottie_rawRes="@raw/emp_data" />
 
             <TextView
                     android:id="@+id/tv_no_record"

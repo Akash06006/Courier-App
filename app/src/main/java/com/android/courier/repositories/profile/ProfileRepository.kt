@@ -9,7 +9,9 @@ import com.android.courier.application.MyApplication
 import com.android.courier.common.UtilsFunctions
 import com.android.courier.model.CommonModel
 import com.android.courier.model.LoginResponse
+import com.android.courier.model.notifications.NotificationsResponse
 import com.android.courier.model.profile.RegionResponse
+import com.android.services.model.promocode.PromoCodeListResponse
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonObject
 import okhttp3.MultipartBody
@@ -75,19 +77,29 @@ class ProfileRepository {
             val mApiService = ApiService<JsonObject>()
             mApiService.get(
                 object : ApiResponse<JsonObject> {
+                    private var loginResponse : Any? = null
+
                     override fun onResponse(mResponse : Response<JsonObject>) {
-                        val loginResponse = if (mResponse.body() != null)
+                        loginResponse = if (mResponse.body() != null)
                             gson.fromJson<LoginResponse>(
                                 "" + mResponse.body(),
                                 LoginResponse::class.java
                             )
                         else {
-                            gson.fromJson<LoginResponse>(
-                                mResponse.errorBody()!!.charStream(),
-                                LoginResponse::class.java
-                            )
+                            if (mResponse.code() == 401) {
+                                // UtilsFunctions.showToastError(mResponse.message())
+                                data1!!.postValue(null)
+                            } else {
+                                gson.fromJson<LoginResponse>(
+                                    mResponse.errorBody()!!.charStream(),
+                                    LoginResponse::class.java
+                                )
+                                UtilsFunctions.showToastError(mResponse.message())
+
+                            }
+
                         }
-                        data1!!.postValue(loginResponse)
+                        data1!!.postValue(loginResponse as LoginResponse?)
                     }
 
                     override fun onError(mKey : String) {

@@ -38,15 +38,18 @@ class PaymentOptionsListAdapter(
     override fun onBindViewHolder(@NonNull holder : ViewHolder, position : Int) {
         viewHolder = holder
         val dis = (position + 1) * 10
-        if (paymentList!![position].equals("Google Pay")) {
-            holder.binding!!.imgPayment.setImageResource(R.drawable.ic_google_pay)
-        } else if (paymentList!![position].equals("Patym") || paymentList!![position].equals("Paytm")) {
+
+        if (paymentList!![position].trim().equals("Paytm")) {
             holder.binding!!.imgPayment.setImageResource(R.drawable.ic_paytm)
+        } else if (paymentList!![position].trim().equals("Google Pay")) {
+            holder.binding!!.imgPayment.setImageResource(R.drawable.ic_google_pay)
         } else {
-            holder.binding!!.imgPayment.setImageResource(R.drawable.ic_cash)
+            holder.binding!!.imgPayment.setImageResource(R.drawable.ic_phone_pay)
         }
     }
 
+    //ic_phone_pay
+    /* Paytm*/
     override fun getItemCount() : Int {
         return paymentList!!.size
     }

@@ -336,6 +336,27 @@
 
                     </LinearLayout>
 
+                    <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                        <CheckBox
+                                android:id="@+id/chkTermsAndPrivacy"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="@dimen/dp_10"
+                                android:layout_marginTop="@dimen/dp_5"
+                                android:button="@drawable/checkbox_selector_terms"
+                                android:checked="false" />
+
+                        <TextView
+                                android:id="@+id/txtTermsAndPrivacy"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="5dp"
+                                android:text="I agree to LOCOMO's Terms and Conditions and acknowledge that i have read the Privacy Policy "></TextView>
+
+                    </LinearLayout>
                 </LinearLayout>
             </ScrollView>
 

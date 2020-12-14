@@ -20,8 +20,11 @@
         <include
                 android:id="@+id/common_tool_bar"
                 layout="@layout/common_toolbar_back"
+
                 android:layout_width="match_parent"
-                android:layout_height="50dp" />
+                android:layout_height="70dp"
+                android:layout_marginTop="-2dp"
+                android:layout_marginRight="-2dp" />
 
         <RelativeLayout
                 android:layout_width="match_parent"

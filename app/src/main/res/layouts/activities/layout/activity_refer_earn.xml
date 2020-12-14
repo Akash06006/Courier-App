@@ -25,7 +25,9 @@
                 android:id="@+id/common_tool_bar"
                 layout="@layout/common_toolbar_back"
                 android:layout_width="match_parent"
-                android:layout_height="45dp"
+                android:layout_height="70dp"
+                android:layout_marginTop="-2dp"
+                android:layout_marginRight="-2dp"
                 android:onClick="@{(v) -> reviewsViewModel.clickListener(v)}" />
 
         <ScrollView
@@ -65,12 +67,13 @@
                             android:layout_marginRight="20dp"
                             android:gravity="center_horizontal"
                             android:text="Invite your friends and get loyalty points."
-                            android:textColor="@color/colorBlack"
+                            android:textColor="@color/colorPrimary"
                             android:textSize="18sp"
                             android:textStyle="bold"
                             app:font="@{`bold`}" />
 
                     <TextView
+                            android:id="@+id/txtMessage"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="20dp"
@@ -81,6 +84,20 @@
                             android:textColor="@color/colorBlack"
                             app:font="@{`regular`}" />
 
+                    <TextView
+                            android:id="@+id/txtCode"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="20dp"
+                            android:layout_marginTop="20dp"
+                            android:layout_marginRight="20dp"
+                            android:gravity="center_horizontal"
+                            android:text=""
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            app:font="@{`bold`}" />
+
                     <RelativeLayout
                             android:id="@+id/btnSubmit"
                             android:layout_width="match_parent"
@@ -90,6 +107,7 @@
                             android:layout_marginRight="@dimen/dp_20"
                             android:layout_marginBottom="@dimen/dp_20"
                             android:background="@drawable/shape_button_back"
+                            android:backgroundTint="@color/colorPrimary"
                             android:onClick="@{(v) -> reviewsViewModel.clickListener(v)}">
 
                         <Button
@@ -97,6 +115,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_centerInParent="true"
                                 android:background="@null"
+                                android:clickable="false"
                                 android:text="Share and Earn"
                                 android:textAlignment="center"
                                 android:textAllCaps="false"

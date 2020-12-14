@@ -66,7 +66,7 @@
                     <com.google.android.material.tabs.TabItem
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:icon="@drawable/ic_tab_home"
+                            android:icon="@drawable/ic_tab_home_selected"
                             android:text="Home" />
 
                     <com.google.android.material.tabs.TabItem
@@ -281,6 +281,7 @@
                                 android:textAllCaps="false"
                                 android:textColor="@color/colorWhite"
                                 android:textSize="@dimen/sp_14"
+                                android:visibility="gone"
                                 app:font="@{`regular`}"
                                 tools:ignore="RtlSymmetry" />
 
@@ -376,6 +377,7 @@
                                 android:textAllCaps="false"
                                 android:textColor="@color/colorWhite"
                                 android:textSize="@dimen/sp_14"
+                                android:visibility="gone"
                                 app:font="@{`regular`}"
                                 tools:ignore="RtlSymmetry" />
 

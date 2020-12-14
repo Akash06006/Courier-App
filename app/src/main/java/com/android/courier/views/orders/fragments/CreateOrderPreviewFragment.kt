@@ -4,29 +4,34 @@ import android.app.Dialog
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.TextPaint
 import android.text.TextUtils
+import android.text.method.LinkMovementMethod
+import android.text.style.ClickableSpan
 import android.view.LayoutInflater
+import android.view.View
 import android.view.Window
+import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.android.courier.databinding.ActivityOrderPreviewBinding
 import com.android.courier.R
 import com.android.courier.adapters.orders.AddressListAdapter
 import com.android.courier.application.MyApplication
 import com.android.courier.common.UtilsFunctions
-import com.android.courier.model.order.*
+import com.android.courier.databinding.ActivityOrderPreviewBinding
+import com.android.courier.model.order.CreateOrderResponse
 import com.android.courier.utils.BaseFragment
 import com.android.courier.viewmodels.order.OrderViewModel
-import com.android.courier.views.home.LandingActivty
 import com.android.courier.views.orders.OrderDetailActivity
-import kotlinx.android.synthetic.main.fragment_create_orders_second.*
 
 class
 CreateOrderPreviewFragment : BaseFragment() {
@@ -75,7 +80,22 @@ CreateOrderPreviewFragment : BaseFragment() {
             fun(it : String?) {
                 when (it) {
                     "toolbar" -> {
-                        (activity as LandingActivty).openCloseDrawer()
+                        /*val ss = SpannableString("Android is a Software stack")
+                        val clickableSpan : ClickableSpan = object : ClickableSpan() {
+                            override fun onClick(textView : View?) {
+                                startActivity(Intent(activity, NextActivity::class.java))
+                            }
+
+                            override fun updateDrawState(ds : TextPaint) {
+                                super.updateDrawState(ds)
+                                ds.isUnderlineText = false
+                            }
+                        }
+                        ss.setSpan(clickableSpan, 22, 27, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                        val textView = findViewById(R.id.hello) as TextView
+                        textView.text = ss
+                        textView.movementMethod = LinkMovementMethod.getInstance()
+                        textView.highlightColor = Color.TRANSPARENT*/
                     }
                 }
             })
@@ -108,7 +128,7 @@ CreateOrderPreviewFragment : BaseFragment() {
         }
 
 
-        orderPreviewBinding.txtFare.setText(MyApplication.createOrdersInput.deliveryCharges)
+        orderPreviewBinding.txtFare.setText(MyApplication.createOrdersInput.orderPrice)
         orderPreviewBinding.txtWeight.setText(MyApplication.createOrdersInput.weightValue)
         orderPreviewBinding.txtValue.setText(MyApplication.createOrdersInput.parcelValue)
         orderPreviewBinding.txtFareCollected.setText(MyApplication.createOrdersInput.fareCollected)
@@ -119,6 +139,10 @@ CreateOrderPreviewFragment : BaseFragment() {
                 MyApplication.createOrdersInput.deliveryAddress,
                 MyApplication.createOrdersInput.pickupAddress
             )
+        val controller =
+            AnimationUtils.loadLayoutAnimation(activity, R.anim.layout_animation_from_left)
+        orderPreviewBinding.rvAddress.setLayoutAnimation(controller);
+        orderPreviewBinding.rvAddress.scheduleLayoutAnimation();
         val linearLayoutManager = LinearLayoutManager(activity)
         linearLayoutManager.orientation = RecyclerView.VERTICAL
         orderPreviewBinding.rvAddress.layoutManager = linearLayoutManager
@@ -135,10 +159,14 @@ CreateOrderPreviewFragment : BaseFragment() {
           }*/
 
         orderPreviewBinding.btnConfirm?.setOnClickListener {
-            if (UtilsFunctions.isNetworkConnected()) {
-                baseActivity.startProgressDialog()
-                orderViewModel.createOrder(MyApplication.createOrdersInput)
-                //confirmationDialog?.dismiss()
+            if (orderPreviewBinding.chkTermsAndPrivacy.isChecked == true) {
+                if (UtilsFunctions.isNetworkConnected()) {
+                    baseActivity.startProgressDialog()
+                    orderViewModel.createOrder(MyApplication.createOrdersInput)
+                    //confirmationDialog?.dismiss()
+                }
+            } else {
+                UtilsFunctions.showToastError("Please accept Terms & Conditions and Privacy Policy")
             }
         }
         // confirmationDialog?.show()

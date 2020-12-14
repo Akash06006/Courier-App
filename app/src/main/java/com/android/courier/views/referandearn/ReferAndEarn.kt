@@ -74,12 +74,22 @@ class ReferAndEarn : BaseActivity(), DialogssInterface {
         reviewsBinding = viewDataBinding as ActivityReferEarnBinding
         reviewsViewModel = ViewModelProviders.of(this).get(NotificaionViewModel::class.java)
         reviewsBinding.commonToolBar.imgRight.visibility = View.GONE
+        val referralCode = SharedPrefClass().getPrefValue(
+            MyApplication.instance,
+            GlobalConstants.REFERRAL_CODE
+        ).toString()
         val userImage =
             SharedPrefClass().getPrefValue(this, GlobalConstants.USER_IMAGE).toString()
         Glide.with(this).load(userImage).placeholder(R.drawable.ic_user)
         reviewsBinding.commonToolBar.imgToolbarText.text =
             resources.getString(R.string.refer_earn)
         reviewsBinding.reviewsViewModel = reviewsViewModel
+        reviewsBinding.txtMessage.setText(
+            "This referral code gives " + GlobalConstants.REFERRAL_POINT_GIVE + " loyalty points to your friends when they will signup in " + resources.getString(
+                R.string.app_name
+            ) + " using this code, and you will receive " + GlobalConstants.REFERRAL_POINT_EARN + " loyalty points for a referral."
+        )
+        reviewsBinding.txtCode.setText(referralCode)
         //UtilsFunctions.hideKeyBoard(reviewsBinding.tvNoRecord)
         reviewsViewModel.isClick().observe(
             this, Observer<String>(function =
@@ -89,16 +99,12 @@ class ReferAndEarn : BaseActivity(), DialogssInterface {
                         onBackPressed()
                     }
                     "btnSubmit" -> {
-                        val referralCode = SharedPrefClass().getPrefValue(
-                            MyApplication.instance,
-                            GlobalConstants.REFERRAL_CODE
-                        ).toString()
                         try {
                             val shareIntent = Intent(Intent.ACTION_SEND)
                             shareIntent.type = "text/plain"
                             shareIntent.putExtra(Intent.EXTRA_SUBJECT, "Locomo App")
                             var shareMessage =
-                                "Hey\nJoin me on Locomo app and get delicious food and exciting offers. Use $referralCode referral code for login\n"
+                                "Hey!! join me on Locomo app and get some exciting offers. Use this referral code $referralCode for login/signup\n\n Android Play Store:\n " + GlobalConstants.ANDROID_LINK + "\n\niPhone App Store:\n" + GlobalConstants.ANDROID_LINK
                             shareMessage = shareMessage
                             shareIntent.putExtra(Intent.EXTRA_TEXT, shareMessage)
                             startActivity(Intent.createChooser(shareIntent, "choose one"))

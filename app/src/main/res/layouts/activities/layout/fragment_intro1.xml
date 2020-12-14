@@ -18,7 +18,7 @@
             android:layout_marginBottom="20dp"
             android:padding="10dp"
             android:src="@drawable/intro_one" />
-<!---->
+    <!---->
     <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -47,13 +47,13 @@
                 android:textStyle="bold"
                 tools:ignore="AllCaps" />
 
-        <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+        <View
+                android:layout_width="30dp"
+                android:layout_height="2dp"
                 android:layout_above="@+id/llBottom"
                 android:layout_gravity="center"
                 android:layout_margin="5dp"
-                android:src="@drawable/ic_underline_blue" />
+                android:background="@color/colorMustad" />
 
         <TextView
                 android:layout_width="wrap_content"

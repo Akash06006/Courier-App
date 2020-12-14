@@ -28,6 +28,7 @@ import com.android.courier.adapters.orders.WeightListAdapter
 import com.android.courier.application.MyApplication
 import com.android.courier.common.UtilsFunctions
 import com.android.courier.common.UtilsFunctions.showToastError
+import com.android.courier.common.UtilsFunctions.showToastInfo
 import com.android.courier.constants.GlobalConstants
 import com.android.courier.maps.FusedLocationClass
 import com.android.courier.model.order.*
@@ -153,7 +154,7 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface {
                     val date = Utils(activity!!).getDateLocal(
                         "EEE MMM dd HH:mm:ss zzzz yyyy",
                         getDaysAgo(0).toString(),
-                        "MM/dd/YYYY"
+                        "dd/MM/YYYY"
                     )
                     // MyApplication.createOrdersInput.pickupAddress?.date = date
                     pickupDate = date
@@ -161,7 +162,7 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface {
                     val date = Utils(activity!!).getDateLocal(
                         "EEE MMM dd HH:mm:ss zzzz yyyy",
                         getDaysAgo(1).toString(),
-                        "MM/dd/YYYY"
+                        "dd/MM/YYYY"
                     )
                     // MyApplication.createOrdersInput.pickupAddress?.date = date
                     pickupDate = date
@@ -295,11 +296,14 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface {
                                   activityCreateOrderBinding.txtCancellationCharges.text = "0"*/
                             }
 
-                            MyApplication.createOrdersInput.deliveryCharges = payableAmount
+                            MyApplication.createOrdersInput.deliveryCharges =
+                                response.data?.deliveryFee + ""
                             MyApplication.createOrdersInput.totalOrderPrice = payableAmount
                             MyApplication.createOrdersInput.orderPrice = orderPrice
                             MyApplication.createOrdersInput.offerPrice =
                                 response.data?.discountPrice + ""
+                            MyApplication.createOrdersInput.securityFee =
+                                response.data?.securityFee + ""
                             MyApplication.createOrdersInput.pendingCCharges =
                                 totalCancellationCharges
                             MyApplication.createOrdersInput.cancelOrderIds = cancelOrderIds
@@ -316,7 +320,9 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface {
                                 response.data?.weightFee + "",
                                 response.data?.securityFee + "",
                                 response.data?.discountPrice + "",
-                                totalCancellationCharges, "first"
+                                totalCancellationCharges,
+                                "first",
+                                response.data?.deliveryTypeCharges + ""
                             )
                         }
                         else -> message?.let {
@@ -378,7 +384,16 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface {
             this, Observer<String>(function =
             fun(it : String?) {
                 when (it) {
+                    "imgDelInfo" -> {
+                        showToastInfo(
+                            "Regular : Delivery of ur Courier will be done within 1-3 hours*\n" +
+                                    "Express : Delivery will be done on utmost Priority bases*\n" +
+                                    "(* Timings of delivery may vary due to Distance and City Taffic )"
+                        )
+                    }
                     "btnProceed" -> {
+                        createOrderFirstBinding.edtDelMob.clearFocus()
+                        createOrderFirstBinding.edtPickMob.clearFocus()
                         if (TextUtils.isEmpty(
                                 pickupDate
                             ) || TextUtils.isEmpty(
@@ -645,6 +660,11 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface {
                 this,
                 weightList
             )
+        val controller =
+            AnimationUtils.loadLayoutAnimation(activity, R.anim.layout_animation_from_bottom)
+        createOrderFirstBinding.rvWeight.setLayoutAnimation(controller);
+        createOrderFirstBinding.rvWeight.scheduleLayoutAnimation();
+        createOrderFirstBinding.rvWeight.setHasFixedSize(true)
         val linearLayoutManager = LinearLayoutManager(activity)
         linearLayoutManager.orientation = RecyclerView.HORIZONTAL
         createOrderFirstBinding.rvWeight.layoutManager = linearLayoutManager
@@ -678,6 +698,11 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface {
                 this,
                 deliveryTypeList
             )
+        val controller =
+            AnimationUtils.loadLayoutAnimation(activity, R.anim.layout_animation_from_bottom)
+        createOrderFirstBinding.rvDeliveryTypes.setLayoutAnimation(controller);
+        createOrderFirstBinding.rvDeliveryTypes.scheduleLayoutAnimation();
+        createOrderFirstBinding.rvDeliveryTypes.setHasFixedSize(true)
         val linearLayoutManager = LinearLayoutManager(activity)
         linearLayoutManager.orientation = RecyclerView.HORIZONTAL
         createOrderFirstBinding.rvDeliveryTypes.layoutManager = linearLayoutManager
@@ -1309,18 +1334,24 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface {
                 MyApplication.createOrdersInput.weight
             ) /*&& !TextUtils.isEmpty(activityCreateOrderBinding.edtParcelValue.text.toString())*/
         ) {
+            if (MyApplication.createOrdersInput.orderId.equals("null") || TextUtils.isEmpty(
+                    MyApplication.createOrdersInput.orderId
+                )
+            ) {
+                MyApplication.createOrdersInput.orderId = ""
+            }
+            if (MyApplication.createOrdersInput.parcelValue.equals("null") || TextUtils.isEmpty(
+                    MyApplication.createOrdersInput.parcelValue
+                )
+            ) {
+                MyApplication.createOrdersInput.parcelValue = ""
+            }
             val mJsonObject = JsonObject()
             mJsonObject.addProperty(
                 "parcelValue",
                 MyApplication.createOrdersInput.parcelValue/* activityCreateOrderBinding.edtParcelValue.text.toString()*/
             )
-            if (MyApplication.createOrdersInput.orderId.equals("null") || TextUtils.isEmpty(
-                    MyApplication.createOrdersInput.orderId
-                )
-            ) {
-                orderId = ""
-            }
-            mJsonObject.addProperty("orderId", orderId)
+            mJsonObject.addProperty("orderId", MyApplication.createOrdersInput.orderId)
             mJsonObject.addProperty("vehicleId", "9c9d2c0e-02d6-4095-a0b4-b267b736dd65")
             mJsonObject.addProperty("deliveryId", MyApplication.createOrdersInput.deliveryOption)
             mJsonObject.addProperty("weightId", MyApplication.createOrdersInput.weight)
@@ -1347,7 +1378,8 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface {
         securityFee : String,
         couponDeduction : String,
         totalCancellationCharges : String,
-        from : String
+        from : String,
+        deliveryTypeCharges : String?
     ) {
         /*if (from.equals("first")) {
             createOrderFirstBinding.viewLine1.setAlpha(1f)
@@ -1379,7 +1411,7 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface {
             createOrderFirstBinding.rlWeight.visibility = View.GONE
             createOrderFirstBinding.view2.visibility = View.GONE
         }
-        if (!securityFee.equals("0") && !securityFee.equals("")) {
+        if (!securityFee.equals("0") && !securityFee.equals("") && !securityFee.equals("null")) {
             createOrderFirstBinding.txtSecurity.text = "₹ " + securityFee
             createOrderFirstBinding.view3.visibility = View.VISIBLE
             createOrderFirstBinding.rlSecurity.visibility = View.VISIBLE
@@ -1401,6 +1433,15 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface {
             createOrderFirstBinding.rlCouponDeduction.visibility = View.VISIBLE
         } else {
             createOrderFirstBinding.rlCouponDeduction.visibility = View.GONE
+        }
+
+        if (!deliveryTypeCharges.equals("0") && !deliveryTypeCharges.equals("")) {
+            createOrderFirstBinding.view5.visibility = View.VISIBLE
+            createOrderFirstBinding.txtDeliveryTypeCharges.text = "₹ " + deliveryTypeCharges
+            createOrderFirstBinding.rlDeliveryTypeCharges.visibility = View.VISIBLE
+        } else {
+            createOrderFirstBinding.rlDeliveryTypeCharges.visibility = View.GONE
+            createOrderFirstBinding.view5.visibility = View.GONE
         }
 
         createOrderFirstBinding.txtFare.text = "₹ " + payableAmount

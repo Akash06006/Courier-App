@@ -133,7 +133,34 @@ object UtilsFunctions {
         text.text = message
         val toast = Toast(MyApplication.instance)
         toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0)
-        toast.duration = LENGTH_SHORT
+        toast.duration = LENGTH_LONG
+        layout.setBackgroundColor(
+            ContextCompat.getColor(
+                MyApplication.instance,
+                R.color.colorOrange
+            )
+        )
+        toast.setGravity(Gravity.FILL_HORIZONTAL or Gravity.BOTTOM, 0, 0)
+        toast.view = layout
+        toast.show()
+
+    }
+
+    @JvmStatic
+    fun showToastInfo(message : String?) {
+        if (message == null)
+            return
+        val inflater =
+            MyApplication.instance.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        val layout = inflater.inflate(R.layout.layout_toast, null)
+        val image = layout.findViewById<ImageView>(R.id.image)
+        image.setImageResource(R.drawable.ic_info)
+        val text = layout.findViewById<TextView>(R.id.text)
+        text.setTextColor(MyApplication.instance.getColor(R.color.colorPrimary))
+        text.text = message
+        val toast = Toast(MyApplication.instance)
+        toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0)
+        toast.duration = LENGTH_LONG
         layout.setBackgroundColor(
             ContextCompat.getColor(
                 MyApplication.instance,

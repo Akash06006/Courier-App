@@ -2,6 +2,8 @@
 <network-security-config>
     <domain-config cleartextTrafficPermitted="true">
         <!--<domain includeSubdomains="true">3.90.42.207</domain>-->
-        <domain includeSubdomains="true">np.seasiafinishingschool.com</domain>
+        <domain includeSubdomains="true">http://stgcerb.cerebruminfotech.com:9067/api</domain>
+        <domain includeSubdomains="true">http://stgcerb.cerebruminfotech.com:9067</domain>
+        <domain includeSubdomains="true">http://stgcerb.cerebruminfotech.com</domain>
     </domain-config>
 </network-security-config>

@@ -8,6 +8,7 @@ import com.android.courier.api.ApiService
 import com.android.courier.application.MyApplication
 import com.android.courier.common.UtilsFunctions
 import com.android.courier.model.CommonModel
+import com.android.courier.model.loyalty.LoyaltyResponse
 import com.android.services.model.promocode.PromoCodeListResponse
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonObject
@@ -28,19 +29,26 @@ class PromoCodeRepository {
         val mApiService = ApiService<JsonObject>()
         mApiService.get(
             object : ApiResponse<JsonObject> {
+                private var loginResponse : Any? = null
+
                 override fun onResponse(mResponse : Response<JsonObject>) {
-                    val loginResponse = if (mResponse.body() != null)
+                    loginResponse = if (mResponse.body() != null)
                         gson.fromJson<PromoCodeListResponse>(
                             "" + mResponse.body(),
                             PromoCodeListResponse::class.java
                         )
                     else {
-                        gson.fromJson<PromoCodeListResponse>(
-                            mResponse.errorBody()!!.charStream(),
-                            PromoCodeListResponse::class.java
-                        )
+                        if (mResponse.code() == 401) {
+                            // UtilsFunctions.showToastError(mResponse.message())
+                            data1!!.postValue(null)
+                        } else {
+                            gson.fromJson<PromoCodeListResponse>(
+                                mResponse.errorBody()!!.charStream(),
+                                PromoCodeListResponse::class.java
+                            )
+                        }
                     }
-                    data1!!.postValue(loginResponse)
+                    data1!!.postValue(loginResponse as PromoCodeListResponse?)
                 }
 
                 override fun onError(mKey : String) {

@@ -42,20 +42,19 @@ class DiscountListAdapter(
 
     override fun onBindViewHolder(@NonNull holder : ViewHolder, position : Int) {
         viewHolder = holder
-        /* Glide.with(mContext).load(bannersList!![position].icon).placeholder(R.drawable.ic_dummy)
-             .into(holder.binding!!.imgBanner)
-
-         holder.binding!!.imgBanner.setOnClickListener {
-             if (bannersList!![position].type.equals("coupon")) {
-                 mContext.showOfferInformation(position)
-             } else {
-                 mContext.baseActivity.showToastSuccess("No Information")
-             }
-         }*/
+        Glide.with(mContext).load(bannersList!![position].icon).placeholder(R.drawable.ic_dummy)
+            .into(holder.binding!!.imgBanner)
+        /*holder.binding!!.imgBanner.setOnClickListener {
+            if (bannersList!![position].type.equals("coupon")) {
+                mContext.showOfferInformation(position)
+            } else {
+                mContext.baseActivity.showToastSuccess("No Information")
+            }
+        }*/
     }
 
     override fun getItemCount() : Int {
-        return 6//bannersList!!.count()
+        return bannersList!!.count()
     }
 
     inner class ViewHolder//This constructor would switch what to findViewBy according to the type of viewType

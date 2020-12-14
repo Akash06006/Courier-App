@@ -21,6 +21,7 @@ import android.text.TextUtils
 import android.util.Log
 import android.view.View
 import android.view.Window
+import android.view.animation.AnimationUtils
 import android.widget.*
 import androidx.annotation.DrawableRes
 import androidx.annotation.RequiresApi
@@ -45,7 +46,9 @@ import com.android.courier.model.order.OrdersDetailResponse
 import com.android.courier.sharedpreference.SharedPrefClass
 import com.android.courier.utils.BaseActivity
 import com.android.courier.viewmodels.order.OrderViewModel
+import com.android.courier.views.chat.ChatActivity
 import com.android.courier.views.chat.DriverChatActivity
+import com.android.courier.views.socket.DriverTrackingActivity
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.location.*
@@ -60,6 +63,7 @@ import kotlin.collections.ArrayList
 class OrderDetailActivity : BaseActivity(), OnMapReadyCallback, LocationListener,
     GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
     GoogleMap.OnCameraIdleListener {
+    private lateinit var deliveryAddress : ArrayList<OrdersDetailResponse.PickupAddress>
     private lateinit var activityCreateOrderBinding : ActivityOrderDetailBinding
     private lateinit var orderViewModel : OrderViewModel
     var vehicleList = ArrayList<ListsResponse.VehicleData>()
@@ -100,6 +104,12 @@ class OrderDetailActivity : BaseActivity(), OnMapReadyCallback, LocationListener
     var reasons = java.util.ArrayList<String>()
     var cancelledCharges = "0"
     var phoneNumber = ""
+    var driverId = ""
+    var pickLat = ""
+    var picktLong = ""
+    var isPicked = ""
+    var isCompletedCancelled = false
+    var isCancellable : String? = null
     override fun getLayoutId() : Int {
         return R.layout.activity_order_detail
     }
@@ -126,6 +136,7 @@ class OrderDetailActivity : BaseActivity(), OnMapReadyCallback, LocationListener
 
     override fun initViews() {
         // Initialize the SDK
+        deliveryAddress = ArrayList()
         Places.initialize(applicationContext, getString(R.string.maps_api_key))
         // Create a new PlacesClient instance
         val placesClient = Places.createClient(this)
@@ -137,10 +148,12 @@ class OrderDetailActivity : BaseActivity(), OnMapReadyCallback, LocationListener
         orderViewModel = ViewModelProviders.of(this).get(OrderViewModel::class.java)
         activityCreateOrderBinding.orderViewModel = orderViewModel
         mContext = this
-        val userImage =
-            SharedPrefClass().getPrefValue(this, GlobalConstants.USER_IMAGE).toString()
-        Glide.with(this).load(userImage).placeholder(R.drawable.ic_user)
-            .into(activityCreateOrderBinding.toolbarCommon.imgRight)
+        /* val userImage =
+             SharedPrefClass().getPrefValue(this, GlobalConstants.USER_IMAGE).toString()
+         Glide.with(this).load(userImage).placeholder(R.drawable.ic_user)
+             .into(activityCreateOrderBinding.toolbarCommon.imgRight)*/
+        activityCreateOrderBinding.toolbarCommon.imgHelp.visibility = View.VISIBLE
+        //activityCreateOrderBinding.toolbarCommon.imgRight.setImageResource(R.drawable.ic_help_chat)
         // activityCreateOrderBinding.toolbarCommon.imgToolbarText.text = "Order #123"
         val supportMapFragment =
             supportFragmentManager.findFragmentById(R.id.map_view) as SupportMapFragment?
@@ -149,16 +162,15 @@ class OrderDetailActivity : BaseActivity(), OnMapReadyCallback, LocationListener
 
         orderId = intent.extras?.get("id").toString()
         val activeOrder = intent.extras?.get("active").toString()
-        if (activeOrder.equals("true")) {
-            activityCreateOrderBinding.bottomButtons.visibility = View.VISIBLE
-        } else {
+        if (activeOrder.equals("false")) {
             activityCreateOrderBinding.bottomButtons.visibility = View.GONE
+        } else {
+            activityCreateOrderBinding.bottomButtons.visibility = View.VISIBLE
         }
         // Specify the types of place data to return.
         orderViewModel.cancelReasonRes().observe(this,
             Observer<CancelReasonsListResponse> { response->
-                stopProgressDialog()
-
+                // stopProgressDialog()
                 if (response != null) {
                     val message = response.message
                     when {
@@ -203,37 +215,18 @@ class OrderDetailActivity : BaseActivity(), OnMapReadyCallback, LocationListener
                     val message = response.message
                     when {
                         response.code == 200 -> {
+                            var oldLatLong = LatLng(0.0, 0.0)
                             activityCreateOrderBinding.orderDetailModel = response.data
                             cancelledCharges = response.data?.cancellationCharges!!
-                            val source = LatLng(
-                                response.data?.pickupAddress?.lat!!.toDouble(),
-                                response.data?.pickupAddress?.long!!.toDouble()
-                            )
-
+                            pickLat = response.data?.pickupAddress?.lat!!
+                            picktLong = response.data?.pickupAddress?.long!!
+                            isCancellable = response.data?.cancellable
+                            isPicked = response.data?.pickupAddress?.isComplete!!
                             activityCreateOrderBinding.txtBookingId.text =
                                 "Booking ID " + response.data?.orderNo!!
                             activityCreateOrderBinding.txtfare.text =
                                 "₹ " + response.data?.totalOrderPrice!!
 
-                            mGoogleMap!!.moveCamera(CameraUpdateFactory.newLatLng(source))
-                            mGoogleMap!!.animateCamera(CameraUpdateFactory.zoomTo(16f))
-                            var isSourceAdded = false
-                            var destination : LatLng?
-                            for (item in response.data?.deliveryAddress!!) {
-                                destination = LatLng(
-                                    item.lat!!.toDouble(),
-                                    item.long!!.toDouble()
-                                )
-                                var oldLatLong = LatLng(0.0, 0.0)
-                                if (!isSourceAdded) {
-                                    isSourceAdded = true
-                                    drawPolyline(source, destination, true)
-                                    oldLatLong = destination
-                                } else {
-                                    drawPolyline(oldLatLong, destination, false)
-                                    oldLatLong = destination
-                                }
-                            }
                             if (response.data?.assignedEmployees != null) {
                                 activityCreateOrderBinding.toolbarCommon.imgToolbarText.text =
                                     "Enroute to Pickup"
@@ -242,12 +235,13 @@ class OrderDetailActivity : BaseActivity(), OnMapReadyCallback, LocationListener
                                 Glide.with(this).load(response.data?.assignedEmployees?.image)
                                     .placeholder(R.drawable.ic_user)
                                     .into(activityCreateOrderBinding.imgDriver)
+                                driverId = response.data?.assignedEmployees?.id!!
                                 phoneNumber = response.data?.assignedEmployees?.phoneNumber!!
                                 activityCreateOrderBinding.txtDelBoyName.text =
                                     response.data?.assignedEmployees?.firstName + " " + response.data?.assignedEmployees?.lastName
                             } else {
                                 activityCreateOrderBinding.toolbarCommon.imgToolbarText.text =
-                                    "Searching for a Driver"
+                                    "Searching for a Rider"
                                 activityCreateOrderBinding.rlDriverDetail.visibility = View.GONE
                                 activityCreateOrderBinding.rlPayment.visibility = View.GONE
 
@@ -265,6 +259,13 @@ class OrderDetailActivity : BaseActivity(), OnMapReadyCallback, LocationListener
                                     this,
                                     response.data?.deliveryAddress, response.data?.pickupAddress
                                 )
+                            val controller =
+                                AnimationUtils.loadLayoutAnimation(
+                                    this,
+                                    R.anim.layout_animation_from_left
+                                )
+                            activityCreateOrderBinding.rvAddress.setLayoutAnimation(controller);
+                            activityCreateOrderBinding.rvAddress.scheduleLayoutAnimation();
                             val linearLayoutManager = LinearLayoutManager(this)
                             linearLayoutManager.orientation = RecyclerView.VERTICAL
                             activityCreateOrderBinding.rvAddress.layoutManager = linearLayoutManager
@@ -300,6 +301,125 @@ class OrderDetailActivity : BaseActivity(), OnMapReadyCallback, LocationListener
 
                                 }
                             })
+                            val source = LatLng(
+                                response.data?.pickupAddress?.lat!!.toDouble(),
+                                response.data?.pickupAddress?.long!!.toDouble()
+                            )
+                            var ic_source : BitmapDescriptor
+                            if (!TextUtils.isEmpty(response.data?.pickupAddress!!.isComplete) && response.data?.pickupAddress!!.isComplete.equals(
+                                    "false"
+                                )
+                            ) {
+                                isPicked = "false"
+                                ic_source = bitmapDescriptorFromVector(
+                                    this,
+                                    R.drawable.ic_source
+                                )
+                                activityCreateOrderBinding.imgNavigate.visibility = View.GONE
+                                mGoogleMap!!.addMarker(
+                                    MarkerOptions()
+                                        .position(source)
+                                        .icon(ic_source)
+                                )
+                            } else if (!TextUtils.isEmpty(response.data?.pickupAddress!!.isComplete) && response.data?.pickupAddress!!.isComplete.equals(
+                                    "true"
+                                )
+                            ) {
+                                isPicked = "true"
+                                ic_source = bitmapDescriptorFromVector(
+                                    this,
+                                    R.drawable.ic_source_completed
+                                )
+                                activityCreateOrderBinding.imgNavigate.visibility = View.VISIBLE
+                                mGoogleMap!!.addMarker(
+                                    MarkerOptions()
+                                        .position(source)
+                                        .icon(ic_source)
+                                )
+                            }
+
+                            mGoogleMap!!.moveCamera(CameraUpdateFactory.newLatLng(source))
+                            if (response.data?.distance!!.toDouble() < 20) {
+                                mGoogleMap!!.animateCamera(CameraUpdateFactory.zoomTo(14f))
+                            } else {
+                                mGoogleMap!!.animateCamera(CameraUpdateFactory.zoomTo(12f))
+                            }
+                            var isSourceAdded = false
+                            var destination : LatLng?
+                            deliveryAddress = response.data?.deliveryAddress!!
+                            for (item in response.data?.deliveryAddress!!) {
+                                destination = LatLng(
+                                    item.lat!!.toDouble(),
+                                    item.long!!.toDouble()
+                                )
+                                var dest : BitmapDescriptor
+                                if (item.isComplete.equals("false")) {
+                                    dest = bitmapDescriptorFromVector(
+                                        this,
+                                        R.drawable.ic_destination
+                                    )
+                                } else {
+                                    dest = bitmapDescriptorFromVector(
+                                        this,
+                                        R.drawable.ic_destination_completed
+                                    )
+                                }
+                                mGoogleMap!!.addMarker(
+                                    MarkerOptions()
+                                        .position(
+                                            LatLng(
+                                                item.lat!!.toDouble(),
+                                                item.long!!.toDouble()
+                                            )
+                                        )
+                                        .icon(dest)
+                                )
+
+                                if (!isSourceAdded) {
+                                    isSourceAdded = true
+                                    //TODO-- drawPolyline(source, destination, true)
+                                    oldLatLong = destination
+                                } else {
+                                    //TODO--  drawPolyline(oldLatLong, destination, false)
+                                    oldLatLong = destination
+                                }
+                            }
+
+
+                            val builder = LatLngBounds.Builder();
+                            /* for (Marker marker : markers) {
+                                 builder.include(marker);
+                             }*/
+                            builder.include(LatLng(pickLat.toDouble(), picktLong.toDouble()))
+                            for (item in response.data?.deliveryAddress!!) {
+                                builder.include(LatLng(item.lat!!.toDouble(), item.long!!.toDouble()))
+                            }
+                            var bounds = builder.build();
+                            var padding = 200  // offset from edges of the map in pixels
+                            var cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
+                            mGoogleMap!!.animateCamera(cu)
+
+
+
+                            if (response.data?.orderStatus?.status.equals("3") || response.data?.orderStatus?.status.equals(
+                                    "4"
+                                ) || response.data?.orderStatus?.status.equals("5")
+                            ) {
+                                activityCreateOrderBinding.toolbarCommon.imgToolbarText.text =
+                                    "Order Cancelled"
+                                activityCreateOrderBinding.bottomButtons.visibility = View.GONE
+                                activityCreateOrderBinding.imgNavigate.visibility = View.GONE
+                                isCompletedCancelled = true
+                            } else if (response.data?.orderStatus?.status.equals("7")) {
+                                activityCreateOrderBinding.toolbarCommon.imgToolbarText.text =
+                                    "Delivered at Drop Location"
+                                activityCreateOrderBinding.bottomButtons.visibility = View.GONE
+                                activityCreateOrderBinding.imgNavigate.visibility = View.GONE
+                                isCompletedCancelled = true
+                            } else if (response.data?.orderStatus?.status.equals("6")) {
+                                activityCreateOrderBinding.toolbarCommon.imgToolbarText.text =
+                                    "Order has picked up"
+                            }
                             //drawPolyline()
                         }
                         else -> message?.let { UtilsFunctions.showToastError(it) }
@@ -313,25 +433,78 @@ class OrderDetailActivity : BaseActivity(), OnMapReadyCallback, LocationListener
             this, Observer<String>(function =
             fun(it : String?) {
                 when (it) {
+                    "imgHelp" -> {
+                        val intent = Intent(this, ChatActivity::class.java)
+                        intent.putExtra("orderId", orderId)
+                        startActivity(intent)
+                    }
                     "imgCall" -> {
-                        val dialIntent = Intent(Intent.ACTION_DIAL)
-                        dialIntent.data = Uri.parse("tel:" + phoneNumber)
-                        startActivity(dialIntent)
+                        if (!isCompletedCancelled) {
+                            val dialIntent = Intent(Intent.ACTION_DIAL)
+                            dialIntent.data = Uri.parse("tel:" + phoneNumber)
+                            startActivity(dialIntent)
+                        } else {
+                            UtilsFunctions.showToastWarning("This order is not going anymore, You can not call the rider")
+                        }
+
                     }
                     "imgChat" -> {
-                        val intent = Intent(this, DriverChatActivity::class.java)
-                        intent.putExtra("orderId", orderId)
-                        intent.putExtra("driverId", "c1578683-8e45-4e23-8e46-1e41add525ae")
-                        startActivity(intent)
+                        if (!isCompletedCancelled) {
+                            val intent = Intent(this, DriverChatActivity::class.java)
+                            intent.putExtra("orderId", orderId)
+                            intent.putExtra("driverId", driverId)
+                            startActivity(intent)
+                        } else {
+                            UtilsFunctions.showToastWarning("This order is not going anymore, You can not text the rider")
+                        }
                     }
                     "btnCancel" -> {
+                        /* */
                         // Set the fields to specify which types of place data to
-                        showCancelReasonDialog()
+                        if (!TextUtils.isEmpty(isCancellable) && isCancellable.equals("true")) {
+                            showCancelReasonDialog()
+                        } else {
+                            showToastError("You can not cancel this order")
+                        }
+
+                    }
+                    "imgNavigate" -> {
+                        val intent = Intent(this, DriverTrackingActivity::class.java)
+                        intent.putExtra(
+                            "addresses",
+                            deliveryAddress
+                        )
+                        intent.putExtra(
+                            "orderId",
+                            orderId
+                        )
+                        intent.putExtra(
+                            "pickLat",
+                            pickLat
+                        )
+                        intent.putExtra(
+                            "pickLong",
+                            picktLong
+                        )
+                        intent.putExtra(
+                            "driverId",
+                            driverId
+                        )
+                        intent.putExtra(
+                            "orderStatus",
+                            isPicked
+                        )
+                        startActivity(intent)
                     }
                     "btnSchedule" -> {
-                        val intent = Intent(this, CreateOrderActivty::class.java)
-                        intent.putExtra("id", orderId)
-                        startActivity(intent)
+                        if (!TextUtils.isEmpty(isCancellable) && isCancellable.equals("true")) {
+                            val intent = Intent(this, CreateOrderActivty::class.java)
+                            intent.putExtra("id", orderId)
+                            startActivity(intent)
+                        } else {
+                            showToastError("You can not reschedule this order")
+                        }
+
                     }
                 }
             })
@@ -589,7 +762,7 @@ class OrderDetailActivity : BaseActivity(), OnMapReadyCallback, LocationListener
 
         if (!cancelledCharges.equals("0") || !TextUtils.isEmpty(cancelledCharges)) {
             llCancelCharges?.visibility = View.VISIBLE
-            txtCharges?.text = cancelledCharges
+            txtCharges?.text = "₹ " + cancelledCharges
         } else {
             llCancelCharges?.visibility = View.GONE
         }
@@ -692,7 +865,7 @@ class OrderDetailActivity : BaseActivity(), OnMapReadyCallback, LocationListener
     ) {
         var path : MutableList<LatLng> = ArrayList()
         val context = GeoApiContext.Builder()
-            .apiKey(getString(R.string.maps_api_key))
+            .apiKey("AIzaSyA7Zj-PTZm4sDG-eoiLPA-XohvgxBe95wU"/*getString(R.string.maps_api_key)*/)
             .build()
         val req = DirectionsApi.getDirections(
             context,
@@ -757,40 +930,12 @@ class OrderDetailActivity : BaseActivity(), OnMapReadyCallback, LocationListener
         sourceLatLng : LatLng,
         destinationLatLng : LatLng, isSourceAdded : Boolean
     ) {
-        polyPath = path
+        //  polyPath = path
+        if (polyPath != null)
+            polyPath!!.addAll(path)
+        else
+            polyPath = path
         // mGoogleMap?.clear()
-        var ic_source : BitmapDescriptor
-        if (isSourceAdded) {
-            ic_source = bitmapDescriptorFromVector(
-                this,
-                R.drawable.ic_source
-            )//ic_source
-        } else {
-            /* ic_source = BitmapDescriptorFactory.fromResource(R.drawable.ic_destination)*/
-            ic_source = bitmapDescriptorFromVector(
-                this,
-                R.drawable.ic_destination
-            )
-        }
-        // var ic_destination = BitmapDescriptorFactory.fromResource(R.drawable.ic_destination)
-        var ic_destination = bitmapDescriptorFromVector(
-            this,
-            R.drawable.ic_destination
-        )
-        //var icon = bitmapDescriptorFromVector(this, R.drawable.ic_map_pin)
-        //  if (isSourceAdded) {
-        mGoogleMap!!.addMarker(
-            MarkerOptions()
-                .position(LatLng(sourceLatLng.latitude, sourceLatLng.longitude))
-                .icon(ic_source)
-        )
-        //  }
-        mGoogleMap!!.addMarker(
-            MarkerOptions()
-                .position(LatLng(destinationLatLng.latitude, destinationLatLng.longitude))
-                //.snippet(points[0].longitude.toString() + "")
-                .icon(ic_destination)
-        )
         if (polyPath!!.size > 0) {
             val opts = PolylineOptions().addAll(path).color(R.color.colorPrimary).width(16f)
             /*polylineFinal = */mGoogleMap?.addPolyline(opts)

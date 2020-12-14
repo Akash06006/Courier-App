@@ -56,8 +56,6 @@
                     android:contentDescription="@string/todo"
                     android:onClick="@{(v) -> profileViewModel.clickListener(v)}"
                     android:padding="@dimen/dp_15"
-                    android:rotation="-180"
-
                     android:src="@drawable/ic_arrow_forward"
                     android:tint="@color/colorWhite" />
 
@@ -114,15 +112,16 @@
             <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/colorPrimary"
+
                     android:orientation="vertical">
 
                 <LinearLayout
                         android:id="@+id/upload_profile_layer"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginTop="@dimen/dp_20"
+                        android:layout_marginTop="-5dp"
+                        android:background="@drawable/ic_prof_back"
                         android:gravity="center"
                         android:onClick="@{(v) -> profileViewModel.clickListener(v)}"
                         android:orientation="vertical"
@@ -188,7 +187,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/dp_20"
-                        android:background="@drawable/ic_top_circle"
                         android:orientation="vertical"
                         android:padding="@dimen/dp_10">
                     <!--                    android:background="@drawable/ic_profile_back"
@@ -348,6 +346,7 @@
                             android:text="@string/change_password"
                             android:textAllCaps="false"
                             android:textColor="@color/colorForgotPassword"
+                            android:visibility="gone"
                             app:font="@{`regular`}" />
                     <!-- <Button
                          android:id="@+id/btn_submit"

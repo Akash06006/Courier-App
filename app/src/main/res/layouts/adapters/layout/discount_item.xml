@@ -25,12 +25,13 @@
                 android:paddingLeft="@dimen/dp_10"
                 android:paddingRight="@dimen/dp_10"
                 app:cardCornerRadius="10dp"
-                app:cardElevation="2dp">
+                app:cardElevation="5dp">
 
             <LinearLayout
                     android:id="@+id/service_item"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:elevation="5dp"
                     android:orientation="vertical">
 
                 <ImageView

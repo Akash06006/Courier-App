@@ -1,5 +1,6 @@
 package com.android.courier.repositories.order
 
+import android.content.Intent
 import android.text.TextUtils
 import androidx.lifecycle.MutableLiveData
 import com.android.courier.R
@@ -11,6 +12,7 @@ import com.android.courier.common.UtilsFunctions
 import com.android.courier.model.CommonModel
 import com.android.courier.model.LoginResponse
 import com.android.courier.model.order.*
+import com.android.courier.views.authentication.LoginActivity
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonObject
 import okhttp3.MultipartBody
@@ -280,22 +282,37 @@ class OrderRepository {
             val mApiService = ApiService<JsonObject>()
             mApiService.get(
                 object : ApiResponse<JsonObject> {
+                    private var loginResponse : Any? = null
+
                     override fun onResponse(mResponse : Response<JsonObject>) {
-                        val loginResponse = if (mResponse.body() != null)
+                        loginResponse = if (mResponse.body() != null)
                             gson.fromJson<OrdersListResponse>(
                                 "" + mResponse.body(),
                                 OrdersListResponse::class.java
                             )
                         else {
-                            gson.fromJson<OrdersListResponse>(
-                                mResponse.errorBody()!!.charStream(),
-                                OrdersListResponse::class.java
-                            )
+                            if (mResponse.code() == 401) {
+                                UtilsFunctions.showToastError(mResponse.message())
+                                val i = Intent(
+                                    MyApplication.instance.applicationContext,
+                                    LoginActivity::class.java
+                                )
+                                i.flags =
+                                    Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                MyApplication.instance.applicationContext.startActivity(i)
+                                return
+                                data5!!.postValue(null)
+                                /**/
+                            } else {
+                                gson.fromJson<OrdersListResponse>(
+                                    mResponse.errorBody()!!.charStream(),
+                                    OrdersListResponse::class.java
+                                )
+
+                            }
+
                         }
-
-
-                        data5!!.postValue(loginResponse)
-
+                        data5!!.postValue(loginResponse as OrdersListResponse?)
                     }
 
                     override fun onError(mKey : String) {
@@ -316,22 +333,29 @@ class OrderRepository {
             val mApiService = ApiService<JsonObject>()
             mApiService.get(
                 object : ApiResponse<JsonObject> {
+                    private var loginResponse : Any? = null
+
                     override fun onResponse(mResponse : Response<JsonObject>) {
-                        val loginResponse = if (mResponse.body() != null)
+                        loginResponse = if (mResponse.body() != null)
                             gson.fromJson<CalculatePriceResponse>(
                                 "" + mResponse.body(),
                                 CalculatePriceResponse::class.java
                             )
                         else {
-                            gson.fromJson<CalculatePriceResponse>(
-                                mResponse.errorBody()!!.charStream(),
-                                CalculatePriceResponse::class.java
-                            )
+                            if (mResponse.code() == 401) {
+                                UtilsFunctions.showToastError(mResponse.message())
+                                data4!!.postValue(null)
+                            } else {
+                                UtilsFunctions.showToastError(mResponse.message())
+                                gson.fromJson<CalculatePriceResponse>(
+                                    mResponse.errorBody()!!.charStream(),
+                                    CalculatePriceResponse::class.java
+                                )
+                                data4!!.postValue(loginResponse as CalculatePriceResponse?)
+                            }
+
                         }
-
-
-                        data4!!.postValue(loginResponse)
-
+                        data4!!.postValue(loginResponse as CalculatePriceResponse?)
                     }
 
                     override fun onError(mKey : String) {
@@ -460,22 +484,29 @@ class OrderRepository {
             val mApiService = ApiService<JsonObject>()
             mApiService.get(
                 object : ApiResponse<JsonObject> {
+                    private var loginResponse : Any? = null
+
                     override fun onResponse(mResponse : Response<JsonObject>) {
-                        val loginResponse = if (mResponse.body() != null)
+                        loginResponse = if (mResponse.body() != null)
                             gson.fromJson<OrdersDetailResponse>(
                                 "" + mResponse.body(),
                                 OrdersDetailResponse::class.java
                             )
                         else {
-                            gson.fromJson<OrdersDetailResponse>(
-                                mResponse.errorBody()!!.charStream(),
-                                OrdersDetailResponse::class.java
-                            )
+                            if (mResponse.code() == 401) {
+                                UtilsFunctions.showToastError(mResponse.message())
+                                data6!!.postValue(null)
+                            } else {
+                                UtilsFunctions.showToastError(mResponse.message())
+                                gson.fromJson<OrdersDetailResponse>(
+                                    mResponse.errorBody()!!.charStream(),
+                                    OrdersDetailResponse::class.java
+                                )
+                                //data6!!.postValue(loginResponse as OrdersDetailResponse?)
+                            }
+
                         }
-
-
-                        data6!!.postValue(loginResponse)
-
+                        data6!!.postValue(loginResponse as OrdersDetailResponse?)
                     }
 
                     override fun onError(mKey : String) {
@@ -496,22 +527,29 @@ class OrderRepository {
             val mApiService = ApiService<JsonObject>()
             mApiService.get(
                 object : ApiResponse<JsonObject> {
+                    private var loginResponse : Any? = null
+
                     override fun onResponse(mResponse : Response<JsonObject>) {
-                        val loginResponse = if (mResponse.body() != null)
+                        loginResponse = if (mResponse.body() != null)
                             gson.fromJson<CancelReasonsListResponse>(
                                 "" + mResponse.body(),
                                 CancelReasonsListResponse::class.java
                             )
                         else {
-                            gson.fromJson<CancelReasonsListResponse>(
-                                mResponse.errorBody()!!.charStream(),
-                                CancelReasonsListResponse::class.java
-                            )
+                            if (mResponse.code() == 401) {
+                                UtilsFunctions.showToastError(mResponse.message())
+                                data7!!.postValue(null)
+                                return
+                            } else {
+                                gson.fromJson<CancelReasonsListResponse>(
+                                    mResponse.errorBody()!!.charStream(),
+                                    CancelReasonsListResponse::class.java
+                                )
+
+                            }
+
                         }
-
-
-                        data7!!.postValue(loginResponse)
-
+                        data7!!.postValue(loginResponse as CancelReasonsListResponse?)
                     }
 
                     override fun onError(mKey : String) {
@@ -539,13 +577,26 @@ class OrderRepository {
                                 CreateOrderResponse::class.java
                             )
                         else {
-                            gson.fromJson<CreateOrderResponse>(
-                                mResponse.errorBody()!!.charStream(),
-                                CreateOrderResponse::class.java
-                            )
+                            if (mResponse.code() == 401) {
+                                UtilsFunctions.showToastError(mResponse.message())
+                                val i = Intent(
+                                    MyApplication.instance.applicationContext,
+                                    LoginActivity::class.java
+                                )
+                                i.flags =
+                                    Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                MyApplication.instance.applicationContext.startActivity(i)
+                                /**/
+                            } else {
+                                gson.fromJson<CreateOrderResponse>(
+                                    mResponse.errorBody()!!.charStream(),
+                                    CreateOrderResponse::class.java
+                                )
+                            }
+
                         }
 
-                        createOrder!!.postValue(loginResponse)
+                        createOrder!!.postValue(loginResponse as CreateOrderResponse?)
 
                     }
 

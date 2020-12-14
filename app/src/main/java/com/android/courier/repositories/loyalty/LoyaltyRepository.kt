@@ -9,6 +9,7 @@ import com.android.courier.application.MyApplication
 import com.android.courier.common.UtilsFunctions
 import com.android.courier.model.LoginResponse
 import com.android.courier.model.loyalty.LoyaltyResponse
+import com.android.courier.model.notifications.NotificationsResponse
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonObject
 import retrofit2.Response
@@ -29,19 +30,29 @@ class LoyaltyRepository {
         val mApiService = ApiService<JsonObject>()
         mApiService.get(
             object : ApiResponse<JsonObject> {
+                private var loginResponse : Any? = null
+
                 override fun onResponse(mResponse : Response<JsonObject>) {
-                    val loginResponse = if (mResponse.body() != null)
+                    loginResponse = if (mResponse.body() != null)
                         gson.fromJson<LoyaltyResponse>(
                             "" + mResponse.body(),
                             LoyaltyResponse::class.java
                         )
                     else {
-                        gson.fromJson<LoyaltyResponse>(
-                            mResponse.errorBody()!!.charStream(),
-                            LoyaltyResponse::class.java
-                        )
+                        if (mResponse.code() == 401) {
+                            // UtilsFunctions.showToastError(mResponse.message())
+                            loyaltyPoint!!.postValue(null)
+                        } else {
+                            gson.fromJson<LoyaltyResponse>(
+                                mResponse.errorBody()!!.charStream(),
+                                LoyaltyResponse::class.java
+                            )
+
+                        }
+
                     }
-                    loyaltyPoint!!.postValue(loginResponse)
+                    loyaltyPoint!!.postValue(loginResponse as LoyaltyResponse?)
+
                 }
 
                 override fun onError(mKey : String) {

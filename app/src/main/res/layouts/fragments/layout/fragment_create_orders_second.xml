@@ -172,6 +172,45 @@
                         android:background="@color/colorGrey1" />
 
                 <RelativeLayout
+                        android:id="@+id/rlDeliveryTypeCharges"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp">
+
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="5dp"
+                            android:text="Delivery Type Charges"
+                            android:textAllCaps="false"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="15sp"
+                            app:font="@{`semibold`}" />
+
+                    <TextView
+                            android:id="@+id/txtDeliveryTypeCharges"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="5dp"
+                            android:text="₹ 0"
+                            android:textAllCaps="false"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="15sp"
+                            android:textStyle="bold"
+                            app:font="@{`bold`}" />
+                </RelativeLayout>
+
+                <View
+                        android:id="@+id/view5"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_margin="10dp"
+                        android:background="@color/colorGrey1" />
+
+                <RelativeLayout
                         android:id="@+id/rlCancel"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -356,12 +395,12 @@
                                     android:background="@null"
                                     android:hint="Item Name"
                                     android:imeOptions="actionDone"
+                                    android:maxLength="12"
                                     android:onClick="@{(v) -> orderViewModel.clickListener(v)}"
                                     android:paddingTop="10dp"
                                     android:paddingRight="10dp"
                                     android:paddingBottom="15dp"
                                     android:singleLine="true"
-
                                     android:textColorHint="@color/colorGrey1"
                                     android:textSize="14sp"
                                     app:font="@{`semibold`}" />

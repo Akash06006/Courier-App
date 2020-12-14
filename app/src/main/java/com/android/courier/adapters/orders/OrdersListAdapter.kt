@@ -45,16 +45,16 @@ class OrdersListAdapter(
 
     override fun onBindViewHolder(@NonNull holder : ViewHolder, position : Int) {
         viewHolder = holder
-        val dis = (position + 1) * 10
         if (active.equals("true")) {
-            if (true) {
-                holder.binding!!.txtDriverStatus.setText("Searching for Rider")
-                holder.binding!!.txtDriverStatus.setTextColor(mContext.resources.getColor(R.color.colorRed))
-            } else {
+            if (orderList!![position].riderStatus!!.contains("assigned")) {
                 holder.binding!!.txtDriverStatus.setText("Rider has been assigned")
                 holder.binding!!.txtDriverStatus.setTextColor(mContext.resources.getColor(R.color.colorMustad))
-            }
 
+            } else {
+                holder.binding!!.txtDriverStatus.setText("Searching for Rider")
+                holder.binding!!.txtDriverStatus.setTextColor(mContext.resources.getColor(R.color.colorRed))
+            }
+/*riderStatus -> {JsonPrimitive@17574} ""Rider has been assigned""*/
         } else {
             if (orderList!![position].orderStatus!!.contains("Can")) {
                 holder.binding!!.txtDriverStatus.setText(orderList!![position].orderStatus)

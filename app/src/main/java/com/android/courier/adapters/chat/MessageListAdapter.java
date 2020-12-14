@@ -183,13 +183,13 @@ public class MessageListAdapter extends RecyclerView.Adapter {
 
             imageView = (ImageView) itemView.findViewById(R.id.img_message);
             timeText = (TextView) itemView.findViewById(R.id.text_message_time);
-            imageView.setOnClickListener(new View.OnClickListener() {
+           /* imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (mMessageList.get(getAdapterPosition()).getMedia() != null)
                         ((ChatActivity) mContext).showImageData(false, mMessageList.get(getAdapterPosition()).getMedia());
                 }
-            });
+            });*/
         }
 
         void bind(ChatListModel message) {

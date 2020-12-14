@@ -24,7 +24,7 @@
         <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="70dp"
-                android:background="@color/colorPrimary"
+                android:background="@drawable/ic_toolbar_back"
                 app:layout_constraintBottom_toTopOf="@+id/img_cost"
                 app:layout_constraintTop_toTopOf="@+id/img_cost">
 
@@ -111,6 +111,17 @@
         <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
+
+            <com.airbnb.lottie.LottieAnimationView
+                    android:id="@+id/noRecordAnimation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@+id/txtNoRecord"
+                    android:layout_centerInParent="true"
+                    android:visibility="gone"
+                    app:lottie_autoPlay="true"
+                    app:lottie_loop="false"
+                    app:lottie_rawRes="@raw/emp_data" />
 
             <TextView
                     android:id="@+id/txtNoRecord"

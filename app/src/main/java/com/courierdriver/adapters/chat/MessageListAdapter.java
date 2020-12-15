@@ -45,11 +45,11 @@ public class MessageListAdapter extends RecyclerView.Adapter {
     // Determines the appropriate ViewType according to the sender of the message.
     @Override
     public int getItemViewType(int position) {
-        ChatListModel message = (ChatListModel) mMessageList.get(position);
+        ChatListModel message = mMessageList.get(position);
         String chatType = mMessageList.get(position).getChatType();
         String userId = new SharedPrefClass().getPrefValue(
                 mContext,
-                "USERID"
+                "USER_ID"
         ).toString();
         //if (!TextUtils.isEmpty(chatType) && chatType.equalsIgnoreCase("driver")) {
         if ((message.getSenderId() != null && message.getSenderId().equalsIgnoreCase(userId)) && message.getType() != null && message.getType() == 1) {
@@ -86,7 +86,7 @@ public class MessageListAdapter extends RecyclerView.Adapter {
 
         if (viewType == VIEW_TYPE_MESSAGE_SENT) {
             view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.item_message_sent, parent, false);
+                    .inflate(R.layout.item_message_received, parent, false);
             return new SentMessageHolder(view);
         } else if (viewType == VIEW_TYPE_MESSAGE_SENT_IMAGE) {
             view = LayoutInflater.from(parent.getContext())
@@ -98,7 +98,7 @@ public class MessageListAdapter extends RecyclerView.Adapter {
             return new ReceiveImageHolder(view);
         } else if (viewType == VIEW_TYPE_MESSAGE_RECEIVED) {
             view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.item_message_received, parent, false);
+                    .inflate(R.layout.item_message_sent, parent, false);
             return new ReceivedMessageHolder(view);
         }
 
@@ -108,7 +108,7 @@ public class MessageListAdapter extends RecyclerView.Adapter {
     // Passes the message object to a ViewHolder so that the contents can be bound to UI.
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        ChatListModel message = (ChatListModel) mMessageList.get(position);
+        ChatListModel message = mMessageList.get(position);
         switch (holder.getItemViewType()) {
             case VIEW_TYPE_MESSAGE_SENT:
                 ((SentMessageHolder) holder).bind(message);
@@ -135,8 +135,8 @@ public class MessageListAdapter extends RecyclerView.Adapter {
         SentMessageHolder(View itemView) {
             super(itemView);
 
-            messageText = (TextView) itemView.findViewById(R.id.text_message_body);
-            timeText = (TextView) itemView.findViewById(R.id.text_message_time);
+            messageText = itemView.findViewById(R.id.text_message_body);
+            timeText = itemView.findViewById(R.id.text_message_time);
         }
 
         void bind(ChatListModel message) {
@@ -155,8 +155,8 @@ public class MessageListAdapter extends RecyclerView.Adapter {
         ReceivedMessageHolder(View itemView) {
             super(itemView);
 
-            messageText = (TextView) itemView.findViewById(R.id.text_message_body);
-            timeText = (TextView) itemView.findViewById(R.id.text_message_time);
+            messageText = itemView.findViewById(R.id.text_message_body);
+            timeText = itemView.findViewById(R.id.text_message_time);
         }
 
         void bind(ChatListModel message) {
@@ -179,8 +179,8 @@ public class MessageListAdapter extends RecyclerView.Adapter {
         SentImageHolder(View itemView) {
             super(itemView);
 
-            imageView = (ImageView) itemView.findViewById(R.id.img_message);
-            timeText = (TextView) itemView.findViewById(R.id.text_message_time);
+            imageView = itemView.findViewById(R.id.img_message);
+            timeText = itemView.findViewById(R.id.text_message_time);
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -210,8 +210,8 @@ public class MessageListAdapter extends RecyclerView.Adapter {
         ReceiveImageHolder(View itemView) {
             super(itemView);
 
-            imageView = (ImageView) itemView.findViewById(R.id.img_message);
-            timeText = (TextView) itemView.findViewById(R.id.text_message_time);
+            imageView = itemView.findViewById(R.id.img_message);
+            timeText = itemView.findViewById(R.id.text_message_time);
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

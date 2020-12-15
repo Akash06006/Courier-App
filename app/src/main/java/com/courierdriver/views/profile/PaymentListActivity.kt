@@ -21,6 +21,10 @@ class PaymentListActivity : BaseFragment() {
     private var isGooglePayVisible = false
     private var count = 0
     private var paymentType = ""
+    private var paymentListData: ArrayList<PaymentOptionsModel.Body>? = null
+    private var paytm = ""
+    private var googlePay = ""
+    private var phonePe = ""
 
     override fun initView() {
         binding = viewDataBinding as ActivityPaymentListBinding
@@ -40,8 +44,9 @@ class PaymentListActivity : BaseFragment() {
                 if (response != null) {
                     when (response.code) {
                         200 -> {
-                         //   baseActivity.showToastSuccess(response.message)
+                            //   baseActivity.showToastSuccess(response.message)
                             binding!!.model = response
+                            paymentListData = response.body
                         }
                         else -> {
                             UtilsFunctions.showToastError(response.message!!)
@@ -60,7 +65,7 @@ class PaymentListActivity : BaseFragment() {
                 if (response != null) {
                     when (response.code) {
                         200 -> {
-                            baseActivity.showToastSuccess(response.message)
+                            baseActivity.showToastSuccess("Payments options updated successfully")
                         }
                         else -> {
                             UtilsFunctions.showToastError(response.message!!)
@@ -85,17 +90,21 @@ class PaymentListActivity : BaseFragment() {
                     "tv_invite_friend" -> {
                         count = 0
                         paymentType = ""
+                        paytm = ""
+                        googlePay = ""
+                        phonePe = ""
+
                         if (!TextUtils.isEmpty(binding!!.etPhonePaytm.text.toString())) {
                             count += 1
-                            paymentType = "Paytm"
+                            paytm = paymentListData!![0].type!! + ","
                         }
                         if (!TextUtils.isEmpty(binding!!.etPhoneGooglePay.text.toString())) {
                             count += 1
-                            paymentType = "Google Pay"
+                            googlePay = paymentListData!![1].type!! + ","
                         }
                         if (!TextUtils.isEmpty(binding!!.etPhonePhonePe.text.toString())) {
                             count += 1
-                            paymentType = "PhonePe"
+                            phonePe = paymentListData!![2].type!!
                         }
                         if (!TextUtils.isEmpty(binding!!.etPhonePaytm.text.toString())
                             && (binding!!.etPhonePaytm.text.toString()).length < 10
@@ -124,13 +133,16 @@ class PaymentListActivity : BaseFragment() {
                         } else {
                             if (count < 2)
                                 UtilsFunctions.showToastError(getString(R.string.payment_options_error))
-                            else
+                            else {
+                                paymentType = paytm + googlePay + phonePe
+
                                 viewModel!!.profileSetup(
                                     binding!!.etPhoneGooglePay.text.toString(),
                                     binding!!.etPhonePhonePe.text.toString(),
                                     binding!!.etPhonePaytm.text.toString(),
                                     paymentType
                                 )
+                            }
                         }
                     }
                     "rel_phone_pe" -> {

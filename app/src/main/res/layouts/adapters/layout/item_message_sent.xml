@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:gravity="left"
     android:paddingTop="8dp">
@@ -15,7 +15,7 @@
         android:background="@drawable/other_message_bubble"
         android:maxWidth="240dp"
         android:padding="8dp"
-        android:text="hello, hello!"
+        android:text="/, hello!"
         android:textColor="#ffffff"
         android:textSize="@dimen/sp_14"
         app:layout_constraintRight_toRightOf="parent"

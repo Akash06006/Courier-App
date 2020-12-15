@@ -16,7 +16,7 @@ import com.courierdriver.R
 import com.courierdriver.constants.GlobalConstants
 import com.courierdriver.model.GcmMessageResponse
 import com.courierdriver.sharedpreference.SharedPrefClass
-import com.courierdriver.views.home.LandingActivty
+import com.courierdriver.views.notification.NotificationChatActivity
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 
@@ -60,7 +60,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             return
         }
         val displayMessage = dataList["message"]
-        val intent = Intent(this, LandingActivty::class.java)
+        val intent = Intent(this, NotificationChatActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         val pendingIntent = PendingIntent.getActivity(
             this, 0/*Request code*/, intent,
@@ -73,12 +73,12 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             notificationBuilder = NotificationCompat.Builder(this, packageName)
                 .setSmallIcon(R.drawable.ic_app)
-                .setContentTitle(getString(R.string.app_name))
+                .setContentTitle(displayMessage)
                 .setChannelId(packageName)
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true)
                 .setOngoing(false)
-                .setContentText(displayMessage)
+//                .setContentText(displayMessage)
                 .setDefaults(Notification.DEFAULT_ALL)
                 .setPriority(Notification.FLAG_HIGH_PRIORITY)
                 .setStyle(
@@ -98,8 +98,8 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         } else {
             notificationBuilder = NotificationCompat.Builder(this, packageName)
                 .setSmallIcon(R.drawable.ic_app)
-                .setContentTitle(getString(R.string.app_name))
-                .setContentText(displayMessage)
+                .setContentTitle(displayMessage)
+//                .setContentText(displayMessage)
                 .setAutoCancel(true)
                 .setOngoing(false)
                 .setDefaults(Notification.DEFAULT_ALL)

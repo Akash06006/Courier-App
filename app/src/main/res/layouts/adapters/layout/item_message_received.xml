@@ -31,6 +31,7 @@
         android:layout_marginLeft="@dimen/dp_10"
         android:layout_marginTop="@dimen/dp_2"
         android:text="11:40"
+        android:layout_marginRight="@dimen/dp_10"
         android:textSize="10sp"
         android:textColor="@color/colorGrey"
         app:layout_constraintBottom_toBottomOf="@+id/text_message_body"

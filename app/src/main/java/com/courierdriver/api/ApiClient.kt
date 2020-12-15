@@ -94,6 +94,26 @@ object ApiClient {
                     val request = builder.build()
                     val response = chain.proceed(request)
                     return if (response.code == 401) {
+
+                        val notificationToken =
+                            SharedPrefClass().getPrefValue(
+                                MyApplication.instance,
+                                GlobalConstants.NOTIFICATION_TOKENPref
+                            )
+                                .toString()
+                        SharedPrefClass().putObject(
+                            MyApplication.instance,
+                            "isLogin",
+                            false
+                        )
+                        SharedPrefClass().clearAll(MyApplication.instance)
+                        SharedPrefClass().putObject(
+                            MyApplication.instance,
+                            GlobalConstants.NOTIFICATION_TOKENPref,
+                            notificationToken
+                        )
+                        GlobalConstants.NOTIFICATION_TOKEN = notificationToken
+
                         val i = Intent(
                             MyApplication.instance.applicationContext,
                             LoginActivity::class.java

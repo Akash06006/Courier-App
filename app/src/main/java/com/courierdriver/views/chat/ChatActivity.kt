@@ -18,9 +18,6 @@ import com.courierdriver.chatSocket.ConnectionListener
 import com.courierdriver.chatSocket.SocketConnectionManager
 import com.courierdriver.constants.GlobalConstants
 import com.courierdriver.constants.GlobalConstants.SOCKET_CHAT_URL
-import com.google.gson.GsonBuilder
-import io.socket.emitter.Emitter
-import org.json.JSONArray
 import com.courierdriver.databinding.ActivityChatScreenBinding
 import com.courierdriver.model.chat.ChatListModel
 import com.courierdriver.sharedpreference.SharedPrefClass
@@ -28,6 +25,9 @@ import com.courierdriver.utils.BaseActivity
 import com.courierdriver.utils.ConvertBase64
 import com.esafirm.imagepicker.features.ImagePicker
 import com.esafirm.imagepicker.features.ReturnMode
+import com.google.gson.GsonBuilder
+import io.socket.emitter.Emitter
+import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.ByteArrayOutputStream
@@ -78,8 +78,8 @@ class ChatActivity : BaseActivity(),
             chatList,
             sharedPrefClass
         )
-        chatBinding.reyclerviewMessageList.setLayoutManager(LinearLayoutManager(this))
-        chatBinding.reyclerviewMessageList.setAdapter(mMessageAdapter)
+        chatBinding.reyclerviewMessageList.layoutManager = LinearLayoutManager(this)
+        chatBinding.reyclerviewMessageList.adapter = mMessageAdapter
 
         Log.e("Socket", " Init")
 
@@ -172,6 +172,7 @@ class ChatActivity : BaseActivity(),
                 objectChatHistory.put("type", 1)
                 objectChatHistory.put("message", chatBinding.edittextChatbox.text.toString())
                 objectChatHistory.put("userType", "driver")
+                objectChatHistory.put("orderId", orderId)
                 objectChatHistory.put("receiverId", GlobalConstants.ADMIN_ID)
                 SocketConnectionManager.getInstance()
                     .socket.emit("sendMessage", objectChatHistory)
@@ -261,12 +262,6 @@ class ChatActivity : BaseActivity(),
         finish()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        /* val socketConnectionManager = SocketConnectionManager.getInstance()
-         socketConnectionManager.closeConnection()*/
-    }
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         try {
@@ -302,7 +297,7 @@ class ChatActivity : BaseActivity(),
     fun showImageData(isThrowSelection: Boolean, imagePathOrURL: String) {
         val dialog = Dialog(this)
         dialog.setContentView(R.layout.show_image_dialog)
-        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent)
+        dialog.window.setBackgroundDrawableResource(android.R.color.transparent)
         // set the custom dialog components - text, image and button
         // set the custom dialog components - text, image and button
         val image: ImageView = dialog.findViewById(R.id.img) as ImageView
@@ -354,7 +349,7 @@ class ChatActivity : BaseActivity(),
             objectChatHistory.put("media", image)
             objectChatHistory.put("extension", imageExtension)
             objectChatHistory.put("userType", "driver")
-
+            objectChatHistory.put("orderId", orderId)
             objectChatHistory.put("receiverId", GlobalConstants.ADMIN_ID)
             SocketConnectionManager.getInstance()
                 .socket.emit("sendMessage", objectChatHistory)
@@ -388,7 +383,7 @@ class ChatActivity : BaseActivity(),
     }
 
     private fun showBoatChatMessages() {
-        chatBinding!!.boatMessageView.visibility = View.VISIBLE
+        chatBinding.boatMessageView.visibility = View.VISIBLE
         chatBinding.edittextChatbox.isEnabled = false
         var boatMessageList: ArrayList<String> = ArrayList()
         boatMessageList.add("I have not received my order")
@@ -429,7 +424,7 @@ class ChatActivity : BaseActivity(),
         objectChatHistory.put("userType", "driver")
         SocketConnectionManager.getInstance()
             .socket.emit("sendMessage", objectChatHistory)
-        chatBinding!!.boatMessageView.visibility = View.GONE
+        chatBinding.boatMessageView.visibility = View.GONE
         chatBinding.edittextChatbox.isEnabled = true
 
     }

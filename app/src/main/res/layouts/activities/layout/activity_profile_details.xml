@@ -4,6 +4,7 @@
 
     <data>
 
+        <import type="com.courierdriver.common.BindingUtils" />
         <variable
             name="viewModel"
             type="com.courierdriver.viewmodels.profile.ProfileViewModel" />
@@ -145,7 +146,7 @@
                                 android:layout_marginLeft="@dimen/dp_10"
                                 android:layout_marginTop="@dimen/dp_20"
                                 android:layout_marginRight="@dimen/dp_10"
-                                android:text="Completed Orders"
+                                android:text="@string/completed_orders"
                                 android:textAlignment="center"
                                 android:textColor="@color/colorGrey"
                                 android:textSize="@dimen/dp_12"
@@ -180,7 +181,7 @@
                                 android:layout_marginLeft="@dimen/dp_10"
                                 android:layout_marginTop="@dimen/dp_20"
                                 android:layout_marginRight="@dimen/dp_10"
-                                android:text="@{model.avgRating}"
+                                android:text="@{BindingUtils.setDecimalText(model.avgRating)}"
                                 android:textAlignment="center"
                                 android:textColor="@color/colorTextBlue"
                                 android:textSize="@dimen/sp_16"
@@ -279,7 +280,7 @@
                         android:drawableStart="@drawable/ic_help_red"
                         android:drawablePadding="@dimen/dp_10"
                         android:gravity="center_vertical"
-                        android:text="@{`Orders without lateness within current week : `+model.delayedOrders.toString()}"
+                        android:text="@{`Orders with lateness within current week : `+model.delayedOrders.toString()}"
                         android:textColor="@color/colorBlack"
                         android:textSize="@dimen/sp_14"
                         app:font="@{`bold`}" />
@@ -287,6 +288,7 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
+                        android:visibility="gone"
                         android:layout_marginTop="@dimen/dp_10"
                         android:background="@color/colorGreyLight" />
 
@@ -298,6 +300,7 @@
                         android:drawableStart="@drawable/ic_help_red"
                         android:drawablePadding="@dimen/dp_10"
                         android:gravity="center_vertical"
+                        android:visibility="gone"
                         android:text="@string/check_autostart_settings_to_make_sure_you_will_receive_all_notifications"
                         android:textColor="@color/colorBlack"
                         android:textSize="@dimen/sp_14"
@@ -365,7 +368,7 @@
                             android:layout_alignParentRight="true"
                             android:paddingRight="@dimen/dp_5"
                             android:text="@{model.referralCode.toString()}"
-                            android:textColor="@color/colorBlack"
+                            android:textColor="@color/colorTextBlue"
                             android:textSize="@dimen/sp_16"
                             app:font="@{`bold`}" />
 

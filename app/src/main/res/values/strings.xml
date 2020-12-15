@@ -1,7 +1,7 @@
 <!DOCTYPE resources [<!ENTITY app_name "LOCOMO">]>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <string name="app_name">&app_name;</string>
-    <string name="facebook_app_id">630169387861716</string>
+    <string name="facebook_app_id">194931038898257</string>
     <string name="fb_login_protocol_scheme">fb630169387861716</string>
     <string name="maps_api_key">AIzaSyD9A-jAewYGLoXKBJtOTSpxrd5VvUSU9js</string>
 
@@ -68,7 +68,7 @@
     <string name="todo">TODO</string>
     <string name="yes">Yes</string>
     <string name="by" tools:keep="@string/by">By</string>
-    <string name="want_to_logout">ARE YOU SURE YOU WOULD LIKE TO LOG OUT?</string>
+    <string name="want_to_logout">ARE YOU SURE YOU WOULD LIKE TO SIGN OUT?</string>
     <string name="no">No</string>
     <string name="coming_soon">Coming Soon</string>
     <string name="dummy_text">Lorem ipsum, or lipsum as it is sometimes known, is dummy text used in laying out print,
@@ -317,7 +317,7 @@
     <string name="avg_review">Avg. Review</string>
     <string name="approved_by_system_administrator">Documents are Approved</string>
     <string name="blocked_by_system_administrator">Blocked by system administrator</string>
-    <string name="approval_inprogress">Verification inProgress</string>
+    <string name="approval_inprogress">Verification in Progress</string>
     <string name="locomo">LOCOMO</string>
     <string name="delivery_of_essential_goods">Delivery of essential goods</string>
     <string name="city">City</string>
@@ -343,9 +343,9 @@
     <string name="id_card">ID Card</string>
     <string name="select_vehicle">Select Vehicle</string>
     <string name="reference_name">Reference Name</string>
-    <string name="logout_alert">Are you sure you want to Logout?</string>
+    <string name="logout_alert">Are you sure you want to Sign out?</string>
     <string name="number">Number</string>
-    <string name="payment_options_error">Please enter atleast two account\'s mobile number.</string>
+    <string name="payment_options_error">Please enter atleast two payment methods.</string>
     <string name="please_select_one_address_to_drop_the_order">Please select one address to drop the order.</string>
     <string name="notification_chat">Notification/Chat</string>
     <string name="enough_points_error">You don\'t have points to convert in cash.</string>

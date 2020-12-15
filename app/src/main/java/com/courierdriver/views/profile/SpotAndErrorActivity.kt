@@ -84,7 +84,7 @@ class SpotAndErrorActivity : BaseActivity(), ChoiceCallBack {
     private fun setToolbarTextIcons() {
         binding!!.toolbarCommon.toolbar.setImageResource(R.drawable.ic_back)
         binding!!.toolbarCommon.imgRight.visibility = View.GONE
-        binding!!.toolbarCommon.imgToolbarText.text = "Spot and error"
+        binding!!.toolbarCommon.imgToolbarText.text = getString(R.string.report_for_problem)
     }
 
     private fun viewClicks() {
@@ -161,7 +161,7 @@ class SpotAndErrorActivity : BaseActivity(), ChoiceCallBack {
                     when (response.code) {
                         200 -> {
                             if (response.body!!.isNotEmpty()) {
-                                subjectList = response!!.body
+                                subjectList = response.body
                                 if (subjectList!!.isNotEmpty())
                                     setSubjectListSpinner()
                             }

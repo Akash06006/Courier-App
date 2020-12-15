@@ -17,6 +17,10 @@
         <variable
             name="currencySign"
             type="String" />
+
+        <variable
+            name="additionalCharges"
+            type="String" />
     </data>
 
     <androidx.core.widget.NestedScrollView
@@ -66,7 +70,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/dp_10"
-                            android:text="@{model.all.avgRating}"
+                            android:text="@{BindingUtils.setDecimalText(model.all.avgRating)}"
                             android:textColor="@color/colorBlack"
                             android:textSize="@dimen/sp_14"
                             app:font="@{`bold`}" />
@@ -82,7 +86,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Order Completed"
+                            android:text="@string/order_completed"
                             android:textColor="@color/colorGrey"
                             android:textSize="@dimen/sp_12"
                             app:font="@{`regular`}" />
@@ -298,7 +302,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentLeft="true"
-                            android:text="Total Commission"
+                            android:text="@string/total_commission"
                             android:textColor="@color/colorBlack"
                             android:textSize="@dimen/sp_14"
                             app:font="@{`regular`}" />
@@ -373,7 +377,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentRight="true"
-                            android:text="@{`+`+currencySign+BindingUtils.setDecimalText(model.commissionData.payableCommission)}"
+                            android:text="@{`+`+currencySign+BindingUtils.setDecimalText(additionalCharges)}"
                             android:textColor="@color/colorRed"
                             android:textSize="@dimen/sp_14"
                             app:font="@{`bold`}" />
@@ -406,7 +410,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentRight="true"
-                            android:text="@{currencySign+BindingUtils.setDecimalText(model.commissionData.totalCommission)}"
+                            android:text="@{currencySign+BindingUtils.setDecimalText(model.commissionData.payableCommission)}"
                             android:textColor="@color/colorRed"
                             android:textSize="@dimen/sp_14"
                             app:font="@{`bold`}" />
@@ -516,32 +520,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/rating"
-                                android:textColor="@color/colorGrey"
-                                android:textSize="@dimen/sp_12"
-                                app:font="@{`regular`}" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/dp_10"
-                                android:text="@{model.week.avgRating}"
-                                android:textColor="@color/colorBlack"
-                                android:textSize="@dimen/sp_14"
-                                app:font="@{`bold`}" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:gravity="center_horizontal"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Order Completed"
+                                android:text="@string/completed"
                                 android:textColor="@color/colorGrey"
                                 android:textSize="@dimen/sp_12"
                                 app:font="@{`regular`}" />
@@ -566,7 +545,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/my_income"
+                                android:text="My Earnings"
                                 android:textColor="@color/colorGrey"
                                 android:textSize="@dimen/sp_12"
                                 app:font="@{`regular`}" />
@@ -576,6 +555,31 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/dp_10"
                                 android:text="@{currencySign+BindingUtils.setDecimalText(model.week.myIncome)}"
+                                android:textColor="@color/colorBlack"
+                                android:textSize="@dimen/sp_14"
+                                app:font="@{`bold`}" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center_horizontal"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Penalty"
+                                android:textColor="@color/colorGrey"
+                                android:textSize="@dimen/sp_12"
+                                app:font="@{`regular`}" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/dp_10"
+                                android:text="@{currencySign+BindingUtils.setDecimalText(model.week.penalty)}"
                                 android:textColor="@color/colorPrimary"
                                 android:textSize="@dimen/sp_14"
                                 app:font="@{`bold`}" />

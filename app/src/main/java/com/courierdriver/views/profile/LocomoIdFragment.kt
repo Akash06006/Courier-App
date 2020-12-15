@@ -137,11 +137,14 @@ class LocomoIdFragment : BaseFragment(), DownloadFileCallback {
                             binding!!.model = response.body
                             model = response.body
                             downloadUrl = response.body!!.locomoIdUrl!!
+                            setProfileImage(response.body.image!!)
                         }
                         208 -> {
                             binding!!.linInProgress.visibility = View.VISIBLE
-                            binding!!.linLocomoId.visibility = View.GONE
                             binding!!.linLocomoIdDetail.visibility = View.GONE
+
+                            model = response.body
+                            setProfileImage(response.body!!.image!!)
                         }
                         else -> {
                             UtilsFunctions.showToastError(response.message!!)
@@ -153,6 +156,14 @@ class LocomoIdFragment : BaseFragment(), DownloadFileCallback {
                     // UtilsFunctions.showToastError(resources.getString(R.string.internal_server_error))
                 }
             })
+    }
+
+    private fun setProfileImage(imageUrl: String) {
+        Glide.with(this)
+            .load(imageUrl)
+            .diskCacheStrategy(DiskCacheStrategy.ALL)
+            .placeholder(R.drawable.ic_user_profile)
+            .into(binding!!.imgProfile)
     }
 
     override fun showNotification(downloadFileName: String) {

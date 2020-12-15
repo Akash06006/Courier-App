@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <import type="com.courierdriver.common.BindingUtils" />
+
         <import type="android.view.View" />
 
         <variable
@@ -60,8 +62,8 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/proof_address_tv"
                 android:layout_marginLeft="@dimen/dp_20"
-                android:layout_marginRight="@dimen/dp_5"
                 android:layout_marginTop="@dimen/dp_10"
+                android:layout_marginRight="@dimen/dp_5"
                 app:cardCornerRadius="@dimen/dp_10"
                 app:cardElevation="@dimen/dp_2">
 
@@ -98,16 +100,16 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:layout_marginTop="@dimen/dp_2"
-                            android:textColor="@color/colorTextBlue"
-                            android:text="@string/front" />
+                            android:text="@string/front"
+                            android:textColor="@color/colorTextBlue" />
                     </LinearLayout>
 
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
-                        android:visibility="@{(!model.poaFApproved) ? View.GONE : View.VISIBLE}"
-                        android:src="@drawable/ic_check_mark" />
+                        android:src="@drawable/ic_check_mark"
+                        android:visibility="@{(!model.poaFApproved) ? View.GONE : View.VISIBLE}" />
                 </RelativeLayout>
             </androidx.cardview.widget.CardView>
 
@@ -118,8 +120,8 @@
                 android:layout_below="@+id/proof_address_tv"
                 android:layout_alignParentRight="true"
                 android:layout_marginLeft="@dimen/dp_5"
-                android:layout_marginRight="@dimen/dp_20"
                 android:layout_marginTop="@dimen/dp_10"
+                android:layout_marginRight="@dimen/dp_20"
                 app:cardCornerRadius="@dimen/dp_10"
                 app:cardElevation="@dimen/dp_2">
 
@@ -156,8 +158,8 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:layout_marginTop="@dimen/dp_2"
-                            android:textColor="@color/colorTextBlue"
-                            android:text="@string/back" />
+                            android:text="@string/back"
+                            android:textColor="@color/colorTextBlue" />
                     </LinearLayout>
 
                     <ImageView
@@ -229,8 +231,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
-                        android:visibility="@{(!model.panApproved) ? View.GONE : View.VISIBLE}"
-                        android:src="@drawable/ic_check_mark" />
+                        android:src="@drawable/ic_check_mark"
+                        android:visibility="@{(!model.panApproved) ? View.GONE : View.VISIBLE}" />
                 </RelativeLayout>
             </androidx.cardview.widget.CardView>
 
@@ -255,9 +257,9 @@
                 android:layout_height="@dimen/dp_40"
                 android:layout_below="@+id/vehicle_info__tv"
                 android:layout_marginLeft="20dp"
-                style="@style/SpinnerTheme"
                 android:layout_marginTop="@dimen/dp_15"
-                android:layout_marginRight="20dp" />
+                android:layout_marginRight="20dp"
+                android:backgroundTint="@color/colorPrimary" />
 
             <View
                 android:id="@+id/view_transport"
@@ -316,8 +318,8 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/driver_license_photo"
                 android:layout_marginLeft="@dimen/dp_20"
-                android:layout_marginRight="@dimen/dp_5"
                 android:layout_marginTop="@dimen/dp_10"
+                android:layout_marginRight="@dimen/dp_5"
                 app:cardCornerRadius="@dimen/dp_10"
                 app:cardElevation="@dimen/dp_2">
 
@@ -354,16 +356,16 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:layout_marginTop="@dimen/dp_2"
-                            android:textColor="@color/colorTextBlue"
-                            android:text="@string/front" />
+                            android:text="@string/front"
+                            android:textColor="@color/colorTextBlue" />
                     </LinearLayout>
 
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
-                        android:visibility="@{(!model.licenseFApproved) ? View.GONE : View.VISIBLE}"
-                        android:src="@drawable/ic_check_mark" />
+                        android:src="@drawable/ic_check_mark"
+                        android:visibility="@{(!model.licenseFApproved) ? View.GONE : View.VISIBLE}" />
                 </RelativeLayout>
             </androidx.cardview.widget.CardView>
 
@@ -373,8 +375,8 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/driver_license_photo"
                 android:layout_alignParentRight="true"
-                android:layout_marginTop="@dimen/dp_10"
                 android:layout_marginLeft="@dimen/dp_5"
+                android:layout_marginTop="@dimen/dp_10"
                 android:layout_marginRight="@dimen/dp_20"
                 android:onClick="@{(v) -> docVerifyViewModel.clickListener(v)}"
                 app:cardCornerRadius="@dimen/dp_10"
@@ -413,16 +415,16 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:layout_marginTop="@dimen/dp_2"
-                            android:textColor="@color/colorTextBlue"
-                            android:text="@string/back" />
+                            android:text="@string/back"
+                            android:textColor="@color/colorTextBlue" />
                     </LinearLayout>
 
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
-                        android:visibility="@{(!model.licenseBApproved) ? View.GONE : View.VISIBLE}"
-                        android:src="@drawable/ic_check_mark" />
+                        android:src="@drawable/ic_check_mark"
+                        android:visibility="@{(!model.licenseBApproved) ? View.GONE : View.VISIBLE}" />
                 </RelativeLayout>
             </androidx.cardview.widget.CardView>
 

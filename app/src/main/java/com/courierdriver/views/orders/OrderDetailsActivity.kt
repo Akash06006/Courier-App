@@ -39,6 +39,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.courierdriver.R
 import com.courierdriver.adapters.orders.DeliveryAddressAdapter
 import com.courierdriver.adapters.orders.DetailDeliveryAddressAdapter
+import com.courierdriver.adapters.orders.NavigationAddressAdapter
 import com.courierdriver.application.MyApplication
 import com.courierdriver.callbacks.SelfieCallBack
 import com.courierdriver.common.UtilsFunctions
@@ -92,6 +93,7 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
     GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
     GoogleMap.OnCameraIdleListener, DialogssInterface, SelfieCallBack,
     NetworkChangeCallback, NotiFyRestartTrackingReceiver {
+    private var marker: Marker? = null
     private var deliveryList: ArrayList<OrdersDetailResponse.PickupAddress>? = ArrayList()
     private var orderDetail: OrdersDetailResponse.Data? = OrdersDetailResponse.Data()
     private lateinit var activityCreateOrderBinding: ActivityOrderDetailsBinding
@@ -128,8 +130,9 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
     private var cancelledCharges = "0"
     private var selfieAction = 0 // 1 - Pickup Selfie , 2 - Drop Selfie
     private var selectDeliveryAddressDailog: Dialog? = null
+    private var setNavigationIconDialog: Dialog? = null
     private var dialogDelAddressList: ArrayList<OrdersDetailResponse.PickupAddress>? = null
-    private var addressId = ""
+    private var addressId = "0"
     private var orderStatus = ""
     private var fusedLocationProviderClient: FusedLocationProviderClient? = null
     private var locationRequest: LocationRequest? = null
@@ -341,6 +344,9 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
             this, Observer<String>(function =
             fun(it: String?) {
                 when (it) {
+                    "rel_navigation" -> {
+                        settNavigationIconAddress()
+                    }
                     "tv_available_accept_order" -> {
                         orderViewModel.acceptOrder(orderId)
                     }
@@ -399,6 +405,7 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
                                     }
                                 }
                             }
+                            addressId = "0"
                             orderViewModel.orderDetail(orderId)
 
                             UtilsFunctions.showToastSuccess(message!!)
@@ -460,10 +467,27 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
                             activityCreateOrderBinding.orderDetailModel = response.data
                             orderDetail = response.data
                             orderId = response.data!!.id!!
-                            getTimeDifference()
+                            orderStatus = response.data!!.orderStatus?.status!!
                             cancelledCharges = response.data?.cancellationCharges!!
                             setDeliveryAddressAdapter(response.data?.deliveryAddress)
                             hideUnhideButtons(response.data!!)
+
+                            if (orderDetail!!.additionalCharges!!.cancellationCharges != null &&
+                                orderDetail!!.additionalCharges!!.cancellationCharges != "0"
+                            )
+                                activityCreateOrderBinding.linAdditionalCharges.visibility =
+                                    View.VISIBLE
+                            else
+                                activityCreateOrderBinding.linAdditionalCharges.visibility =
+                                    View.GONE
+
+                            if (orderDetail!!.additionalCharges!!.securityFee != null &&
+                                orderDetail!!.additionalCharges!!.securityFee != "0"
+                            )
+                                activityCreateOrderBinding.linSecuirtyCharges.visibility =
+                                    View.VISIBLE
+                            else
+                                activityCreateOrderBinding.linSecuirtyCharges.visibility = View.GONE
 
                             if (orderStatus == "1")
                                 activityCreateOrderBinding.linValuesEarningsAvailable.visibility =
@@ -471,8 +495,6 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
                             else
                                 activityCreateOrderBinding.linValuesEarningsAvailable.visibility =
                                     View.VISIBLE
-
-                            getTimeDifference()
 
                             if (response.data!!.deliveryoption!!.title == "Regular") {
                                 activityCreateOrderBinding.tvDeliveryOption.setTextColor(
@@ -490,25 +512,16 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
                                 )
                             }
 
+                            setPickupDestinationMarker(response)
 
-                            val icDestination = bitmapDescriptorFromVector(
-                                this,
-                                R.drawable.ic_loc_dest
-                            )
-                            for (item in response.data?.deliveryAddress!!) {
-                                val marker = mGoogleMap!!.addMarker(
-                                    MarkerOptions()
-                                        .position(
-                                            LatLng(
-                                                item.lat!!.toDouble(),
-                                                item.long!!.toDouble()
-                                            )
-                                        )
-                                        .icon(icDestination)
-                                )
-
-                                builder.include(marker.position)
-                            }
+                            /* var currentLatLng = LatLng(currentLatitude, currentLongitude)
+                             for (i in 0 until response.data?.deliveryAddress!!.size) {
+                                 var destLatLng = LatLng(
+                                     response!!.data!!.deliveryAddress!![i].lat!!.toDouble(),
+                                     response!!.data!!.deliveryAddress!![i].long!!.toDouble()
+                                 )
+                                 drawPolyline(currentLatLng, destLatLng, false)
+                             }*/
 
                             deliveryList = response.data!!.deliveryAddress!!
                             customerId = response.data!!.userId!!
@@ -531,6 +544,88 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
                     }
                 }
             })
+    }
+
+    private fun setPickupDestinationMarker(response: OrdersDetailResponse) {
+        if (mGoogleMap != null)
+            mGoogleMap!!.clear()
+
+        val icPickup = bitmapDescriptorFromVector(
+            this,
+            R.drawable.ic_pickup
+        )
+        val icPickupPending = bitmapDescriptorFromVector(
+            this,
+            R.drawable.ic_pickup_pending
+        )
+        // if(response.pick)
+        if (response.data!!.pickedUp == false) {
+            marker = mGoogleMap!!.addMarker(
+                MarkerOptions()
+                    .position(
+                        LatLng(
+                            response.data?.pickupAddress!!.lat!!.toDouble(),
+                            response.data?.pickupAddress!!.long!!.toDouble()
+                        )
+                    )
+                    .icon(icPickupPending)
+            )
+        } else {
+            marker = mGoogleMap!!.addMarker(
+                MarkerOptions()
+                    .position(
+                        LatLng(
+                            response.data?.pickupAddress!!.lat!!.toDouble(),
+                            response.data?.pickupAddress!!.long!!.toDouble()
+                        )
+                    )
+                    .icon(icPickup)
+            )
+        }
+
+        builder.include(marker!!.position)
+
+
+        val icDestinationDelivered = bitmapDescriptorFromVector(
+            this,
+            R.drawable.ic_loc_dest
+        )
+        val icDestination = bitmapDescriptorFromVector(
+            this,
+            R.drawable.ic_current_location
+        )
+
+        for (i in 0 until response.data?.deliveryAddress!!.size) {
+            if (response.data?.deliveryAddress!![i].isComplete == false) {
+                marker = mGoogleMap!!.addMarker(
+                    MarkerOptions()
+                        .position(
+                            LatLng(
+                                response.data?.deliveryAddress!![i].lat!!.toDouble(),
+                                response.data?.deliveryAddress!![i].long!!.toDouble()
+                            )
+                        )
+                        .icon(icDestination)
+                )
+            } else {
+                marker = mGoogleMap!!.addMarker(
+                    MarkerOptions()
+                        .position(
+                            LatLng(
+                                response.data?.deliveryAddress!![i].lat!!.toDouble(),
+                                response.data?.deliveryAddress!![i].long!!.toDouble()
+                            )
+                        )
+                        .icon(icDestinationDelivered)
+                )
+            }
+
+            builder.include(marker!!.position)
+        }
+        val bounds = builder.build()
+        val padding = 150 // offset from edges of the map in pixels
+        val cu = CameraUpdateFactory.newLatLngBounds(bounds, padding)
+        mGoogleMap!!.moveCamera(cu)
     }
 
     //region CURRENT_LOCATION
@@ -588,22 +683,23 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
                     currentLatitude = location.latitude
                     currentLongitude = location.longitude
 
-                    val icDestination = bitmapDescriptorFromVector(
-                        this,
-                        R.drawable.ic_current_location
-                    )
+                    /* val icDestination = bitmapDescriptorFromVector(
+                         this,
+                         R.drawable.ic_current_location
+                     )
 
-                    val marker = mGoogleMap!!.addMarker(
-                        MarkerOptions()
-                            .position(LatLng(currentLatitude, currentLongitude))
-                            .icon(icDestination)
-                    )
+                     val marker = mGoogleMap!!.addMarker(
+                         MarkerOptions()
+                             .position(LatLng(currentLatitude, currentLongitude))
+                             .icon(icDestination)
+                     )
 
-                    builder.include(marker.position)
-                    val bounds = builder.build()
-                    val padding = 20 // offset from edges of the map in pixels
-                    val cu = CameraUpdateFactory.newLatLngBounds(bounds, padding)
-                    mGoogleMap!!.moveCamera(cu)
+                     builder.include(marker.position)
+                     val bounds = builder.build()
+                     val padding = 20 // offset from edges of the map in pixels
+                     val cu = CameraUpdateFactory.newLatLngBounds(bounds, padding)
+                     mGoogleMap!!.moveCamera(cu)*/
+
 //                    mGoogleMap?.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(currentLatitude, currentLongitude), 15f))
                 } else {
                     //Gps not enabled if loc is null
@@ -827,17 +923,21 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
         val orderStatusName = data.orderStatus?.statusName
         if (orderStatus.equals("1")) {
             activityCreateOrderBinding.linChatHelp.visibility = View.GONE
+            activityCreateOrderBinding.relNavigation.visibility = View.GONE
             activityCreateOrderBinding.llAvailable.visibility = View.VISIBLE
             activityCreateOrderBinding.llAcceptedTakeOrder.visibility = View.GONE
             activityCreateOrderBinding.llCompleteOrder.visibility = View.GONE
         } else if (orderStatus.equals("2")) {
             if (orderStatusName.equals("Picked Up")) {
+                activityCreateOrderBinding.relNavigation.visibility = View.VISIBLE
                 activityCreateOrderBinding.linChatHelp.visibility = View.VISIBLE
                 activityCreateOrderBinding.tvTimer.visibility = View.GONE
                 activityCreateOrderBinding.llAvailable.visibility = View.GONE
                 activityCreateOrderBinding.llAcceptedTakeOrder.visibility = View.GONE
                 activityCreateOrderBinding.llCompleteOrder.visibility = View.VISIBLE
             } else {
+                getTimeDifference()
+                activityCreateOrderBinding.relNavigation.visibility = View.GONE
                 activityCreateOrderBinding.linChatHelp.visibility = View.VISIBLE
                 activityCreateOrderBinding.tvTimer.visibility = View.VISIBLE
                 activityCreateOrderBinding.llAvailable.visibility = View.GONE
@@ -846,6 +946,10 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
             }
 
         } else if (orderStatus.equals("3")) {
+            if (orderStatusName == "Cancelled-User")
+                showCancelledOrderAlert("Order is cancelled by customer")
+
+            activityCreateOrderBinding.relNavigation.visibility = View.GONE
             activityCreateOrderBinding.linChatHelp.visibility = View.GONE
             activityCreateOrderBinding.tvTimer.visibility = View.GONE
             activityCreateOrderBinding.llAvailable.visibility = View.GONE
@@ -860,6 +964,30 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
                 activityCreateOrderBinding.llCompleteOrder.visibility = View.GONE
             }
         }
+    }
+
+    private fun showCancelledOrderAlert(message1: String) {
+        val binding =
+            DataBindingUtil.inflate<ViewDataBinding>(
+                LayoutInflater.from(this),
+                R.layout.layout_custom_alert,
+                null,
+                false
+            )
+        val dialog = Dialog(this)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setContentView(binding.root)
+        dialog.setTitle(getString(R.string.app_name))
+        // set the custom dialog components - text, image and button
+        val text = dialog.findViewById(R.id.text) as TextView
+        text.text = message1
+        val dialogButton = dialog.findViewById(R.id.dialogButtonOK) as Button
+        // if button is clicked, close the custom dialog
+        dialogButton.setOnClickListener {
+            dialog.dismiss()
+            finish()
+        }
+        dialog.show()
     }
 
     private fun setDeliveryAddressAdapter(deliveryAddressList: ArrayList<OrdersDetailResponse.PickupAddress>?) {
@@ -1099,11 +1227,14 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
         val spinnerReason =
             submitCancelReasonDialog!!.findViewById<Spinner>(R.id.sp_cancellation_reason)
         val tvSubmit = submitCancelReasonDialog!!.findViewById<TextView>(R.id.tv_submit)
+        val tvPrice = submitCancelReasonDialog!!.findViewById<TextView>(R.id.tv_price)
         val imgCross = submitCancelReasonDialog!!.findViewById<ImageView>(R.id.img_cross)
         val relOtherReason =
             submitCancelReasonDialog!!.findViewById<RelativeLayout>(R.id.rel_other_reason)
         val etOtherReason =
             submitCancelReasonDialog!!.findViewById<EditText>(R.id.et_other_reason)
+
+        tvPrice.text = GlobalConstants.CURRENCY_SIGN + orderDetail!!.driverCCharges
 
         setCancelReasonSpinner(spinnerReason, relOtherReason)
 
@@ -1173,121 +1304,6 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
 
     override fun onCameraIdle() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    private fun drawPolyline(
-        sourceLatLng: LatLng,
-        destinationLatLng: LatLng,
-        isSourceAdded: Boolean
-    ) {
-        val path: MutableList<LatLng> = ArrayList()
-        val context = GeoApiContext.Builder()
-            .apiKey(getString(R.string.maps_api_key))
-            .build()
-        val req = DirectionsApi.getDirections(
-            context,
-            /*sourceLatLng.latitude.toString().plus(",").plus(sourceLatLng.longitude),
-            destinationLatLng.latitude.toString().plus(",").plus(destinationLatLng.longitude)*/
-            sourceLatLng.latitude.toString().plus(",").plus(sourceLatLng.longitude.toString()),
-            destinationLatLng.latitude.toString().plus(",")
-                .plus(destinationLatLng.longitude.toString())
-        )
-        try {
-            val res = req.await()
-            //Loop through legs and steps to get encoded polylines of each step
-            if (res.routes != null && res.routes.isNotEmpty()) {
-                val route = res.routes[0]
-                if (route.legs != null) {
-                    for (i in 0 until route.legs.size) {
-                        val leg = route.legs[i]
-                        if (leg.steps != null) {
-                            for (j in 0 until leg.steps.size) {
-                                val step = leg.steps[j]
-                                if (step.steps != null && step.steps.isNotEmpty()) {
-                                    for (k in 0 until step.steps.size) {
-                                        val step1 = step.steps[k]
-                                        val points1 = step1.polyline
-                                        if (points1 != null) {
-                                            //Decode polyline and add points to latLongList of route coordinates
-                                            val coords1 = points1.decodePath()
-                                            for (coord1 in coords1) {
-                                                // path.add(LatLng(coord1.lat, coord1.lng))
-                                                path.add(LatLng(coord1.lat, coord1.lng))
-                                            }
-                                        }
-                                    }
-                                } else {
-                                    val points = step.polyline
-                                    if (points != null) {
-                                        //Decode polyline and add points to latLongList of route coordinates
-                                        val coords = points.decodePath()
-                                        for (coord in coords) {
-                                            path.add(LatLng(coord.lat, coord.lng))
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            } else {
-                //  mGoogleMap.drawPolyline("Destination is not detected,unable to draw path")
-                Log.d("MapPath", "Unable to draw path")
-            }
-        } catch (ex: Exception) {
-            ex.printStackTrace()
-        }
-
-        drawLine(path, sourceLatLng, destinationLatLng, isSourceAdded)
-
-    }
-
-    var polyPath: MutableList<LatLng>? = null
-    private fun drawLine(
-        path: MutableList<LatLng>,
-        sourceLatLng: LatLng,
-        destinationLatLng: LatLng,
-        isSourceAdded: Boolean
-    ) {
-        polyPath = path
-        // mGoogleMap?.clear()
-        var ic_source: BitmapDescriptor
-        if (isSourceAdded) {
-            ic_source = bitmapDescriptorFromVector(
-                this,
-                R.drawable.ic_current_location
-            )//ic_source
-        } else {
-            /* ic_source = BitmapDescriptorFactory.fromResource(R.drawable.ic_destination)*/
-            ic_source = bitmapDescriptorFromVector(
-                this,
-                R.drawable.ic_loc_dest
-            )
-        }
-        // var ic_destination = BitmapDescriptorFactory.fromResource(R.drawable.ic_destination)
-        var ic_destination = bitmapDescriptorFromVector(
-            this,
-            R.drawable.ic_loc_dest
-        )
-        //var icon = bitmapDescriptorFromVector(this, R.drawable.ic_map_pin)
-        //  if (isSourceAdded) {
-        mGoogleMap!!.addMarker(
-            MarkerOptions()
-                .position(LatLng(sourceLatLng.latitude, sourceLatLng.longitude))
-                .icon(ic_source)
-        )
-        //  }
-        mGoogleMap!!.addMarker(
-            MarkerOptions()
-                .position(LatLng(destinationLatLng.latitude, destinationLatLng.longitude))
-                //.snippet(points[0].longitude.toString() + "")
-                .icon(ic_destination)
-        )
-        if (polyPath!!.size > 0) {
-            val opts = PolylineOptions().addAll(path).color(R.color.colorPrimary).width(16f)
-            /*polylineFinal = */mGoogleMap?.addPolyline(opts)
-        }
-
     }
 
     override fun selfieFromCamera(mKey: String) {
@@ -1466,7 +1482,10 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
         setDialogDeliveryAddressAdapter(rvAddressList)
 
         tvSubmit.setOnClickListener {
-            showTakeSelfieAlert("complete_order")
+            if (addressId != "0")
+                showTakeSelfieAlert("complete_order")
+            else
+                showToastError("Please select address")
         }
         tvCancel.setOnClickListener {
             selectDeliveryAddressDailog!!.dismiss()
@@ -1491,20 +1510,26 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
     }
 
     fun completeOrder(id: String?) {
-        addressId = id!!
+        if (id != null)
+            addressId = id
     }
 
     private fun getTimeDifference() {
-        val simpleDateFormat = SimpleDateFormat("dd-M-yyyy hh:mm")
+        val simpleDateFormat = SimpleDateFormat("dd/mm/yyyy hh:mmaa")
 
         try {
             val c = Calendar.getInstance()
             println("Current time => " + c.time)
-            val df = SimpleDateFormat("dd-M-yyyy hh:mm")
+            val df = SimpleDateFormat("dd/mm/yyyy hh:mmaa")
             val formattedDate = df.format(c.time)
 
+            val pickupTime = orderDetail!!.pickupAddress!!.time
+            val separated =
+                pickupTime!!.split("- ".toRegex()).toTypedArray()
+            var pickupTimeSplitted = separated[1]
+            pickupTimeSplitted = pickupTimeSplitted.replace(" ", "")
             val date2 =
-                simpleDateFormat.parse(orderDetail!!.pickupAddress!!.date + " " + orderDetail!!.pickupAddress!!.time)
+                simpleDateFormat.parse(orderDetail!!.pickupAddress!!.date + " " + pickupTimeSplitted)
             val date1 = simpleDateFormat.parse(formattedDate)
 
             val dateDiff = UtilsFunctions.getTimeDifference(date1, date2)
@@ -1535,7 +1560,7 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
                     ))
                 )
 
-                println("Time : $hms")
+                // println("Time : $hms")
                 activityCreateOrderBinding.tvTimer.text =
                     hms                //here you can have your logic to set text to edittext
             }
@@ -1544,41 +1569,6 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
                 println("Time up")
             }
         }.start()
-
-/*
-        val countDownTimer = object : CountDownTimer(100000, 10000) {
-            override fun onTick(p0: Long) {
-                val millis: Long = p0
-                val hms = String.format(
-                    "%02d:%02d:%02d:%02d",
-                    TimeUnit.HOURS.toDays(TimeUnit.MILLISECONDS.toDays(millis)),
-                    (TimeUnit.MILLISECONDS.toHours(millis) - TimeUnit.DAYS.toHours(
-                        TimeUnit.MILLISECONDS.toDays(
-                            millis
-                        )
-                    )),
-                    (TimeUnit.MILLISECONDS.toMinutes(millis) -
-                            TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis))),
-                    (TimeUnit.MILLISECONDS.toSeconds(millis) - TimeUnit.MINUTES.toSeconds(
-                        TimeUnit.MILLISECONDS.toMinutes(millis)
-                    ))
-                )
-
-                println("Time : $hms")
-                activityCreateOrderBinding.tvTimer.text = hms
-            }
-
-            override fun onFinish() {
-                */
-/*clearing all fields and displaying countdown finished message          *//*
-
-                // countdownTimerText.setText("Count down completed");
-                println("Time up")
-            }
-        }
-
-        countDownTimer.start()
-*/
     }
 
     private fun setToolbar() {
@@ -1588,10 +1578,10 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
 
     private fun getIntentData() {
         orderId = intent.extras?.get("id").toString()
-        val activeOrder = intent.extras?.get("active").toString()
         userId = SharedPrefClass().getPrefValue(this, GlobalConstants.USER_ID).toString()
-        orderStatus =
-            intent.extras?.get("orderStatus").toString()  // 1- Available, 2 - Active, 3 - Completed
+        if (intent.hasExtra("orderStatus"))
+            orderStatus = intent.extras?.get("orderStatus")
+                .toString()  // 1- Available, 2 - Active, 3 - Completed
     }
 
     @TargetApi(Build.VERSION_CODES.M)
@@ -1600,5 +1590,146 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
             checkPermission()
         }
         super.onResume()
+    }
+
+    private fun settNavigationIconAddress() {
+        setNavigationIconDialog = Dialog(this)
+        setNavigationIconDialog!!.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        val dialogBinding =
+            DataBindingUtil.inflate<ViewDataBinding>(
+                LayoutInflater.from(this),
+                R.layout.dialog_select_address,
+                null,
+                false
+            )
+        setNavigationIconDialog!!.setContentView(dialogBinding.root)
+        setNavigationIconDialog!!.setCancelable(false)
+
+        val rvAddressList =
+            setNavigationIconDialog!!.findViewById<RecyclerView>(R.id.rv_address_list)
+        val tvSubmit = setNavigationIconDialog!!.findViewById<TextView>(R.id.tv_submit)
+        val tvCancel = setNavigationIconDialog!!.findViewById<TextView>(R.id.tv_cancel)
+        tvSubmit.visibility = View.VISIBLE
+        tvCancel.visibility = View.GONE
+
+        tvSubmit.setOnClickListener {
+            setNavigationIconDialog!!.dismiss()
+        }
+
+        setNavigationAddressAdapter(rvAddressList)
+
+        setNavigationIconDialog!!.window!!.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
+        setNavigationIconDialog!!.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        setNavigationIconDialog!!.window!!.setLayout(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+        setNavigationIconDialog!!.show()
+    }
+
+    private fun setNavigationAddressAdapter(rvAddressList: RecyclerView) {
+        Log.d("TAG", "listSize=---- ${dialogDelAddressList!!.size}")
+        val linearLayoutManager = LinearLayoutManager(this)
+        val adapter = NavigationAddressAdapter(this, dialogDelAddressList)
+        linearLayoutManager.orientation = RecyclerView.VERTICAL
+        rvAddressList.layoutManager = linearLayoutManager
+        rvAddressList.adapter = adapter
+    }
+
+    fun navigateIcon(addressData: OrdersDetailResponse.PickupAddress) {
+        if (setNavigationIconDialog != null)
+            setNavigationIconDialog!!.dismiss()
+
+        val gmmIntentUri =
+            Uri.parse("google.navigation:q=${addressData.lat},${addressData.long}&mode=d")
+        val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
+        mapIntent.setPackage("com.google.android.apps.maps")
+        startActivity(mapIntent)
+    }
+
+    private fun drawPolyline(
+        sourceLatLng: LatLng,
+        destinationLatLng: LatLng,
+        isSourceAdded: Boolean
+    ) {
+        var path: MutableList<LatLng> = ArrayList()
+        val context = GeoApiContext.Builder()
+            .apiKey("AIzaSyA7Zj-PTZm4sDG-eoiLPA-XohvgxBe95wU"/*getString(R.string.maps_api_key)*/)
+            .build()
+        val req = DirectionsApi.getDirections(
+            context,
+            /*sourceLatLng.latitude.toString().plus(",").plus(sourceLatLng.longitude),
+            destinationLatLng.latitude.toString().plus(",").plus(destinationLatLng.longitude)*/
+            sourceLatLng.latitude.toString().plus(",").plus(sourceLatLng.longitude.toString()),
+            destinationLatLng.latitude.toString().plus(",")
+                .plus(destinationLatLng.longitude.toString())
+        )
+        try {
+            val res = req.await()
+            //Loop through legs and steps to get encoded polylines of each step
+            if (res.routes != null && res.routes.isNotEmpty()) {
+                val route = res.routes[0]
+                if (route.legs != null) {
+                    for (i in 0 until route.legs.size) {
+                        val leg = route.legs[i]
+                        if (leg.steps != null) {
+                            for (j in 0 until leg.steps.size) {
+                                val step = leg.steps[j]
+                                if (step.steps != null && step.steps.isNotEmpty()) {
+                                    for (k in 0 until step.steps.size) {
+                                        val step1 = step.steps[k]
+                                        val points1 = step1.polyline
+                                        if (points1 != null) {
+                                            //Decode polyline and add points to latLongList of route coordinates
+                                            val coords1 = points1.decodePath()
+                                            for (coord1 in coords1) {
+                                                // path.add(LatLng(coord1.lat, coord1.lng))
+                                                path.add(LatLng(coord1.lat, coord1.lng))
+                                            }
+                                        }
+                                    }
+                                } else {
+                                    val points = step.polyline
+                                    if (points != null) {
+                                        //Decode polyline and add points to latLongList of route coordinates
+                                        val coords = points.decodePath()
+                                        for (coord in coords) {
+                                            path.add(LatLng(coord.lat, coord.lng))
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            } else {
+                //  mGoogleMap.drawPolyline("Destination is not detected,unable to draw path")
+                Log.d("MapPath", "Unable to draw path")
+            }
+        } catch (ex: Exception) {
+            ex.printStackTrace()
+        }
+
+        drawLine(path, sourceLatLng, destinationLatLng, isSourceAdded)
+
+    }
+
+    var polyPath: MutableList<LatLng>? = null
+    private fun drawLine(
+        path: MutableList<LatLng>,
+        sourceLatLng: LatLng,
+        destinationLatLng: LatLng, isSourceAdded: Boolean
+    ) {
+        //  polyPath = path
+        if (polyPath != null)
+            polyPath!!.addAll(path)
+        else
+            polyPath = path
+        // mGoogleMap?.clear()
+        if (polyPath!!.size > 0) {
+            val opts = PolylineOptions().addAll(path).color(R.color.colorPrimary).width(16f)
+            /*polylineFinal = */mGoogleMap?.addPolyline(opts)
+        }
+
     }
 }

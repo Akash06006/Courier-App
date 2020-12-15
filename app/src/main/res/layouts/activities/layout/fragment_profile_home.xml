@@ -7,7 +7,6 @@
 
         <import type="com.courierdriver.common.BindingUtils" />
 
-
         <variable
             name="onClick"
             type="android.view.View.OnClickListener" />
@@ -140,7 +139,7 @@
                         android:onClick="@{(v) -> homeViewModel.clickListener(v)}"
                         android:paddingLeft="@dimen/dp_10"
                         android:paddingRight="@dimen/dp_10"
-                        android:text="Locomo id"
+                        android:text="Locomo Id"
                         android:textAlignment="center"
                         android:textColor="@color/colorBlack"
                         android:textSize="@dimen/sp_14"

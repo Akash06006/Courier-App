@@ -41,11 +41,17 @@ class OrderListModel {
         @SerializedName("totalOrderPrice")
         val totalOrderPrice: String? = null
 
+        @SerializedName("isOngoing")
+        val isOngoing: Boolean? = null
+
         @SerializedName("vehicle")
         val vehicle: Vehicle? = null
 
         @SerializedName("weight")
         val weight: Weight? = null
+
+        @SerializedName("driverEarning")
+        val driverEarning: String? = null
 
         @SerializedName("deliveryoption")
         val deliveryoption: Deliveryoption? = null

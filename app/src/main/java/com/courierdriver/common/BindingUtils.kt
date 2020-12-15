@@ -248,9 +248,7 @@ object BindingUtils {
 
         image = GlobalConstants.BASE_SERVER + image
 
-
         return image
-
     }
 
     @JvmStatic
@@ -265,7 +263,11 @@ object BindingUtils {
     fun setDecimalText(text: String?): String {
         var formattedText = ""
         if (!TextUtils.isEmpty(text)) {
-            formattedText = DecimalFormat("##.##").format(text!!.toDouble())
+            try {
+                formattedText = DecimalFormat("##.##").format(text!!.toDouble())
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
             return formattedText
         } else
             return ""
@@ -291,7 +293,7 @@ object BindingUtils {
         var today = ""
         if (!TextUtils.isEmpty(date)) {
             try {
-                val dateFormat = SimpleDateFormat("dd-MM-yyyy")
+                val dateFormat = SimpleDateFormat("dd/MM/yyyy")
                 val datee = dateFormat.parse(date)
 
                 when (format) {

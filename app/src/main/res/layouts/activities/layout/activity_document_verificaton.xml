@@ -60,8 +60,8 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/proof_address_tv"
                     android:layout_marginLeft="@dimen/dp_20"
-                    android:layout_marginRight="@dimen/dp_5"
                     android:layout_marginTop="@dimen/dp_10"
+                    android:layout_marginRight="@dimen/dp_5"
                     android:onClick="@{(v) -> docVerifyViewModel.clickListener(v)}"
                     app:cardCornerRadius="@dimen/dp_10"
                     app:cardElevation="@dimen/dp_2">
@@ -81,7 +81,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:onClick="@{(v) -> docVerifyViewModel.clickListener(v)}"
                         android:orientation="vertical">
 
                         <ImageView
@@ -104,13 +103,12 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/proof_address_tv"
                     android:layout_alignParentRight="true"
+                    android:layout_marginLeft="@dimen/dp_5"
                     android:layout_marginTop="@dimen/dp_10"
                     android:layout_marginRight="@dimen/dp_20"
-                    android:layout_marginLeft="@dimen/dp_5"
                     android:onClick="@{(v) -> docVerifyViewModel.clickListener(v)}"
                     app:cardCornerRadius="@dimen/dp_10"
                     app:cardElevation="@dimen/dp_2">
-
 
                     <com.makeramen.roundedimageview.RoundedImageView
                         android:id="@+id/back_adahar_iv"
@@ -320,9 +318,9 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/driver_license_photo"
                     android:layout_alignParentRight="true"
+                    android:layout_marginLeft="@dimen/dp_5"
                     android:layout_marginTop="@dimen/dp_10"
                     android:layout_marginRight="@dimen/dp_20"
-                    android:layout_marginLeft="@dimen/dp_5"
                     android:onClick="@{(v) -> docVerifyViewModel.clickListener(v)}"
                     app:cardCornerRadius="@dimen/dp_10"
                     app:cardElevation="@dimen/dp_2">
@@ -376,11 +374,11 @@
 
                 <LinearLayout
                     android:id="@+id/lin_pay"
-                    android:layout_below="@+id/tv_payment_options"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingBottom="@dimen/dp_20"
-                    android:orientation="vertical">
+                    android:layout_below="@+id/tv_payment_options"
+                    android:orientation="vertical"
+                    android:paddingBottom="@dimen/dp_20">
 
                     <androidx.cardview.widget.CardView
                         android:layout_width="match_parent"
@@ -462,6 +460,7 @@
                                     android:paddingTop="@dimen/dp_10"
                                     android:paddingRight="@dimen/dp_20"
                                     android:paddingBottom="@dimen/dp_10"
+                                    android:singleLine="true"
                                     android:textColor="@color/colorBlack"
                                     android:textSize="@dimen/sp_16" />
 
@@ -549,6 +548,7 @@
                                     android:paddingTop="@dimen/dp_10"
                                     android:paddingRight="@dimen/dp_20"
                                     android:paddingBottom="@dimen/dp_10"
+                                    android:singleLine="true"
                                     android:textColor="@color/colorBlack"
                                     android:textSize="@dimen/sp_16" />
 
@@ -637,6 +637,7 @@
                                     android:paddingTop="@dimen/dp_10"
                                     android:paddingRight="@dimen/dp_20"
                                     android:paddingBottom="@dimen/dp_10"
+                                    android:singleLine="true"
                                     android:textColor="@color/colorBlack"
                                     android:textSize="@dimen/sp_16" />
 

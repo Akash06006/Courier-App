@@ -22,19 +22,31 @@ class StatisticsModel {
 
         class CommissionData {
 
-            @SerializedName("totalCommission") val totalCommission : String?=null
-            @SerializedName("earnedCash") val earnedCash : String?=null
-            @SerializedName("payableCommission") val payableCommission : String?=null
-            @SerializedName("additionalCharges") val additionalCharges : AdditionalCharges?=null
+            @SerializedName("totalCommission")
+            val totalCommission: String? = null
+            @SerializedName("earnedCash")
+            val earnedCash: String? = null
+            @SerializedName("payableCommission")
+            val payableCommission: String? = null
+            @SerializedName("usedPoints")
+            val usedPoints: String? = null
+            @SerializedName("usedCash")
+            val usedCash: String? = null
+            @SerializedName("additionalCharges")
+            val additionalCharges: AdditionalCharges? = null
 
             class AdditionalCharges {
 
-                @SerializedName("total")
-                val total: String? = null
-                @SerializedName("cancellationCharges")
-                val cancellationCharges: String? = null
+                /*@SerializedName("total")
+                val total: String? = null*/
                 @SerializedName("securityFee")
                 val securityFee: String? = null
+
+                @SerializedName("cancellationCharges")
+                val cancellationCharges: String? = null
+
+                @SerializedName("cancelChargesCust")
+                val cancelChargesCust: String? = null
             }
         }
 

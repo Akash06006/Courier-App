@@ -39,15 +39,11 @@
         android:theme="@style/AppTheme.NoActionBar"
         tools:ignore="GoogleAppIndexingWarning"
         tools:targetApi="n">
-        <activity android:name=".views.orders.OrderDetailsActivity" />
-        <activity android:name=".views.authentication.DocumentVerificatonActivity" />
-        <activity android:name=".views.tutorials.TutorialActivity" />
-        <activity android:name=".views.home.LandingActivty" />
         <activity
             android:name=".views.SplashActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter>
+            <intent-filter>uh
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
@@ -71,7 +67,7 @@
         <activity
             android:name=".views.authentication.OTPVerificationActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden" />
+            android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
             android:name=".views.authentication.ResetPasswrodActivity"
             android:screenOrientation="portrait"
@@ -80,6 +76,23 @@
             android:name=".views.authentication.ChangePasswrodActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
+
+        <activity
+            android:name=".views.orders.OrderDetailsActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity
+            android:name=".views.authentication.DocumentVerificatonActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity
+            android:name=".views.tutorials.TutorialActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity
+            android:name=".views.home.LandingActivty"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
             android:name=".views.contactus.ContactUsActivity"
             android:screenOrientation="portrait"
@@ -167,11 +180,11 @@
             </intent-filter>
         </service>
 
-<!--
-        <meta-data
-            android:name="com.google.firebase.messaging.default_notification_channel_id"
-            android:value="@string/app_name" />
--->
+        <!--
+                <meta-data
+                    android:name="com.google.firebase.messaging.default_notification_channel_id"
+                    android:value="@string/app_name" />
+        -->
 
         <activity
             android:name="com.facebook.CustomTabActivity"
@@ -185,7 +198,10 @@
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
-        <activity android:name=".views.notification.NotificationChatActivity" />
+        <activity
+            android:name=".views.notification.NotificationChatActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden" />
     </application>
 
 </manifest>

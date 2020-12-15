@@ -1,7 +1,10 @@
 package com.courierdriver.views.authentication
 
 import android.content.Intent
+import android.content.pm.PackageInfo
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Base64.encode
 import android.util.Log
 import android.widget.EditText
 import android.widget.Toast
@@ -9,6 +12,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.courierdriver.R
 import com.courierdriver.application.MyApplication
+import com.courierdriver.common.FirebaseFunctions
 import com.courierdriver.common.UtilsFunctions
 import com.courierdriver.constants.GlobalConstants
 import com.courierdriver.databinding.ActivityLoginBinding
@@ -16,7 +20,6 @@ import com.courierdriver.model.LoginResponse
 import com.courierdriver.sharedpreference.SharedPrefClass
 import com.courierdriver.utils.BaseActivity
 import com.courierdriver.viewmodels.LoginViewModel
-import com.courierdriver.views.home.LandingActivty
 import com.facebook.CallbackManager
 import com.facebook.FacebookCallback
 import com.facebook.FacebookException
@@ -33,6 +36,7 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.iid.FirebaseInstanceId
 import com.google.gson.JsonObject
 import org.json.JSONObject
+import java.security.MessageDigest
 import java.util.*
 
 class LoginActivity : BaseActivity() {
@@ -58,12 +62,35 @@ class LoginActivity : BaseActivity() {
         // activityLoginbinding.tvForgotPassword.paintFlags = Paint.UNDERLINE_TEXT_FLAG
         val gso: GoogleSignInOptions =
             GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken("6946227711-va1qdqpru77knadr33pnseqnn9l89hgf.apps.googleusercontent.com")
+//                .requestIdToken("6946227711-va1qdqpru77knadr33pnseqnn9l89hgf.apps.googleusercontent.com")
                 .requestEmail()
                 .build()
         firebaseToken()
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
-        loginViewModel.getLoginRes().observe(this,
+        getLoginResultObserver()
+        loaderObserver()
+        viewClicks()
+        printHashKey()
+    }
+
+    fun printHashKey() {
+        try {
+            val info: PackageInfo = packageManager
+                .getPackageInfo(packageName, PackageManager.GET_SIGNATURES)
+            for (signature in info.signatures) {
+                val md = MessageDigest.getInstance("SHA")
+                md.update(signature.toByteArray())
+                val hashKey = String(encode(md.digest(), 0))
+                Log.i("AppLog", "key:$hashKey=")
+            }
+        } catch (e: java.lang.Exception) {
+            Log.e("AppLog", "error:", e)
+        }
+    }
+
+    private fun getLoginResultObserver() {
+        loginViewModel.getLoginRes().observe(
+            this,
             Observer<LoginResponse> { loginResponse ->
                 stopProgressDialog()
 
@@ -132,6 +159,11 @@ class LoginActivity : BaseActivity() {
                             GlobalConstants.EMAIL,
                             loginResponse.data!!.email
                         )
+                        SharedPrefClass().putObject(
+                            MyApplication.instance,
+                            GlobalConstants.AVAILABLE,
+                            loginResponse.data!!.isAvailable.toString()
+                        )
 
                         mOtpJsonObject.addProperty(
                             "countryCode",
@@ -142,23 +174,18 @@ class LoginActivity : BaseActivity() {
                             activityLoginbinding.edtPhone.text.toString()
                         )
 
-                        /* showToastSuccess(message)
-                         GlobalConstants.VERIFICATION_TYPE = "signup"
-                         FirebaseFunctions.sendOTP("login", mOtpJsonObject, this)
- */
-                        val intent = Intent(this, LandingActivty::class.java)
-                        startActivity(intent)
-                        finish()
+                        //  showToastSuccess(message)
+                        GlobalConstants.VERIFICATION_TYPE = "signup"
+                        FirebaseFunctions.sendOTP("login", mOtpJsonObject, this)
+                        /* val intent = Intent(this, LandingActivty::class.java)
+                         startActivity(intent)
+                         finish()*/
 
                     } else {
                         showToastError(message)
                     }
-
                 }
             })
-
-        loaderObserver()
-        viewClicks()
     }
 
     private fun viewClicks() {
@@ -224,7 +251,7 @@ class LoginActivity : BaseActivity() {
                                 mJsonObject.addProperty("phoneNumber", phoneNumber)
                                 mJsonObject.addProperty(
                                     "countryCode",
-                                    "+" +  activityLoginbinding.btCountryCode.selectedCountryCode
+                                    "+" + activityLoginbinding.btCountryCode.selectedCountryCode
                                 )
                                 /*mJsonObject.addProperty("email", email)
                                 mJsonObject.addProperty("password", password)*/
@@ -384,11 +411,10 @@ class LoginActivity : BaseActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == RC_SIGN_IN) {
-                val task: Task<GoogleSignInAccount> =
-                    GoogleSignIn.getSignedInAccountFromIntent(data)
-                handleSignInResult(task)
-        }
-        else {
+            val task: Task<GoogleSignInAccount> =
+                GoogleSignIn.getSignedInAccountFromIntent(data)
+            handleSignInResult(task)
+        } else {
             callbackManager?.onActivityResult(requestCode, resultCode, data)
         }
     }
@@ -397,8 +423,7 @@ class LoginActivity : BaseActivity() {
         try {
             val account = completedTask.getResult<ApiException>(ApiException::class.java)
             if (account == null) {
-                Toast.makeText(this, "Somthing went wrong", Toast.LENGTH_LONG).show()
-
+                Toast.makeText(this, "Something went wrong", Toast.LENGTH_LONG).show()
                 return
             }
             val input = JsonObject()

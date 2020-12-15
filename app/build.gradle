@@ -124,6 +124,10 @@ dependencies {
         exclude group: 'org.json', module: 'json'
     }
 
+    //PayuMoney screen animation
+    def lottieVersion = "3.4.0"
+    implementation "com.airbnb.android:lottie:$lottieVersion"
+
     //Image Picker
     implementation 'com.github.esafirm.android-image-picker:imagepicker:2.2.0'
 }

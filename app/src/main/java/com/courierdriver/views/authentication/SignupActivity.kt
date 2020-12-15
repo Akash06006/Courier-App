@@ -6,6 +6,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Environment
 import android.provider.MediaStore
+import android.text.TextUtils
 import android.widget.EditText
 import androidx.core.content.FileProvider
 import androidx.lifecycle.Observer
@@ -280,6 +281,15 @@ class SignupActivity : BaseActivity(), ChoiceCallBack {
                                     R.string.phone_min
                                 )
                             )
+                            phone.contains("+") -> {
+                                showError(
+                                    activitySignupbinding.edtPhone, getString(R.string.invalid)
+                                            + " " + getString(R.string.phone_number)
+                                )
+                            }
+                            TextUtils.isEmpty(profileImage) -> {
+                                showToastError("Please select image")
+                            }
                             /* password.isEmpty() -> showError(
                                  activitySignupbinding.edtPassword,
                                  getString(R.string.empty) + " " + getString(
@@ -309,37 +319,41 @@ class SignupActivity : BaseActivity(), ChoiceCallBack {
 
                                 val mHashMap = HashMap<String, RequestBody>()
                                 mHashMap["countryCode"] =
-                                    Utils(this!!).createPartFromString("+" + activitySignupbinding.btnCcp.selectedCountryCode)
+                                    Utils(this).createPartFromString("+" + activitySignupbinding.btnCcp.selectedCountryCode)
                                 mHashMap["phoneNumber"] =
-                                    Utils(this!!).createPartFromString(phone)
+                                    Utils(this).createPartFromString(phone)
                                 mHashMap["firstName"] =
-                                    Utils(this!!).createPartFromString(fName)
+                                    Utils(this).createPartFromString(fName)
                                 mHashMap["lastName"] =
-                                    Utils(this!!).createPartFromString(lName)
-                                mHashMap["phoneNumber"] =
-                                    Utils(this!!).createPartFromString(phone)
+                                    Utils(this).createPartFromString(lName)
+                                /* mHashMap["phoneNumber"] =
+                                     Utils(this!!).createPartFromString(phone)*/
                                 mHashMap["email"] =
-                                    Utils(this!!).createPartFromString(email)
+                                    Utils(this).createPartFromString(email)
                                 /* mHashMap["password"] =
                                      Utils(this!!).createPartFromString(password)*/
                                 mHashMap["isSocial"] =
-                                    Utils(this!!).createPartFromString(isSocial.toString())
+                                    Utils(this).createPartFromString(isSocial.toString())
+/*
                                 mHashMap["deviceToken"] =
                                     Utils(this!!).createPartFromString("deviceToken")
+*/
                                 mHashMap["platform"] =
-                                    Utils(this!!).createPartFromString("android")
+                                    Utils(this).createPartFromString("android")
                                 mHashMap["socialType"] =
-                                    Utils(this!!).createPartFromString("socialType")
+                                    Utils(this).createPartFromString(socialType)
                                 mHashMap["socialId"] =
-                                    Utils(this!!).createPartFromString("socialId")
+                                    Utils(this).createPartFromString(socialId)
+                                mHashMap["deviceToken"] =
+                                    Utils(this).createPartFromString(GlobalConstants.NOTIFICATION_TOKEN)
                                 mHashMap["referralCode"] =
-                                    Utils(this!!).createPartFromString(activitySignupbinding.etReferralCode.text.toString())
+                                    Utils(this).createPartFromString(activitySignupbinding.etReferralCode.text.toString())
 
                                 var userImage: MultipartBody.Part? = null
-                                if (!profileImage.isEmpty()) {
+                                if (profileImage.isNotEmpty()) {
                                     val f1 = File(profileImage)
                                     userImage =
-                                        Utils(this!!).prepareFilePart(
+                                        Utils(this).prepareFilePart(
                                             "profileImage",
                                             f1
                                         )

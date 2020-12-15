@@ -92,5 +92,9 @@ class LoginResponse {
         @SerializedName("regionId")
         @Expose
         var regionId: String? = null
+
+        @SerializedName("isAvailable")
+        @Expose
+        var isAvailable: Boolean? = null
     }
 }

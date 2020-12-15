@@ -120,11 +120,15 @@ class OrderDetailRepository {
             mApiService.get(
                 object : ApiResponse<JsonObject> {
                     override fun onResponse(mResponse: Response<JsonObject>) {
-                        val data = gson.fromJson<CommonModel>(
-                            "" + mResponse.body()!!,
-                            CommonModel::class.java
-                        )
-                        completeOrderData!!.postValue(data)
+                        if (mResponse.body() != null) {
+                            val data = gson.fromJson<CommonModel>(
+                                "" + mResponse.body()!!,
+                                CommonModel::class.java
+                            )
+                            completeOrderData!!.postValue(data)
+                        } else {
+                            completeOrderData!!.postValue(null)
+                        }
                     }
 
                     override fun onError(mKey: String) {
@@ -514,13 +518,16 @@ class OrderDetailRepository {
             mApiService.get(
                 object : ApiResponse<JsonObject> {
                     override fun onResponse(mResponse: Response<JsonObject>) {
-                        val data = gson.fromJson<CommonModel>(
-                            "" + mResponse.body()!!,
-                            CommonModel::class.java
-                        )
-                        cancelOrderData!!.postValue(data)
+                        if (mResponse.body() != null) {
+                            val data = gson.fromJson<CommonModel>(
+                                "" + mResponse.body()!!,
+                                CommonModel::class.java
+                            )
+                            cancelOrderData!!.postValue(data)
+                        } else {
+                            cancelOrderData!!.postValue(null)
+                        }
                     }
-
                     override fun onError(mKey: String) {
                         cancelOrderData!!.value = null
                         UtilsFunctions.showToastError(MyApplication.instance.getString(R.string.internal_server_error))
@@ -530,7 +537,6 @@ class OrderDetailRepository {
         }
         return cancelOrderData!!
     }
-
 
     fun orderDetail(orderId: String?): MutableLiveData<OrdersDetailResponse> {
         if (!TextUtils.isEmpty(orderId)) {

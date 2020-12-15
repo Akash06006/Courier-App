@@ -64,6 +64,9 @@ class DocumentVerificatonActivity : BaseActivity(), ChoiceCallBack, SelfieCallBa
     private var isGooglePayVisible = false
     private var count = 0
     private var paymentType = ""
+    private var paytm = ""
+    private var googlePay = ""
+    private var phonePe = ""
 
     override fun getLayoutId(): Int {
         return R.layout.activity_document_verificaton
@@ -90,16 +93,16 @@ class DocumentVerificatonActivity : BaseActivity(), ChoiceCallBack, SelfieCallBa
                     "rel_phone_pe" -> {
                         if (isPhonePeVisible) {
                             isPhonePeVisible = false
-                            activityDocVeribinding!!.linPhonePe.visibility = View.GONE
-                            activityDocVeribinding!!.imgArrowPhonePe.setImageDrawable(
+                            activityDocVeribinding.linPhonePe.visibility = View.GONE
+                            activityDocVeribinding.imgArrowPhonePe.setImageDrawable(
                                 getDrawable(
                                     R.drawable.ic_small_arrow_down
                                 )
                             )
                         } else {
                             isPhonePeVisible = true
-                            activityDocVeribinding!!.linPhonePe.visibility = View.VISIBLE
-                            activityDocVeribinding!!.imgArrowPhonePe.setImageDrawable(
+                            activityDocVeribinding.linPhonePe.visibility = View.VISIBLE
+                            activityDocVeribinding.imgArrowPhonePe.setImageDrawable(
                                 getDrawable(
                                     R.drawable.ic_up_arrow
                                 )
@@ -109,16 +112,16 @@ class DocumentVerificatonActivity : BaseActivity(), ChoiceCallBack, SelfieCallBa
                     "rel_google_pay" -> {
                         if (isGooglePayVisible) {
                             isGooglePayVisible = false
-                            activityDocVeribinding!!.linGooglePay.visibility = View.GONE
-                            activityDocVeribinding!!.imgArrowGooglePay.setImageDrawable(
+                            activityDocVeribinding.linGooglePay.visibility = View.GONE
+                            activityDocVeribinding.imgArrowGooglePay.setImageDrawable(
                                 getDrawable(
                                     R.drawable.ic_small_arrow_down
                                 )
                             )
                         } else {
                             isGooglePayVisible = true
-                            activityDocVeribinding!!.linGooglePay.visibility = View.VISIBLE
-                            activityDocVeribinding!!.imgArrowGooglePay.setImageDrawable(
+                            activityDocVeribinding.linGooglePay.visibility = View.VISIBLE
+                            activityDocVeribinding.imgArrowGooglePay.setImageDrawable(
                                 getDrawable(
                                     R.drawable.ic_up_arrow
                                 )
@@ -128,16 +131,16 @@ class DocumentVerificatonActivity : BaseActivity(), ChoiceCallBack, SelfieCallBa
                     "rel_paytm" -> {
                         if (isPaytmVisible) {
                             isPaytmVisible = false
-                            activityDocVeribinding!!.linPaytm.visibility = View.GONE
-                            activityDocVeribinding!!.imgArrowPaytm.setImageDrawable(
+                            activityDocVeribinding.linPaytm.visibility = View.GONE
+                            activityDocVeribinding.imgArrowPaytm.setImageDrawable(
                                 getDrawable(
                                     R.drawable.ic_small_arrow_down
                                 )
                             )
                         } else {
                             isPaytmVisible = true
-                            activityDocVeribinding!!.linPaytm.visibility = View.VISIBLE
-                            activityDocVeribinding!!.imgArrowPaytm.setImageDrawable(
+                            activityDocVeribinding.linPaytm.visibility = View.VISIBLE
+                            activityDocVeribinding.imgArrowPaytm.setImageDrawable(
                                 getDrawable(
                                     R.drawable.ic_up_arrow
                                 )
@@ -148,17 +151,21 @@ class DocumentVerificatonActivity : BaseActivity(), ChoiceCallBack, SelfieCallBa
                         dlNumber = activityDocVeribinding.etDrivingLicenseNo.text.toString()
                         count = 0
                         paymentType = ""
+                        paytm = ""
+                        googlePay = ""
+                        phonePe = ""
+
                         if (!TextUtils.isEmpty(activityDocVeribinding.etPhonePaytm.text.toString())) {
                             count += 1
-                            paymentType = "Paytm"
+                            paytm = "Paytm" + ","
                         }
                         if (!TextUtils.isEmpty(activityDocVeribinding.etPhoneGooglePay.text.toString())) {
                             count += 1
-                            paymentType = "Google Pay"
+                            googlePay = "Google Pay" + ","
                         }
                         if (!TextUtils.isEmpty(activityDocVeribinding.etPhonePhonePe.text.toString())) {
                             count += 1
-                            paymentType = "PhonePe"
+                            phonePe = "Phone Pay"
                         }
 
                         //  mHashMap["password"] = Utils(this).createPartFromString(password)
@@ -203,6 +210,8 @@ class DocumentVerificatonActivity : BaseActivity(), ChoiceCallBack, SelfieCallBa
                         } else if (count < 2) {
                             UtilsFunctions.showToastError(getString(R.string.payment_options_error))
                         } else {
+                            paymentType = paytm + googlePay + phonePe
+
                             val mHashMap = HashMap<String, RequestBody>()
                             mHashMap["dlNumber"] =
                                 Utils(this).createPartFromString(dlNumber)
@@ -351,8 +360,8 @@ class DocumentVerificatonActivity : BaseActivity(), ChoiceCallBack, SelfieCallBa
                                 GlobalConstants.IS_DOC_UPLOADED,
                                 "true"
                             )
-                            Intent(this, LandingActivty::class.java)
-                            startActivity(intent)
+                            val intent1 = Intent(this, LandingActivty::class.java)
+                            startActivity(intent1)
                             finish()
                             message?.let { UtilsFunctions.showToastSuccess(it) }
                         }
@@ -598,7 +607,7 @@ class DocumentVerificatonActivity : BaseActivity(), ChoiceCallBack, SelfieCallBa
     }
 
     private fun loaderObserver() {
-        docVerifyViewModel!!.isLoading().observe(this, Observer<Boolean> { aBoolean ->
+        docVerifyViewModel.isLoading().observe(this, Observer<Boolean> { aBoolean ->
             if (aBoolean!!) {
                 startProgressDialog()
             } else {

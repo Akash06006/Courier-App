@@ -273,4 +273,8 @@ class LandingActivty : BaseActivity(), View.OnClickListener, NotifyWorkStatusBut
             activityOtpVerificationBinding.txtAvailble.text = "Not Working"
         }
     }
+
+    override fun onBackPressed() {
+        finish()
+    }
 }

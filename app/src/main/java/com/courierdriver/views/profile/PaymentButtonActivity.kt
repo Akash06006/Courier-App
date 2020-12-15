@@ -246,7 +246,6 @@ class PaymentButtonActivity : BaseActivity() {
         binding!!.toolbarCommon.imgRight.visibility = View.GONE
     }
 
-
     override fun getLayoutId(): Int {
         return R.layout.activity_payment_button
     }

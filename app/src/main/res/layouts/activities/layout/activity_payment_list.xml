@@ -102,6 +102,7 @@
                             android:background="@drawable/shape_round_color_primary"
                             android:inputType="phone"
                             android:paddingLeft="@dimen/dp_20"
+                            android:singleLine="true"
                             android:paddingTop="@dimen/dp_10"
                             android:paddingRight="@dimen/dp_20"
                             android:paddingBottom="@dimen/dp_10"
@@ -191,6 +192,7 @@
                             android:inputType="phone"
                             android:paddingLeft="@dimen/dp_20"
                             android:paddingTop="@dimen/dp_10"
+                            android:singleLine="true"
                             android:paddingRight="@dimen/dp_20"
                             android:paddingBottom="@dimen/dp_10"
                             android:text="@{model.body.get(0).gpayNo}"
@@ -282,6 +284,7 @@
                             android:paddingTop="@dimen/dp_10"
                             android:paddingRight="@dimen/dp_20"
                             android:paddingBottom="@dimen/dp_10"
+                            android:singleLine="true"
                             android:text="@{model.body.get(0).phonePayNo}"
                             android:textColor="@color/colorBlack"
                             android:textSize="@dimen/sp_16" />

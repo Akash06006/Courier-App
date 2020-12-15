@@ -7,6 +7,8 @@
             name="model"
             type="com.courierdriver.model.order.OrderListModel.Body" />-->
 
+        <import type="com.courierdriver.common.BindingUtils" />
+
         <variable
             name="orderDetailViewModel"
             type="com.courierdriver.viewmodels.order.OrderDetailViewModel" />
@@ -45,12 +47,36 @@
                     android:layout_height="match_parent"
                     android:orientation="vertical">
 
-                    <fragment
-                        android:id="@+id/map_view"
-                        android:name="com.google.android.gms.maps.SupportMapFragment"
-                        android:layout_width="match_parent"
-                        android:layout_height="270dp"
-                        android:background="#ffffff" />
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="270dp">
+
+                        <fragment
+                            android:id="@+id/map_view"
+                            android:name="com.google.android.gms.maps.SupportMapFragment"
+                            android:layout_width="match_parent"
+                            android:layout_height="270dp"
+                            android:background="#ffffff" />
+
+                        <RelativeLayout
+                            android:id="@+id/rel_navigation"
+                            android:layout_width="@dimen/dp_40"
+                            android:layout_height="@dimen/dp_40"
+                            android:layout_alignParentRight="true"
+                            android:layout_alignParentBottom="true"
+                            android:layout_marginRight="@dimen/dp_30"
+                            android:layout_marginBottom="@dimen/dp_60"
+                            android:background="@drawable/shape_circle"
+                            android:backgroundTint="@color/colorPrimary"
+                            android:onClick="@{(v) -> orderDetailViewModel.clickListener(v)}">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerInParent="true"
+                                android:src="@drawable/ic_navigation" />
+                        </RelativeLayout>
+                    </RelativeLayout>
 
                     <LinearLayout
                         android:id="@+id/lin_chat_help"
@@ -77,7 +103,7 @@
                                 android:id="@+id/tv_chat"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="1"
+                                android:layout_weight="0.9"
                                 android:drawableLeft="@drawable/ic_chat"
                                 android:drawablePadding="@dimen/dp_5"
                                 android:gravity="start|center_vertical"
@@ -91,7 +117,7 @@
                                 android:id="@+id/tv_help"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="1"
+                                android:layout_weight="0.8"
                                 android:drawableLeft="@drawable/ic_help"
                                 android:drawablePadding="@dimen/dp_5"
                                 android:gravity="start|center_vertical"
@@ -106,7 +132,7 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="end"
-                                android:layout_weight="1"
+                                android:layout_weight="1.4"
                                 android:drawableLeft="@drawable/ic_timer"
                                 android:drawablePadding="@dimen/dp_5"
                                 android:gravity="start|center_vertical"
@@ -158,7 +184,7 @@
                                         android:layout_below="@+id/tv_order_details"
                                         android:layout_alignParentLeft="true"
                                         android:text="@{orderDetailModel.pickupAddress.date}"
-                                        android:textColor="@color/colorGrey"
+                                        android:textColor="@color/colorLightBlue"
                                         android:textSize="@dimen/sp_12"
                                         app:font="@{`bold`}" />
 
@@ -171,7 +197,7 @@
                                         android:paddingTop="@dimen/dp_5"
                                         android:paddingRight="@dimen/dp_10"
                                         android:paddingBottom="@dimen/dp_5"
-                                        android:text="@{currencySign+orderDetailModel.totalOrderPrice}"
+                                        android:text="@{currencySign+BindingUtils.setDecimalText(orderDetailModel.driverEarning)}"
                                         android:textColor="@color/colorTextBlue"
                                         android:textSize="@dimen/sp_16"
                                         app:font="@{`bold`}" />
@@ -457,7 +483,7 @@
                                                     android:layout_width="wrap_content"
                                                     android:layout_height="wrap_content"
                                                     android:paddingLeft="@dimen/dp_5"
-                                                    android:text="@{orderDetailModel.driverEarning}"
+                                                    android:text="@{BindingUtils.setDecimalText(orderDetailModel.driverEarning)}"
                                                     android:textColor="@color/colorBlack"
                                                     android:textSize="@dimen/sp_12"
                                                     app:font="@{`semibold`}" />
@@ -474,7 +500,7 @@
                                             <TextView
                                                 android:layout_width="wrap_content"
                                                 android:layout_height="wrap_content"
-                                                android:text="Collect from customer"
+                                                android:text="@string/collect_from_customer"
                                                 android:textColor="@color/colorGrey"
                                                 android:textSize="@dimen/sp_11"
                                                 app:font="@{`regular`}" />
@@ -496,14 +522,12 @@
                                                     android:layout_width="wrap_content"
                                                     android:layout_height="wrap_content"
                                                     android:paddingLeft="@dimen/dp_5"
-                                                    android:text="@{orderDetailModel.driverEarning}"
+                                                    android:text="@{BindingUtils.setDecimalText(orderDetailModel.totalOrderPrice)}"
                                                     android:textColor="@color/colorTextBlue"
                                                     android:textSize="@dimen/sp_14"
                                                     app:font="@{`semibold`}" />
                                             </LinearLayout>
                                         </LinearLayout>
-
-
                                     </LinearLayout>
 
                                     <View
@@ -550,7 +574,7 @@
                                                     android:layout_width="wrap_content"
                                                     android:layout_height="wrap_content"
                                                     android:paddingLeft="@dimen/dp_5"
-                                                    android:text="@{orderDetailModel.parcelValue}"
+                                                    android:text="@{orderDetailModel.payToLocomo}"
                                                     android:textColor="@color/colorBlack"
                                                     android:textSize="@dimen/sp_12"
                                                     app:font="@{`semibold`}" />
@@ -561,10 +585,11 @@
                                             android:layout_width="match_parent"
                                             android:layout_height="wrap_content"
                                             android:layout_marginTop="@dimen/dp_10"
-                                            android:layout_weight="1"
+                                            android:gravity="center_vertical"
                                             android:orientation="vertical">
 
                                             <LinearLayout
+                                                android:id="@+id/lin_additional_charges"
                                                 android:layout_width="match_parent"
                                                 android:layout_height="wrap_content"
                                                 android:orientation="horizontal">
@@ -572,7 +597,7 @@
                                                 <TextView
                                                     android:layout_width="wrap_content"
                                                     android:layout_height="wrap_content"
-                                                    android:text="Additional Charges"
+                                                    android:text="@string/additional_charges"
                                                     android:textColor="@color/colorGrey"
                                                     android:textSize="@dimen/sp_11"
                                                     app:font="@{`regular`}" />
@@ -594,7 +619,7 @@
                                                         android:layout_width="wrap_content"
                                                         android:layout_height="wrap_content"
                                                         android:paddingLeft="@dimen/dp_5"
-                                                        android:text="@{orderDetailModel.adminComission}"
+                                                        android:text="@{BindingUtils.setDecimalText(orderDetailModel.additionalCharges.cancellationCharges)}"
                                                         android:textColor="@color/colorBlack"
                                                         android:textSize="@dimen/sp_12"
                                                         app:font="@{`semibold`}" />
@@ -603,6 +628,7 @@
                                             </LinearLayout>
 
                                             <LinearLayout
+                                                android:id="@+id/lin_secuirty_charges"
                                                 android:layout_width="match_parent"
                                                 android:layout_height="wrap_content"
                                                 android:orientation="horizontal">
@@ -610,7 +636,7 @@
                                                 <TextView
                                                     android:layout_width="wrap_content"
                                                     android:layout_height="wrap_content"
-                                                    android:text="Secuirty Charges"
+                                                    android:text="@string/security_charges"
                                                     android:textColor="@color/colorGrey"
                                                     android:textSize="@dimen/sp_11"
                                                     app:font="@{`regular`}" />
@@ -632,7 +658,7 @@
                                                         android:layout_width="wrap_content"
                                                         android:layout_height="wrap_content"
                                                         android:paddingLeft="@dimen/dp_5"
-                                                        android:text="@{orderDetailModel.driverCCharges}"
+                                                        android:text="@{orderDetailModel.additionalCharges.securityFee}"
                                                         android:textColor="@color/colorBlack"
                                                         android:textSize="@dimen/sp_12"
                                                         app:font="@{`semibold`}" />
@@ -675,10 +701,10 @@
 
                         <TextView
                             android:id="@+id/tv_available_accept_order"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/dp_10"
-                            android:layout_marginRight="@dimen/dp_10"
+                            android:layout_marginLeft="@dimen/dp_40"
+                            android:layout_marginRight="@dimen/dp_40"
                             android:background="@drawable/round_corners_home_tab"
                             android:backgroundTint="@color/colorPrimary"
                             android:gravity="center"

@@ -6,7 +6,6 @@ import android.content.Intent
 import android.os.Build
 import android.os.CountDownTimer
 import android.text.TextUtils
-import android.view.View
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.courierdriver.R
@@ -28,7 +27,6 @@ import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthProvider
 import com.google.gson.JsonObject
 import org.json.JSONException
-import java.util.concurrent.TimeUnit
 
 class OTPVerificationActivity : BaseActivity() {
     private lateinit var otpVerificationModel: OTPVerificationModel
@@ -42,6 +40,7 @@ class OTPVerificationActivity : BaseActivity() {
     var number = ""
     var countryCode = ""
     var isDocUploaded = ""
+    var isTimeRunning = false
 
     override fun getLayoutId(): Int {
         return R.layout.activity_otp_verification
@@ -106,17 +105,19 @@ class OTPVerificationActivity : BaseActivity() {
 
                     }
                     "tv_resend" -> {
-                        val mJsonObject1 = JsonObject()
-                        mJsonObject1.addProperty(
-                            "countryCode",
-                            countryCode
-                        )
-                        mJsonObject1.addProperty(
-                            "phoneNumber",
-                            number
-                        )
-                        FirebaseFunctions.sendOTP("resend", mJsonObject1, this)
-                        countDown()
+                        if (!isTimeRunning) {
+                            val mJsonObject1 = JsonObject()
+                            mJsonObject1.addProperty(
+                                "countryCode",
+                                countryCode
+                            )
+                            mJsonObject1.addProperty(
+                                "phoneNumber",
+                                number
+                            )
+                            FirebaseFunctions.sendOTP("resend", mJsonObject1, this)
+                            countDown()
+                        }
                     }
                 }
 
@@ -191,7 +192,7 @@ class OTPVerificationActivity : BaseActivity() {
             countryCode = countryCode.replace("\"", "")
             /* mJsonObject = JSONObject(intent.extras.get("data").toString())
              var mob = mJsonObject.get("phoneNumber").toString()*/
-            val msg = activityOtpVerificationBinding.tvOtpSent.getText().toString()
+            val msg = activityOtpVerificationBinding.tvOtpSent.text.toString()
             activityOtpVerificationBinding.tvOtpSent.text = "$msg $number"
 
         } catch (e: JSONException) {
@@ -287,6 +288,7 @@ class OTPVerificationActivity : BaseActivity() {
     private fun countDown() {
         object : CountDownTimer(30000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
+                isTimeRunning = true
                 // activityOtpVerificationBinding.resendOTP = 1
                 activityOtpVerificationBinding.tvResend.text =
                     "Resend in " + millisUntilFinished / 1000 + " sec"
@@ -294,6 +296,7 @@ class OTPVerificationActivity : BaseActivity() {
             }
 
             override fun onFinish() {
+                isTimeRunning = false
                 activityOtpVerificationBinding.tvResend.text =
                     getString(R.string.resend_otp)
             }

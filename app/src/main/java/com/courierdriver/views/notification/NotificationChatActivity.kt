@@ -1,5 +1,6 @@
 package com.courierdriver.views.notification
 
+import android.view.View
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -33,10 +34,16 @@ class NotificationChatActivity : BaseActivity() {
         viewModel!!.notificationData().observe(this,
             Observer<NotificationListModel> { response ->
                 stopProgressDialog()
+                binding!!.rvItems.visibility = View.VISIBLE
+                binding!!.tvNoRecord.visibility = View.GONE
                 if (response != null) {
                     when (response.code) {
                         200 -> {
                             setAdapter(response.body)
+                        }
+                        204 -> {
+                            binding!!.tvNoRecord.visibility = View.VISIBLE
+                            binding!!.rvItems.visibility = View.GONE
                         }
                         else -> {
                             UtilsFunctions.showToastError(response.message!!)

@@ -64,6 +64,24 @@ class HomeOrdersAdapter(
             )
         }
 
+        if (orderList!![position].isOngoing != null) {
+            if (orderList!![position].isOngoing!!) {
+                holder.binding.cvOrderList.setBackgroundDrawable(
+                    ContextCompat.getDrawable(
+                        mContext.baseActivity,
+                        R.drawable.round_layout_stroke
+                    )
+                )
+            } else {
+                holder.binding.cvOrderList.setBackgroundDrawable(
+                    ContextCompat.getDrawable(
+                        mContext.baseActivity,
+                        R.drawable.round_layout_without_stroke
+                    )
+                )
+            }
+        }
+
         if (orderList!![position].deliveryAddress!!.size > 1)
             holder.binding.tvDeliveryAddressSize.visibility = View.VISIBLE
         else
@@ -135,7 +153,7 @@ class HomeOrdersAdapter(
             binding!!.cvOrderList.setOnClickListener {
                 val intent = Intent(mContext.activity, OrderDetailsActivity::class.java)
                 intent.putExtra("id", orderList!![adapterPosition].id)
-                intent.putExtra("active", "true")
+//                intent.putExtra("active", "true")
                 intent.putExtra(
                     "orderStatus",
                     orderStatus.toString()

@@ -4,7 +4,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="reply">Reply</string>
     <string name="referral_code">Referral code</string>
-    <string name="your_today">Your Today</string>
+    <string name="your_today">You Today</string>
     <string name="help_us_to_understand_you">Help us to Understand you</string>
     <string name="skip">Skip</string>
     <string name="next">Next</string>
@@ -14,4 +14,11 @@
     <string name="total_payable">Total Payable</string>
     <string name="additional_charges">Additional Charges</string>
     <string name="you_are_not_working">You are not working</string>
+    <string name="collect_from_customer">Collect from customer</string>
+    <string name="security_charges">Security Charges</string>
+    <string name="total_commission">Total Commission</string>
+    <string name="order_completed">Order Completed</string>
+    <string name="no_record_found">No Record Found</string>
+    <string name="report_for_problem">Report for problem</string>
+    <string name="completed_orders">Completed Orders</string>
 </resources>

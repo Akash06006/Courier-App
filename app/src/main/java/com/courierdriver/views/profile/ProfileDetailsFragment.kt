@@ -74,34 +74,34 @@ class ProfileDetailsFragment : BaseFragment(), DialogssInterface, SelfieCallBack
                             confirmationDialog = mDialogClass.setDefaultDialog(
                                 baseActivity,
                                 this,
-                            "logout",
-                            getString(R.string.logout),
-                            getString(R.string.want_to_logout),
-                            getString(R.string.logout_alert)
-                        )
-                        confirmationDialog!!.show()
-                    }
-                    "tv_invite_friend" -> {
-                        val shareIntent: Intent = Intent().apply {
-                            action = Intent.ACTION_SEND
-                            putExtra(
-                                Intent.EXTRA_TEXT,
-                                "Please download app from ${GlobalConstants.TERMS_AND_CONDITIONS} Use my referral code to earn points ${model!!.referralCode}"
+                                "logout",
+                                getString(R.string.logout),
+                                getString(R.string.want_to_logout),
+                                getString(R.string.logout_alert)
                             )
-                            type = "text/plain"
+                            confirmationDialog!!.show()
                         }
-                        startActivity(
-                            Intent.createChooser(
-                                shareIntent,
-                                "Send to"
+                        "tv_invite_friend" -> {
+                            val shareIntent: Intent = Intent().apply {
+                                action = Intent.ACTION_SEND
+                                putExtra(
+                                    Intent.EXTRA_TEXT,
+                                    "Please download app from ${GlobalConstants.TERMS_AND_CONDITIONS} Use my referral code to earn points ${model!!.referralCode}"
+                                )
+                                type = "text/plain"
+                            }
+                            startActivity(
+                                Intent.createChooser(
+                                    shareIntent,
+                                    "Send to"
+                                )
                             )
-                        )
+                        }
+                        "tv_selfie" -> {
+                            showTakeSelfieAlert()
+                        }
                     }
-                    "tv_selfie" -> {
-                        showTakeSelfieAlert()
-                    }
-                }
-            })
+                })
         )
     }
 
@@ -226,7 +226,8 @@ class ProfileDetailsFragment : BaseFragment(), DialogssInterface, SelfieCallBack
                 if (response != null) {
                     when (response.code) {
                         200 -> {
-                            confirmationDialog!!.dismiss()
+                            if (confirmationDialog != null)
+                                confirmationDialog!!.dismiss()
                             showToastSuccess(response.message!!)
                         }
                         else -> {
@@ -263,6 +264,8 @@ class ProfileDetailsFragment : BaseFragment(), DialogssInterface, SelfieCallBack
                             GlobalConstants.NOTIFICATION_TOKEN = notificationToken
 
                             val intent1 = Intent(baseActivity, LoginActivity::class.java)
+                            intent1.flags =
+                                Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                             startActivity(intent1)
                             baseActivity.finish()
                         }
@@ -305,6 +308,26 @@ class ProfileDetailsFragment : BaseFragment(), DialogssInterface, SelfieCallBack
                             binding!!.model = response.body
                             model = response.body
 
+                            if (response.body!!.isApproved!!) {
+                                binding!!.tvApproved.text =
+                                    getString(R.string.approved_by_system_administrator)
+                                binding!!.tvApproved.setCompoundDrawablesWithIntrinsicBounds(
+                                    R.drawable.ic_tick,
+                                    0,
+                                    0,
+                                    0
+                                )
+                            } else {
+                                binding!!.tvApproved.text =
+                                    getString(R.string.approval_inprogress)
+                                binding!!.tvApproved.setCompoundDrawablesWithIntrinsicBounds(
+                                    R.drawable.ic_help_red,
+                                    0,
+                                    0,
+                                    0
+                                )
+                            }
+/*
                             when (response.body!!.status) {
                                 "0" -> //Pending
                                 {
@@ -340,11 +363,27 @@ class ProfileDetailsFragment : BaseFragment(), DialogssInterface, SelfieCallBack
                                     )
                                 }
                             }
+*/
 
-                            if (response.body.noCompletedOrds!!)
-                                binding!!.linNoCompOrders.visibility = View.VISIBLE
-                            else
-                                binding!!.linNoCompOrders.visibility = View.GONE
+                            if (response.body.totalOrders!!.toInt() > 0) {
+                                binding!!.tvNoCompOrders.text =
+                                    response.body.totalOrders + " " + getString(R.string.completed_orders)
+                                binding!!.tvNoCompOrders.setCompoundDrawablesWithIntrinsicBounds(
+                                    R.drawable.ic_tick,
+                                    0,
+                                    0,
+                                    0
+                                )
+                            } else {
+                                binding!!.tvNoCompOrders.text =
+                                    getString(R.string.no_completed_orders)
+                                binding!!.tvNoCompOrders.setCompoundDrawablesWithIntrinsicBounds(
+                                    R.drawable.ic_help_red,
+                                    0,
+                                    0,
+                                    0
+                                )
+                            }
                         }
                         else -> {
                             showToastError(response.message!!)

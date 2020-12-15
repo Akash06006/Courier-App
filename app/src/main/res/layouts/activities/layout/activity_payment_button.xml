@@ -28,6 +28,7 @@
             android:onClick="@{(v) -> viewModel.clickListener(v)}"
             android:visibility="visible" />
 
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -35,6 +36,18 @@
             android:backgroundTint="@color/colorWhite"
             android:orientation="vertical"
             android:paddingTop="@dimen/dp_10">
+
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/animationView"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="@dimen/dp_20"
+                android:layout_marginTop="@dimen/dp_20"
+                android:layout_marginRight="@dimen/dp_20"
+                app:lottie_autoPlay="true"
+                app:lottie_loop="true"
+                app:lottie_rawRes="@raw/payment" />
 
             <TextView
                 android:layout_width="wrap_content"

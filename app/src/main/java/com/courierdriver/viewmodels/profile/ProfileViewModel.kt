@@ -96,11 +96,24 @@ class ProfileViewModel : BaseViewModel() {
         return profileSetupList!!
     }
 
-    fun payComission(transactionId: String?, amount: String?) {
+    fun payComission(
+        transactionId: String?,
+        amount: String?,
+        securityFee: String?,
+        cancelChargesCust: String?,
+        cancellationCharges: String?,
+        usedCash: String?,
+        usedPoints: String?
+    ) {
         if (UtilsFunctions.isNetworkConnected()) {
             val jsonObject = JsonObject()
             jsonObject.addProperty("transactionId", transactionId)
             jsonObject.addProperty("amount", amount)
+            jsonObject.addProperty("securityFee", securityFee)
+            jsonObject.addProperty("cancelChargesdriv", cancelChargesCust)
+            jsonObject.addProperty("cancelChargesCust ", cancellationCharges)
+            jsonObject.addProperty("usedPoints", usedPoints)
+            jsonObject.addProperty("usedCash", usedCash)
 //            jsonObject.addProperty("usedPoints","")
             payComissionList = profileRepository.payComission(jsonObject, payComissionList)
             mIsUpdating.postValue(true)

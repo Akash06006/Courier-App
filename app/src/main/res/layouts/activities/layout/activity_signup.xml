@@ -94,6 +94,7 @@
                                 android:imeOptions="actionNext"
                                 android:paddingBottom="15dp"
                                 android:singleLine="true"
+                                android:inputType="textPersonName"
                                 android:textSize="14sp"
                                 app:font="@{`regular`}" />
 
@@ -105,6 +106,7 @@
                                 android:layout_marginTop="10dp"
                                 android:layout_marginRight="10dp"
                                 android:hint="@string/lname"
+                                android:inputType="textPersonName"
                                 android:imeOptions="actionNext"
                                 android:paddingBottom="15dp"
                                 android:singleLine="true"
@@ -113,22 +115,17 @@
 
                         </LinearLayout>
 
-                        <RelativeLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content">
 
-                            <de.hdodenhof.circleimageview.CircleImageView
-                                android:id="@+id/img_profile"
-                                android:layout_width="@dimen/dp_100"
-                                android:layout_height="@dimen/dp_100"
-                                android:layout_alignParentEnd="true"
-                                android:layout_centerVertical="true"
-                                android:layout_marginRight="@dimen/dp_10"
-                                android:background="@drawable/ic_user_profile"
-                                android:contentDescription="@string/todo"
-                                android:onClick="@{(v) -> loginViewModel.clickListener(v)}" />
-
-                        </RelativeLayout>
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:id="@+id/img_profile"
+                            android:layout_width="90dp"
+                            android:layout_height="90dp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="@dimen/dp_10"
+                            android:background="@drawable/ic_user_profile"
+                            android:contentDescription="@string/todo"
+                            android:onClick="@{(v) -> loginViewModel.clickListener(v)}" />
 
                     </RelativeLayout>
 

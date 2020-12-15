@@ -41,8 +41,8 @@ class StatisticsActivity : BaseFragment(), DialogssInterface {
     private var monthName = "All"
     private var monthList = ArrayList<String>()
     private var yearsList = ArrayList<String>()
-    private var invitedPoints = 0
-    private var earnedPoints = 0
+    private var invitedPoints = 0.0
+    private var earnedPoints = 0.0
     private var payableAmount = "0"
     private var confirmationDialog: Dialog? = null
     private var mDialogClass = DialogClass()
@@ -52,6 +52,8 @@ class StatisticsActivity : BaseFragment(), DialogssInterface {
     private var selectedMonth = "0"
     private var selectedYear = "2020"
     private var selectedWeek = "1"
+    private var additionalChargesData: StatisticsModel.Body.CommissionData? = null
+    private var totalComissionAddCharges = 0.0
 
     override fun initView() {
         binding = viewDataBinding as ActivityStatisticsBinding
@@ -76,14 +78,46 @@ class StatisticsActivity : BaseFragment(), DialogssInterface {
                 when (it) {
                     "tv_pay_now" -> {
                         //  makePayment()
-                        if (!TextUtils.isEmpty(payableAmount) && !payableAmount.equals("0")) {
-                            binding!!.tvPayNow.isEnabled = true
-                            val intent = Intent(baseActivity, PaymentButtonActivity::class.java)
-                            intent.putExtra("amount", payableAmount)
-                            startActivityForResult(intent, PAYMENT_CODE)
-                        } else {
+                        if (!TextUtils.isEmpty(payableAmount) && payableAmount.toDouble() > 0) {
+//                            binding!!.tvPayNow.isEnabled = true
+                            /* if (earnedPoints > payableAmount.toDouble()) {
+                                 viewModel!!.payComission(
+                                     "0",
+                                     payableAmount,
+                                     additionalChargesData!!.additionalCharges!!.securityFee,
+                                     additionalChargesData!!.additionalCharges!!.cancelChargesCust,
+                                     additionalChargesData!!.additionalCharges!!.cancellationCharges,
+                                     additionalChargesData!!.usedCash,
+                                     additionalChargesData!!.usedPoints
+                                 )
+                             } else {*/
+                            /* val intent = Intent(baseActivity, PaymentButtonActivity::class.java)
+                             intent.putExtra("amount", payableAmount)
+                             startActivityForResult(intent, PAYMENT_CODE)*/
+
+                            viewModel!!.payComission(
+                                "0",
+                                payableAmount,
+                                additionalChargesData!!.additionalCharges!!.securityFee,
+                                additionalChargesData!!.additionalCharges!!.cancelChargesCust,
+                                additionalChargesData!!.additionalCharges!!.cancellationCharges,
+                                additionalChargesData!!.usedCash, additionalChargesData!!.usedPoints
+                            )
+
+                            /*}*/
+                        } /*else if (totalComissionAddCharges > 0) {
+                            viewModel!!.payComission(
+                                "0",
+                                totalComissionAddCharges.toString(),
+                                additionalChargesData!!.additionalCharges!!.securityFee,
+                                additionalChargesData!!.additionalCharges!!.cancelChargesCust,
+                                additionalChargesData!!.additionalCharges!!.cancellationCharges,
+                                additionalChargesData!!.usedCash,
+                                additionalChargesData!!.usedPoints
+                            )
+                        }*//* else {
                             binding!!.tvPayNow.isEnabled = false
-                        }
+                        }*/
 
                     }
                     "tv_convert_to_cash" -> {
@@ -174,17 +208,53 @@ class StatisticsActivity : BaseFragment(), DialogssInterface {
                 if (response != null) {
                     when (response.code) {
                         200 -> {
-                            binding!!.model = response.body
-                            invitedPoints = response.body!!.pointsData!!.invitedFriends!!.toInt()
-                            earnedPoints = response.body.pointsData!!.earnedPoints!!.toInt()
-                            payableAmount = response.body.commissionData!!.payableCommission!!
-                            monthStatisticsList = response.body.year!!
-                            val count = invitedPoints + earnedPoints
-                            if (count <= 0) {
-                                binding!!.tvConvertToCash.backgroundTintList =
-                                    ContextCompat.getColorStateList(baseActivity, R.color.colorGrey)
+                            val data = response.body
+                            data?.let {
+                                binding!!.model = data
+                                invitedPoints =
+                                    data.pointsData!!.invitedFriends!!.toDouble()
+                                earnedPoints = data.pointsData.earnedPoints!!.toDouble()
+                                payableAmount = data.commissionData!!.payableCommission!!
+                                monthStatisticsList = data.year!!
+                                additionalChargesData = data.commissionData
+                                val additionalCharges =
+                                    additionalChargesData!!.additionalCharges!!.cancellationCharges!!.toDouble() +
+                                            additionalChargesData!!.additionalCharges!!.cancelChargesCust!!.toDouble() + additionalChargesData!!.additionalCharges!!.securityFee!!.toDouble()
+                                binding!!.additionalCharges = additionalCharges.toString()
+
+                                totalComissionAddCharges =
+                                    data.commissionData.totalCommission!!.toDouble() + additionalCharges
+
+                                val count = invitedPoints + earnedPoints
+                                if (count <= 0) {
+                                    binding!!.tvConvertToCash.backgroundTintList =
+                                        ContextCompat.getColorStateList(
+                                            baseActivity,
+                                            R.color.colorGrey
+                                        )
+                                } else {
+                                    binding!!.tvConvertToCash.backgroundTintList =
+                                        ContextCompat.getColorStateList(
+                                            baseActivity,
+                                            R.color.colorPrimary
+                                        )
+                                }
+
+                                if (payableAmount.toDouble() <= 0) {
+                                    binding!!.tvPayNow.backgroundTintList =
+                                        ContextCompat.getColorStateList(
+                                            baseActivity,
+                                            R.color.colorGrey
+                                        )
+                                } else {
+                                    binding!!.tvPayNow.backgroundTintList =
+                                        ContextCompat.getColorStateList(
+                                            baseActivity,
+                                            R.color.colorPrimary
+                                        )
+                                }
+                                setAdapter()
                             }
-                            setAdapter()
                         }
                         else -> {
                             UtilsFunctions.showToastError(response.message!!)
@@ -201,12 +271,20 @@ class StatisticsActivity : BaseFragment(), DialogssInterface {
         viewModel!!.convertPointsData().observe(this,
             Observer<CommonModel> { response ->
                 baseActivity.stopProgressDialog()
+                if (confirmationDialog != null)
+                    confirmationDialog!!.dismiss()
                 if (response != null) {
                     when (response.code) {
                         200 -> {
-                            invitedPoints = 0
-                            earnedPoints = 0
+                            invitedPoints = 0.0
+                            earnedPoints = 0.0
                             UtilsFunctions.showToastSuccess(response.message!!)
+                            viewModel!!.statistics(
+                                GlobalConstants.STATISTICS,
+                                selectedYear,
+                                selectedMonth,
+                                selectedWeek
+                            )
                         }
                         else -> {
                             UtilsFunctions.showToastError(response.message!!)
@@ -393,7 +471,16 @@ class StatisticsActivity : BaseFragment(), DialogssInterface {
                 if (data.hasExtra("paymentId")) {
                     val paymentId = data.getStringExtra("paymentId")
                     Log.d("TAG", "paymentIdStats=--- $paymentId")
-                    viewModel!!.payComission(paymentId, payableAmount)
+                    if (paymentId != "0") {
+                        viewModel!!.payComission(
+                            paymentId,
+                            payableAmount,
+                            additionalChargesData!!.additionalCharges!!.securityFee,
+                            additionalChargesData!!.additionalCharges!!.cancelChargesCust,
+                            additionalChargesData!!.additionalCharges!!.cancellationCharges,
+                            additionalChargesData!!.usedCash, additionalChargesData!!.usedPoints
+                        )
+                    }
                 }
             }
 

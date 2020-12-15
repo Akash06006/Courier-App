@@ -18,17 +18,16 @@ import com.courierdriver.chatSocket.ConnectionListener
 import com.courierdriver.chatSocket.SocketConnectionManager
 import com.courierdriver.constants.GlobalConstants
 import com.courierdriver.constants.GlobalConstants.SOCKET_CHAT_URL
+import com.courierdriver.databinding.ActivityChatScreenBinding
 import com.courierdriver.model.chat.ChatListModel
 import com.courierdriver.sharedpreference.SharedPrefClass
 import com.courierdriver.utils.BaseActivity
-import com.google.gson.GsonBuilder
-import io.socket.emitter.Emitter
-import org.json.JSONArray
-
-import com.courierdriver.databinding.ActivityChatScreenBinding
 import com.courierdriver.utils.ConvertBase64
 import com.esafirm.imagepicker.features.ImagePicker
 import com.esafirm.imagepicker.features.ReturnMode
+import com.google.gson.GsonBuilder
+import io.socket.emitter.Emitter
+import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.ByteArrayOutputStream
@@ -53,6 +52,7 @@ class CustomerChatActivity : BaseActivity(),
     var orderId = ""
     var customerId = ""
     var boatMessageDialog: Dialog? = null
+
     /*
         var socketConnectionManager: SocketConnectionManager? = null
     */
@@ -63,7 +63,6 @@ class CustomerChatActivity : BaseActivity(),
     override fun onResume() {
         super.onResume()
         Log.e("Socket", "onResume")
-
     }
 
     override fun initViews() {
@@ -79,8 +78,8 @@ class CustomerChatActivity : BaseActivity(),
             chatList,
             sharedPrefClass
         )
-        chatBinding.reyclerviewMessageList.setLayoutManager(LinearLayoutManager(this))
-        chatBinding.reyclerviewMessageList.setAdapter(mMessageAdapter)
+        chatBinding.reyclerviewMessageList.layoutManager = LinearLayoutManager(this)
+        chatBinding.reyclerviewMessageList.adapter = mMessageAdapter
 
         Log.e("Socket", " Init")
 
@@ -100,6 +99,7 @@ class CustomerChatActivity : BaseActivity(),
                 val data = args[0] as JSONObject
                 try {
                     val roomId = data.getString("groupId")
+                    GlobalConstants.ROOM_ID = roomId
                     sharedPrefClass.putObject(this, GlobalConstants.ROOM_ID, roomId)
                     val objectChatHistory = JSONObject()
                     objectChatHistory.put(
@@ -112,19 +112,19 @@ class CustomerChatActivity : BaseActivity(),
                         "userType", "driver"
                     )
                     objectChatHistory.put(
-                        "orderId", "b21bc840-b682-4d84-a818-aa939760aea4"
+                        "orderId", orderId
                     )
                     objectChatHistory.put(
-                        "groupId", sharedPrefClass.getPrefValue(
+                        "groupId", GlobalConstants.ROOM_ID /*sharedPrefClass.getPrefValue(
                             MyApplication.instance,
                             GlobalConstants.ROOM_ID
-                        ).toString()
+                        ).toString()*/
                     )
                     SocketConnectionManager.getInstance()
                         .socket.emit(
-                        "chatHistoryUser",
-                        objectChatHistory
-                    )
+                            "chatHistoryUser",
+                            objectChatHistory
+                        )
                     Log.e("Socket", "Room join")
 
                 } catch (e: JSONException) {
@@ -170,14 +170,15 @@ class CustomerChatActivity : BaseActivity(),
                     ).toString()
                 )
                 objectChatHistory.put(
-                    "groupId", sharedPrefClass.getPrefValue(
+                    "groupId", GlobalConstants.ROOM_ID /*sharedPrefClass.getPrefValue(
                         MyApplication.instance,
                         GlobalConstants.ROOM_ID
-                    ).toString()
+                    ).toString()*/
                 )
                 objectChatHistory.put("type", 1)
                 objectChatHistory.put("message", chatBinding.edittextChatbox.text.toString())
                 objectChatHistory.put("userType", "driver")
+                objectChatHistory.put("orderId", orderId)
                 objectChatHistory.put(
                     "receiverId",
                     customerId/*GlobalConstants.ADMIN_ID*/
@@ -239,7 +240,7 @@ class CustomerChatActivity : BaseActivity(),
                 "userType", "driver"
             )
             objectCreateRoom.put(
-                "orderId", "b21bc840-b682-4d84-a818-aa939760aea4"
+                "orderId", orderId
             )
             //objectCreateRoom.put("orderId", orderId)
             SocketConnectionManager.getInstance()
@@ -264,10 +265,10 @@ class CustomerChatActivity : BaseActivity(),
             ).toString()
         )
         objectChatHistory.put(
-            "groupId", sharedPrefClass.getPrefValue(
+            "groupId", GlobalConstants.ROOM_ID /*sharedPrefClass.getPrefValue(
                 MyApplication.instance,
                 GlobalConstants.ROOM_ID
-            ).toString()
+            ).toString()*/
         )
         SocketConnectionManager.getInstance()
             .socket.emit("leaveRoom", objectChatHistory)
@@ -275,12 +276,6 @@ class CustomerChatActivity : BaseActivity(),
             SocketConnectionManager.getInstance()
         socketConnectionManager.closeConnection()
         finish()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        /* val socketConnectionManager = SocketConnectionManager.getInstance()
-         socketConnectionManager.closeConnection()*/
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -318,7 +313,7 @@ class CustomerChatActivity : BaseActivity(),
     fun showImageData(isThrowSelection: Boolean, imagePathOrURL: String) {
         val dialog = Dialog(this)
         dialog.setContentView(R.layout.show_image_dialog)
-        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent)
+        dialog.window.setBackgroundDrawableResource(android.R.color.transparent)
         // set the custom dialog components - text, image and button
         // set the custom dialog components - text, image and button
         val image: ImageView = dialog.findViewById(R.id.img) as ImageView
@@ -361,15 +356,16 @@ class CustomerChatActivity : BaseActivity(),
                 ).toString()
             )
             objectChatHistory.put(
-                "groupId", sharedPrefClass.getPrefValue(
+                "groupId", GlobalConstants.ROOM_ID /*sharedPrefClass.getPrefValue(
                     MyApplication.instance,
                     GlobalConstants.ROOM_ID
-                ).toString()
+                ).toString()*/
             )
             objectChatHistory.put("type", 2)
             objectChatHistory.put("media", image)
             objectChatHistory.put("extension", imageExtension)
             objectChatHistory.put("userType", "driver")
+            objectChatHistory.put("orderId", orderId)
 
             objectChatHistory.put(
                 "receiverId",
@@ -385,16 +381,16 @@ class CustomerChatActivity : BaseActivity(),
                 ).toString()
             )
             objChatHistory.put(
-                "groupId", sharedPrefClass.getPrefValue(
+                "groupId", GlobalConstants.ROOM_ID /*sharedPrefClass.getPrefValue(
                     MyApplication.instance,
                     GlobalConstants.ROOM_ID
-                ).toString()
+                ).toString()*/
             )
             SocketConnectionManager.getInstance()
                 .socket.emit(
-                "chatHistory",
-                objChatHistory
-            )
+                    "chatHistory",
+                    objChatHistory
+                )
             Log.e("Socket", "Image Sent")
             dialog.dismiss()
         }
@@ -406,7 +402,7 @@ class CustomerChatActivity : BaseActivity(),
     }
 
     private fun showBoatChatMessages() {
-        chatBinding!!.boatMessageView.visibility = View.VISIBLE
+        chatBinding.boatMessageView.visibility = View.VISIBLE
         chatBinding.edittextChatbox.isEnabled = false
         var boatMessageList: ArrayList<String> = ArrayList()
         boatMessageList.add("I have not received my order")
@@ -420,8 +416,8 @@ class CustomerChatActivity : BaseActivity(),
           wmpl.gravity = Gravity.BOTTOM or Gravity.LEFT*/
         // val rvMessages: RecyclerView = boatMessageDialog!!.findViewById(R.id.rvMessages) as RecyclerView
         boatMessageAdapter = BoatChatMessageListAdapter(this, boatMessageList)
-        chatBinding.rvMessages.setLayoutManager(LinearLayoutManager(this))
-        chatBinding.rvMessages.setAdapter(boatMessageAdapter)
+        chatBinding.rvMessages.layoutManager = LinearLayoutManager(this)
+        chatBinding.rvMessages.adapter = boatMessageAdapter
         /*  boatMessageDialog!!.show()
           boatMessageDialog!!.setCancelable(false)*/
     }
@@ -435,17 +431,17 @@ class CustomerChatActivity : BaseActivity(),
             ).toString()
         )
         objectChatHistory.put(
-            "groupId", sharedPrefClass.getPrefValue(
+            "groupId", GlobalConstants.ROOM_ID /*sharedPrefClass.getPrefValue(
                 MyApplication.instance,
                 GlobalConstants.ROOM_ID
-            ).toString()
+            ).toString()*/
         )
         objectChatHistory.put("type", 1)
         objectChatHistory.put("message", message)
         objectChatHistory.put("userType", "driver")
         SocketConnectionManager.getInstance()
             .socket.emit("sendMessageUser", objectChatHistory)
-        chatBinding!!.boatMessageView.visibility = View.GONE
+        chatBinding.boatMessageView.visibility = View.GONE
         chatBinding.edittextChatbox.isEnabled = true
 
     }

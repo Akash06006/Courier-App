@@ -37,12 +37,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/dp_15"
                     android:layout_marginRight="@dimen/dp_15"
-                    android:drawableLeft="@drawable/ic_small_arrow_right"
-                    android:drawablePadding="@dimen/dp_10"
                     android:gravity="center_vertical"
                     android:onClick="@{(v) -> viewModel.clickListener(v)}"
                     android:paddingTop="@dimen/dp_30"
-                    android:text="@string/how_to_complete_your_first_order"
+                    android:text="How it works"
                     android:textColor="@color/colorBlack"
                     android:textSize="@dimen/sp_16"
                     app:font="@{`regular`}" />
@@ -60,12 +58,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/dp_15"
                     android:layout_marginRight="@dimen/dp_15"
-                    android:drawableLeft="@drawable/ic_small_arrow_right"
-                    android:drawablePadding="@dimen/dp_10"
                     android:gravity="center_vertical"
                     android:onClick="@{(v) -> viewModel.clickListener(v)}"
                     android:paddingTop="@dimen/dp_15"
-                    android:text="@string/how_to_pay_commission"
+                    android:text="How to respond to your first order"
                     android:textColor="@color/colorBlack"
                     android:textSize="@dimen/sp_16"
                     app:font="@{`regular`}" />
@@ -83,12 +79,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/dp_15"
                     android:layout_marginRight="@dimen/dp_15"
-                    android:drawableLeft="@drawable/ic_small_arrow_right"
-                    android:drawablePadding="@dimen/dp_10"
                     android:gravity="center_vertical"
                     android:onClick="@{(v) -> viewModel.clickListener(v)}"
                     android:paddingTop="@dimen/dp_15"
-                    android:text="Order with COD"
+                    android:text="Frequently asked questions"
                     android:textColor="@color/colorBlack"
                     android:textSize="@dimen/sp_16"
                     app:font="@{`regular`}" />
@@ -106,12 +100,68 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/dp_15"
                     android:layout_marginRight="@dimen/dp_15"
-                    android:drawableLeft="@drawable/ic_small_arrow_right"
-                    android:drawablePadding="@dimen/dp_10"
                     android:gravity="center_vertical"
                     android:onClick="@{(v) -> viewModel.clickListener(v)}"
                     android:paddingTop="@dimen/dp_15"
-                    android:text="@string/order_with_buy_for_me"
+                    android:text="Important points to remember"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="@dimen/sp_16"
+                    app:font="@{`regular`}" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="@dimen/dp_15"
+                    android:background="@color/colorGreyLight" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dp_15"
+                    android:layout_marginRight="@dimen/dp_15"
+                    android:gravity="center_vertical"
+                    android:onClick="@{(v) -> viewModel.clickListener(v)}"
+                    android:paddingTop="@dimen/dp_15"
+                    android:text="How to pay comission"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="@dimen/sp_16"
+                    app:font="@{`regular`}" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="@dimen/dp_15"
+                    android:background="@color/colorGreyLight" />
+
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dp_15"
+                    android:layout_marginRight="@dimen/dp_15"
+                    android:gravity="center_vertical"
+                    android:onClick="@{(v) -> viewModel.clickListener(v)}"
+                    android:paddingTop="@dimen/dp_15"
+                    android:text="How to collect payment for every order"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="@dimen/sp_16"
+                    app:font="@{`regular`}" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="@dimen/dp_15"
+                    android:background="@color/colorGreyLight" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dp_15"
+                    android:layout_marginRight="@dimen/dp_15"
+                    android:gravity="center_vertical"
+                    android:onClick="@{(v) -> viewModel.clickListener(v)}"
+                    android:paddingTop="@dimen/dp_15"
+                    android:text="How to earn more and avoid fines"
                     android:textColor="@color/colorBlack"
                     android:textSize="@dimen/sp_16"
                     app:font="@{`regular`}" />
@@ -128,14 +178,13 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/dp_15"
                     android:layout_marginRight="@dimen/dp_15"
-                    android:drawableLeft="@drawable/ic_small_arrow_right"
-                    android:drawablePadding="@dimen/dp_10"
                     android:gravity="center_vertical"
                     android:onClick="@{(v) -> viewModel.clickListener(v)}"
                     android:paddingTop="@dimen/dp_15"
                     android:text="@string/payment_transactions"
                     android:textColor="@color/colorBlack"
                     android:textSize="@dimen/sp_16"
+                    android:visibility="gone"
                     app:font="@{`regular`}" />
 
                 <View
@@ -144,7 +193,8 @@
                     android:layout_marginLeft="@dimen/dp_15"
                     android:layout_marginTop="@dimen/dp_15"
                     android:layout_marginRight="@dimen/dp_15"
-                    android:background="@color/colorGreyLight" />
+                    android:background="@color/colorGreyLight"
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/tv_spot_and_error"
@@ -152,12 +202,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/dp_15"
                     android:layout_marginRight="@dimen/dp_15"
-                    android:drawableLeft="@drawable/ic_small_arrow_right"
-                    android:drawablePadding="@dimen/dp_10"
                     android:gravity="center_vertical"
                     android:onClick="@{(v) -> viewModel.clickListener(v)}"
                     android:paddingTop="@dimen/dp_15"
-                    android:text="@string/spot_and_error"
+                    android:text="@string/report_for_problem"
                     android:textColor="@color/colorBlack"
                     android:textSize="@dimen/sp_16"
                     app:font="@{`regular`}" />
@@ -173,14 +221,14 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/dp_15"
                     android:layout_marginRight="@dimen/dp_15"
-                    android:drawableLeft="@drawable/ic_small_arrow_right"
-                    android:drawablePadding="@dimen/dp_10"
                     android:gravity="center_vertical"
+                    android:onClick="@{(v) -> viewModel.clickListener(v)}"
                     android:paddingTop="@dimen/dp_15"
-                    android:text="@string/about"
+                    android:text="Contact us"
                     android:textColor="@color/colorBlack"
                     android:textSize="@dimen/sp_16"
                     app:font="@{`regular`}" />
+
 
                 <View
                     android:layout_width="match_parent"
@@ -194,8 +242,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/dp_15"
                     android:layout_marginRight="@dimen/dp_15"
-                    android:drawableLeft="@drawable/ic_small_arrow_right"
-                    android:drawablePadding="@dimen/dp_10"
                     android:gravity="center_vertical"
                     android:onClick="@{(v) -> viewModel.clickListener(v)}"
                     android:paddingTop="@dimen/dp_15"

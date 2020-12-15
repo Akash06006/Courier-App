@@ -87,7 +87,7 @@ class DefineWorkActivity : BaseActivity(), RadioGroup.OnCheckedChangeListener {
                 if (response != null) {
                     when (response.code) {
                         200 -> {
-                            UtilsFunctions.showToastSuccess(response.message!!)
+                           // UtilsFunctions.showToastSuccess(response.message!!)
                             tutorialQuesData = response.body!![0]
                             binding!!.model = tutorialQuesData
                             selectedOption = tutorialQuesData!!.option1!!
@@ -109,7 +109,7 @@ class DefineWorkActivity : BaseActivity(), RadioGroup.OnCheckedChangeListener {
                 if (response != null) {
                     when (response.code) {
                         200 -> {
-                            UtilsFunctions.showToastSuccess(response.message!!)
+                            //  UtilsFunctions.showToastSuccess(response.message!!)
                             selectedOption = ""
                             if (pageCount < 3) {
                                 pageCount += 1

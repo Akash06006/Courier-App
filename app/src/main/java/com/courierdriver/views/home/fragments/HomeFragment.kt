@@ -422,6 +422,7 @@ HomeFragment : BaseFragment(), DialogssInterface, NotifyWorkStatus {
                     fragmentHomeBinding.linInProgress.visibility = View.GONE
                     fragmentHomeBinding.tvNoRecord.visibility = View.GONE
                     fragmentHomeBinding.rvOrderList.visibility = View.VISIBLE
+                    fragmentHomeBinding.linNotWorking.visibility = View.GONE
                     val message = response.message
                     when (response.code) {
                         200 -> {
@@ -431,7 +432,9 @@ HomeFragment : BaseFragment(), DialogssInterface, NotifyWorkStatus {
 
                             if (response.body!!.isNotEmpty()) {
                                 orderList = response.body
-                                baseActivity.showToastSuccess("Updated! \nAvailable ${orderList!!.size} orders")
+                                if (orderStatus == 1)
+                                    baseActivity.showToastSuccess("Updated! \nAvailable ${orderList!!.size} orders")
+
                                 setAdapter()
                             } else {
                                 fragmentHomeBinding.tvNoRecord.visibility = View.VISIBLE
@@ -439,10 +442,24 @@ HomeFragment : BaseFragment(), DialogssInterface, NotifyWorkStatus {
                             }
                         }
                         400 -> {
+                            baseActivity.showToastError(response.message)
+                            /*fragmentHomeBinding.linInProgress.visibility = View.VISIBLE
+                            fragmentHomeBinding.linTabsMain.visibility = View.GONE
+                            fragmentHomeBinding.linNotWorking.visibility = View.GONE*/
+                            // account under review
+                        }
+                        207 -> {
                             fragmentHomeBinding.linInProgress.visibility = View.VISIBLE
                             fragmentHomeBinding.linTabsMain.visibility = View.GONE
                             fragmentHomeBinding.linNotWorking.visibility = View.GONE
                             // account under review
+                        }
+                        208 -> {
+                            fragmentHomeBinding.tvNoRecord.text = response.message
+                            fragmentHomeBinding.tvNoRecord.visibility = View.VISIBLE
+                            fragmentHomeBinding.rvOrderList.visibility = View.GONE
+                            fragmentHomeBinding.linNotWorking.visibility = View.GONE
+                            fragmentHomeBinding.linInProgress.visibility = View.GONE
                         }
                         206 -> {
                             val isAvailable = false
@@ -556,7 +573,7 @@ HomeFragment : BaseFragment(), DialogssInterface, NotifyWorkStatus {
                 if (response != null) {
                     when (response.code) {
                         200 -> {
-                            UtilsFunctions.showToastSuccess(response.message!!)
+                            // UtilsFunctions.showToastSuccess(response.message!!)
 
                             if (submitCancelReasonDialog != null)
                                 submitCancelReasonDialog!!.dismiss()
@@ -867,13 +884,11 @@ HomeFragment : BaseFragment(), DialogssInterface, NotifyWorkStatus {
 
     //endregion
 
-/*
     override fun onResume() {
         super.onResume()
         if(orderStatus==1)
         getAvailableOrders()
     }
-*/
 
     override fun getLayoutResId(): Int {
         return R.layout.fragment_home

@@ -15,8 +15,9 @@ class TermsAndConditionsActivity : BaseActivity() {
     override fun initViews() {
         binding = viewDataBinding as ActivityTermsConditionsBinding
 
+        val url = intent.getStringExtra("url")
         binding!!.webView.setLayerType(View.LAYER_TYPE_HARDWARE, null)
-        binding!!.webView.loadUrl(GlobalConstants.TERMS_AND_CONDITIONS)
+        binding!!.webView.loadUrl(url)
         binding!!.webView.webViewClient = MyWebViewClient(binding!!)
     }
 

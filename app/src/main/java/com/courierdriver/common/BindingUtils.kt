@@ -350,7 +350,7 @@ object BindingUtils {
                 //val dataDate = dataString.replace("IST", " GMT+0530")
                 Log.d("BindingUtils", "utc time=---- $dataString")
 
-                val dateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm")
+                val dateFormat = SimpleDateFormat("dd/MM/yyyy hh:mm aa")
 //                val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
                 // val dateFormat = SimpleDateFormat("EEE MMM dd HH:mm:ss Z yyyy", Locale.US)
                 val pasTime = dateFormat.parse(dataString)

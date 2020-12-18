@@ -21,8 +21,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/dp_10"
-            android:layout_marginRight="@dimen/dp_10"
             android:layout_marginTop="@dimen/dp_5"
+            android:layout_marginRight="@dimen/dp_10"
             android:layout_marginBottom="@dimen/dp_5"
             app:cardCornerRadius="@dimen/dp_20">
 
@@ -42,6 +42,20 @@
                     android:text="@{model.notificationTitle.toString()}"
                     android:textColor="@color/colorBlack"
                     android:textSize="@dimen/sp_14"
+                    app:font="@{`semibold`}" />
+
+                <TextView
+                    android:id="@+id/tv_desc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tv_message"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginTop="@dimen/dp_2"
+                    android:layout_toLeftOf="@+id/img_notification"
+                    android:paddingRight="@dimen/dp_5"
+                    android:text="@{model.notificationDescription.toString()}"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="@dimen/sp_12"
                     app:font="@{`regular`}" />
 
                 <ImageView
@@ -54,7 +68,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/tv_message"
+                    android:layout_below="@+id/tv_desc"
                     android:paddingTop="@dimen/dp_5"
                     android:text="@{model.createdAt!=null?BindingUtils.covertTimeAgoToText(model.createdAt):@string/todo}"
                     android:textColor="@color/colorGrey"
@@ -65,12 +79,12 @@
                     android:id="@+id/tv_reply"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/tv_message"
+                    android:layout_below="@+id/tv_desc"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="@dimen/dp_10"
-                    android:layout_marginRight="@dimen/dp_10"
                     android:layout_marginTop="@dimen/dp_5"
+                    android:layout_marginRight="@dimen/dp_10"
                     android:background="@drawable/round_corners_home_tab"
                     android:backgroundTint="@color/colorPrimary"
                     android:paddingLeft="@dimen/dp_15"

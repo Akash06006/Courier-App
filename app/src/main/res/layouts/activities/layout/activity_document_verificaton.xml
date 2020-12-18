@@ -209,7 +209,6 @@
                     app:font="@{`bold`}"
                     tools:ignore="AllCaps" />
 
-
                 <Spinner
                     android:id="@+id/sp_transport"
                     android:layout_width="match_parent"
@@ -461,6 +460,7 @@
                                     android:paddingRight="@dimen/dp_20"
                                     android:paddingBottom="@dimen/dp_10"
                                     android:singleLine="true"
+                                    android:maxLength="13"
                                     android:textColor="@color/colorBlack"
                                     android:textSize="@dimen/sp_16" />
 
@@ -549,6 +549,7 @@
                                     android:paddingRight="@dimen/dp_20"
                                     android:paddingBottom="@dimen/dp_10"
                                     android:singleLine="true"
+                                    android:maxLength="13"
                                     android:textColor="@color/colorBlack"
                                     android:textSize="@dimen/sp_16" />
 
@@ -638,6 +639,7 @@
                                     android:paddingRight="@dimen/dp_20"
                                     android:paddingBottom="@dimen/dp_10"
                                     android:singleLine="true"
+                                    android:maxLength="13"
                                     android:textColor="@color/colorBlack"
                                     android:textSize="@dimen/sp_16" />
 

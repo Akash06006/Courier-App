@@ -228,6 +228,10 @@ interface ApiInterface {
     @GET("delivery/profile/paymentOptions")
     fun paymentOptions(): Call<JsonObject>
 
+
+    @GET("delivery/profile/helpLinks")
+    fun helpLinks(): Call<JsonObject>
+
     @GET("delivery/notification")
     fun notification(): Call<JsonObject>
 

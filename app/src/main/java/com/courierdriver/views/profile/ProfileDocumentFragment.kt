@@ -66,8 +66,8 @@ class ProfileDocumentFragment : BaseFragment(), ChoiceCallBack, SelfieCallBack {
         sharedPrefValues()
         makeEnableDisableViews(false)
         clickViews()
-        getProfileDetailsObserver()
         getVehicleListObserver()
+        getProfileDetailsObserver()
         verifyDocObserver()
         loaderObserver()
     }
@@ -116,10 +116,23 @@ class ProfileDocumentFragment : BaseFragment(), ChoiceCallBack, SelfieCallBack {
                         200 -> {
                             // UtilsFunctions.showToastSuccess(response.message!!)
                             activityDocVeribinding.model = response.body
+/*
                             response.body!!.transport?.let {
                                 vehicleId = response.body.transport!!.id.toString()
                                 transportType = response.body.transport!!.name!!
                             }
+*/
+/*
+                            activityDocVeribinding.spTransport.post {
+                                vehicleStringList?.let {
+                                    for (item in 0 until vehicleStringList!!.size) {
+                                        if (vehicleStringList!![item] == transportType) {
+                                            activityDocVeribinding.spTransport.setSelection(item+1)
+                                        }
+                                    }
+                                }
+                            }
+*/
                         }
                         else -> {
                             UtilsFunctions.showToastError(response.message!!)
@@ -172,7 +185,7 @@ class ProfileDocumentFragment : BaseFragment(), ChoiceCallBack, SelfieCallBack {
                         mHashMap["dlNumber"] =
                             Utils(baseActivity).createPartFromString(dlNumber)
                         mHashMap["transportType"] =
-                            Utils(baseActivity).createPartFromString(transportType)
+                            Utils(baseActivity).createPartFromString(activityDocVeribinding.tvTransport.text.toString())
                         //  mHashMap["password"] = Utils(baseActivity).createPartFromString(password)
                         var poaFront: MultipartBody.Part? = null
                         if (aadharFrontImg.isNotEmpty()) {
@@ -462,8 +475,12 @@ class ProfileDocumentFragment : BaseFragment(), ChoiceCallBack, SelfieCallBack {
                         200 -> {
                             if (response.body!!.isNotEmpty()) {
                                 vehicleList = response.body
-                                if (vehicleList!!.isNotEmpty())
-                                    setVehiclesSpinner(activityDocVeribinding.spTransport)
+                                if (vehicleList!!.isNotEmpty()) {
+                                    vehicleId = vehicleList!![0].id.toString()
+                                    activityDocVeribinding.tvTransport.text = vehicleList!![0].name
+                                }
+
+                                  //  setVehiclesSpinner(activityDocVeribinding.spTransport)
                             }
                         }
                     }
@@ -488,16 +505,6 @@ class ProfileDocumentFragment : BaseFragment(), ChoiceCallBack, SelfieCallBack {
         adapter.addAll(vehicleStringList!!)
         adapter.setDropDownViewResource(R.layout.spinner_item)
         spRegions.adapter = adapter
-
-        spRegions.post {
-            vehicleStringList?.let {
-                for (item in 0 until vehicleStringList!!.size) {
-                    if (vehicleStringList!![item] == transportType) {
-                        spRegions.setSelection(item+1)
-                    }
-                }
-            }
-        }
 
         spRegions.onItemSelectedListener = object :
             AdapterView.OnItemSelectedListener {

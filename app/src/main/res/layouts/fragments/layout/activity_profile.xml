@@ -93,18 +93,31 @@
                             android:layout_marginRight="20dp"
                             android:background="@color/colorGreyLight" />
 
+                        <TextView
+                            android:id="@+id/tv_transport"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="20dp"
+                            android:layout_marginTop="@dimen/dp_10"
+                            android:layout_marginRight="20dp"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="14sp"
+                            app:font="@{`regular`}" />
+
                         <Spinner
                             android:id="@+id/sp_transport"
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/dp_40"
                             android:layout_marginLeft="20dp"
                             android:layout_marginTop="@dimen/dp_10"
-                            android:layout_marginRight="20dp" />
+                            android:layout_marginRight="20dp"
+                            android:visibility="gone" />
 
                         <View
                             android:layout_width="match_parent"
                             android:layout_height="0.5dp"
                             android:layout_marginLeft="20dp"
+                            android:layout_marginTop="@dimen/dp_2"
                             android:layout_marginRight="20dp"
                             android:background="@color/colorGreyLight" />
 
@@ -124,7 +137,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/dp_20"
                                 android:inputType="text"
-                                android:maxLength="30"
+                                android:maxLength="32"
                                 android:singleLine="true"
                                 android:text="@{model.firstName}"
                                 android:textColor="@color/colorblack"
@@ -150,7 +163,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:inputType="text"
-                                android:maxLength="30"
+                                android:maxLength="32"
                                 android:singleLine="true"
                                 android:text="@{model.lastName}"
                                 android:textColor="@color/colorblack"
@@ -200,7 +213,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:inputType="phone"
-                                android:maxLength="12"
+                                android:maxLength="13"
                                 android:singleLine="true"
                                 android:text="@{model.phoneNumber}"
                                 android:textColor="@color/colorblack"
@@ -218,8 +231,8 @@
                             android:layout_marginTop="10dp"
                             android:layout_marginRight="20dp"
                             android:hint="@string/password"
-                            android:visibility="gone"
-                            android:textColorHint="@color/colorblack">
+                            android:textColorHint="@color/colorblack"
+                            android:visibility="gone">
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/et_password"
@@ -244,8 +257,8 @@
                             android:layout_marginTop="10dp"
                             android:layout_marginRight="20dp"
                             android:hint="@string/reference_name"
-                            android:visibility="gone"
-                            android:textColorHint="@color/colorblack">
+                            android:textColorHint="@color/colorblack"
+                            android:visibility="gone">
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/et_reference_name"
@@ -270,8 +283,8 @@
                             android:layout_marginTop="10dp"
                             android:layout_marginRight="20dp"
                             android:hint="@string/reference_contact"
-                            android:visibility="gone"
-                            android:textColorHint="@color/colorblack">
+                            android:textColorHint="@color/colorblack"
+                            android:visibility="gone">
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/et_reference_contact"

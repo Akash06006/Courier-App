@@ -59,6 +59,15 @@ class SignupActivity : BaseActivity(), ChoiceCallBack {
             viewDataBinding as ActivitySignupBinding //DataBindingUtil.setContentView(this, R.layout.activity_login)
         loginViewModel = ViewModelProviders.of(this).get(LoginViewModel::class.java)
         activitySignupbinding.loginViewModel = loginViewModel
+        getIntentData()
+        // activityLoginbinding.tvForgotPassword.paintFlags = Paint.UNDERLINE_TEXT_FLAG
+        getSignupResponseObserver()
+        getVerifyUserObserver()
+        loaderObserver()
+        viewClicks()
+    }
+
+    private fun getIntentData() {
         val fbSocial = intent.extras.get("fbSocial").toString()
         val googleSocial = intent.extras.get("googleSocial").toString()
         if (fbSocial.equals("true")) {
@@ -104,121 +113,9 @@ class SignupActivity : BaseActivity(), ChoiceCallBack {
             activitySignupbinding.edtLastName.setText(lastName)
             activitySignupbinding.edtEmail.setText(email)
         }
-        // activityLoginbinding.tvForgotPassword.paintFlags = Paint.UNDERLINE_TEXT_FLAG
-        loginViewModel.getSignupRes().observe(this,
-            Observer<LoginResponse> { loginResponse ->
-                stopProgressDialog()
-                // FirebaseFunctions.sendOTP("login", mOtpJsonObject, this)
-                if (loginResponse != null) {
-                    val message = loginResponse.message
+    }
 
-                    if (loginResponse.code == 200) {
-                        /* SharedPrefClass().putObject(
-                             MyApplication.instance,
-                             "isLogin",
-                             true
-                         )*/
-                        GlobalConstants.VERIFICATION_TYPE = "signup"
-                        FirebaseFunctions.sendOTP("login", mOtpJsonObject, this)
-                        /* mOtpJsonObject.addProperty("phoneNumber", response.data?.phoneNumber)
-                         mOtpJsonObject.addProperty("countryCode", response.data?.countryCode)*/
-                        SharedPrefClass().putObject(
-                            MyApplication.instance,
-                            GlobalConstants.ACCESS_TOKEN,
-                            loginResponse.data!!.token
-                        )
-                        SharedPrefClass().putObject(
-                            MyApplication.instance,
-                            GlobalConstants.USERID,
-                            loginResponse.data!!.id
-                        )
-                        SharedPrefClass().putObject(
-                            MyApplication.instance,
-                            GlobalConstants.USER_ID,
-                            loginResponse.data!!.id
-                        )
-                        SharedPrefClass().putObject(
-                            MyApplication.instance,
-                            GlobalConstants.IS_SOCIAL,
-                            isSocial
-                        )
-                        SharedPrefClass().putObject(
-                            MyApplication.instance,
-                            GlobalConstants.REGION_ID,
-                            ""
-                        )
-                        SharedPrefClass().putObject(
-                            MyApplication.instance,
-                            GlobalConstants.IS_DOC_UPLOADED,
-                            "false"
-                        )
-                        SharedPrefClass().putObject(
-                            MyApplication.instance,
-                            GlobalConstants.USERNAME,
-                            activitySignupbinding.edtFirstName.text.toString() + " " + activitySignupbinding.edtLastName.text.toString()
-                        )
-                        /* val mJsonObject = JsonObject()
-                         mJsonObject.addProperty("userId", loginResponse.data!!.id)
-                         mJsonObject.addProperty("sessionToken", loginResponse.data!!.token)
-                         loginViewModel.callVerifyUserApi(mJsonObject)*/
-                        /* showToastSuccess(message)
-                         val intent = Intent(this, OTPVerificationActivity::class.java)
-                         startActivity(intent)
-                         finish()*/
-
-                    } else if (loginResponse.code == 408) {
-                        showToastError(message)
-                    } else {
-                        showToastError(message)
-                    }
-
-                }
-            })
-        /*loginViewModel.getEmailError().observe(this, Observer<String> { emailError->
-            activityLoginbinding.etEmail.error = emailError
-            activityLoginbinding.etEmail.requestFocus()
-        })
-
-
-        loginViewModel.getPasswordError().observe(this, Observer<String> { passError->
-            activityLoginbinding.etPassword.requestFocus()
-            activityLoginbinding.etPassword.error = passError
-        })*/
-        loginViewModel.getVerifyUserRes().observe(this,
-            Observer<CommonModel> { loginResponse ->
-                stopProgressDialog()
-                if (loginResponse != null) {
-                    val message = loginResponse.message
-
-                    if (loginResponse.code == 200) {
-                        SharedPrefClass().putObject(
-                            MyApplication.instance,
-                            "isLogin",
-                            true
-                        )
-                        //showToastSuccess(message)
-                        val intent = Intent(this, LandingActivty::class.java)
-                        intent.flags =
-                            Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                        startActivity(intent)
-                        finish()
-
-                    } else {
-                        //showToastError(message)
-                    }
-
-                }
-            })
-
-
-        loginViewModel.isLoading().observe(this, Observer<Boolean> { aBoolean ->
-            if (aBoolean!!) {
-                startProgressDialog()
-            } else {
-                stopProgressDialog()
-            }
-        })
-
+    private fun viewClicks() {
         loginViewModel.isClick().observe(
             this, Observer<String>(function =
             fun(it: String?) {
@@ -334,10 +231,10 @@ class SignupActivity : BaseActivity(), ChoiceCallBack {
                                      Utils(this!!).createPartFromString(password)*/
                                 mHashMap["isSocial"] =
                                     Utils(this).createPartFromString(isSocial.toString())
-/*
-                                mHashMap["deviceToken"] =
-                                    Utils(this!!).createPartFromString("deviceToken")
-*/
+    /*
+                                    mHashMap["deviceToken"] =
+                                        Utils(this!!).createPartFromString("deviceToken")
+    */
                                 mHashMap["platform"] =
                                     Utils(this).createPartFromString("android")
                                 mHashMap["socialType"] =
@@ -368,6 +265,122 @@ class SignupActivity : BaseActivity(), ChoiceCallBack {
                 }
             })
         )
+    }
+
+    private fun loaderObserver() {
+        loginViewModel.isLoading().observe(this, Observer<Boolean> { aBoolean ->
+            if (aBoolean!!) {
+                startProgressDialog()
+            } else {
+                stopProgressDialog()
+            }
+        })
+    }
+
+    private fun getVerifyUserObserver() {
+        loginViewModel.getVerifyUserRes().observe(this,
+            Observer<CommonModel> { loginResponse ->
+                stopProgressDialog()
+                if (loginResponse != null) {
+                    val message = loginResponse.message
+
+                    if (loginResponse.code == 200) {
+                        SharedPrefClass().putObject(
+                            MyApplication.instance,
+                            "isLogin",
+                            true
+                        )
+                        //showToastSuccess(message)
+                        val intent = Intent(this, LandingActivty::class.java)
+                        intent.flags =
+                            Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        startActivity(intent)
+                        finish()
+
+                    } else {
+                        //showToastError(message)
+                    }
+
+                }
+            })
+    }
+
+    private fun getSignupResponseObserver() {
+        loginViewModel.getSignupRes().observe(this,
+            Observer<LoginResponse> { loginResponse ->
+                stopProgressDialog()
+                // FirebaseFunctions.sendOTP("login", mOtpJsonObject, this)
+                if (loginResponse != null) {
+                    val message = loginResponse.message
+
+                    if (loginResponse.code == 200) {
+                        /* SharedPrefClass().putObject(
+                             MyApplication.instance,
+                             "isLogin",
+                             true
+                         )*/
+                        GlobalConstants.VERIFICATION_TYPE = "signup"
+                        FirebaseFunctions.sendOTP("login", mOtpJsonObject, this)
+                        /* mOtpJsonObject.addProperty("phoneNumber", response.data?.phoneNumber)
+                         mOtpJsonObject.addProperty("countryCode", response.data?.countryCode)*/
+                        SharedPrefClass().putObject(
+                            MyApplication.instance,
+                            GlobalConstants.ACCESS_TOKEN,
+                            loginResponse.data!!.token
+                        )
+                        SharedPrefClass().putObject(
+                            MyApplication.instance,
+                            GlobalConstants.USERID,
+                            loginResponse.data!!.id
+                        )
+                        SharedPrefClass().putObject(
+                            MyApplication.instance,
+                            GlobalConstants.USER_ID,
+                            loginResponse.data!!.id
+                        )
+                        SharedPrefClass().putObject(
+                            MyApplication.instance,
+                            GlobalConstants.IS_SOCIAL,
+                            isSocial
+                        )
+                        SharedPrefClass().putObject(
+                            MyApplication.instance,
+                            GlobalConstants.REGION_ID,
+                            ""
+                        )
+                        SharedPrefClass().putObject(
+                            MyApplication.instance,
+                            GlobalConstants.IS_DOC_UPLOADED,
+                            "false"
+                        )
+                        SharedPrefClass().putObject(
+                            MyApplication.instance,
+                            GlobalConstants.AVAILABLE,
+                            "true"
+                        )
+
+                        SharedPrefClass().putObject(
+                            MyApplication.instance,
+                            GlobalConstants.USERNAME,
+                            activitySignupbinding.edtFirstName.text.toString() + " " + activitySignupbinding.edtLastName.text.toString()
+                        )
+                        /* val mJsonObject = JsonObject()
+                         mJsonObject.addProperty("userId", loginResponse.data!!.id)
+                         mJsonObject.addProperty("sessionToken", loginResponse.data!!.token)
+                         loginViewModel.callVerifyUserApi(mJsonObject)*/
+                        /* showToastSuccess(message)
+                         val intent = Intent(this, OTPVerificationActivity::class.java)
+                         startActivity(intent)
+                         finish()*/
+
+                    } else if (loginResponse.code == 408) {
+                        showToastError(message)
+                    } else {
+                        showToastError(message)
+                    }
+
+                }
+            })
     }
 
     override fun photoFromCamera(mKey: String) {

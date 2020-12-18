@@ -32,7 +32,7 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/tv_how_to_complete_order"
+                    android:id="@+id/how_it_works"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/dp_15"
@@ -54,6 +54,7 @@
                     android:background="@color/colorGreyLight" />
 
                 <TextView
+                    android:id="@+id/tv_respond_order"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/dp_15"
@@ -75,6 +76,7 @@
                     android:background="@color/colorGreyLight" />
 
                 <TextView
+                    android:id="@+id/tv_frequently_quest"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/dp_15"
@@ -96,6 +98,7 @@
                     android:background="@color/colorGreyLight" />
 
                 <TextView
+                    android:id="@+id/tv_imp_points"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/dp_15"
@@ -115,6 +118,7 @@
                     android:background="@color/colorGreyLight" />
 
                 <TextView
+                    android:id="@+id/tv_pay_comission"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/dp_15"
@@ -135,6 +139,7 @@
 
 
                 <TextView
+                    android:id="@+id/tv_payment_for_order"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/dp_15"
@@ -154,6 +159,7 @@
                     android:background="@color/colorGreyLight" />
 
                 <TextView
+                    android:id="@+id/tv_earn_more"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/dp_15"
@@ -217,6 +223,7 @@
                     android:background="@color/colorGreyLight" />
 
                 <TextView
+                    android:id="@+id/tv_contact_us"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/dp_15"

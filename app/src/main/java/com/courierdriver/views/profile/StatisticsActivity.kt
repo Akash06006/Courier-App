@@ -80,7 +80,7 @@ class StatisticsActivity : BaseFragment(), DialogssInterface {
                         //  makePayment()
                         if (!TextUtils.isEmpty(payableAmount) && payableAmount.toDouble() > 0) {
 //                            binding!!.tvPayNow.isEnabled = true
-                            /* if (earnedPoints > payableAmount.toDouble()) {
+                             if (earnedPoints > payableAmount.toDouble()) {
                                  viewModel!!.payComission(
                                      "0",
                                      payableAmount,
@@ -90,11 +90,12 @@ class StatisticsActivity : BaseFragment(), DialogssInterface {
                                      additionalChargesData!!.usedCash,
                                      additionalChargesData!!.usedPoints
                                  )
-                             } else {*/
-                            /* val intent = Intent(baseActivity, PaymentButtonActivity::class.java)
+                             } else {
+                             val intent = Intent(baseActivity, PaymentButtonActivity::class.java)
                              intent.putExtra("amount", payableAmount)
-                             startActivityForResult(intent, PAYMENT_CODE)*/
+                             startActivityForResult(intent, PAYMENT_CODE)
 
+/*
                             viewModel!!.payComission(
                                 "0",
                                 payableAmount,
@@ -103,8 +104,9 @@ class StatisticsActivity : BaseFragment(), DialogssInterface {
                                 additionalChargesData!!.additionalCharges!!.cancellationCharges,
                                 additionalChargesData!!.usedCash, additionalChargesData!!.usedPoints
                             )
+*/
 
-                            /*}*/
+                            }
                         } /*else if (totalComissionAddCharges > 0) {
                             viewModel!!.payComission(
                                 "0",
@@ -410,7 +412,7 @@ class StatisticsActivity : BaseFragment(), DialogssInterface {
         builder.setAmount(payableAmount)
             .setTxnId(System.currentTimeMillis().toString())
             .setPhone(GlobalConstants.MOBILE)
-            .setProductName("LOCOMO")
+            .setProductName(getString(R.string.app_name))
             .setFirstName(GlobalConstants.FIRST_NAME)
             .setEmail(GlobalConstants.PAYUMONEY_EMAIL)
             .setsUrl(GlobalConstants.SURL)

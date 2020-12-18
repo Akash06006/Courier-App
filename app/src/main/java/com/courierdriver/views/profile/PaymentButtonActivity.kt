@@ -81,7 +81,7 @@ class PaymentButtonActivity : BaseActivity() {
         builder.setAmount(payableAmount)
             .setTxnId(System.currentTimeMillis().toString())
             .setPhone(GlobalConstants.MOBILE)
-            .setProductName("LOCOMO")
+            .setProductName(getString(R.string.app_name))
             .setFirstName(GlobalConstants.FIRST_NAME)
             .setEmail(GlobalConstants.PAYUMONEY_EMAIL)
             .setsUrl(GlobalConstants.SURL)

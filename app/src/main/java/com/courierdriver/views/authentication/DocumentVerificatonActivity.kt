@@ -67,6 +67,7 @@ class DocumentVerificatonActivity : BaseActivity(), ChoiceCallBack, SelfieCallBa
     private var paytm = ""
     private var googlePay = ""
     private var phonePe = ""
+    private var notificationToken = ""
 
     override fun getLayoutId(): Int {
         return R.layout.activity_document_verificaton
@@ -82,6 +83,7 @@ class DocumentVerificatonActivity : BaseActivity(), ChoiceCallBack, SelfieCallBa
             SharedPrefClass().getPrefValue(this, GlobalConstants.USER_ID).toString()
 
         loaderObserver()
+        sharedPrefValue()
         getVehicleListObserver()
 
         docVerifyViewModel.isClick().observe(
@@ -365,12 +367,40 @@ class DocumentVerificatonActivity : BaseActivity(), ChoiceCallBack, SelfieCallBa
                             finish()
                             message?.let { UtilsFunctions.showToastSuccess(it) }
                         }
+                        408 -> {
+                            showToastError("User not available anymore")
+                            SharedPrefClass().putObject(
+                                this,
+                                "isLogin",
+                                false
+                            )
+                            SharedPrefClass().clearAll(this)
+                            SharedPrefClass().putObject(
+                                this,
+                                GlobalConstants.NOTIFICATION_TOKENPref,
+                                notificationToken
+                            )
+                            GlobalConstants.NOTIFICATION_TOKEN = notificationToken
+                            val i = Intent(
+                                MyApplication.instance.applicationContext,
+                                LoginActivity::class.java
+                            )
+                            i.flags =
+                                Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                            startActivity(i)
+                        }
                         else -> message?.let { UtilsFunctions.showToastError(it) }
                     }
 
                 }
             })
 
+    }
+
+    private fun sharedPrefValue() {
+        notificationToken =
+            SharedPrefClass().getPrefValue(this, GlobalConstants.NOTIFICATION_TOKENPref)
+                .toString()
     }
 
     private fun showError(textView: EditText, error: String) {

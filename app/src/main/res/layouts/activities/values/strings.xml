@@ -10,7 +10,7 @@
     <string name="next">Next</string>
     <string name="start_order">Start Order</string>
     <string name="please_specify_reason_for_withdrawing_this_order">Please specify reason for withdrawing this order!</string>
-    <string name="your_account_is_not_verified_yet_you_can_generate_your_locomo_id_once_you_are_approved_by_admin">Your account is not verified yet. You can generate your Locomo id once you are approved by admin!</string>
+    <string name="your_account_is_not_verified_yet_you_can_generate_your_locomo_id_once_you_are_approved_by_admin">Your account is not verified yet. You can generate your Locomo Id once you are approved by admin!</string>
     <string name="total_payable">Total Payable</string>
     <string name="additional_charges">Additional Charges</string>
     <string name="you_are_not_working">You are not working</string>

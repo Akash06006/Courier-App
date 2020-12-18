@@ -259,14 +259,28 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="@dimen/dp_15"
                 android:layout_marginRight="20dp"
-                android:backgroundTint="@color/colorPrimary" />
+                android:backgroundTint="@color/colorPrimary"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/tv_transport"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/vehicle_info__tv"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="@dimen/dp_15"
+                android:layout_marginRight="20dp"
+                android:textColor="@color/colorBlack"
+                android:textSize="14sp"
+                app:font="@{`regular`}" />
 
             <View
                 android:id="@+id/view_transport"
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
-                android:layout_below="@+id/sp_transport"
+                android:layout_below="@+id/tv_transport"
                 android:layout_marginLeft="20dp"
+                android:layout_marginTop="@dimen/dp_2"
                 android:layout_marginRight="20dp"
                 android:background="@color/colorGrey" />
 

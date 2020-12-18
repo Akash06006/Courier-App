@@ -2,6 +2,7 @@ package com.courierdriver.utils
 
 import android.Manifest
 import android.app.Activity
+import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
@@ -9,6 +10,7 @@ import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.drawable.Animatable
 import android.graphics.drawable.ColorDrawable
+import android.net.Uri
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.os.StrictMode
@@ -157,7 +159,6 @@ abstract class BaseActivity : AppCompatActivity() {
 
     fun showToastSuccess(message: String?) {
         UtilsFunctions.showToastSuccess(message!!)
-
     }
 
     fun showToastError(message: String?) {
@@ -263,6 +264,7 @@ abstract class BaseActivity : AppCompatActivity() {
         }
     }
 
+/*
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<String>,
@@ -275,6 +277,121 @@ abstract class BaseActivity : AppCompatActivity() {
             this,
             permCallback
         )
+    }
+*/
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>, grantResults: IntArray
+    ) {
+        when (requestCode) {
+            REQUEST_ID_MULTIPLE_PERMISSIONS -> {
+                val perms = HashMap<String, Int>()
+                // Initialize the map with both permissions
+                perms[Manifest.permission.CAMERA] = PackageManager.PERMISSION_GRANTED
+                perms[Manifest.permission.WRITE_EXTERNAL_STORAGE] =
+                    PackageManager.PERMISSION_GRANTED
+                perms[Manifest.permission.ACCESS_FINE_LOCATION] = PackageManager.PERMISSION_GRANTED
+                perms[Manifest.permission.RECORD_AUDIO] = PackageManager.PERMISSION_GRANTED
+                perms[Manifest.permission.READ_CONTACTS] = PackageManager.PERMISSION_GRANTED
+                perms[Manifest.permission.CALL_PHONE] = PackageManager.PERMISSION_GRANTED
+                // Fill with actual results from user
+                if (grantResults.isNotEmpty()) {
+                    for (i in permissions.indices)
+                        perms[permissions[i]] = grantResults[i]
+                    // Check for both permissions
+                    if (perms[Manifest.permission.CAMERA] == PackageManager.PERMISSION_GRANTED
+                        && perms[Manifest.permission.WRITE_EXTERNAL_STORAGE] == PackageManager.PERMISSION_GRANTED
+                        && perms[Manifest.permission.ACCESS_FINE_LOCATION] == PackageManager.PERMISSION_GRANTED
+                        && perms[Manifest.permission.RECORD_AUDIO] == PackageManager.PERMISSION_GRANTED
+                        && perms[Manifest.permission.READ_CONTACTS] == PackageManager.PERMISSION_GRANTED
+                        && perms[Manifest.permission.CALL_PHONE] == PackageManager.PERMISSION_GRANTED
+                    ) {
+                        // process the normal flow
+                        //else any one or both the permissions are not granted
+                    } else {
+                        //permission is denied (this is the first time, when "never ask again" is not checked) so ask again explaining the usage of permission
+                        //                        // shouldShowRequestPermissionRationale will return true
+                        //show the dialog or snackbar saying its necessary and try again otherwise proceed with setup.
+                        if (ActivityCompat.shouldShowRequestPermissionRationale(
+                                this,
+                                Manifest.permission.CAMERA
+                            )
+                            || ActivityCompat.shouldShowRequestPermissionRationale(
+                                this,
+                                Manifest.permission.WRITE_EXTERNAL_STORAGE
+                            )
+                            || ActivityCompat.shouldShowRequestPermissionRationale(
+                                this,
+                                Manifest.permission.ACCESS_FINE_LOCATION
+                            )
+                            || ActivityCompat.shouldShowRequestPermissionRationale(
+                                this,
+                                Manifest.permission.RECORD_AUDIO
+                            ) /*|| ActivityCompat.shouldShowRequestPermissionRationale(
+                                this,
+                                Manifest.permission.GET_ACCOUNTS
+                            )*/
+                            || ActivityCompat.shouldShowRequestPermissionRationale(
+                                this,
+                                Manifest.permission.CALL_PHONE
+                            )
+                        ) {
+                            showDialogOK("Service Permissions are required for this app")
+                        } else {
+                            explain("You need to give some mandatory permissions to continue. Do you want to go to app settings?")
+                            //                            //proceed with logic by disabling the related features or quit the app.
+                        }//permission is denied (and never ask again is  checked)
+                        //shouldShowRequestPermissionRationale will return false
+                    }
+                }
+            }
+        }
+    }
+
+    private fun showDialogOK(message1: String) {
+        val binding =
+            DataBindingUtil.inflate<ViewDataBinding>(
+                LayoutInflater.from(this),
+                R.layout.layout_custom_alert,
+                null,
+                false
+            )
+        val dialog = Dialog(this)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setContentView(binding.root)
+        dialog.setTitle(getString(R.string.app_name))
+        // set the custom dialog components - text, image and button
+        val text = dialog.findViewById(R.id.text) as TextView
+        text.text = message1
+        val dialogButton = dialog.findViewById(R.id.dialogButtonOK) as Button
+        val dialogButtonCancel = dialog.findViewById(R.id.dialogButtonCancel) as Button
+        // if button is clicked, close the custom dialog
+        dialogButton.setOnClickListener {
+            dialog.dismiss()
+            checkAndRequestPermissions()
+        }
+        dialogButtonCancel.setOnClickListener {
+            finish()
+        }
+        dialog.show()
+    }
+
+
+    private fun explain(msg: String) {
+        val dialog = AlertDialog.Builder(this)
+        dialog.setMessage(msg)
+            .setPositiveButton("Yes") { paramDialogInterface, paramInt ->
+                //  permissionsclass.requestPermission(type,code);
+                startActivity(
+                    Intent(
+                        android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                        Uri.parse("package:com.android.courier")
+                    )
+                )
+            }
+            .setNegativeButton("Cancel") { paramDialogInterface, paramInt -> /*finish()*/ }
+        dialog.show()
     }
 
     interface PermissionCallback {

@@ -173,7 +173,7 @@
                             android:background="@null"
                             android:digits="0123456789"
                             android:hint="@string/phone_number"
-                            android:imeOptions="actionNext"
+                            android:imeOptions="actionDone"
                             android:inputType="phone"
                             android:singleLine="true"
                             android:textSize="@dimen/sp_14"

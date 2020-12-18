@@ -1103,6 +1103,7 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
     }
 
     //endregion
+
     private fun checkPermission() {
         if (!mPermissionCheck) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

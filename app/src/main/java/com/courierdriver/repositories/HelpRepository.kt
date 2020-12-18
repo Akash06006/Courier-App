@@ -100,6 +100,31 @@ class HelpRepository {
         return logoutData!!
     }
 
+    fun helpLinks(
+        logoutData: MutableLiveData<HelpLinksModel>?
+    ): MutableLiveData<HelpLinksModel> {
+        if (UtilsFunctions.isNetworkConnected()) {
+            val mApiService = ApiService<JsonObject>()
+            mApiService.get(
+                object : ApiResponse<JsonObject> {
+                    override fun onResponse(mResponse: Response<JsonObject>) {
+                        val data = gson.fromJson<HelpLinksModel>(
+                            "" + mResponse.body()!!,
+                            HelpLinksModel::class.java
+                        )
+                        logoutData!!.postValue(data)
+                    }
+
+                    override fun onError(mKey: String) {
+                        logoutData!!.value = null
+                        UtilsFunctions.showToastError(MyApplication.instance.getString(R.string.internal_server_error))
+                    }
+                }, ApiClient.getApiInterface().helpLinks()
+            )
+        }
+        return logoutData!!
+    }
+
     fun paymentHistory(
         paymentData: MutableLiveData<PaymentHistoryModel>?
     ): MutableLiveData<PaymentHistoryModel> {

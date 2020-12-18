@@ -209,9 +209,32 @@ class ProfileFragment : BaseFragment(), ChoiceCallBack {
                             //  showToastSuccess(response.message!!)
                             binding!!.model = response.body
                             regionId = response.body!!.regionId!!
-                            vehicleId = response.body.transportId!!
+                          //  vehicleId = response.body.transportId!!
                             selectedRegion = response.body.regionName!!
-                            selectedVehicle = response.body.transportName!!
+                          //  selectedVehicle = response.body.transportName!!
+
+                            binding!!.spRegion.post {
+                                regionStringList?.let {
+                                    for (item in 0 until regionStringList!!.size) {
+                                        if (regionStringList!![item] == selectedRegion) {
+                                            binding!!.spRegion.setSelection(item + 1)
+                                        }
+                                    }
+                                }
+                            }
+
+/*
+                            binding!!.spTransport.post {
+                                selectedVehicle = response.body.transportName
+                                vehicleStringList?.let {
+                                    for (item in 0 until vehicleStringList!!.size) {
+                                        if (vehicleStringList!![item] == selectedVehicle) {
+                                            binding!!.spTransport.setSelection(item + 1)
+                                        }
+                                    }
+                                }
+                            }
+*/
                         }
                         else -> {
                             showToastError(response.message!!)
@@ -389,15 +412,6 @@ class ProfileFragment : BaseFragment(), ChoiceCallBack {
         adapter.setDropDownViewResource(R.layout.spinner_item)
         spRegions.adapter = adapter
 
-        spRegions.post {
-            regionStringList?.let {
-                for (item in 0 until regionStringList!!.size) {
-                    if (regionStringList!![item] == selectedRegion) {
-                        spRegions.setSelection(item + 1)
-                    }
-                }
-            }
-        }
 
         spRegions.onItemSelectedListener = object :
             AdapterView.OnItemSelectedListener {
@@ -428,8 +442,11 @@ class ProfileFragment : BaseFragment(), ChoiceCallBack {
                         200 -> {
                             if (response.body!!.isNotEmpty()) {
                                 vehicleList = response.body
-                                if (vehicleList!!.isNotEmpty())
-                                    setVehiclesSpinner(binding!!.spTransport)
+                                if (vehicleList!!.isNotEmpty()) {
+                                    vehicleId = vehicleList!![0].id.toString()
+                                    binding!!.tvTransport.text = vehicleList!![0].name
+                                }
+                                  //  setVehiclesSpinner(binding!!.spTransport)
                             }
                         }
                     }
@@ -454,16 +471,6 @@ class ProfileFragment : BaseFragment(), ChoiceCallBack {
         adapter.addAll(vehicleStringList!!)
         adapter.setDropDownViewResource(R.layout.spinner_item)
         spRegions.adapter = adapter
-
-        spRegions.post {
-            vehicleStringList?.let {
-                for (item in 0 until vehicleStringList!!.size) {
-                    if (vehicleStringList!![item] == selectedVehicle) {
-                        spRegions.setSelection(item + 1)
-                    }
-                }
-            }
-        }
 
         spRegions.onItemSelectedListener = object :
             AdapterView.OnItemSelectedListener {

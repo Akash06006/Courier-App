@@ -28,18 +28,62 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 object UtilsFunctions {
+
     @JvmStatic
     fun showToastError(message: String) {
-        val toast = Toast.makeText(MyApplication.instance, message, LENGTH_LONG) as Toast
-        toast.setGravity(Gravity.BOTTOM or Gravity.FILL_HORIZONTAL, 0, 0)
-        val view = toast.view
-        val group = toast.view as ViewGroup
-        val messageTextView = group.getChildAt(0) as TextView
-        messageTextView.textSize = 16.0f
-        messageTextView.setPadding(10, 10, 10, 10)
-        toast.setMargin(0f, 0f)
-        messageTextView.gravity = Gravity.CENTER
-        view.setBackgroundColor(ContextCompat.getColor(MyApplication.instance, R.color.colorRed))
+        val inflater =
+            MyApplication.instance.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        val layout = inflater.inflate(R.layout.layout_toast, null)
+        val image = layout.findViewById<ImageView>(R.id.image)
+        image.visibility = View.GONE
+        val text = layout.findViewById<TextView>(R.id.text)
+        text.text = message
+        val toast = Toast(MyApplication.instance)
+        toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0)
+        toast.duration = LENGTH_SHORT
+        layout.setBackgroundColor(
+            ContextCompat.getColor(
+                MyApplication.instance,
+                R.color.colorRed
+            )
+        )
+        toast.setGravity(Gravity.FILL_HORIZONTAL or Gravity.BOTTOM, 0, 0)
+        toast.view = layout
+        toast.show()
+    }
+    /*val toast = Toast.makeText(MyApplication.instance, message, LENGTH_SHORT) as Toast
+toast.setGravity(Gravity.BOTTOM or Gravity.FILL_HORIZONTAL, 0, 0)
+val view = toast.view
+val group = toast.view as ViewGroup
+val messageTextView = group.getChildAt(0) as TextView
+messageTextView.textSize = 16.0f
+messageTextView.setPadding(10, 10, 10, 10)
+toast.setMargin(0f, 0f)
+messageTextView.gravity = Gravity.CENTER
+view.setBackgroundColor(ContextCompat.getColor(MyApplication.instance, R.color.colorRed))
+toast.show()*/
+
+
+    @JvmStatic
+    fun showToastSuccess(message: String) {
+        val inflater =
+            MyApplication.instance.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        val layout = inflater.inflate(R.layout.layout_toast, null)
+        val image = layout.findViewById<ImageView>(R.id.image)
+        image.setImageResource(R.drawable.ic_check)
+        val text = layout.findViewById<TextView>(R.id.text)
+        text.text = message
+        val toast = Toast(MyApplication.instance)
+        toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0)
+        toast.duration = LENGTH_SHORT
+        layout.setBackgroundColor(
+            ContextCompat.getColor(
+                MyApplication.instance,
+                R.color.colorSuccess
+            )
+        )
+        toast.setGravity(Gravity.FILL_HORIZONTAL or Gravity.BOTTOM, 0, 0)
+        toast.view = layout
         toast.show()
     }
 
@@ -52,30 +96,6 @@ object UtilsFunctions {
             outputUri = Uri.fromFile(file)
         }
         return outputUri
-    }
-
-    @JvmStatic
-    fun showToastSuccess(message: String) {
-        val inflater =
-            MyApplication.instance.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        val layout = inflater.inflate(com.courierdriver.R.layout.layout_toast, null)
-        val image = layout.findViewById<ImageView>(R.id.image)
-        image.setImageResource(R.drawable.ic_check)
-        val text = layout.findViewById<TextView>(R.id.text)
-        text.text = message
-        val toast = Toast(MyApplication.instance)
-        toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0)
-        toast.duration = LENGTH_LONG
-        layout.setBackgroundColor(
-            ContextCompat.getColor(
-                MyApplication.instance,
-                R.color.colorSuccess
-            )
-        )
-        toast.setGravity(Gravity.FILL_HORIZONTAL or Gravity.BOTTOM, 0, 0)
-        toast.view = layout
-        toast.show()
-
     }
 
     @SuppressLint("SimpleDateFormat")

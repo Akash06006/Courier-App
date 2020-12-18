@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <variable
             name="verifViewModel"
             type="com.courierdriver.viewmodels.OTPVerificationModel" />
@@ -100,7 +99,7 @@
                 android:paddingLeft="@dimen/dp_10"
                 android:layout_marginTop="@dimen/dp_10"
                 android:paddingRight="@dimen/dp_10"
-                app:cursorVisible="false"
+                app:cursorVisible="true"
                 app:forceKeyboard="true"
                 app:hint=""
                 app:inputType="number"

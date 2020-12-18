@@ -66,8 +66,8 @@ class PromoCodeActivity : BaseActivity() {
                             promoCodeBinding.tvNoRecord.visibility = View.GONE
                             initRecyclerView()
                         }
-                        else -> message?.let {
-                            UtilsFunctions.showToastError(it)
+                        else -> /*message?.let*/ {
+                            //UtilsFunctions.showToastError(it)
                             promoCodeBinding.rvPromo.visibility = View.GONE
                             promoCodeBinding.tvNoRecord.visibility = View.VISIBLE
                             promoCodeBinding.noRecordAnimation.visibility = View.VISIBLE

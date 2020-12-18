@@ -3,6 +3,7 @@ package com.android.courier.views.authentication
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import android.content.Intent
+import android.text.TextUtils
 import android.widget.EditText
 import com.android.courier.R
 import com.android.courier.application.MyApplication
@@ -149,14 +150,14 @@ class SignupActivity : BaseActivity() {
                             GlobalConstants.IS_SOCIAL,
                             isSocial
                         )
-                        SharedPrefClass().putObject(
-                            MyApplication.instance,
-                            GlobalConstants.REFERRAL_CODE,
-                            loginResponse.data!!.referralCode
-                        )
 
-
-
+                        if (!TextUtils.isEmpty(loginResponse.data!!.referralCode)) {
+                            SharedPrefClass().putObject(
+                                MyApplication.instance,
+                                GlobalConstants.REFERRAL_CODE,
+                                loginResponse.data!!.referralCode
+                            )
+                        }
 
                         SharedPrefClass().putObject(
                             MyApplication.instance,
@@ -313,7 +314,7 @@ class SignupActivity : BaseActivity() {
                                 mJsonObject.addProperty("lastName", lName)
                                 mJsonObject.addProperty(
                                     "countryCode",
-                                    activitySignupbinding.btnCcp.selectedCountryCode
+                                    "+" + activitySignupbinding.btnCcp.selectedCountryCode
                                 )
                                 mJsonObject.addProperty("phoneNumber", phone)
                                 mJsonObject.addProperty("email", email)

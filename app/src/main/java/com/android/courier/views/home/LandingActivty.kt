@@ -90,12 +90,8 @@ class LandingActivty : BaseActivity(), DialogssInterface {
         )
         Glide.with(this)
             .load(image)
-            .placeholder(R.drawable.ic_user)
+            .placeholder(R.drawable.ic_person)
             .into(landingBinding!!.icProfile)
-        val name = SharedPrefClass().getPrefValue(
-            MyApplication.instance.applicationContext,
-            GlobalConstants.USERNAME
-        )
         val email = SharedPrefClass().getPrefValue(
             MyApplication.instance.applicationContext,
             GlobalConstants.USEREMAIL
@@ -110,6 +106,10 @@ class LandingActivty : BaseActivity(), DialogssInterface {
             GlobalConstants.TERMS_CONDITION
         ).toString()
         //val contacts : List<Contact> = Contacts.getQuery().find()
+        val name = SharedPrefClass().getPrefValue(
+            MyApplication.instance.applicationContext,
+            GlobalConstants.USERNAME
+        )
         landingBinding.tvName.text = name.toString()
         landingBinding.tvEmail.text = email.toString()
         var from = ""
@@ -407,13 +407,18 @@ class LandingActivty : BaseActivity(), DialogssInterface {
     }
 
     public fun openCloseDrawer() {
+        val name = SharedPrefClass().getPrefValue(
+            MyApplication.instance.applicationContext,
+            GlobalConstants.USERNAME
+        )
+        landingBinding.tvName.text = name.toString()
         val image = SharedPrefClass().getPrefValue(
             MyApplication.instance.applicationContext,
             GlobalConstants.USER_IMAGE
         )
         Glide.with(this)
             .load(image)
-            .placeholder(R.drawable.ic_user)
+            .placeholder(R.drawable.ic_person)
             .into(landingBinding!!.icProfile)
         /* if (drawer!!.isDrawerOpen(GravityCompat.START)) {
              drawer!!.closeDrawer(Gravity.LEFT) //CLOSE Nav Drawer!

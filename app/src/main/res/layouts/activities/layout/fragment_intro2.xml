@@ -5,7 +5,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/map_back"
-        android:gravity="center"
         android:orientation="vertical">
 
     <ImageView
@@ -84,6 +83,17 @@
                 android:padding="10dp"
                 android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
                 android:textColor="@android:color/white" />
+
     </LinearLayout>
 
+    <ImageView
+            android:id="@+id/imgDots"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/llBottom"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center"
+            android:layout_margin="10dp"
+            android:background="@drawable/img_second" />
 </RelativeLayout>

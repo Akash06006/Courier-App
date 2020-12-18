@@ -144,6 +144,7 @@ class OTPVerificationActivity : BaseActivity() {
 
                     }
                     "tv_resend" -> {
+                        activityOtpVerificationBinding.pinview.value = ""
                         val mJsonObject1 = JsonObject()
                         mJsonObject1.addProperty(
                             "countryCode",
@@ -158,12 +159,14 @@ class OTPVerificationActivity : BaseActivity() {
                         object : CountDownTimer(30000, 1000) {
                             override fun onTick(millisUntilFinished : Long) {
                                 // activityOtpVerificationBinding.resendOTP = 1
+                                activityOtpVerificationBinding.tvResend.isEnabled = false
                                 activityOtpVerificationBinding.tvResend.text =
-                                    "Resend in 00:" + millisUntilFinished / 1000 + " sec"
+                                    "Resend in " + millisUntilFinished / 1000 + " sec"
                                 //here you can have your logic to set text to edittext
                             }
 
                             override fun onFinish() {
+                                activityOtpVerificationBinding.tvResend.isEnabled = true
                                 activityOtpVerificationBinding.tvResend.text =
                                     getString(R.string.resend_otp)
                                 //  activityOtpVerificationBinding.resendOTP = 0
@@ -171,7 +174,6 @@ class OTPVerificationActivity : BaseActivity() {
                             }
 
                         }.start()
-
                     }
                 }
 

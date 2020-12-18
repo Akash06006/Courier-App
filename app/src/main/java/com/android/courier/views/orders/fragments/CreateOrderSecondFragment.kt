@@ -13,7 +13,10 @@ import android.location.LocationManager
 import android.os.Build
 import android.os.Looper
 import android.provider.Settings
+import android.text.Editable
 import android.text.TextUtils
+import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.view.Window
 import android.view.inputmethod.EditorInfo
@@ -42,6 +45,8 @@ import com.android.courier.utils.BaseFragment
 import com.android.courier.viewmodels.order.OrderViewModel
 import com.android.courier.views.home.LandingActivty
 import com.android.courier.views.orders.CreateOrderActivty
+import com.github.tamir7.contacts.Contact
+import com.github.tamir7.contacts.Contacts
 import com.google.android.gms.location.*
 import com.google.gson.JsonObject
 import kotlinx.android.synthetic.main.fragment_create_orders_second.*
@@ -78,6 +83,9 @@ CreateOrderSecondFragment : BaseFragment() {
         fragmentCreateOrdersSecondBinding.orderViewModel = orderViewModel
         // categoriesList=List<Service>()
         calculatePrice()
+
+        fragmentCreateOrdersSecondBinding.edtParcelValue.addTextChangedListener(textWatcher)
+        fragmentCreateOrdersSecondBinding.edtItemName.addTextChangedListener(textWatcher)
 
         orderViewModel.orderListRes().observe(this,
             Observer<OrdersListResponse> { response->
@@ -150,7 +158,7 @@ CreateOrderSecondFragment : BaseFragment() {
                             } else {
                                 totalCancellationCharges = "0"
                             }
-
+                            Log.e("Price Calculate", "" + payableAmount)
 
                             MyApplication.createOrdersInput.deliveryCharges =
                                 response.data?.deliveryFee + ""
@@ -186,6 +194,7 @@ CreateOrderSecondFragment : BaseFragment() {
                 calculatePrice()
             }
         })
+
 
         fragmentCreateOrdersSecondBinding.edtParcelValue.setOnEditorActionListener { v, actionId, event->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -229,6 +238,10 @@ CreateOrderSecondFragment : BaseFragment() {
         }
 
 
+        fragmentCreateOrdersSecondBinding.edtItemName.setOnFocusChangeListener(View.OnFocusChangeListener { v, hasFocus->
+            MyApplication.createOrdersInput.itemName =
+                fragmentCreateOrdersSecondBinding.edtItemName.text.toString()
+        })
         fragmentCreateOrdersSecondBinding.chkLoyalty.setOnCheckedChangeListener(object :
             CompoundButton.OnCheckedChangeListener {
             override fun onCheckedChanged(buttonView : CompoundButton, isChecked : Boolean) {
@@ -340,6 +353,8 @@ CreateOrderSecondFragment : BaseFragment() {
                         )
                     }
                     "btnProceed" -> {
+                        fragmentCreateOrdersSecondBinding.edtParcelValue.clearFocus()
+                        fragmentCreateOrdersSecondBinding.edtItemName.clearFocus()
                         if (TextUtils.isEmpty(
                                 MyApplication.createOrdersInput.itemName
                             ) || TextUtils.isEmpty(MyApplication.createOrdersInput.parcelValue)
@@ -527,7 +542,7 @@ CreateOrderSecondFragment : BaseFragment() {
             fragmentCreateOrdersSecondBinding.btnApplyCoupon.isEnabled = false
             fragmentCreateOrdersSecondBinding.chkLoyalty.isEnabled = false
         }
-        calculatePrice()
+        //TODO--calculatePrice()
     }
 
     fun calculatePrice() {
@@ -570,6 +585,7 @@ CreateOrderSecondFragment : BaseFragment() {
             )
             if (UtilsFunctions.isNetworkConnected()) {
                 //  (activity as CreateOrderActivty).callPriceCalculationApi(mJsonObject)
+                Log.e("Price Calculate Second", "" + mJsonObject)
                 orderViewModel.calculatePrice(mJsonObject)
                 //  showToastSuccess("api call")
             }
@@ -652,5 +668,42 @@ CreateOrderSecondFragment : BaseFragment() {
 
 
         fragmentCreateOrdersSecondBinding.txtFare.text = "₹ " + payableAmount
+    }
+
+    var textWatcher : TextWatcher = object : TextWatcher {
+        override fun beforeTextChanged(
+            s : CharSequence,
+            start : Int,
+            count : Int,
+            after : Int
+        ) {
+        }
+
+        override fun onTextChanged(
+            s : CharSequence,
+            start : Int,
+            before : Int,
+            count : Int
+        ) {
+            if (!TextUtils.isEmpty(s.toString())) {
+            }
+
+        }
+
+        override fun afterTextChanged(s : Editable) {
+            if (s.hashCode() == fragmentCreateOrdersSecondBinding.edtParcelValue.text.hashCode()) {
+                // showToastError("parcelValue")
+                MyApplication.createOrdersInput.parcelValue =
+                    fragmentCreateOrdersSecondBinding.edtParcelValue.text.toString()
+                //showToastSuccess("" + MyApplication.createOrdersInput.parcelValue)
+                calculatePrice()
+            } else {
+                //showToastError("itemName")
+                MyApplication.createOrdersInput.itemName =
+                    fragmentCreateOrdersSecondBinding.edtItemName.text.toString()
+                //showToastSuccess("" + MyApplication.createOrdersInput.itemName)
+            }
+
+        }
     }
 }

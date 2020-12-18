@@ -62,17 +62,17 @@ class LoyaltyPointsListActivity : BaseActivity() {
                                 loyaltyBinding.noRecordAnimation.visibility = View.GONE
                                 loyaltyBinding.txtNoRecord.visibility = View.GONE
                             } else {
-                                loyaltyBinding.llPoints.visibility = View.GONE
+                                //loyaltyBinding.llPoints.visibility = View.GONE
                                 loyaltyBinding.noRecordAnimation.visibility = View.VISIBLE
                                 loyaltyBinding.txtNoRecord.visibility = View.VISIBLE
                             }
 
                         }
-                        else -> message?.let {
-                            UtilsFunctions.showToastError(it)
+                        else -> /*message?.let*/ {
+                            // UtilsFunctions.showToastError(it)
                             loyaltyBinding.noRecordAnimation.visibility = View.VISIBLE
                             loyaltyBinding.txtNoRecord.visibility = View.VISIBLE
-                            loyaltyBinding.llPoints.visibility = View.GONE
+                            // loyaltyBinding.llPoints.visibility = View.GONE
                         }
                     }
                 }

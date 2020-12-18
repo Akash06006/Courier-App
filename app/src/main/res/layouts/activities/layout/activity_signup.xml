@@ -67,6 +67,8 @@
                         android:layout_marginRight="10dp"
                         android:hint="@string/fname"
                         android:imeOptions="actionNext"
+                        android:inputType="textCapSentences"
+                        android:maxLength="15"
                         android:paddingBottom="15dp"
                         android:singleLine="true"
                         android:textSize="14sp"
@@ -81,6 +83,8 @@
                         android:layout_marginRight="10dp"
                         android:hint="@string/lname"
                         android:imeOptions="actionNext"
+                        android:inputType="textCapSentences"
+                        android:maxLength="15"
                         android:paddingBottom="15dp"
                         android:singleLine="true"
                         android:textSize="14sp"
@@ -148,9 +152,10 @@
                             android:layout_marginTop="10dp"
                             android:layout_marginRight="10dp"
                             android:digits="0123456789"
-                            android:hint="@string/phone_number"
+                            android:hint="Mobile Number"
                             android:imeOptions="actionNext"
                             android:inputType="number"
+                            android:maxLength="10"
                             android:paddingBottom="15dp"
                             android:singleLine="true"
                             android:textSize="14sp"
@@ -210,7 +215,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
-                        android:text="by continuing you agree to our Terms and Conditions."
+                        android:text="By continuing you agree to our Terms and Conditions."
                         android:textColor="@color/gray" />
 
                 <Button

@@ -82,7 +82,7 @@
                     android:background="@drawable/ic_query_back"
                     android:elevation="1dp"
                     android:gravity="top"
-                    android:hint="please write here"
+                    android:hint="Please write here"
                     android:minLines="5"
                     android:padding="15dp"
                     android:textColor="@color/colorBlack"

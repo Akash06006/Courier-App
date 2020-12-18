@@ -3,20 +3,16 @@ package com.android.courier.views.orders.fragments
 import android.app.Dialog
 import android.content.Intent
 import android.graphics.Color
+import android.graphics.Typeface
 import android.graphics.drawable.ColorDrawable
-import android.text.SpannableString
-import android.text.Spanned
-import android.text.TextPaint
-import android.text.TextUtils
+import android.text.*
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.Window
 import android.view.animation.AnimationUtils
-import android.widget.Button
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.widget.*
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.Observer
@@ -31,6 +27,7 @@ import com.android.courier.databinding.ActivityOrderPreviewBinding
 import com.android.courier.model.order.CreateOrderResponse
 import com.android.courier.utils.BaseFragment
 import com.android.courier.viewmodels.order.OrderViewModel
+import com.android.courier.views.orders.CreateOrderActivty
 import com.android.courier.views.orders.OrderDetailActivity
 
 class
@@ -75,6 +72,23 @@ CreateOrderPreviewFragment : BaseFragment() {
             })
 
 
+        orderPreviewBinding.chkTermsAndPrivacy.setOnCheckedChangeListener(object :
+            CompoundButton.OnCheckedChangeListener {
+            override fun onCheckedChanged(buttonView : CompoundButton, isChecked : Boolean) {
+                (activity as CreateOrderActivty).previewTick(isChecked)
+            }
+        })
+        orderPreviewBinding.txtTermsAndPrivacy.makeLinks(
+            Pair("Terms and Conditions", View.OnClickListener {
+                Toast.makeText(activity!!, "Coming Soon", Toast.LENGTH_SHORT)
+                    .show()
+            }),
+            Pair("Privacy Policy", View.OnClickListener {
+                Toast.makeText(activity!!, "Coming Soon", Toast.LENGTH_SHORT)
+                    .show()
+            })
+        )
+
         orderViewModel.isClick().observe(
             this, Observer<String>(function =
             fun(it : String?) {
@@ -104,29 +118,11 @@ CreateOrderPreviewFragment : BaseFragment() {
     }
 
     public fun preFillData() {
-        /*val txtDeliveryOption = confirmationDialog?.findViewById<TextView>(R.id.txtDeliveryOption)
-        val txtFare = confirmationDialog?.findViewById<TextView>(R.id.txtFare)
-        val txtWeight = confirmationDialog?.findViewById<TextView>(R.id.txtWeight)
-        val txtValue = confirmationDialog?.findViewById<TextView>(R.id.txtValue)
-        val txtFareCollected = confirmationDialog?.findViewById<TextView>(R.id.txtFareCollected)
-        val txtVehicleType = confirmationDialog?.findViewById<TextView>(R.id.txtVehicleType)
-        val btnConfirm = confirmationDialog?.findViewById<Button>(R.id.btnConfirm)
-        val imgBack = confirmationDialog?.findViewById<ImageView>(R.id.imagBack)
-        val imgUser = confirmationDialog?.findViewById<ImageView>(R.id.img_right)
-        val rvAddress = confirmationDialog?.findViewById<RecyclerView>(R.id.rvAddress)*/
-        /*  val layoutBottomSheet =
-              confirmationDialog?.findViewById<RelativeLayout>(R.id.layoutBottomSheet)
-          val animation = AnimationUtils.loadAnimation(this!!, R.anim.anim)
-          animation.setDuration(500)
-          layoutBottomSheet?.setAnimation(animation)
-          layoutBottomSheet?.animate()
-          animation.start()*/
         if (MyApplication.createOrdersInput.deliveryValue.equals("1")) {
             orderPreviewBinding.txtDeliveryOption.setText("Regular")
         } else {
             orderPreviewBinding.txtDeliveryOption.setText("Express")
         }
-
 
         orderPreviewBinding.txtFare.setText(MyApplication.createOrdersInput.orderPrice)
         orderPreviewBinding.txtWeight.setText(MyApplication.createOrdersInput.weightValue)
@@ -208,5 +204,35 @@ CreateOrderPreviewFragment : BaseFragment() {
             }
         }
         confirmationDialog?.show()
+    }
+
+    fun TextView.makeLinks(vararg links : Pair<String, View.OnClickListener>) {
+        val spannableString = SpannableString(this.text)
+        for (link in links) {
+            val clickableSpan = object : ClickableSpan() {
+                override fun updateDrawState(textPaint : TextPaint) {
+                    // use this to change the link color
+                    textPaint.color = activity!!.resources.getColor(R.color.colorPrimary)
+                    // textPaint.setStyle(Typeface.BOLD)
+                    // toggle below value to enable/disable
+                    // the underline shown below the clickable text
+                    // textPaint.isUnderlineText = true
+                }
+
+                override fun onClick(view : View) {
+                    Selection.setSelection((view as TextView).text as Spannable, 0)
+                    view.invalidate()
+                    link.second.onClick(view)
+                }
+            }
+            val startIndexOfLink = this.text.toString().indexOf(link.first)
+            spannableString.setSpan(
+                clickableSpan, startIndexOfLink, startIndexOfLink + link.first.length,
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+        }
+        this.movementMethod =
+            LinkMovementMethod.getInstance() // without LinkMovementMethod, link can not click
+        this.setText(spannableString, TextView.BufferType.SPANNABLE)
     }
 }

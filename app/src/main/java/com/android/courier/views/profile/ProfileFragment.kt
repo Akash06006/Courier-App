@@ -1,10 +1,13 @@
 package com.android.courier.views.profile
 
 import android.Manifest
+import android.Manifest.permission.CAMERA
+import android.Manifest.permission.READ_EXTERNAL_STORAGE
 import android.app.Activity
 import android.app.Activity.RESULT_OK
 import android.app.Dialog
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.net.Uri
@@ -19,6 +22,8 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -64,6 +69,8 @@ class ProfileFragment : BaseFragment(), ChoiceCallBack {
     private var profileImage = ""
     private var regionPos = 0
     private var regionId = "0"
+    val REQUEST_IMAGE_CAPTURE = 1
+    private val PERMISSION_REQUEST_CODE : Int = 101
     var region = ArrayList<String>()
     override fun getLayoutResId() : Int {
         return R.layout.activity_profile
@@ -118,9 +125,19 @@ class ProfileFragment : BaseFragment(), ChoiceCallBack {
                                 GlobalConstants.USER_IMAGE,
                                 response.data!!.image
                             )
+
+                            Glide.with(this)
+                                .load(response.data!!.image)
+                                .placeholder(R.drawable.ic_person)
+                                .into(profileBinding!!.imgProfile)
                             SharedPrefClass().putObject(
                                 activity!!,
                                 getString(R.string.fname),
+                                response.data!!.firstName + " " + response.data!!.lastName
+                            )
+                            SharedPrefClass().putObject(
+                                activity!!,
+                                GlobalConstants.USERNAME,
                                 response.data!!.firstName + " " + response.data!!.lastName
                             )
                             if (!TextUtils.isEmpty(response.data?.regionId)) {
@@ -247,14 +264,16 @@ class ProfileFragment : BaseFragment(), ChoiceCallBack {
                         makeEnableDisableViews(true)
                     }
                     "iv_edit" -> {
-                       // if (baseActivity.checkAndRequestPermissions()) {
+                        if (checkPersmission()) {
                             confirmationDialog =
                                 mDialogClass.setUploadConfirmationDialog(
                                     activity!!,
                                     this,
                                     "gallery"
                                 )
-                       // }
+                        } else requestPermission()
+                        // if (baseActivity.checkAndRequestPermissions()) {
+                        // }
 
                     }
                     "btn_submit" -> {
@@ -452,4 +471,47 @@ class ProfileFragment : BaseFragment(), ChoiceCallBack {
             .placeholder(R.drawable.ic_person)
             .into(profileBinding.imgProfile)
     }
+
+    private fun checkPersmission() : Boolean {
+        return (ContextCompat.checkSelfPermission(activity!!, android.Manifest.permission.CAMERA) ==
+                PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(
+            activity!!,
+            android.Manifest.permission.READ_EXTERNAL_STORAGE
+        ) == PackageManager.PERMISSION_GRANTED)
+    }
+
+    private fun requestPermission() {
+        ActivityCompat.requestPermissions(
+            activity!!, arrayOf(READ_EXTERNAL_STORAGE, CAMERA),
+            PERMISSION_REQUEST_CODE
+        )
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode : Int,
+        permissions : Array<out String>,
+        grantResults : IntArray
+    ) {
+        when (requestCode) {
+            PERMISSION_REQUEST_CODE -> {
+                if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                    && grantResults[1] == PackageManager.PERMISSION_GRANTED
+                ) {
+                    confirmationDialog =
+                        mDialogClass.setUploadConfirmationDialog(
+                            activity!!,
+                            this,
+                            "gallery"
+                        )
+
+                } else {
+                    Toast.makeText(activity, "Permission Denied", Toast.LENGTH_SHORT).show()
+                }
+                return
+            }
+            else -> {
+            }
+        }
+    }
+
 }

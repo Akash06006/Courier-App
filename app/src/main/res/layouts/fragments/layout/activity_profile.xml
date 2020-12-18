@@ -138,7 +138,6 @@
                                 android:layout_height="@dimen/dp_100"
                                 android:layout_centerInParent="true"
                                 android:contentDescription="@string/todo"
-                                android:src="@{model.image!=null ?  model.image.toString():@string/todo,default=@drawable/ic_person}"
                                 app:civ_border_color="@color/colorWhite"
                                 app:civ_border_width="3dp" />
 
@@ -229,7 +228,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/dp_20"
-                                android:inputType="text"
+                                android:inputType="textCapSentences"
                                 android:maxLength="30"
                                 android:singleLine="true"
                                 android:text="@{model.firstName}"
@@ -255,7 +254,7 @@
                                 android:id="@+id/et_lastname"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:inputType="text"
+                                android:inputType="textCapSentences"
                                 android:maxLength="30"
                                 android:singleLine="true"
                                 android:text="@{model.lastName}"

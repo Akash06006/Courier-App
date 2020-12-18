@@ -92,7 +92,7 @@
                     android:layout_marginLeft="@dimen/dp_10"
                     android:layout_marginTop="@dimen/dp_10"
                     android:layout_marginRight="@dimen/dp_10"
-                    app:cursorVisible="false"
+                    app:cursorVisible="true"
                     app:forceKeyboard="true"
                     app:hint=""
                     app:inputType="number"

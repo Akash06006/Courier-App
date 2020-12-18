@@ -57,18 +57,44 @@
                         app:font="@{`bold`}"
                         tools:ignore="AllCaps" />
 
-                <EditText
-                        android:id="@+id/edtEmail"
+                <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginTop="20dp"
-                        android:layout_marginRight="10dp"
-                        android:hint="@string/mob_no"
-                        android:imeOptions="actionDone"
-                        android:inputType="phone"
-                        android:paddingBottom="15dp"
-                        android:singleLine="true" />
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                    <EditText
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="20dp"
+                            android:digits="0123456789"
+                            android:editable="false"
+                            android:focusable="false"
+                            android:focusableInTouchMode="false"
+                            android:imeOptions="actionDone"
+                            android:inputType="phone"
+                            android:maxLength="10"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp"
+                            android:paddingBottom="15dp"
+                            android:singleLine="true"
+                            android:text="+91" />
+
+                    <EditText
+                            android:id="@+id/edtEmail"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dp"
+                            android:layout_marginRight="10dp"
+                            android:digits="0123456789"
+                            android:hint="@string/mob_no"
+                            android:imeOptions="actionDone"
+                            android:inputType="phone"
+                            android:maxLength="10"
+                            android:paddingLeft="10dp"
+                            android:paddingBottom="15dp"
+                            android:singleLine="true" />
+                </LinearLayout>
 
                 <EditText
                         android:id="@+id/edtPassword"
@@ -77,6 +103,8 @@
                         android:layout_marginLeft="10dp"
                         android:layout_marginTop="10dp"
                         android:layout_marginRight="10dp"
+                        android:editable="false"
+                        android:focusable="false"
                         android:hint="@string/password"
                         android:imeOptions="actionDone"
                         android:inputType="textPassword"
@@ -121,6 +149,7 @@
                         android:layout_marginTop="@dimen/dp_20"
                         android:text="@string/signup_with"
                         android:textAllCaps="false"
+                        android:textColor="@color/colorPrimary"
                         app:font="@{`regular`}"
                         tools:ignore="AllCaps" />
 
@@ -186,6 +215,7 @@
                             android:layout_marginRight="2dp"
                             android:text="@string/new_user"
                             android:textAllCaps="false"
+                            android:textColor="@color/colorPrimary"
                             app:font="@{`regular`}"
                             tools:ignore="AllCaps" />
 

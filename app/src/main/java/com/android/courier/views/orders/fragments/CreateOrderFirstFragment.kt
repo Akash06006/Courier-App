@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.text.TextUtils
@@ -15,12 +16,17 @@ import android.view.animation.AnimationUtils
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import android.Manifest
+import android.text.Editable
+import android.text.TextWatcher
 import com.android.courier.databinding.FragmentCreateOrdersFirstBinding
 import com.android.courier.R
 import com.android.courier.adapters.orders.DeliveryTypesAdapter
@@ -53,6 +59,7 @@ import com.google.android.libraries.places.widget.AutocompleteActivity
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonObject
+import kotlinx.android.synthetic.main.layout_toast.view.*
 import org.json.JSONException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -333,7 +340,7 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface {
                 }
             })
         // var time = ArrayList<String>()/*slot(position)*/
-        createOrderFirstBinding.edtDelMob.setOnFocusChangeListener(View.OnFocusChangeListener { v, hasFocus->
+        /*createOrderFirstBinding.edtDelMob.setOnFocusChangeListener(View.OnFocusChangeListener { v, hasFocus->
             if (!hasFocus) { // code to execute when EditText loses focus
                 if (!TextUtils.isEmpty(createOrderFirstBinding.edtDelMob.text.toString()) && createOrderFirstBinding.edtDelMob.text.length < 10) {
                     createOrderFirstBinding.edtDelMob.requestFocus()
@@ -343,12 +350,11 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface {
                     delMobile = createOrderFirstBinding.edtDelMob.text.toString()
                 }
             }
-        })
-
-        createOrderFirstBinding.edtPickMob.setOnFocusChangeListener(View.OnFocusChangeListener { v, hasFocus->
+        })*/
+        /*createOrderFirstBinding.edtPickMob.setOnFocusChangeListener(View.OnFocusChangeListener { v, hasFocus->
             if (!hasFocus) { // code to execute when EditText loses focus
                 if (!TextUtils.isEmpty(createOrderFirstBinding.edtPickMob.text.toString()) && createOrderFirstBinding.edtPickMob.text.length < 10) {
-                    createOrderFirstBinding.edtPickMob.requestFocus()
+                    // createOrderFirstBinding.edtPickMob.requestFocus()
                     createOrderFirstBinding.edtPickMob.error =
                         getString(R.string.mob_no) + " " + getString(R.string.phone_min)
                 } else {
@@ -357,228 +363,289 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface {
                         createOrderFirstBinding.edtPickMob.text.toString()
                 }
             }
-        })
+        })*/
         //MyApplication.createOrdersInput.pickupAddress?.phoneNumber = pickupMobile
-        createOrderFirstBinding.edtDelMob.setOnEditorActionListener { v, actionId, event->
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
-                // doSomething()
-                createOrderFirstBinding.edtDelMob.clearFocus()
-                if (!TextUtils.isEmpty(createOrderFirstBinding.edtDelMob.text.toString()) && createOrderFirstBinding.edtDelMob.text.length < 10) {
-                    createOrderFirstBinding.edtDelMob.requestFocus()
-                    createOrderFirstBinding.edtDelMob.error =
-                        getString(R.string.mob_no) + " " + getString(R.string.phone_min)
-                } else {
-                    val imm =
-                        activity!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                    imm.hideSoftInputFromWindow(v.windowToken, 0)
-                    delMobile = createOrderFirstBinding.edtDelMob.text.toString()
-                    /* MyApplication.createOrdersInput.pickupAddress?.phoneNumber =
-                         createOrderFirstBinding.edtDelMob.text.toString()*/
+        /* createOrderFirstBinding.edtDelMob.setOnEditorActionListener { v, actionId, event->
+             if (actionId == EditorInfo.IME_ACTION_DONE) {
+                 // doSomething()
+                 // createOrderFirstBinding.edtDelMob.clearFocus()
+                 if (!TextUtils.isEmpty(createOrderFirstBinding.edtDelMob.text.toString()) && createOrderFirstBinding.edtDelMob.text.length < 10) {
+                     // createOrderFirstBinding.edtDelMob.requestFocus()
+                     createOrderFirstBinding.edtDelMob.error =
+                         getString(R.string.mob_no) + " " + getString(R.string.phone_min)
+                 } else {
+                       val imm =
+                           activity!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                       imm.hideSoftInputFromWindow(v.windowToken, 0)
+                     delMobile = createOrderFirstBinding.edtDelMob.text.toString()
+                     *//* MyApplication.createOrdersInput.pickupAddress?.phoneNumber =
+                         createOrderFirstBinding.edtDelMob.text.toString()*//*
                 }
                 true
             } else {
                 false
             }
-        }
+        }*/
         orderViewModel.isClick().observe(
-            this, Observer<String>(function =
-            fun(it : String?) {
-                when (it) {
-                    "imgDelInfo" -> {
-                        showToastInfo(
-                            "Regular : Delivery of ur Courier will be done within 1-3 hours*\n" +
-                                    "Express : Delivery will be done on utmost Priority bases*\n" +
-                                    "(* Timings of delivery may vary due to Distance and City Taffic )"
-                        )
-                    }
-                    "btnProceed" -> {
-                        createOrderFirstBinding.edtDelMob.clearFocus()
-                        createOrderFirstBinding.edtPickMob.clearFocus()
-                        if (TextUtils.isEmpty(
-                                pickupDate
-                            ) || TextUtils.isEmpty(
-                                pickTime
-                            ) || TextUtils.isEmpty(
-                                pickupMobile
-                            ) || TextUtils.isEmpty(
-                                delAddress
-                            ) || TextUtils.isEmpty(
-                                delMobile
-                            ) || TextUtils.isEmpty(
-                                MyApplication.createOrdersInput.deliveryOption
-                            ) || TextUtils.isEmpty(MyApplication.createOrdersInput.weight)
-                            || TextUtils.isEmpty(MyApplication.createOrdersInput.distance) || MyApplication.createOrdersInput.distance.equals(
-                                "0"
+            this, Observer<String>(
+                function =
+                fun(it : String?) {
+                    when (it) {
+                        "imgDelInfo" -> {
+                            showToastInfo(
+                                "Regular : Delivery of your Courier will be done within 1-3 hours*\n" +
+                                        "Express : Delivery will be done on utmost Priority bases*\n" +
+                                        "(* Timings of delivery may vary due to Distance and City Traffic )"
                             )
-                        ) {
-                            showToastError("Please Select all the values")
-                        } else {
-                            val pickupAdd = CreateOrdersInput.PickupAddress()
-                            pickupAdd.address = pickupAddress
-                            pickupAdd.id = 0
-                            pickupAdd.lat = pickLat
-                            pickupAdd.long = pickLong
-                            pickupAdd.date = pickupDate
-                            pickupAdd.time = pickTime
-                            pickupAdd.isComplete = "false"
-                            pickupAdd.phoneNumber = pickupMobile
-                            MyApplication.createOrdersInput.pickupAddress = pickupAdd
-                            val deliveryAddressList =
-                                ArrayList<CreateOrdersInput.PickupAddress>()
-                            var address = CreateOrdersInput.PickupAddress()
-                            address.address = delAddress
-                            address.lat = delLat
-                            address.id = 0
-                            address.long = delLong
-                            address.isComplete = "false"
-                            address.phoneNumber = delMobile
-                            deliveryAddressList.add(address)
-                            MyApplication.createOrdersInput.deliveryAddress = deliveryAddressList
-
-                            MyApplication.createOrdersInput.deliveryAddress!!.addAll(addressList)
-
-                            (activity as CreateOrderActivty).callSecondFragment(2)
-
                         }
+                        "btnProceed" -> {
+                            //createOrderFirstBinding.edtDelMob.clearFocus()
+                            // createOrderFirstBinding.edtPickMob.clearFocus()
+                            pickupMobile = "" + createOrderFirstBinding.edtPickMob.text.trim()
+                            delMobile = "" + createOrderFirstBinding.edtDelMob.text.trim()
+                            if (TextUtils.isEmpty(
+                                    pickupDate
+                                ) || TextUtils.isEmpty(
+                                    pickTime
+                                ) || TextUtils.isEmpty(
+                                    pickupMobile
+                                ) || TextUtils.isEmpty(
+                                    delAddress
+                                ) || TextUtils.isEmpty(
+                                    delMobile
+                                ) || TextUtils.isEmpty(
+                                    MyApplication.createOrdersInput.deliveryOption
+                                ) || TextUtils.isEmpty(MyApplication.createOrdersInput.weight)
+                                || TextUtils.isEmpty(MyApplication.createOrdersInput.distance) || MyApplication.createOrdersInput.distance.equals(
+                                    "0"
+                                )
+                            ) {
+                                showToastError("Please fill all details")
+                            } else if (pickupMobile.length < 10) {
+                                createOrderFirstBinding.edtPickMob.requestFocus()
+                                showToastError("Please enter valid phone number")
+                            } else if (delMobile.length < 10) {
+                                createOrderFirstBinding.edtDelMob.requestFocus()
+                                showToastError("Please enter valid phone number")
+                            } else {
+                                val pickupAdd = CreateOrdersInput.PickupAddress()
+                                pickupAdd.address = pickupAddress
+                                pickupAdd.id = 0
+                                pickupAdd.lat = pickLat
+                                pickupAdd.long = pickLong
+                                pickupAdd.date = pickupDate
+                                pickupAdd.time = pickTime
+                                pickupAdd.isComplete = "false"
+                                pickupAdd.phoneNumber = pickupMobile
+                                MyApplication.createOrdersInput.pickupAddress = pickupAdd
+                                val deliveryAddressList =
+                                    ArrayList<CreateOrdersInput.PickupAddress>()
+                                var address = CreateOrdersInput.PickupAddress()
+                                address.address = delAddress
+                                address.lat = delLat
+                                address.id = 0
+                                address.long = delLong
+                                address.isComplete = "false"
+                                address.phoneNumber = delMobile
+                                deliveryAddressList.add(address)
+                                MyApplication.createOrdersInput.deliveryAddress =
+                                    deliveryAddressList
+                                var isAllDetailAded = true
+                                for (item in addressList) {
+                                    if (TextUtils.isEmpty(item.address) || TextUtils.isEmpty(item.phoneNumber) || item.phoneNumber?.length!! < 10) {
+                                        isAllDetailAded = false
+                                    }
+                                }
+                                MyApplication.createOrdersInput.deliveryAddress!!.addAll(addressList)
 
-                    }
-                    "imgDelAddress" -> {
-                        if (!TextUtils.isEmpty(createOrderFirstBinding.edtPickupLoc.text.toString())) {
-                            if (UtilsFunctions.isNetworkConnected()) {
-                                clickedForLocation = "delivery"
-                                val intent = Intent(activity, AddAddressActivity::class.java)
-                                startActivityForResult(intent, 200)
+                                if (isAllDetailAded) {
+                                    (activity as CreateOrderActivty).callSecondFragment(2)
+                                } else {
+                                    showToastError("Please add details for drop locations")
+                                }
                             }
-                        } else {
-                            showToastError("Please select pickup address")
                         }
-
-                    }
-                    "imgPickContact" -> {
-                        if (UtilsFunctions.isNetworkConnected()) {
-                            clickedForLocation = "pickup"
-                            val intent = Intent(activity, ContactListActivity::class.java)
-                            startActivityForResult(intent, 201)
+                        "imgDelAddress" -> {
+                            if (ContextCompat.checkSelfPermission(
+                                    activity!!,
+                                    Manifest.permission.ACCESS_FINE_LOCATION
+                                ) !==
+                                PackageManager.PERMISSION_GRANTED
+                            ) {
+                                if (ActivityCompat.shouldShowRequestPermissionRationale(
+                                        activity!!,
+                                        Manifest.permission.ACCESS_FINE_LOCATION
+                                    )
+                                ) {
+                                    ActivityCompat.requestPermissions(
+                                        activity!!,
+                                        arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 1
+                                    )
+                                } else {
+                                    ActivityCompat.requestPermissions(
+                                        activity!!,
+                                        arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 1
+                                    )
+                                }
+                            } else {
+                                if (!TextUtils.isEmpty(createOrderFirstBinding.edtPickupLoc.text.toString())) {
+                                    if (UtilsFunctions.isNetworkConnected()) {
+                                        clickedForLocation = "delivery"
+                                        val intent =
+                                            Intent(activity, AddAddressActivity::class.java)
+                                        startActivityForResult(intent, 200)
+                                    }
+                                } else {
+                                    showToastError("Please select pickup address")
+                                }
+                            }
                         }
-                    }
-                    "imgPickupAddress" -> {
-                        if (TextUtils.isEmpty(createOrderFirstBinding.edtDelAddress.text.toString())) {
+                        "imgPickContact" -> {
                             if (UtilsFunctions.isNetworkConnected()) {
                                 clickedForLocation = "pickup"
-                                val intent = Intent(activity, AddAddressActivity::class.java)
-                                startActivityForResult(intent, 200)
+                                val intent = Intent(activity, ContactListActivity::class.java)
+                                startActivityForResult(intent, 201)
                             }
-                        } else {
-                            showCleareDataDialog(
-                                "If you change pickup address, then your delivery locations will be removed.",
-                                true
-                            )
                         }
-
-                    }
-                    "imgDelContact" -> {
-                        if (UtilsFunctions.isNetworkConnected()) {
-                            clickedForLocation = "delivery"
-                            val intent = Intent(activity, ContactListActivity::class.java)
-                            startActivityForResult(intent, 201)
+                        "imgPickupAddress" -> {
+                            if (ContextCompat.checkSelfPermission(
+                                    activity!!,
+                                    Manifest.permission.ACCESS_FINE_LOCATION
+                                ) !==
+                                PackageManager.PERMISSION_GRANTED
+                            ) {
+                                if (ActivityCompat.shouldShowRequestPermissionRationale(
+                                        activity!!,
+                                        Manifest.permission.ACCESS_FINE_LOCATION
+                                    )
+                                ) {
+                                    ActivityCompat.requestPermissions(
+                                        activity!!,
+                                        arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 1
+                                    )
+                                } else {
+                                    ActivityCompat.requestPermissions(
+                                        activity!!,
+                                        arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 1
+                                    )
+                                }
+                            } else {
+                                if (TextUtils.isEmpty(createOrderFirstBinding.edtDelAddress.text.toString())) {
+                                    if (UtilsFunctions.isNetworkConnected()) {
+                                        clickedForLocation = "pickup"
+                                        val intent =
+                                            Intent(activity, AddAddressActivity::class.java)
+                                        startActivityForResult(intent, 200)
+                                    }
+                                } else {
+                                    showCleareDataDialog(
+                                        "If you change pickup address, then your delivery locations will be removed.",
+                                        true
+                                    )
+                                }
+                            }
                         }
-                    }
-                    "edtPickupLoc" -> {
-                        clickedForLocation = "pickup"
-                        // Set the fields to specify which types of place data to
-                        // return after the user has made a selection.
-                        if (TextUtils.isEmpty(createOrderFirstBinding.edtDelAddress.text.toString())) {
+                        "imgDelContact" -> {
                             if (UtilsFunctions.isNetworkConnected()) {
-                                callAutoPlaceApi()
+                                clickedForLocation = "delivery"
+                                val intent = Intent(activity, ContactListActivity::class.java)
+                                startActivityForResult(intent, 201)
                             }
-                        } else {
-                            showCleareDataDialog(
-                                "If you change pickup address, then your delivery locations will be removed.",
-                                true
-                            )
                         }
-
-                    }
-                    "edtDelAddress" -> {
-                        if (!TextUtils.isEmpty(createOrderFirstBinding.edtPickupLoc.text.toString())) {
-                            clickedForLocation = "delivery"
+                        "edtPickupLoc" -> {
+                            clickedForLocation = "pickup"
                             // Set the fields to specify which types of place data to
                             // return after the user has made a selection.
-                            if (UtilsFunctions.isNetworkConnected()) {
-                                callAutoPlaceApi()
-                            }
-                        } else {
-                            showToastError("Please select pickup address")
-                        }
-
-                    }
-                    "txtAddAddress" -> {
-                        createOrderFirstBinding.edtDelMob.clearFocus()
-                        // delMobile = "9865201201"
-                        if (TextUtils.isEmpty(delAddress) || TextUtils.isEmpty(delMobile)
-                        ) {
-                            showToastError("Please add all delivery details")
-                        } else if (addressList.size == 0) {
-                            addAddressView(null)
-                        } else {
-                            if (TextUtils.isEmpty(
-                                    addressList[addressList.size - 1].address
-                                ) || TextUtils.isEmpty(addressList[addressList.size - 1].phoneNumber)
-                            ) {
-                                showToastError("Please add all fields")
+                            if (TextUtils.isEmpty(createOrderFirstBinding.edtDelAddress.text.toString())) {
+                                if (UtilsFunctions.isNetworkConnected()) {
+                                    callAutoPlaceApi()
+                                }
                             } else {
-                                addAddressView(null)
+                                showCleareDataDialog(
+                                    "If you change pickup address, then your delivery locations will be removed.",
+                                    true
+                                )
                             }
                         }
-
-                    }
-                    "txtRegular" -> {
-                        deliveryType = "1"
-                        createOrderFirstBinding.txtExpress.setBackground(
-                            activity!!.resources.getDrawable(
-                                R.drawable.ic_del_type_unselected
-                            )
-                        )
-                        createOrderFirstBinding.txtRegular.setBackground(
-                            activity!!.resources.getDrawable(
-                                R.drawable.ic_del_type_selected
-                            )
-                        )
-                        //slot()
-                    }
-                    "txtExpress" -> {
-                        deliveryType = "2"
-                        createOrderFirstBinding.txtRegular.setBackground(
-                            activity!!.resources.getDrawable(
-                                R.drawable.ic_del_type_unselected
-                            )
-                        )
-                        createOrderFirstBinding.txtExpress.setBackground(
-                            activity!!.resources.getDrawable(
-                                R.drawable.ic_del_type_selected
-                            )
-                        )
-                    }
-                    "imgPriceDetails" -> {
-                        if (createOrderFirstBinding.llPriceDetail.visibility == View.GONE) {
-                            createOrderFirstBinding.imgPriceDetails.setImageResource(
-                                R.drawable.ic_down_arrow
-                            )
-                            createOrderFirstBinding.llPriceDetail.visibility = View.VISIBLE
-                            createOrderFirstBinding.llPriceDetail.bringToFront()
-
-                        } else {
-                            createOrderFirstBinding.imgPriceDetails.setImageResource(
-                                R.drawable.ic_up_arrow
-                            )
-                            createOrderFirstBinding.llPriceDetail.visibility = View.GONE
+                        "edtDelAddress" -> {
+                            if (!TextUtils.isEmpty(createOrderFirstBinding.edtPickupLoc.text.toString())) {
+                                clickedForLocation = "delivery"
+                                // Set the fields to specify which types of place data to
+                                // return after the user has made a selection.
+                                if (UtilsFunctions.isNetworkConnected()) {
+                                    callAutoPlaceApi()
+                                }
+                            } else {
+                                showToastError("Please select pickup address")
+                            }
                         }
-                        ///showToastSuccess("Show Details")
-                        // showCancelOrdersDialog()
+                        "txtAddAddress" -> {
+                            // createOrderFirstBinding.edtDelMob.clearFocus()
+                            // delMobile = "9865201201"
+                            delMobile = "" + createOrderFirstBinding.edtDelMob.text
+                            if (TextUtils.isEmpty(delAddress) || TextUtils.isEmpty(delMobile)
+                            ) {
+                                showToastError("Please add all delivery details")
+                            } else if (addressList.size == 0) {
+                                addAddressView(null)
+                            } else {
+                                if (TextUtils.isEmpty(
+                                        addressList[addressList.size - 1].address
+                                    ) || TextUtils.isEmpty(addressList[addressList.size - 1].phoneNumber)
+                                ) {
+                                    showToastError("Please add all fields")
+                                } else {
+                                    addAddressView(null)
+                                }
+                            }
+                        }
+                        "txtRegular" -> {
+                            deliveryType = "1"
+                            createOrderFirstBinding.txtExpress.setBackground(
+                                activity!!.resources.getDrawable(
+                                    R.drawable.ic_del_type_unselected
+                                )
+                            )
+                            createOrderFirstBinding.txtRegular.setBackground(
+                                activity!!.resources.getDrawable(
+                                    R.drawable.ic_del_type_selected
+                                )
+                            )
+                            //slot()
+                        }
+                        "txtExpress" -> {
+                            deliveryType = "2"
+                            createOrderFirstBinding.txtRegular.setBackground(
+                                activity!!.resources.getDrawable(
+                                    R.drawable.ic_del_type_unselected
+                                )
+                            )
+                            createOrderFirstBinding.txtExpress.setBackground(
+                                activity!!.resources.getDrawable(
+                                    R.drawable.ic_del_type_selected
+                                )
+                            )
+                        }
+                        "imgPriceDetails" -> {
+                            if (createOrderFirstBinding.llPriceDetail.visibility == View.GONE) {
+                                createOrderFirstBinding.imgPriceDetails.setImageResource(
+                                    R.drawable.ic_down_arrow
+                                )
+                                createOrderFirstBinding.llPriceDetail.visibility = View.VISIBLE
+                                createOrderFirstBinding.llPriceDetail.bringToFront()
+
+                            } else {
+                                createOrderFirstBinding.imgPriceDetails.setImageResource(
+                                    R.drawable.ic_up_arrow
+                                )
+                                createOrderFirstBinding.llPriceDetail.visibility = View.GONE
+                            }
+                            ///showToastSuccess("Show Details")
+                            // showCancelOrdersDialog()
+                        }
+                        /**/
                     }
-                    /**/
-                }
-            })
+                })
         )
 
     }
@@ -741,7 +808,7 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface {
     }
 
     //endregion
-    //region ADD MULTIPLE ADDRESS
+//region ADD MULTIPLE ADDRESS
     private fun addAddressView(pickupAddress : CreateOrdersInput.PickupAddress?) {
         i = i + 1
         val addressModel = CreateOrdersInput.PickupAddress()
@@ -762,6 +829,8 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface {
         rowView.id = i
         imgDelContact.id = i
         imgDelMap.id = i
+
+
 
         createOrderFirstBinding.llAddress.addView(rowView)
         addressModel.id = i
@@ -857,7 +926,7 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface {
             if (!hasFocus) { // code to execute when EditText loses focus
                 val tag = v?.id as Int
                 if (!TextUtils.isEmpty(edtDelMob.text.toString()) && edtDelMob.text.length < 10) {
-                    edtDelMob.requestFocus()
+                    // edtDelMob.requestFocus()
                     edtDelMob.error =
                         getString(R.string.mob_no) + " " + getString(R.string.phone_min)
                 } else {
@@ -878,7 +947,7 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface {
                 // doSomething()
                 // val tag = v?.id as Int
                 if (!TextUtils.isEmpty(edtDelMob.text.toString()) && edtDelMob.text.length < 10) {
-                    edtDelMob.requestFocus()
+                    //edtDelMob.requestFocus()
                     edtDelMob.error =
                         getString(R.string.mob_no) + " " + getString(R.string.phone_min)
                     /* } else {
@@ -891,7 +960,7 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface {
                          }*/
 
                 } else {
-                    edtDelMob.clearFocus()
+                    // edtDelMob.clearFocus()
                     val imm =
                         activity!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                     imm.hideSoftInputFromWindow(v.windowToken, 0)
@@ -902,6 +971,43 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface {
             }
         }
         //setListeners(rowView, true, addressList.size.minus(1))
+        var textWatcher : TextWatcher = object : TextWatcher {
+            override fun beforeTextChanged(
+                s : CharSequence,
+                start : Int,
+                count : Int,
+                after : Int
+            ) {
+            }
+
+            override fun onTextChanged(
+                s : CharSequence,
+                start : Int,
+                before : Int,
+                count : Int
+            ) {
+                if (!TextUtils.isEmpty(s.toString())) {
+                }
+
+            }
+
+            override fun afterTextChanged(s : Editable) {
+                if (s.hashCode() == edtDelMob.text.hashCode()) {
+                    val tag = edtDelMob.id as Int
+
+                    for (items in addressList) {
+                        if (tag == items.id) {
+                            // addressList.remove(items)
+                            items.phoneNumber = edtDelMob.text.toString()
+                            break
+                        }
+                    }
+
+                }
+
+            }
+        }
+        edtDelMob.addTextChangedListener(textWatcher)
     }
 
     fun clearAddressData() {
@@ -954,7 +1060,7 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface {
     }
 
     //endregion
-    //region PLACES API
+//region PLACES API
     private fun callAutoPlaceApi() {
         // activityCreateOrderBinding.autocompleteFragment.visibility = View.VISIBLE
         val fields = listOf(
@@ -973,7 +1079,7 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface {
     }
 
     //endregion
-    //region ONACTIVITY FOR RESULT
+//region ONACTIVITY FOR RESULT
     override fun onActivityResult(requestCode : Int, resultCode : Int, data : Intent?) {
         // activityCreateOrderBinding.autocompleteFragment.visibility = View.GONE
         val inputManager : InputMethodManager =
@@ -1100,23 +1206,37 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface {
             val num = data?.getStringExtra("num")
             if (!TextUtils.isEmpty(num)) {
                 if (clickedForLocation.equals("pickup")) {
-                    createOrderFirstBinding.edtPickMob.setText(num)
-                    pickupMobile = num.toString()
-                    MyApplication.createOrdersInput.pickupAddress?.phoneNumber = pickupMobile
-                } else if (clickedForLocation.equals("delivery")) {
-                    createOrderFirstBinding.edtDelMob.setText(num)
-                    delMobile = num.toString()
-                    createOrderFirstBinding.edtDelMob?.clearFocus()
-                } else {
-                    edtDeliveryMob?.setText(num.toString())
-                    val tag = edtDeliveryMob?.id
-                    for (items in addressList) {
-                        if (tag == items.id) {
-                            items.phoneNumber = num
-                            break
-                        }
+                    if (num?.length!! > 9) {
+                        createOrderFirstBinding.edtPickMob.setText(num)
+                        pickupMobile = num.toString()
+                        MyApplication.createOrdersInput.pickupAddress?.phoneNumber = pickupMobile
+                    } else {
+                        showToastError("Please select valid number")
                     }
-                    edtDeliveryMob?.clearFocus()
+
+                } else if (clickedForLocation.equals("delivery")) {
+                    if (num?.length!! > 9) {
+                        createOrderFirstBinding.edtDelMob.setText(num)
+                        delMobile = num.toString()
+                        // createOrderFirstBinding.edtDelMob?.clearFocus()
+                    } else {
+                        showToastError("Please select valid number")
+                    }
+
+                } else {
+                    if (num?.length!! > 9) {
+                        edtDeliveryMob?.setText(num.toString())
+                        val tag = edtDeliveryMob?.id
+                        for (items in addressList) {
+                            if (tag == items.id) {
+                                items.phoneNumber = num
+                                break
+                            }
+                        }
+                        // edtDeliveryMob?.clearFocus()
+                    } else {
+                        showToastError("Please select valid number")
+                    }
 
                 }
             }
@@ -1326,7 +1446,7 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface {
     }
 
     //endregion
-    //region CALCULATE PRICE
+//region CALCULATE PRICE
     fun calculatePrice() {
         if (/*!TextUtils.isEmpty(vehicleId) && */!TextUtils.isEmpty(MyApplication.createOrdersInput.deliveryOption) && !TextUtils.isEmpty(
                 MyApplication.createOrdersInput.distance
@@ -1364,6 +1484,7 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface {
             )
             if (UtilsFunctions.isNetworkConnected()) {
                 //  (activity as CreateOrderActivty).callPriceCalculationApi(mJsonObject)
+                Log.e("Price Calculate First", "" + mJsonObject)
                 orderViewModel.calculatePrice(mJsonObject)
                 //  showToastSuccess("api call")
             }
@@ -1445,5 +1566,30 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface {
         }
 
         createOrderFirstBinding.txtFare.text = "₹ " + payableAmount
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode : Int, permissions : Array<String>,
+        grantResults : IntArray
+    ) {
+        when (requestCode) {
+            1 -> {
+                if (grantResults.isNotEmpty() && grantResults[0] ==
+                    PackageManager.PERMISSION_GRANTED
+                ) {
+                    if ((ContextCompat.checkSelfPermission(
+                            activity!!,
+                            Manifest.permission.ACCESS_FINE_LOCATION
+                        ) ===
+                                PackageManager.PERMISSION_GRANTED)
+                    ) {
+                        Toast.makeText(activity!!, "Permission Granted", Toast.LENGTH_SHORT).show()
+                    }
+                } else {
+                    Toast.makeText(activity!!, "Permission Denied", Toast.LENGTH_SHORT).show()
+                }
+                return
+            }
+        }
     }
 }

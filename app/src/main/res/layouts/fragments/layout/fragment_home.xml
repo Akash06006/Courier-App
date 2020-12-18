@@ -124,7 +124,7 @@
                     android:background="@drawable/shape_button_round_back"
                     android:gravity="center"
                     android:onClick="@{(v) -> homeViewModel.clickListener(v)}"
-                    android:text="@string/new_order"
+                    android:text="Create Order"
                     android:textAllCaps="false"
                     android:textColor="@color/colorWhite"
                     android:textSize="18sp"

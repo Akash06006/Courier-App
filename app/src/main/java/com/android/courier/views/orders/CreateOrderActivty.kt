@@ -515,7 +515,6 @@ class CreateOrderActivty : BaseActivity(), DialogssInterface {
             activityCreateOrderBinding.viewLine2.setAlpha(1f)
             activityCreateOrderBinding.viewLine2.background =
                 ColorDrawable(Color.parseColor("#ffffff"))
-            activityCreateOrderBinding.imgThree.setImageResource(R.drawable.ic_tick)
             val fragment = CreateOrderPreviewFragment()
             this.callFragments(
                 fragment,
@@ -528,6 +527,16 @@ class CreateOrderActivty : BaseActivity(), DialogssInterface {
 
     }
 
+    fun previewTick(isChecked : Boolean) {
+        if (isChecked) {
+            activityCreateOrderBinding.imgThree.setImageResource(R.drawable.ic_tick)
+        } else {
+            activityCreateOrderBinding.imgThree.setImageResource(R.drawable.ic_stepper_unselected)
+        }
+
+    }
+
+    /**/
     override fun onBackPressed() {
 //        super.onBackPressed()
         if (fragment == 1) {

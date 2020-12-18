@@ -43,7 +43,7 @@
     <string name="OTP">OTP</string>
 
     <string name="server_not_reached">We can\'t connect to the server right now,please try again after some time.</string>
-    <string name="resend_otp_message">We sent OTP to verify,Please check associated phone</string>
+    <string name="resend_otp_message">We sent OTP to verify, please check message</string>
     <string name="invalid_otp">Invalid OTP</string>
     <string name="something_error">Somthing is wrong, we will fix it soon...</string>
     <string name="verify">Verify</string>
@@ -232,11 +232,11 @@
     <string name="new_order">Create Order</string>
     <string name="vehicle_type">Vehicle Type</string>
     <string name="delivery_option">Delivery Option</string>
-    <string name="pickup_location">Pickup Location</string>
+    <string name="pickup_location">Pickup Location*</string>
     <string name="pickup_address">Pickup Address</string>
     <string name="delivery_address">Delivery Address</string>
     <string name="mob_no">Mobile No</string>
-    <string name="delivery_location">Drop Location</string>
+    <string name="delivery_location">Drop Location*</string>
     <string name="add_address">Add Address</string>
     <string name="item_name">Item Name</string>
     <string name="weight">Weight</string>
@@ -269,7 +269,7 @@
     <string name="four_hour">4 Hours</string>
     <string name="same_day">Same Day</string>
     <string name="delivery_type">Delivery Type</string>
-    <string name="remove_address">Remove Address</string>
+    <string name="remove_address">Remove Stop</string>
     <string name="order_details">Order Details</string>
     <string name="value">Value</string>
     <string name="fare">Fare</string>

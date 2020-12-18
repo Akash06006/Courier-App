@@ -33,21 +33,29 @@ class LoginRepository {
             val mApiService = ApiService<JsonObject>()
             mApiService.get(
                 object : ApiResponse<JsonObject> {
+                    private var loginResponse : Any? = null
+
                     override fun onResponse(mResponse : Response<JsonObject>) {
-                        val loginResponse = if (mResponse.body() != null)
+                        loginResponse = if (mResponse.body() != null)
                             gson.fromJson<LoginResponse>(
                                 "" + mResponse.body(),
                                 LoginResponse::class.java
                             )
                         else {
+                            //  if (mResponse.errorBody() != null) {
                             gson.fromJson<LoginResponse>(
                                 mResponse.errorBody()!!.charStream(),
                                 LoginResponse::class.java
                             )
+                            /*  } else {
+                                 loginResponse = null
+                             }*/
+
                         }
 
-
-                        data!!.postValue(loginResponse)
+                        if (loginResponse != null) {
+                            data!!.postValue(loginResponse as LoginResponse?)
+                        }
 
                     }
 

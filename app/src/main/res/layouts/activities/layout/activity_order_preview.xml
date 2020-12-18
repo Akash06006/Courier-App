@@ -121,7 +121,7 @@
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:gravity="left"
-                                        android:text="@string/delivery_option"
+                                        android:text="Delivery Type"
                                         android:textSize="10sp"
                                         app:font="@{`regular`}" />
 
@@ -354,7 +354,9 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="5dp"
-                                android:text="I agree to LOCOMO's Terms and Conditions and acknowledge that i have read the Privacy Policy "></TextView>
+                                android:text="I agree to LOCOMO's Terms and Conditions and acknowledge that i have read the Privacy Policy "
+                                android:textColor="@color/colorGrey"
+                                android:textSize="15sp"></TextView>
 
                     </LinearLayout>
                 </LinearLayout>

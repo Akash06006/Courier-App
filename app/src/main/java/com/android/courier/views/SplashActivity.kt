@@ -11,6 +11,7 @@ import com.android.courier.databinding.ActivitySplashBinding
 import com.android.courier.sharedpreference.SharedPrefClass
 import com.android.courier.utils.BaseActivity
 import com.android.courier.views.authentication.LoginActivity
+import com.android.courier.views.authentication.OTPVerificationActivity
 import com.android.courier.views.contacts.ContactListActivity
 import com.android.courier.views.home.LandingActivty
 import com.android.courier.views.orders.OrderDetailActivity
@@ -98,7 +99,7 @@ class SplashActivity : BaseActivity() {
             sharedPrefClass!!.getPrefValue(this, GlobalConstants.TUTORIAL_VISIBLE).toString()
         val intent = if (login == "true") {
             Intent(this, LandingActivty::class.java)
-            //Intent(this, ContactListActivity::class.java)
+            //Intent(this, OTPVerificationActivity::class.java)
         } else {
             if (tutorialVisible.equals("true")) {
                 Intent(this, LoginActivity::class.java)

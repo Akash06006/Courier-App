@@ -16,6 +16,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.os.StrictMode
+import android.text.TextUtils
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -29,8 +30,10 @@ import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import com.android.courier.R
+import com.android.courier.application.MyApplication
 import com.android.courier.common.UtilsFunctions
 import com.android.courier.constants.GlobalConstants
+import com.android.courier.sharedpreference.SharedPrefClass
 import com.android.courier.views.authentication.LoginActivity
 import com.google.gson.GsonBuilder
 import java.util.ArrayList
@@ -349,7 +352,13 @@ abstract class BaseActivity : AppCompatActivity() {
                                     }
                                 })
                         } else {
-                            //explain("You need to give some mandatory permissions to continue. Do you want to go to app settings?")
+                            val userID = "" + SharedPrefClass().getPrefValue(
+                                MyApplication.instance,
+                                GlobalConstants.USERID
+                            )
+                            if (TextUtils.isEmpty(userID) || userID.equals("null")) {
+                                explain("You need to give some mandatory permissions to continue. Do you want to go to app settings?")
+                            }
                             //                            //proceed with logic by disabling the related features or quit the app.
                         }//permission is denied (and never ask again is  checked)
                         //shouldShowRequestPermissionRationale will return false
@@ -359,7 +368,7 @@ abstract class BaseActivity : AppCompatActivity() {
         }
     }
 
-    /*private fun explain(msg : String) {
+    private fun explain(msg : String) {
         val dialog = AlertDialog.Builder(this)
         dialog.setMessage(msg)
             .setPositiveButton("Yes") { paramDialogInterface, paramInt->
@@ -367,13 +376,14 @@ abstract class BaseActivity : AppCompatActivity() {
                 startActivity(
                     Intent(
                         android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                        Uri.parse("package:com.example.courier")
+                        Uri.parse("package:com.android.courier")
                     )
                 )
             }
-            .setNegativeButton("Cancel") { paramDialogInterface, paramInt-> finish() }
+            .setNegativeButton("Cancel") { paramDialogInterface, paramInt-> /*finish()*/ }
         dialog.show()
-    }*/
+    }
+
     private fun showDialogOK(message : String, okListener : DialogInterface.OnClickListener) {
         AlertDialog.Builder(this)
             .setMessage(message)

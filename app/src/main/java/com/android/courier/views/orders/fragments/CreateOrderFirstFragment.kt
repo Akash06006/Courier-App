@@ -1273,6 +1273,9 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface {
                 val long = addressList[pos].long
                 desLoc = desLoc + "|" + lat + "," + long
                 mapQuery.put("destinations", desLoc)
+                if (TextUtils.isEmpty(lat) || lat.equals("null")) {
+                    return
+                }
                 pos += 1
             }
 
@@ -1300,11 +1303,19 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface {
                     if (distanceResponse.status.equals("OK")) {
                         val rows = distanceResponse.rows
                         if (rows?.size!! > 0) {
-                            val elements = rows[0].elements
-                            for (i in 0 until elements!!.size) {
-                                distancInMeter =
-                                    distancInMeter.plus(elements[i].distance?.value!!.toDouble()/*distanceInMeterArray!![0].toDouble()*/)
+                            if (rows[0] != null) {
+                                if (rows[0].elements != null) {
+                                    val elements = rows[0].elements
+                                    for (i in 0 until elements!!.size) {
+                                        if (elements[i].distance != null) {
+                                            distancInMeter =
+                                                distancInMeter.plus(elements[i].distance?.value!!.toDouble()/*distanceInMeterArray!![0].toDouble()*/)
+                                        }
+
+                                    }
+                                }
                             }
+
                         }
                     }
                     val distancInKm = distancInMeter / 1000

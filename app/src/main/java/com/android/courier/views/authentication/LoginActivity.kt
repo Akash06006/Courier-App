@@ -75,11 +75,11 @@ class LoginActivity : BaseActivity() {
                     val message = loginResponse.message
 
                     if (loginResponse.code == 200) {
-                        SharedPrefClass().putObject(
-                            MyApplication.instance,
-                            "isLogin",
-                            true
-                        )
+                        /* SharedPrefClass().putObject(
+                             MyApplication.instance,
+                             "isLogin",
+                             true
+                         )*/
                         SharedPrefClass().putObject(
                             MyApplication.instance,
                             GlobalConstants.ACCESS_TOKEN,
@@ -137,12 +137,12 @@ class LoginActivity : BaseActivity() {
                             loginResponse.data!!.referralCode
                         )
                         GlobalConstants.VERIFICATION_TYPE = "login"
-                        // FirebaseFunctions.sendOTP("login", mOtpJsonObject, this)
-                        val intent = Intent(this, LandingActivty::class.java)
-                        intent.flags =
-                            Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                        startActivity(intent)
-                        finish()
+                        FirebaseFunctions.sendOTP("login", mOtpJsonObject, this)
+                        /* val intent = Intent(this, LandingActivty::class.java)
+                         intent.flags =
+                             Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                         startActivity(intent)
+                         finish()*/
                         //showToastSuccess(message)
                         //val intent = Intent(this, LandingActivty::class.java)
                         //intent.putExtra("catId", ""/*categoriesList[position].id*/)

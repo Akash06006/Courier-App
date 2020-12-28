@@ -126,7 +126,7 @@ class OrderDetailActivity : BaseActivity(), OnMapReadyCallback, LocationListener
 
         super.onResume()
         reasons.clear()
-        reasons.add("Select Reason")
+        reasons.add("Select Your Reason")
         if (UtilsFunctions.isNetworkConnected()) {
             startProgressDialog()
             orderViewModel.orderDetail(orderId)
@@ -384,15 +384,18 @@ class OrderDetailActivity : BaseActivity(), OnMapReadyCallback, LocationListener
                                     oldLatLong = destination
                                 }
                             }
-
-
                             val builder = LatLngBounds.Builder();
                             /* for (Marker marker : markers) {
                                  builder.include(marker);
                              }*/
                             builder.include(LatLng(pickLat.toDouble(), picktLong.toDouble()))
                             for (item in response.data?.deliveryAddress!!) {
-                                builder.include(LatLng(item.lat!!.toDouble(), item.long!!.toDouble()))
+                                builder.include(
+                                    LatLng(
+                                        item.lat!!.toDouble(),
+                                        item.long!!.toDouble()
+                                    )
+                                )
                             }
                             var bounds = builder.build();
                             var padding = 200  // offset from edges of the map in pixels
@@ -464,9 +467,10 @@ class OrderDetailActivity : BaseActivity(), OnMapReadyCallback, LocationListener
                         if (!TextUtils.isEmpty(isCancellable) && isCancellable.equals("true")) {
                             showCancelReasonDialog()
                         } else {
-                            showToastError("You can not cancel this order")
+                            showToastError("You can not cancel this order as your order is in transit")
                         }
-
+/*you can not cancel this order or your order in transit
+*/
                     }
                     "imgNavigate" -> {
                         val intent = Intent(this, DriverTrackingActivity::class.java)
@@ -502,7 +506,7 @@ class OrderDetailActivity : BaseActivity(), OnMapReadyCallback, LocationListener
                             intent.putExtra("id", orderId)
                             startActivity(intent)
                         } else {
-                            showToastError("You can not reschedule this order")
+                            showToastError("You can not reschedule this order  as your order is in transit")
                         }
 
                     }

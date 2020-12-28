@@ -53,8 +53,9 @@
                     android:gravity="center"
                     android:text="@string/orders"
                     android:textColor="@color/colorWhite"
-                    android:textSize="@dimen/sp_16"
-                    app:font="@{`semibold`}" />
+                    android:textSize="@dimen/sp_18"
+                    android:textStyle="bold"
+                    app:font="@{`bold`}" />
 
             <Button
                     android:id="@+id/img_cost"

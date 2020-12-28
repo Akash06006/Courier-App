@@ -528,14 +528,14 @@
                                 android:layout_height="40dp"
                                 android:layout_alignParentRight="true"
                                 android:layout_centerVertical="true"
-                                android:background="@drawable/ic_promocode_back"
+                                android:background="@drawable/ic_today_back"
                                 android:onClick="@{(v) -> orderViewModel.clickListener(v)}"
                                 android:paddingLeft="10dp"
                                 android:paddingRight="10dp"
                                 android:src="@drawable/ic_item_name"
                                 android:text="@string/apply_coupon"
                                 android:textAllCaps="false"
-                                android:textColor="@color/colorPrimary"
+                                android:textColor="@color/colorBlack"
                                 android:textSize="12sp"
                                 app:font="@{`semibold`}" />
 

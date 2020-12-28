@@ -51,8 +51,9 @@
                     android:paddingTop="@dimen/dp_15"
                     android:text="@string/loyalty_points"
                     android:textColor="@color/colorWhite"
-                    android:textSize="@dimen/sp_16"
-                    app:font="@{`semibold`}" />
+                    android:textSize="@dimen/sp_18"
+                    android:textStyle="bold"
+                    app:font="@{`bold`}" />
             <!-- android:gravity="center"-->
             <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/img_right"

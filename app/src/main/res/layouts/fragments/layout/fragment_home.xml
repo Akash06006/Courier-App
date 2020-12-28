@@ -106,12 +106,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:layout_marginTop="20dp"
                     android:gravity="center"
                     android:text="@string/your_local_delivery_partner"
                     android:textColor="@color/colorWhite"
                     android:textSize="16sp"
                     android:textStyle="bold"
-
                     app:font="@{`semibold`}" />
 
             <TextView

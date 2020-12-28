@@ -107,7 +107,7 @@
                         android:elevation="@dimen/dp_10"
                         android:paddingLeft="@dimen/dp_20"
                         android:paddingRight="@dimen/dp_20"
-                        android:text="@string/send"
+                        android:text="Cancel Order"
                         android:textAllCaps="false"
                         android:textColor="@color/colorWhite"
                         android:textSize="@dimen/button_text_size" />

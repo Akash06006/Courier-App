@@ -76,7 +76,7 @@ class ChatActivity : BaseActivity(),
         mMessageAdapter = MessageListAdapter(
             this,
             chatList,
-            sharedPrefClass
+            sharedPrefClass, "admin"
         )
         chatBinding.reyclerviewMessageList.setLayoutManager(LinearLayoutManager(this))
         chatBinding.reyclerviewMessageList.setAdapter(mMessageAdapter)

@@ -21,7 +21,9 @@
     <color name="colorButton">#474747</color>
     <color name="colorBlack2">#464646</color>
     <color name="colorGolden">#F1B922</color>
-    <color name="colorGrey1">#D0D0D0</color>
+    <!--<color name="colorGrey1">#D0D0D0</color>-->
+    <color name="colorGrey1">#7B7C7C</color>
+
     <color name="colorLightBlue">#1C9FEA</color>
     <color name="orange_transparent">#98FC9A03</color>
     <color name="colorBlack">#000000</color>

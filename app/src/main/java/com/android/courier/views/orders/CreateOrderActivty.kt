@@ -486,9 +486,7 @@ class CreateOrderActivty : BaseActivity(), DialogssInterface {
     }
 
     fun setViewLine() {
-        activityCreateOrderBinding.viewLine1.setAlpha(1f)
-        activityCreateOrderBinding.viewLine1.background =
-            ColorDrawable(Color.parseColor("#ffffff"))
+        activityCreateOrderBinding.imgOne.setImageResource(R.drawable.ic_tick)
     }
 
     fun callSecondFragment(fragmenNumber : Int) {
@@ -497,8 +495,10 @@ class CreateOrderActivty : BaseActivity(), DialogssInterface {
         activityCreateOrderBinding.viewLine1.background =
             ColorDrawable(Color.parseColor("#ffffff"))
         if (fragmenNumber == 2) {
+            activityCreateOrderBinding.viewLine1.background =
+                ColorDrawable(Color.parseColor("#ffffff"))
             activityCreateOrderBinding.imgToolbarText.setText("Add more Details")
-            activityCreateOrderBinding.imgTwo.setImageResource(R.drawable.ic_tick)
+            activityCreateOrderBinding.imgTwo.setImageResource(R.drawable.ic_stepper_unselected)
             val fragment = CreateOrderSecondFragment()
             this.callFragments(
                 fragment,
@@ -532,6 +532,15 @@ class CreateOrderActivty : BaseActivity(), DialogssInterface {
             activityCreateOrderBinding.imgThree.setImageResource(R.drawable.ic_tick)
         } else {
             activityCreateOrderBinding.imgThree.setImageResource(R.drawable.ic_stepper_unselected)
+        }
+
+    }
+
+    fun secondStepCompleted(isChecked : Boolean) {
+        if (isChecked) {
+            activityCreateOrderBinding.imgTwo.setImageResource(R.drawable.ic_tick)
+        } else {
+            activityCreateOrderBinding.imgTwo.setImageResource(R.drawable.ic_stepper_unselected)
         }
 
     }

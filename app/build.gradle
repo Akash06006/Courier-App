@@ -127,6 +127,9 @@ dependencies {
 
     implementation 'com.makeramen:roundedimageview:2.3.0'
 
+    //Wheel picker
+    compile 'cn.aigestudio.wheelpicker:WheelPicker:1.1.3'
+
     compile 'com.github.tamir7.contacts:contacts:1.1.7'
 }
 apply plugin: 'com.google.gms.google-services'

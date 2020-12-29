@@ -64,7 +64,19 @@ CreateOrderPreviewFragment : BaseFragment() {
                         response.code == 200 -> {
                             orderId = response.data?.id.toString()
                             // if (paymentType.equals("2")) {
-                            showPaymentSuccessDialog()
+                            // showPaymentSuccessDialog()
+                            if (!TextUtils.isEmpty(MyApplication.createOrdersInput.orderId) && !MyApplication.createOrdersInput.orderId.equals(
+                                    "null"
+                                )
+                            ) {
+                                activity!!.finish()
+                            } else {
+                                val intent = Intent(activity, OrderDetailActivity::class.java)
+                                intent.putExtra("id", orderId)
+                                // intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                startActivity(intent)
+                                activity!!.finish()
+                            }
                         }
                         else -> message?.let { UtilsFunctions.showToastError(it) }
                     }

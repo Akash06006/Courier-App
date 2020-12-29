@@ -2,6 +2,7 @@ package com.android.courier.adapters.chat;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import com.android.courier.constants.GlobalConstants;
 import com.android.courier.model.chat.ChatListModel;
 import com.android.courier.sharedpreference.SharedPrefClass;
 import com.android.courier.views.chat.ChatActivity;
+import com.android.courier.views.chat.DriverChatActivity;
 import com.bumptech.glide.Glide;
 
 import java.text.SimpleDateFormat;
@@ -33,11 +35,13 @@ public class MessageListAdapter extends RecyclerView.Adapter {
 
     private Context mContext;
     private ArrayList<ChatListModel> mMessageList;
+    private String chatType = "";
 
-    public MessageListAdapter(Context context, ArrayList<ChatListModel> messageList, SharedPrefClass mSharedPrefClass) {
+    public MessageListAdapter(Context context, ArrayList<ChatListModel> messageList, SharedPrefClass mSharedPrefClass, String chatType) {
         mContext = context;
         mMessageList = messageList;
         sharedPreferenceClass = mSharedPrefClass;
+        this.chatType = chatType;
     }
 
     @Override
@@ -49,7 +53,8 @@ public class MessageListAdapter extends RecyclerView.Adapter {
     @Override
     public int getItemViewType(int position) {
         ChatListModel message = (ChatListModel) mMessageList.get(position);
-        String chatType = mMessageList.get(position).getChatType();
+        //chatType = mMessageList.get(position).getChatType();
+        // Log.e("chatType: ", chatType);
         String userId = new SharedPrefClass().getPrefValue(
                 mContext,
                 "USERID"
@@ -183,13 +188,19 @@ public class MessageListAdapter extends RecyclerView.Adapter {
 
             imageView = (ImageView) itemView.findViewById(R.id.img_message);
             timeText = (TextView) itemView.findViewById(R.id.text_message_time);
-           /* imageView.setOnClickListener(new View.OnClickListener() {
+            imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (mMessageList.get(getAdapterPosition()).getMedia() != null)
-                        ((ChatActivity) mContext).showImageData(false, mMessageList.get(getAdapterPosition()).getMedia());
+                    if (mMessageList.get(getAdapterPosition()).getMedia() != null) {
+                        if (chatType.equals("admin")) {
+                            ((ChatActivity) mContext).showImageData(false, mMessageList.get(getAdapterPosition()).getMedia());
+                        } else {
+                            ((DriverChatActivity) mContext).showImageData(false, mMessageList.get(getAdapterPosition()).getMedia());
+                        }
+                    }
+
                 }
-            });*/
+            });
         }
 
         void bind(ChatListModel message) {
@@ -217,8 +228,14 @@ public class MessageListAdapter extends RecyclerView.Adapter {
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (mMessageList.get(getAdapterPosition()).getMedia() != null)
-                        ((ChatActivity) mContext).showImageData(false, mMessageList.get(getAdapterPosition()).getMedia());
+                    if (mMessageList.get(getAdapterPosition()).getMedia() != null) {
+                        if (chatType.equals("admin")) {
+                            ((ChatActivity) mContext).showImageData(false, mMessageList.get(getAdapterPosition()).getMedia());
+                        } else {
+                            ((DriverChatActivity) mContext).showImageData(false, mMessageList.get(getAdapterPosition()).getMedia());
+                        }
+                    }
+                    // ((ChatActivity) mContext).showImageData(false, mMessageList.get(getAdapterPosition()).getMedia());
                 }
             });
         }

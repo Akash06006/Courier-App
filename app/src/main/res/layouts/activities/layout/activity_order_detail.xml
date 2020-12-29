@@ -291,12 +291,12 @@
                                     <androidx.recyclerview.widget.RecyclerView
                                             android:id="@+id/rvPaymentOptions"
                                             android:layout_width="190dp"
-                                            android:gravity="right"
                                             android:layout_height="wrap_content"
                                             android:layout_alignParentRight="true"
                                             android:layout_marginLeft="@dimen/dp_5"
                                             android:layout_marginTop="@dimen/dp_5"
                                             android:layout_marginRight="@dimen/dp_5"
+                                            android:gravity="right"
                                             android:maxWidth="190dp"
                                             android:padding="@dimen/dp_5"
                                             android:visibility="visible" />
@@ -344,7 +344,7 @@
                                             android:onClick="@{(v) -> orderViewModel.clickListener(v)}"
                                             android:text="@string/cancel"
                                             android:textAllCaps="false"
-                                            android:textColor="@color/colorGrey" />
+                                            android:textColor="@color/colorWhite" />
 
                                 </LinearLayout>
 
@@ -363,7 +363,7 @@
                                             android:gravity="left"
                                             android:text="Booking ID Order#124"
                                             android:textColor="@color/colorPrimary"
-                                            android:textSize="16sp"
+                                            android:textSize="15sp"
                                             android:textStyle="bold"
                                             app:font="@{`bold`}" />
 
@@ -380,7 +380,7 @@
                                             android:text="100"
                                             android:textAllCaps="false"
                                             android:textColor="@color/colorPrimary"
-                                            android:textSize="16sp"
+                                            android:textSize="18sp"
                                             android:textStyle="bold"
                                             app:font="@{`bold`}" />
                                 </RelativeLayout>

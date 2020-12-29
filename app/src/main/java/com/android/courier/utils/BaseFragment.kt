@@ -31,10 +31,10 @@ abstract class BaseFragment : Fragment() {
         viewDataBinding = DataBindingUtil.inflate(inflater, getLayoutResId(), container, false)
         val viewRootBinding = viewDataBinding.root
 
-        baseActivity.overridePendingTransition(
+       /* baseActivity.overridePendingTransition(
             R.anim.slide_in,
             R.anim.slide_out
-        )
+        )*/
         return viewRootBinding
     }
 

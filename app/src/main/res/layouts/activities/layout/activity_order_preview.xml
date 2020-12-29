@@ -159,7 +159,7 @@
                                         android:drawablePadding="2dp"
                                         android:gravity="center_vertical"
                                         android:textColor="@color/colorMustad"
-                                        android:textSize="16sp"
+                                        android:textSize="18sp"
                                         app:font="@{`bold`}" />
                             </LinearLayout>
 

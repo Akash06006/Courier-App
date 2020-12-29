@@ -78,7 +78,7 @@ class DriverChatActivity : BaseActivity(),
         mMessageAdapter = MessageListAdapter(
             this,
             chatList,
-            sharedPrefClass
+            sharedPrefClass, "driver"
         )
         chatBinding.reyclerviewMessageList.setLayoutManager(LinearLayoutManager(this))
         chatBinding.reyclerviewMessageList.setAdapter(mMessageAdapter)
@@ -223,7 +223,7 @@ class DriverChatActivity : BaseActivity(),
     override fun onConnectError() {
         Log.e("Socket", "Error Connected")
         runOnUiThread {
-           // Toast.makeText(this, "error", Toast.LENGTH_SHORT).show()
+            // Toast.makeText(this, "error", Toast.LENGTH_SHORT).show()
         }
         /*try {
             val socketConnectionManager : SocketConnectionManager =

@@ -207,6 +207,14 @@ CreateOrderSecondFragment : BaseFragment() {
                     fragmentCreateOrdersSecondBinding.edtParcelValue.text.toString()
                 fragmentCreateOrdersSecondBinding.edtPromoCode.setText("")
                 MyApplication.createOrdersInput.promoCode = ""
+                fragmentCreateOrdersSecondBinding.btnApplyCoupon.background =
+                    activity!!.resources.getDrawable(R.drawable.ic_today_back)
+
+                fragmentCreateOrdersSecondBinding.btnApplyCoupon.setTextColor(
+                    activity!!.resources.getColor(
+                        R.color.colorBlack
+                    )
+                )
                 fragmentCreateOrdersSecondBinding.btnApplyCoupon.setText("Apply Now")
                 discountApplied = ""
                 GlobalConstants.discountApplied = ""
@@ -286,6 +294,14 @@ CreateOrderSecondFragment : BaseFragment() {
                             // fragmentCreateOrdersSecondBinding.rlOriginalPrice.visibility = View.VISIBLE
                             // fragmentCreateOrdersSecondBinding.txtTotalAmount.setText(deliveryCharges + "₹")
                             // fragmentCreateOrdersSecondBinding.txtDelCharges.setText(response.data?.payableAmount + "₹")
+                            fragmentCreateOrdersSecondBinding.btnApplyCoupon.background =
+                                activity!!.resources.getDrawable(R.drawable.ic_promocode_back)
+
+                            fragmentCreateOrdersSecondBinding.btnApplyCoupon.setTextColor(
+                                activity!!.resources.getColor(
+                                    R.color.colorPrimary
+                                )
+                            )
                             fragmentCreateOrdersSecondBinding.btnApplyCoupon.setText("Remove")
                             fragmentCreateOrdersSecondBinding.edtPromoCode.isEnabled = false
                             MyApplication.createOrdersInput.promoCode =
@@ -315,6 +331,15 @@ CreateOrderSecondFragment : BaseFragment() {
                             //fragmentCreateOrdersSecondBinding.rlOriginalPrice.visibility = View.GONE
                             // fragmentCreateOrdersSecondBinding.txtTotalAmount.setText("")
                             // fragmentCreateOrdersSecondBinding.txtDelCharges.setText(deliveryCharges + "₹")
+                            fragmentCreateOrdersSecondBinding.btnApplyCoupon.background =
+                                activity!!.resources.getDrawable(R.drawable.ic_today_back)
+
+                            fragmentCreateOrdersSecondBinding.btnApplyCoupon.setTextColor(
+                                activity!!.resources.getColor(
+                                    R.color.colorBlack
+                                )
+                            )
+
                             fragmentCreateOrdersSecondBinding.btnApplyCoupon.setText("Apply")
                             fragmentCreateOrdersSecondBinding.edtPromoCode.isEnabled = true
                             fragmentCreateOrdersSecondBinding.edtPromoCode.setText("")
@@ -473,6 +498,14 @@ CreateOrderSecondFragment : BaseFragment() {
             fragmentCreateOrdersSecondBinding.edtParcelValue.setText(MyApplication.createOrdersInput.parcelValue)
         }
         if (!TextUtils.isEmpty(MyApplication.createOrdersInput.promoCode)) {
+            fragmentCreateOrdersSecondBinding.btnApplyCoupon.background =
+                activity!!.resources.getDrawable(R.drawable.ic_promocode_back)
+
+            fragmentCreateOrdersSecondBinding.btnApplyCoupon.setTextColor(
+                activity!!.resources.getColor(
+                    R.color.colorPrimary
+                )
+            )
             fragmentCreateOrdersSecondBinding.edtPromoCode.setText(MyApplication.createOrdersInput.promoCode)
             fragmentCreateOrdersSecondBinding.btnApplyCoupon.setText("Remove")
             fragmentCreateOrdersSecondBinding.edtPromoCode.isEnabled = false
@@ -696,14 +729,29 @@ CreateOrderSecondFragment : BaseFragment() {
                 MyApplication.createOrdersInput.parcelValue =
                     fragmentCreateOrdersSecondBinding.edtParcelValue.text.toString()
                 //showToastSuccess("" + MyApplication.createOrdersInput.parcelValue)
+                checkTikMark()
                 calculatePrice()
             } else {
                 //showToastError("itemName")
+                checkTikMark()
                 MyApplication.createOrdersInput.itemName =
                     fragmentCreateOrdersSecondBinding.edtItemName.text.toString()
                 //showToastSuccess("" + MyApplication.createOrdersInput.itemName)
             }
 
         }
+
+    }
+
+    private fun checkTikMark() {
+        if (!TextUtils.isEmpty(fragmentCreateOrdersSecondBinding.edtItemName.text.toString().trim()) && !TextUtils.isEmpty(
+                fragmentCreateOrdersSecondBinding.edtParcelValue.text.toString().trim()
+            )
+        ) {
+            (activity as CreateOrderActivty).secondStepCompleted(true)
+        } else {
+            (activity as CreateOrderActivty).secondStepCompleted(false)
+        }
+
     }
 }

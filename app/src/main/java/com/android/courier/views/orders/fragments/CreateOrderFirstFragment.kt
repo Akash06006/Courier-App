@@ -62,12 +62,13 @@ import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonObject
+import kotlinx.android.synthetic.main.activity_create_order.view.*
+import kotlinx.android.synthetic.main.layout_toast.view.*
 import org.json.JSONException
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
-@RequiresApi(Build.VERSION_CODES.M)
 class
 CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChangeListener,
     WheelPicker.OnWheelChangeListener {
@@ -145,8 +146,7 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
         mFusedLocationClass = FusedLocationClass(activity)
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(activity!!)
         // initRecyclerView()
-        /*toggleBottomSheet()
-        setBottomSheetDialog()*/
+        createOrderFirstBinding.imgPriceDetails.isEnabled = false
         var adapter1 = ArrayAdapter(
             activity!!,
             R.layout.spinner_item, time
@@ -238,13 +238,6 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
         orderViewModel.getListsRes().observe(this,
             Observer<ListsResponse> { response->
                 baseActivity.stopProgressDialog()
-                /* if (!TextUtils.isEmpty(orderId) && !orderId.equals("null")) {
-                     if (UtilsFunctions.isNetworkConnected()) {
-                         startProgressDialog()
-                         orderViewModel.orderDetail(orderId)
-                         //orderViewModel.cancelReason(orderId)
-                     }
-                 }*/
 
                 if (response != null) {
                     val message = response.message
@@ -252,10 +245,36 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
                         response.code == 200 -> {
                             vehicleList.addAll(response.data?.vehicleData!!)
                             weightList.addAll(response.data?.weightData!!)
-                            initWeightAdapter()
+                            if (weightList.size > 0) {
+                                weightList[0].selected = "true"
+                                weightId = weightList[0].id!!
+                                GlobalConstants.WEIGHT_ID = weightId
+                                weightAdapter?.notifyDataSetChanged()
+                                createOrderInput.weight = weightId
+                                weighValue = weightList[0].name!!
+                                MyApplication.createOrdersInput.weight = weightId
+                                MyApplication.createOrdersInput.weightValue =
+                                    weightList[0].name!!
+
+                                initWeightAdapter()
+                            }
                             // bannersList.addAll(response.data?.bannersData!!)
                             deliveryTypeList.addAll(response.data?.deliveryOptionData!!)
-                            initDeliveryTypeAdapter()
+                            if (deliveryTypeList.size > 0) {
+                                deliveryTypeList[0].selected = "true"
+                                //  if (isSelected.equals("true")) {
+                                deliveryTypeId = deliveryTypeList[0].id!!
+                                GlobalConstants.DELIVERY_TYPE = deliveryTypeId
+                                MyApplication.createOrdersInput.deliveryOption = deliveryTypeId
+                                if (deliveryTypeList[0].title!!.contains("Reg")) {
+                                    MyApplication.createOrdersInput.deliveryValue = "1"
+                                } else {
+                                    MyApplication.createOrdersInput.deliveryValue = "2"
+                                }
+
+                                initDeliveryTypeAdapter()
+                            }
+
                             preFilledData()
                             //  initDiscountsAdapter()
                             /*initWeightAdapter()
@@ -281,7 +300,7 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
                             val payableAmount = response.data?.afterDiscount.toString()
                             var totalCancellationCharges = "0"
 
-
+                            createOrderFirstBinding.imgPriceDetails.isEnabled = true
 
 
                             if (discountApplied.equals("")) {
@@ -426,6 +445,50 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
                             pickupMobile = "" + createOrderFirstBinding.edtPickMob.text.trim()
                             delMobile = "" + createOrderFirstBinding.edtDelMob.text.trim()
                             if (TextUtils.isEmpty(
+                                    pickupAddress
+                                )
+                            ) {
+                                showToastError("Please select pickup location")
+                            } else if (TextUtils.isEmpty(
+                                    pickupMobile
+                                )
+                            ) {
+                                createOrderFirstBinding.edtPickMob.requestFocus()
+                                showToastError("Please enter pickup mobile no")
+                            } else if (pickupMobile.length < 10) {
+                                createOrderFirstBinding.edtPickMob.requestFocus()
+                                showToastError("Please enter valid phone number")
+                            } else if (TextUtils.isEmpty(
+                                    pickupDate
+                                )
+                            ) {
+                                showToastError("Please select date")
+                            } else if (TextUtils.isEmpty(
+                                    pickupDate
+                                )
+                            ) {
+                                showToastError("Please select date")
+                            } else if (TextUtils.isEmpty(
+                                    pickTime
+                                )
+                            ) {
+                                showToastError("Please select time")
+                            } else if (TextUtils.isEmpty(
+                                    delAddress
+                                )
+                            ) {
+                                showToastError("Please select drop location")
+                            } else if (TextUtils.isEmpty(
+                                    delMobile
+                                )
+                            ) {
+                                createOrderFirstBinding.edtDelMob.requestFocus()
+                                showToastError("Please enter mobile no")
+                            } else if (delMobile.length < 10) {
+                                createOrderFirstBinding.edtDelMob.requestFocus()
+                                showToastError("Please enter valid phone number")
+                            }
+                            /*if (TextUtils.isEmpty(
                                     pickupDate
                                 ) || TextUtils.isEmpty(
                                     pickTime
@@ -449,7 +512,7 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
                             } else if (delMobile.length < 10) {
                                 createOrderFirstBinding.edtDelMob.requestFocus()
                                 showToastError("Please enter valid phone number")
-                            } else {
+                            }*/ else {
                                 val pickupAdd = CreateOrdersInput.PickupAddress()
                                 pickupAdd.address = pickupAddress
                                 pickupAdd.id = 0
@@ -474,11 +537,16 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
                                     deliveryAddressList
                                 var isAllDetailAded = true
                                 for (item in addressList) {
-                                    if (TextUtils.isEmpty(item.address) || TextUtils.isEmpty(item.phoneNumber) || item.phoneNumber?.length!! < 10) {
+                                    if (TextUtils.isEmpty(item.address) || TextUtils.isEmpty(
+                                            item.phoneNumber
+                                        ) || item.phoneNumber?.length!! < 10
+                                    ) {
                                         isAllDetailAded = false
                                     }
                                 }
-                                MyApplication.createOrdersInput.deliveryAddress!!.addAll(addressList)
+                                MyApplication.createOrdersInput.deliveryAddress!!.addAll(
+                                    addressList
+                                )
 
                                 if (isAllDetailAded) {
                                     (activity as CreateOrderActivty).callSecondFragment(2)
@@ -523,11 +591,35 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
                             }
                         }
                         "imgPickContact" -> {
-                            if (UtilsFunctions.isNetworkConnected()) {
-                                clickedForLocation = "pickup"
-                                val intent = Intent(activity, ContactListActivity::class.java)
-                                startActivityForResult(intent, 201)
+                            if (ContextCompat.checkSelfPermission(
+                                    activity!!,
+                                    Manifest.permission.READ_CONTACTS
+                                ) !==
+                                PackageManager.PERMISSION_GRANTED
+                            ) {
+                                if (ActivityCompat.shouldShowRequestPermissionRationale(
+                                        activity!!,
+                                        Manifest.permission.READ_CONTACTS
+                                    )
+                                ) {
+                                    ActivityCompat.requestPermissions(
+                                        activity!!,
+                                        arrayOf(Manifest.permission.READ_CONTACTS), 1
+                                    )
+                                } else {
+                                    ActivityCompat.requestPermissions(
+                                        activity!!,
+                                        arrayOf(Manifest.permission.READ_CONTACTS), 1
+                                    )
+                                }
+                            } else {
+                                if (UtilsFunctions.isNetworkConnected()) {
+                                    clickedForLocation = "pickup"
+                                    val intent = Intent(activity, ContactListActivity::class.java)
+                                    startActivityForResult(intent, 201)
+                                }
                             }
+
                         }
                         "imgPickupAddress" -> {
                             if (ContextCompat.checkSelfPermission(
@@ -568,11 +660,35 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
                             }
                         }
                         "imgDelContact" -> {
-                            if (UtilsFunctions.isNetworkConnected()) {
-                                clickedForLocation = "delivery"
-                                val intent = Intent(activity, ContactListActivity::class.java)
-                                startActivityForResult(intent, 201)
+                            if (ContextCompat.checkSelfPermission(
+                                    activity!!,
+                                    Manifest.permission.READ_CONTACTS
+                                ) !==
+                                PackageManager.PERMISSION_GRANTED
+                            ) {
+                                if (ActivityCompat.shouldShowRequestPermissionRationale(
+                                        activity!!,
+                                        Manifest.permission.READ_CONTACTS
+                                    )
+                                ) {
+                                    ActivityCompat.requestPermissions(
+                                        activity!!,
+                                        arrayOf(Manifest.permission.READ_CONTACTS), 1
+                                    )
+                                } else {
+                                    ActivityCompat.requestPermissions(
+                                        activity!!,
+                                        arrayOf(Manifest.permission.READ_CONTACTS), 1
+                                    )
+                                }
+                            } else {
+                                if (UtilsFunctions.isNetworkConnected()) {
+                                    clickedForLocation = "delivery"
+                                    val intent = Intent(activity, ContactListActivity::class.java)
+                                    startActivityForResult(intent, 201)
+                                }
                             }
+
                         }
                         "edtPickupLoc" -> {
                             clickedForLocation = "pickup"
@@ -672,49 +788,6 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
 
     }
 
-    /*private fun setBottomSheetDialog() {
-        sheetBehavior = BottomSheetBehavior.from(createOrderFirstBinding.bottomSheet)
-
-        sheetBehavior.setBottomSheetCallback(object : BottomSheetCallback() {
-            override fun onStateChanged(
-                @NonNull bottomSheet : View,
-                newState : Int
-            ) {
-                when (newState) {
-                    BottomSheetBehavior.STATE_HIDDEN -> {
-                    }
-                    BottomSheetBehavior.STATE_EXPANDED -> {
-                       // btnBottomSheet.setText("Close Sheet")
-                    }
-                    BottomSheetBehavior.STATE_COLLAPSED -> {
-                       // btnBottomSheet.setText("Expand Sheet")
-                    }
-                    BottomSheetBehavior.STATE_DRAGGING -> {
-                    }
-                    BottomSheetBehavior.STATE_SETTLING -> {
-                    }
-                }
-            }
-
-            override fun onSlide(
-                @NonNull bottomSheet : View,
-                slideOffset : Float
-            ) {
-            }
-        })
-    }
-
-    fun toggleBottomSheet() {
-        createOrderFirstBinding.linService.setOnClickListener {
-            if (sheetBehavior.getState() !== BottomSheetBehavior.STATE_EXPANDED) {
-                sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED)
-                // btnBottomSheet.setText("Close sheet")
-            } else {
-                sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED)
-                //   btnBottomSheet.setText("Expand sheet")
-            }
-        }
-    }*/
     private fun preFilledData() {
         //createOrderFirstBinding.orderDetailModel = response.data
         if (!TextUtils.isEmpty(MyApplication.createOrdersInput.pickupAddress?.phoneNumber)) {
@@ -1182,6 +1255,7 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
                                 place.latLng!!.latitude.toString()
                             MyApplication.createOrdersInput.pickupAddress?.long =
                                 place.latLng!!.longitude.toString()
+                            createOrderFirstBinding.edtPickMob.requestFocus()
                         } else if (clickedForLocation.equals("delivery")) {
                             calculatePrice()
                             createOrderFirstBinding.edtDelAddress.setText(place.address.toString())
@@ -1190,6 +1264,7 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
                             delLong = place.latLng!!.longitude.toString()
                             distance = "0"
                             callDistanceAPI()
+                            createOrderFirstBinding.edtDelMob.requestFocus()
                             //}
                         } else {
                             calculatePrice()
@@ -1239,6 +1314,7 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
 
                     MyApplication.createOrdersInput.pickupAddress?.lat = pickLat
                     MyApplication.createOrdersInput.pickupAddress?.long = pickLong
+                    createOrderFirstBinding.edtPickMob.requestFocus()
                 } else if (clickedForLocation.equals("delivery")) {
                     calculatePrice()
                     createOrderFirstBinding.edtDelAddress.setText(address)
@@ -1248,6 +1324,7 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
                     //}
                     distance = "0"
                     callDistanceAPI()
+                    createOrderFirstBinding.edtDelMob.requestFocus()
                 } else {
                     calculatePrice()
                     edtDelAddress?.setText(address)
@@ -1278,7 +1355,7 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
                     } else {
                         showToastError("Please select valid number")
                     }
-
+                    createOrderFirstBinding.edtPickMob.requestFocus()
                 } else if (clickedForLocation.equals("delivery")) {
                     if (num?.length!! > 9) {
                         createOrderFirstBinding.edtDelMob.setText(num)
@@ -1287,6 +1364,7 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
                     } else {
                         showToastError("Please select valid number")
                     }
+                    createOrderFirstBinding.edtDelMob.requestFocus()
 
                 } else {
                     if (num?.length!! > 9) {

@@ -37,8 +37,9 @@
                 android:layout_toRightOf="@+id/toolbar"
                 android:gravity="center"
                 android:textColor="@color/colorWhite"
-                android:textSize="@dimen/sp_16"
-                app:font="@{`semibold`}"
+                android:textSize="@dimen/sp_18"
+                android:textStyle="bold"
+                app:font="@{`bold`}"
                 tools:text="@string/home" />
 
         <Button

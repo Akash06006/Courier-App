@@ -54,10 +54,10 @@ abstract class BaseActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState : Bundle?) {
         super.onCreate(savedInstanceState)
         getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        this@BaseActivity.overridePendingTransition(
+       /* this@BaseActivity.overridePendingTransition(
             R.anim.slide_in,
             R.anim.slide_out
-        )
+        )*/
 
         viewDataBinding = DataBindingUtil.setContentView(this, getLayoutId())
         //  mtoolbar = findViewById(R.id.toolbar);

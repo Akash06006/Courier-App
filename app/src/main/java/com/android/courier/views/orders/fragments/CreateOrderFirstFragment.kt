@@ -62,8 +62,6 @@ import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonObject
-import kotlinx.android.synthetic.main.activity_create_order.view.*
-import kotlinx.android.synthetic.main.layout_toast.view.*
 import org.json.JSONException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -166,10 +164,13 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
                 view : View, position : Int, id : Long
             ) {
                 time = slot(position)
-                if(time.size>0)
-                createOrderFirstBinding.tvSelectTime.text = time[0]
-                else
+                if (time.size > 0) {
+                    pickTime = time[0]
+                    createOrderFirstBinding.tvSelectTime.text = time[0]
+                } else {
+                    pickTime = ""
                     createOrderFirstBinding.tvSelectTime.text = "Select Time"
+                }
 
                 timeTodayTommorrow = days[position]
                 createOrderFirstBinding.txtTime.setSelection(0)
@@ -427,8 +428,8 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
                 fun(it : String?) {
                     when (it) {
                         "tv_select_time" -> {
-                            if(time.size>0)
-                            showBottomSheetDialog()
+                            if (time.size > 0)
+                                showBottomSheetDialog()
                             else
                                 showToastError("No time slots available.")
                         }
@@ -1577,9 +1578,7 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
 
         }
         val timeList = ArrayList<String>()
-       // timeList.add("Select Time")
-
-
+        // timeList.add("Select Time")
         cal1.set(Calendar.HOUR_OF_DAY, 23)
         cal1.set(Calendar.MINUTE, 0)
         cal1.set(Calendar.SECOND, 0)
@@ -1768,7 +1767,7 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
         var tvConfirm = bottomServiceTimeDialog!!.findViewById<TextView>(R.id.tv_confirm)
 
         tvTodayTomm!!.text = timeTodayTommorrow
-        if(time.size>0) {
+        if (time.size > 0) {
             tvSelectedTimeDialog!!.text = time[0]
         }
 

@@ -488,6 +488,9 @@ class CreateOrderActivty : BaseActivity(), DialogssInterface {
     fun setViewLine() {
         activityCreateOrderBinding.imgOne.setImageResource(R.drawable.ic_tick)
     }
+    fun setUnselectLine() {
+        activityCreateOrderBinding.imgOne.setImageResource(R.drawable.ic_stepper_unselected)
+    }
 
     fun callSecondFragment(fragmenNumber : Int) {
         fragment = fragmenNumber

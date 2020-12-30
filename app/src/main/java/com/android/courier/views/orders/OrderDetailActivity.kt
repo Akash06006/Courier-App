@@ -36,14 +36,12 @@ import com.android.courier.adapters.orders.OrderAddressListAdapter
 import com.android.courier.adapters.orders.PaymentOptionsListAdapter
 import com.bumptech.glide.Glide
 import com.android.courier.common.UtilsFunctions
-import com.android.courier.constants.GlobalConstants
 import com.android.courier.databinding.ActivityOrderDetailBinding
 import com.android.courier.maps.FusedLocationClass
 import com.android.courier.model.CommonModel
 import com.android.courier.model.order.CancelReasonsListResponse
 import com.android.courier.model.order.ListsResponse
 import com.android.courier.model.order.OrdersDetailResponse
-import com.android.courier.sharedpreference.SharedPrefClass
 import com.android.courier.utils.BaseActivity
 import com.android.courier.viewmodels.order.OrderViewModel
 import com.android.courier.views.chat.ChatActivity
@@ -129,7 +127,7 @@ class OrderDetailActivity : BaseActivity(), OnMapReadyCallback, LocationListener
         reasons.add("Select Your Reason")
         if (UtilsFunctions.isNetworkConnected()) {
             startProgressDialog()
-            orderViewModel.orderDetail(orderId)
+            orderViewModel.orderDetail("b9a2ccc7-6acd-4eb8-be59-50389ce70c47"/*orderId*/)
             orderViewModel.cancelReason(orderId)
         }
     }
@@ -283,7 +281,7 @@ class OrderDetailActivity : BaseActivity(), OnMapReadyCallback, LocationListener
                             val paymentAdapter =
                                 PaymentOptionsListAdapter(
                                     this,
-                                    response.data?.assignedEmployees?.payVia
+                                    response.data?.assignedEmployees?.payViaNew
                                 )
                             val linearLayoutManager1 = LinearLayoutManager(this)
                             linearLayoutManager1.orientation = RecyclerView.HORIZONTAL

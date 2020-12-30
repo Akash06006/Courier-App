@@ -148,6 +148,15 @@ class OrdersDetailResponse() : Serializable {
         var parentStatus : String? = null
     }
 
+    class PayViaNew : Serializable {
+        @SerializedName("type")
+        @Expose
+        var type : String? = null
+        @SerializedName("phoneNumber")
+        @Expose
+        var phoneNumber : String? = null
+    }
+
     class PickupAddress : Serializable {
         @SerializedName("address")
         @Expose
@@ -264,6 +273,9 @@ class OrdersDetailResponse() : Serializable {
         @SerializedName("payVia")
         @Expose
         var payVia : ArrayList<String>? = null
+        @SerializedName("payViaNew")
+        @Expose
+        var payViaNew : ArrayList<PayViaNew>? = null
     }
 
 }

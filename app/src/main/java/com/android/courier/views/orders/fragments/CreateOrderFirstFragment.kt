@@ -182,16 +182,26 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
                         getDaysAgo(0).toString(),
                         "dd/MM/YYYY"
                     )
+
+                    val c = Calendar.getInstance()
+                    println("Current time => " + c.time)
+                    val df = SimpleDateFormat("dd/MM/yyyy")
+                    val formattedDate = df.format(c.time)
                     // MyApplication.createOrdersInput.pickupAddress?.date = date
-                    pickupDate = date
+                    pickupDate = formattedDate
                 } else {
                     val date = Utils(activity!!).getDateLocal(
                         "EEE MMM dd HH:mm:ss zzzz yyyy",
                         getDaysAgo(1).toString(),
                         "dd/MM/YYYY"
                     )
+
+                    val c = Calendar.getInstance()
+                    println("Current time => " + c.time+1)
+                    val df = SimpleDateFormat("dd/MM/yyyy")
+                    val formattedDate = df.format(c.time)
                     // MyApplication.createOrdersInput.pickupAddress?.date = date
-                    pickupDate = date
+                    pickupDate = formattedDate
                 }
                 adapter1 = ArrayAdapter(
                     activity!!,

@@ -325,7 +325,7 @@ class OrderDetailActivity : BaseActivity(), OnMapReadyCallback, LocationListener
                                 val paymentAdapter =
                                     PaymentOptionsListAdapter(
                                         this,
-                                        response.data?.assignedEmployees?.payVia
+                                        response.data?.assignedEmployees?.payViaNew!!
                                     )
                                 val linearLayoutManager1 = LinearLayoutManager(this)
                                 linearLayoutManager1.orientation = RecyclerView.HORIZONTAL

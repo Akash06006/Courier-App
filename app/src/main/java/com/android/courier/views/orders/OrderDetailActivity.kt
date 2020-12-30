@@ -34,30 +34,32 @@ import androidx.recyclerview.widget.RecyclerView
 import com.android.courier.R
 import com.android.courier.adapters.orders.OrderAddressListAdapter
 import com.android.courier.adapters.orders.PaymentOptionsListAdapter
-import com.bumptech.glide.Glide
 import com.android.courier.common.UtilsFunctions
-import com.android.courier.constants.GlobalConstants
 import com.android.courier.databinding.ActivityOrderDetailBinding
 import com.android.courier.maps.FusedLocationClass
 import com.android.courier.model.CommonModel
 import com.android.courier.model.order.CancelReasonsListResponse
 import com.android.courier.model.order.ListsResponse
 import com.android.courier.model.order.OrdersDetailResponse
-import com.android.courier.sharedpreference.SharedPrefClass
 import com.android.courier.utils.BaseActivity
 import com.android.courier.viewmodels.order.OrderViewModel
 import com.android.courier.views.chat.ChatActivity
 import com.android.courier.views.chat.DriverChatActivity
 import com.android.courier.views.socket.DriverTrackingActivity
+import com.bumptech.glide.Glide
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.location.*
-import com.google.android.gms.maps.*
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import com.google.android.libraries.places.api.Places
 import com.google.gson.JsonObject
 import com.google.maps.DirectionsApi
 import com.google.maps.GeoApiContext
+import java.util.*
 import kotlin.collections.ArrayList
 
 class OrderDetailActivity : BaseActivity(), OnMapReadyCallback, LocationListener,
@@ -110,8 +112,36 @@ class OrderDetailActivity : BaseActivity(), OnMapReadyCallback, LocationListener
     var isPicked = ""
     var isCompletedCancelled = false
     var isCancellable : String? = null
+    private var assignedEmployeesStatus = ""
+    private var addressAdapter : OrderAddressListAdapter? = null
+
     override fun getLayoutId() : Int {
         return R.layout.activity_order_detail
+    }
+
+    private var timer : Timer? = null
+    private var timerTask : TimerTask? = null
+    fun startTimer() {
+        timer = Timer()
+        timerTask = object : TimerTask() {
+            override fun run() {
+                Log.i("timer going", "=========  ")
+                orderViewModel.orderDetail(orderId)
+            }
+        }
+        timer!!.schedule(timerTask, 10000, 10000) //
+    }
+
+    fun stoptimertask() {
+        if (timer != null) {
+            timer!!.cancel()
+            timer = null
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        stoptimertask()
     }
 
     @TargetApi(Build.VERSION_CODES.M)
@@ -167,6 +197,8 @@ class OrderDetailActivity : BaseActivity(), OnMapReadyCallback, LocationListener
         } else {
             activityCreateOrderBinding.bottomButtons.visibility = View.VISIBLE
         }
+
+        startTimer()
         // Specify the types of place data to return.
         orderViewModel.cancelReasonRes().observe(this,
             Observer<CancelReasonsListResponse> { response->
@@ -215,38 +247,40 @@ class OrderDetailActivity : BaseActivity(), OnMapReadyCallback, LocationListener
                     val message = response.message
                     when {
                         response.code == 200 -> {
-                            var oldLatLong = LatLng(0.0, 0.0)
-                            activityCreateOrderBinding.orderDetailModel = response.data
-                            cancelledCharges = response.data?.cancellationCharges!!
-                            pickLat = response.data?.pickupAddress?.lat!!
-                            picktLong = response.data?.pickupAddress?.long!!
-                            isCancellable = response.data?.cancellable
-                            isPicked = response.data?.pickupAddress?.isComplete!!
-                            activityCreateOrderBinding.txtBookingId.text =
-                                "Booking ID " + response.data?.orderNo!!
-                            activityCreateOrderBinding.txtfare.text =
-                                "₹ " + response.data?.totalOrderPrice!!
+                            if (response.data?.orderStatus?.status != assignedEmployeesStatus) {
+                                var oldLatLong = LatLng(0.0, 0.0)
+                                activityCreateOrderBinding.orderDetailModel = response.data
+                                cancelledCharges = response.data?.cancellationCharges!!
+                                pickLat = response.data?.pickupAddress?.lat!!
+                                picktLong = response.data?.pickupAddress?.long!!
+                                isCancellable = response.data?.cancellable
+                                isPicked = response.data?.pickupAddress?.isComplete!!
+                                activityCreateOrderBinding.txtBookingId.text =
+                                    "Booking ID " + response.data?.orderNo!!
+                                activityCreateOrderBinding.txtfare.text =
+                                    "₹ " + response.data?.totalOrderPrice!!
 
-                            if (response.data?.assignedEmployees != null) {
-                                activityCreateOrderBinding.toolbarCommon.imgToolbarText.text =
-                                    "Enroute to Pickup"
-                                activityCreateOrderBinding.rlDriverDetail.visibility = View.VISIBLE
-                                activityCreateOrderBinding.rlPayment.visibility = View.VISIBLE
-                                Glide.with(this).load(response.data?.assignedEmployees?.image)
-                                    .placeholder(R.drawable.ic_user)
-                                    .into(activityCreateOrderBinding.imgDriver)
-                                driverId = response.data?.assignedEmployees?.id!!
-                                phoneNumber = response.data?.assignedEmployees?.phoneNumber!!
-                                activityCreateOrderBinding.txtDelBoyName.text =
-                                    response.data?.assignedEmployees?.firstName + " " + response.data?.assignedEmployees?.lastName
-                            } else {
-                                activityCreateOrderBinding.toolbarCommon.imgToolbarText.text =
-                                    "Searching for a Rider"
-                                activityCreateOrderBinding.rlDriverDetail.visibility = View.GONE
-                                activityCreateOrderBinding.rlPayment.visibility = View.GONE
+                                if (response.data?.assignedEmployees != null) {
+                                    activityCreateOrderBinding.toolbarCommon.imgToolbarText.text =
+                                        "Enroute to Pickup"
+                                    activityCreateOrderBinding.rlDriverDetail.visibility =
+                                        View.VISIBLE
+                                    activityCreateOrderBinding.rlPayment.visibility = View.VISIBLE
+                                    Glide.with(this).load(response.data?.assignedEmployees?.image)
+                                        .placeholder(R.drawable.ic_user)
+                                        .into(activityCreateOrderBinding.imgDriver)
+                                    driverId = response.data?.assignedEmployees?.id!!
+                                    phoneNumber = response.data?.assignedEmployees?.phoneNumber!!
+                                    activityCreateOrderBinding.txtDelBoyName.text =
+                                        response.data?.assignedEmployees?.firstName + " " + response.data?.assignedEmployees?.lastName
+                                } else {
+                                    activityCreateOrderBinding.toolbarCommon.imgToolbarText.text =
+                                        "Searching for a Rider"
+                                    activityCreateOrderBinding.rlDriverDetail.visibility = View.GONE
+                                    activityCreateOrderBinding.rlPayment.visibility = View.GONE
 
-                            }
-                            /*if (response.data?.orderStatus.contains("Can")) {
+                                }
+                                /*if (response.data?.orderStatus.contains("Can")) {
                                 activityCreateOrderBinding.toolbarCommon.imgToolbarText.text =
                                     "response.data?.orderStatus"
                             }
@@ -254,176 +288,187 @@ class OrderDetailActivity : BaseActivity(), OnMapReadyCallback, LocationListener
                             if(response.data?.orderStatus.contains("")){
 
                             }*/
-                            val addressAdapter =
-                                OrderAddressListAdapter(
-                                    this,
-                                    response.data?.deliveryAddress, response.data?.pickupAddress
-                                )
-                            val controller =
-                                AnimationUtils.loadLayoutAnimation(
-                                    this,
-                                    R.anim.layout_animation_from_left
-                                )
-                            activityCreateOrderBinding.rvAddress.setLayoutAnimation(controller);
-                            activityCreateOrderBinding.rvAddress.scheduleLayoutAnimation();
-                            val linearLayoutManager = LinearLayoutManager(this)
-                            linearLayoutManager.orientation = RecyclerView.VERTICAL
-                            activityCreateOrderBinding.rvAddress.layoutManager = linearLayoutManager
-                            activityCreateOrderBinding.rvAddress.setHasFixedSize(true)
-                            activityCreateOrderBinding.rvAddress.adapter = addressAdapter
-                            activityCreateOrderBinding.rvAddress.addOnScrollListener(object :
-                                RecyclerView.OnScrollListener() {
-                                override fun onScrolled(
-                                    recyclerView : RecyclerView,
-                                    dx : Int,
-                                    dy : Int
-                                ) {
-                                }
-                            })
-                            val paymentAdapter =
-                                PaymentOptionsListAdapter(
-                                    this,
-                                    response.data?.assignedEmployees?.payVia
-                                )
-                            val linearLayoutManager1 = LinearLayoutManager(this)
-                            linearLayoutManager1.orientation = RecyclerView.HORIZONTAL
-                            activityCreateOrderBinding.rvPaymentOptions.layoutManager =
-                                linearLayoutManager1
-                            activityCreateOrderBinding.rvPaymentOptions.setHasFixedSize(true)
-                            activityCreateOrderBinding.rvPaymentOptions.adapter = paymentAdapter
-                            activityCreateOrderBinding.rvPaymentOptions.addOnScrollListener(object :
-                                RecyclerView.OnScrollListener() {
-                                override fun onScrolled(
-                                    recyclerView : RecyclerView,
-                                    dx : Int,
-                                    dy : Int
-                                ) {
 
-                                }
-                            })
-                            val source = LatLng(
-                                response.data?.pickupAddress?.lat!!.toDouble(),
-                                response.data?.pickupAddress?.long!!.toDouble()
-                            )
-                            var ic_source : BitmapDescriptor
-                            if (!TextUtils.isEmpty(response.data?.pickupAddress!!.isComplete) && response.data?.pickupAddress!!.isComplete.equals(
-                                    "false"
-                                )
-                            ) {
-                                isPicked = "false"
-                                ic_source = bitmapDescriptorFromVector(
-                                    this,
-                                    R.drawable.ic_source
-                                )
-                                activityCreateOrderBinding.imgNavigate.visibility = View.GONE
-                                mGoogleMap!!.addMarker(
-                                    MarkerOptions()
-                                        .position(source)
-                                        .icon(ic_source)
-                                )
-                            } else if (!TextUtils.isEmpty(response.data?.pickupAddress!!.isComplete) && response.data?.pickupAddress!!.isComplete.equals(
-                                    "true"
-                                )
-                            ) {
-                                isPicked = "true"
-                                ic_source = bitmapDescriptorFromVector(
-                                    this,
-                                    R.drawable.ic_source_completed
-                                )
-                                activityCreateOrderBinding.imgNavigate.visibility = View.VISIBLE
-                                mGoogleMap!!.addMarker(
-                                    MarkerOptions()
-                                        .position(source)
-                                        .icon(ic_source)
-                                )
-                            }
-
-                            mGoogleMap!!.moveCamera(CameraUpdateFactory.newLatLng(source))
-                            if (response.data?.distance!!.toDouble() < 20) {
-                                mGoogleMap!!.animateCamera(CameraUpdateFactory.zoomTo(14f))
-                            } else {
-                                mGoogleMap!!.animateCamera(CameraUpdateFactory.zoomTo(12f))
-                            }
-                            var isSourceAdded = false
-                            var destination : LatLng?
-                            deliveryAddress = response.data?.deliveryAddress!!
-                            for (item in response.data?.deliveryAddress!!) {
-                                destination = LatLng(
-                                    item.lat!!.toDouble(),
-                                    item.long!!.toDouble()
-                                )
-                                var dest : BitmapDescriptor
-                                if (item.isComplete.equals("false")) {
-                                    dest = bitmapDescriptorFromVector(
-                                        this,
-                                        R.drawable.ic_destination
-                                    )
-                                } else {
-                                    dest = bitmapDescriptorFromVector(
-                                        this,
-                                        R.drawable.ic_destination_completed
-                                    )
-                                }
-                                mGoogleMap!!.addMarker(
-                                    MarkerOptions()
-                                        .position(
-                                            LatLng(
-                                                item.lat!!.toDouble(),
-                                                item.long!!.toDouble()
-                                            )
+                                if (addressAdapter == null) {
+                                    addressAdapter =
+                                        OrderAddressListAdapter(
+                                            this,
+                                            response.data?.deliveryAddress,
+                                            response.data?.pickupAddress
                                         )
-                                        .icon(dest)
-                                )
-
-                                if (!isSourceAdded) {
-                                    isSourceAdded = true
-                                    //TODO-- drawPolyline(source, destination, true)
-                                    oldLatLong = destination
+                                    val controller =
+                                        AnimationUtils.loadLayoutAnimation(
+                                            this,
+                                            R.anim.layout_animation_from_left
+                                        )
+                                    activityCreateOrderBinding.rvAddress.setLayoutAnimation(
+                                        controller
+                                    );
+                                    activityCreateOrderBinding.rvAddress.scheduleLayoutAnimation();
+                                    val linearLayoutManager = LinearLayoutManager(this)
+                                    linearLayoutManager.orientation = RecyclerView.VERTICAL
+                                    activityCreateOrderBinding.rvAddress.layoutManager =
+                                        linearLayoutManager
+                                    activityCreateOrderBinding.rvAddress.setHasFixedSize(true)
+                                    activityCreateOrderBinding.rvAddress.adapter = addressAdapter
+                                    activityCreateOrderBinding.rvAddress.addOnScrollListener(object :
+                                        RecyclerView.OnScrollListener() {
+                                        override fun onScrolled(
+                                            recyclerView : RecyclerView,
+                                            dx : Int,
+                                            dy : Int
+                                        ) {
+                                        }
+                                    })
                                 } else {
-                                    //TODO--  drawPolyline(oldLatLong, destination, false)
-                                    oldLatLong = destination
+                                    addressAdapter!!.notifyDataSetChanged()
                                 }
-                            }
-                            val builder = LatLngBounds.Builder();
-                            /* for (Marker marker : markers) {
-                                 builder.include(marker);
-                             }*/
-                            builder.include(LatLng(pickLat.toDouble(), picktLong.toDouble()))
-                            for (item in response.data?.deliveryAddress!!) {
-                                builder.include(
-                                    LatLng(
+                                val paymentAdapter =
+                                    PaymentOptionsListAdapter(
+                                        this,
+                                        response.data?.assignedEmployees?.payVia
+                                    )
+                                val linearLayoutManager1 = LinearLayoutManager(this)
+                                linearLayoutManager1.orientation = RecyclerView.HORIZONTAL
+                                activityCreateOrderBinding.rvPaymentOptions.layoutManager =
+                                    linearLayoutManager1
+                                activityCreateOrderBinding.rvPaymentOptions.setHasFixedSize(true)
+                                activityCreateOrderBinding.rvPaymentOptions.adapter = paymentAdapter
+                                activityCreateOrderBinding.rvPaymentOptions.addOnScrollListener(
+                                    object :
+                                        RecyclerView.OnScrollListener() {
+                                        override fun onScrolled(
+                                            recyclerView : RecyclerView,
+                                            dx : Int,
+                                            dy : Int
+                                        ) {
+
+                                        }
+                                    })
+                                val source = LatLng(
+                                    response.data?.pickupAddress?.lat!!.toDouble(),
+                                    response.data?.pickupAddress?.long!!.toDouble()
+                                )
+                                var ic_source : BitmapDescriptor
+                                if (!TextUtils.isEmpty(response.data?.pickupAddress!!.isComplete) && response.data?.pickupAddress!!.isComplete.equals(
+                                        "false"
+                                    )
+                                ) {
+                                    isPicked = "false"
+                                    ic_source = bitmapDescriptorFromVector(
+                                        this,
+                                        R.drawable.ic_source
+                                    )
+                                    activityCreateOrderBinding.imgNavigate.visibility = View.GONE
+                                    mGoogleMap!!.addMarker(
+                                        MarkerOptions()
+                                            .position(source)
+                                            .icon(ic_source)
+                                    )
+                                } else if (!TextUtils.isEmpty(response.data?.pickupAddress!!.isComplete) && response.data?.pickupAddress!!.isComplete.equals(
+                                        "true"
+                                    )
+                                ) {
+                                    isPicked = "true"
+                                    ic_source = bitmapDescriptorFromVector(
+                                        this,
+                                        R.drawable.ic_source_completed
+                                    )
+                                    activityCreateOrderBinding.imgNavigate.visibility = View.VISIBLE
+                                    mGoogleMap!!.addMarker(
+                                        MarkerOptions()
+                                            .position(source)
+                                            .icon(ic_source)
+                                    )
+                                }
+
+                                mGoogleMap!!.moveCamera(CameraUpdateFactory.newLatLng(source))
+                                if (response.data?.distance!!.toDouble() < 20) {
+                                    mGoogleMap!!.animateCamera(CameraUpdateFactory.zoomTo(14f))
+                                } else {
+                                    mGoogleMap!!.animateCamera(CameraUpdateFactory.zoomTo(12f))
+                                }
+                                var isSourceAdded = false
+                                var destination : LatLng?
+                                deliveryAddress = response.data?.deliveryAddress!!
+                                for (item in response.data?.deliveryAddress!!) {
+                                    destination = LatLng(
                                         item.lat!!.toDouble(),
                                         item.long!!.toDouble()
                                     )
-                                )
+                                    var dest : BitmapDescriptor
+                                    if (item.isComplete.equals("false")) {
+                                        dest = bitmapDescriptorFromVector(
+                                            this,
+                                            R.drawable.ic_destination
+                                        )
+                                    } else {
+                                        dest = bitmapDescriptorFromVector(
+                                            this,
+                                            R.drawable.ic_destination_completed
+                                        )
+                                    }
+                                    mGoogleMap!!.addMarker(
+                                        MarkerOptions()
+                                            .position(
+                                                LatLng(
+                                                    item.lat!!.toDouble(),
+                                                    item.long!!.toDouble()
+                                                )
+                                            )
+                                            .icon(dest)
+                                    )
+
+                                    if (!isSourceAdded) {
+                                        isSourceAdded = true
+                                        //TODO-- drawPolyline(source, destination, true)
+                                        oldLatLong = destination
+                                    } else {
+                                        //TODO--  drawPolyline(oldLatLong, destination, false)
+                                        oldLatLong = destination
+                                    }
+                                }
+                                val builder = LatLngBounds.Builder();
+                                /* for (Marker marker : markers) {
+                                 builder.include(marker);
+                             }*/
+                                builder.include(LatLng(pickLat.toDouble(), picktLong.toDouble()))
+                                for (item in response.data?.deliveryAddress!!) {
+                                    builder.include(
+                                        LatLng(
+                                            item.lat!!.toDouble(),
+                                            item.long!!.toDouble()
+                                        )
+                                    )
+                                }
+                                var bounds = builder.build();
+                                var padding = 200  // offset from edges of the map in pixels
+                                var cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
+                                mGoogleMap!!.animateCamera(cu)
+
+                                assignedEmployeesStatus = response.data?.orderStatus?.status!!
+
+                                if (response.data?.orderStatus?.status.equals("3") || response.data?.orderStatus?.status.equals(
+                                        "4"
+                                    ) || response.data?.orderStatus?.status.equals("5")
+                                ) {
+                                    activityCreateOrderBinding.toolbarCommon.imgToolbarText.text =
+                                        "Order Cancelled"
+                                    activityCreateOrderBinding.bottomButtons.visibility = View.GONE
+                                    activityCreateOrderBinding.imgNavigate.visibility = View.GONE
+                                    isCompletedCancelled = true
+                                } else if (response.data?.orderStatus?.status.equals("7")) {
+                                    activityCreateOrderBinding.toolbarCommon.imgToolbarText.text =
+                                        "Delivered at Drop Location"
+                                    activityCreateOrderBinding.bottomButtons.visibility = View.GONE
+                                    activityCreateOrderBinding.imgNavigate.visibility = View.GONE
+                                    isCompletedCancelled = true
+                                } else if (response.data?.orderStatus?.status.equals("6")) {
+                                    activityCreateOrderBinding.toolbarCommon.imgToolbarText.text =
+                                        "Order has picked up"
+                                }
+                                //drawPolyline()
                             }
-                            var bounds = builder.build();
-                            var padding = 200  // offset from edges of the map in pixels
-                            var cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
-                            mGoogleMap!!.animateCamera(cu)
-
-
-
-                            if (response.data?.orderStatus?.status.equals("3") || response.data?.orderStatus?.status.equals(
-                                    "4"
-                                ) || response.data?.orderStatus?.status.equals("5")
-                            ) {
-                                activityCreateOrderBinding.toolbarCommon.imgToolbarText.text =
-                                    "Order Cancelled"
-                                activityCreateOrderBinding.bottomButtons.visibility = View.GONE
-                                activityCreateOrderBinding.imgNavigate.visibility = View.GONE
-                                isCompletedCancelled = true
-                            } else if (response.data?.orderStatus?.status.equals("7")) {
-                                activityCreateOrderBinding.toolbarCommon.imgToolbarText.text =
-                                    "Delivered at Drop Location"
-                                activityCreateOrderBinding.bottomButtons.visibility = View.GONE
-                                activityCreateOrderBinding.imgNavigate.visibility = View.GONE
-                                isCompletedCancelled = true
-                            } else if (response.data?.orderStatus?.status.equals("6")) {
-                                activityCreateOrderBinding.toolbarCommon.imgToolbarText.text =
-                                    "Order has picked up"
-                            }
-                            //drawPolyline()
                         }
                         else -> message?.let { UtilsFunctions.showToastError(it) }
                     }
@@ -711,7 +756,10 @@ class OrderDetailActivity : BaseActivity(), OnMapReadyCallback, LocationListener
         }
     }
 
-    fun bitmapDescriptorFromVector(context : Context, @DrawableRes vectorDrawableResourceId : Int) : BitmapDescriptor {
+    fun bitmapDescriptorFromVector(
+        context : Context,
+        @DrawableRes vectorDrawableResourceId : Int
+    ) : BitmapDescriptor {
         var background =
             ContextCompat.getDrawable(this, vectorDrawableResourceId/*R.drawable.ic_app*/);
         background?.setBounds(
@@ -876,7 +924,8 @@ class OrderDetailActivity : BaseActivity(), OnMapReadyCallback, LocationListener
             /*sourceLatLng.latitude.toString().plus(",").plus(sourceLatLng.longitude),
             destinationLatLng.latitude.toString().plus(",").plus(destinationLatLng.longitude)*/
             sourceLatLng.latitude.toString().plus(",").plus(sourceLatLng.longitude.toString()),
-            destinationLatLng.latitude.toString().plus(",").plus(destinationLatLng.longitude.toString())
+            destinationLatLng.latitude.toString().plus(",")
+                .plus(destinationLatLng.longitude.toString())
         )
         try {
             val res = req.await()
@@ -973,5 +1022,4 @@ class OrderDetailActivity : BaseActivity(), OnMapReadyCallback, LocationListener
         vectorDrawable?.draw(canvas);
         return BitmapDescriptorFactory.fromBitmap(bitmap);
     }*/
-
 }

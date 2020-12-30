@@ -406,7 +406,7 @@ class LandingActivty : BaseActivity(), DialogssInterface {
         }
     }
 
-    public fun openCloseDrawer() {
+     fun openCloseDrawer() {
         val name = SharedPrefClass().getPrefValue(
             MyApplication.instance.applicationContext,
             GlobalConstants.USERNAME
@@ -423,8 +423,11 @@ class LandingActivty : BaseActivity(), DialogssInterface {
         /* if (drawer!!.isDrawerOpen(GravityCompat.START)) {
              drawer!!.closeDrawer(Gravity.LEFT) //CLOSE Nav Drawer!
          } else {*/
+        drawer = landingBinding!!.drawerLayout
+        drawer!!.openDrawer(GravityCompat.START)
         drawer!!.openDrawer(Gravity.LEFT)
         //}
+
     }
 
 }

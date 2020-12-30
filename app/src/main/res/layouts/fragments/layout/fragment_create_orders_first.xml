@@ -472,17 +472,15 @@
                         <Spinner
                                 android:id="@+id/txtDate"
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
+                                android:layout_height="45dp"
                                 android:layout_alignTop="@+id/tv_select_time"
                                 android:layout_alignBottom="@+id/tv_select_time"
                                 android:layout_marginTop="2dp"
                                 android:background="@drawable/shape_round_stroke"
                                 android:gravity="center"
-                                android:minWidth="100dp"
+                                android:minWidth="150dp"
                                 android:overlapAnchor="false"
-                                android:paddingLeft="@dimen/dp_15"
                                 android:paddingTop="@dimen/dp_7"
-                                android:paddingRight="@dimen/dp_15"
                                 android:paddingBottom="@dimen/dp_7"
                                 android:spinnerMode="dropdown"
                                 android:text="Today"
@@ -492,21 +490,22 @@
                         <TextView
                                 android:id="@+id/tv_select_time"
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
+                                android:layout_height="45dp"
                                 android:layout_marginLeft="@dimen/dp_20"
+                                android:layout_marginTop="@dimen/dp_2"
                                 android:layout_toRightOf="@+id/txtDate"
                                 android:background="@drawable/shape_round_stroke"
                                 android:backgroundTint="#F6E3D2"
                                 android:gravity="center"
-                                android:layout_marginTop="@dimen/dp_2"
+                                android:minWidth="150dp"
                                 android:onClick="@{(v) -> orderViewModel.clickListener(v)}"
-                                android:paddingLeft="@dimen/dp_15"
+
                                 android:paddingTop="@dimen/dp_7"
-                                android:paddingRight="@dimen/dp_15"
+
                                 android:paddingBottom="@dimen/dp_7"
                                 android:text="Select Time"
-                                android:textSize="@dimen/sp_14"
-                                android:textColor="@color/colorPrimary" />
+                                android:textColor="@color/colorPrimary"
+                                android:textSize="@dimen/sp_14" />
 
                         <Spinner
                                 android:id="@+id/txtTime"

@@ -1,5 +1,6 @@
 package com.android.courier.views.orders.fragments
 
+import android.Manifest
 import android.app.Activity
 import android.app.Dialog
 import android.content.Context
@@ -7,15 +8,17 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.os.Build
+import android.text.Editable
 import android.text.TextUtils
+import android.text.TextWatcher
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.Window
+import android.view.*
 import android.view.animation.AnimationUtils
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
+import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
@@ -24,10 +27,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import android.Manifest
-import android.text.Editable
-import android.text.TextWatcher
-import com.android.courier.databinding.FragmentCreateOrdersFirstBinding
+import com.aigestudio.wheelpicker.WheelPicker
 import com.android.courier.R
 import com.android.courier.adapters.orders.DeliveryTypesAdapter
 import com.android.courier.adapters.orders.WeightListAdapter
@@ -36,6 +36,7 @@ import com.android.courier.common.UtilsFunctions
 import com.android.courier.common.UtilsFunctions.showToastError
 import com.android.courier.common.UtilsFunctions.showToastInfo
 import com.android.courier.constants.GlobalConstants
+import com.android.courier.databinding.FragmentCreateOrdersFirstBinding
 import com.android.courier.maps.FusedLocationClass
 import com.android.courier.model.order.*
 import com.android.courier.sharedpreference.SharedPrefClass
@@ -51,23 +52,24 @@ import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
-import com.google.android.gms.location.*
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.widget.Autocomplete
 import com.google.android.libraries.places.widget.AutocompleteActivity
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonObject
-import kotlinx.android.synthetic.main.activity_create_order.view.*
-import kotlinx.android.synthetic.main.layout_toast.view.*
 import org.json.JSONException
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
 class
-CreateOrderFirstFragment : BaseFragment(), DialogssInterface {
+CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChangeListener,
+    WheelPicker.OnWheelChangeListener {
     private var mFusedLocationClass : FusedLocationClass? = null
     private lateinit var orderViewModel : OrderViewModel
     val PERMISSION_ID = 42
@@ -118,6 +120,10 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface {
     var pos = 0
     private lateinit var cancelOrderDetail : CancelOrder
     var time = ArrayList<String>()
+    var tvSelectedTimeDialog : TextView? = null
+    var timeTodayTommorrow = ""
+
+    // lateinit var sheetBehavior : BottomSheetBehavior
     //var categoriesList = null
     override fun getLayoutResId() : Int {
         return R.layout.fragment_create_orders_first
@@ -148,7 +154,7 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface {
         days.add("Tomorrow")
         val adapter = ArrayAdapter(
             activity!!,
-            R.layout.spinner_item, days
+            R.layout.support_simple_spinner_dropdown_item, days
         )
         createOrderFirstBinding.txtDate.adapter = adapter
         createOrderFirstBinding.txtDate.onItemSelectedListener = object :
@@ -158,6 +164,15 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface {
                 view : View, position : Int, id : Long
             ) {
                 time = slot(position)
+                if (time.size > 0) {
+                    pickTime = time[0]
+                    createOrderFirstBinding.tvSelectTime.text = time[0]
+                } else {
+                    pickTime = ""
+                    createOrderFirstBinding.tvSelectTime.text = "Select Time"
+                }
+
+                timeTodayTommorrow = days[position]
                 createOrderFirstBinding.txtTime.setSelection(0)
                 if (position == 0) {
                     val date = Utils(activity!!).getDateLocal(
@@ -412,6 +427,12 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface {
                 function =
                 fun(it : String?) {
                     when (it) {
+                        "tv_select_time" -> {
+                            if (time.size > 0)
+                                showBottomSheetDialog()
+                            else
+                                showToastError("No time slots available.")
+                        }
                         "imgDelInfo" -> {
                             showToastInfo(
                                 "Regular : Delivery of your Courier will be done within 1-3 hours*\n" +
@@ -1557,9 +1578,7 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface {
 
         }
         val timeList = ArrayList<String>()
-        timeList.add("Select Time")
-
-
+        // timeList.add("Select Time")
         cal1.set(Calendar.HOUR_OF_DAY, 23)
         cal1.set(Calendar.MINUTE, 0)
         cal1.set(Calendar.SECOND, 0)
@@ -1725,5 +1744,101 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface {
                 return
             }
         }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+    private fun showBottomSheetDialog() {
+        val bottomServiceTimeDialog = BottomSheetDialog(baseActivity)
+        bottomServiceTimeDialog!!.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        val dialogBinding =
+            DataBindingUtil.inflate<ViewDataBinding>(
+                LayoutInflater.from(baseActivity),
+                R.layout.dialog_service_time_bottom_sheet,
+                null,
+                false
+            )
+        bottomServiceTimeDialog!!.setContentView(dialogBinding.root)
+        bottomServiceTimeDialog!!.setCancelable(true)
+        val wheelPickerTime =
+            bottomServiceTimeDialog!!.findViewById<WheelPicker>(R.id.wheel_picker_time)
+        tvSelectedTimeDialog =
+            bottomServiceTimeDialog!!.findViewById<TextView>(R.id.tv_selected_time)
+        var tvTodayTomm = bottomServiceTimeDialog!!.findViewById<TextView>(R.id.tv_today_tomm)
+        var tvConfirm = bottomServiceTimeDialog!!.findViewById<TextView>(R.id.tv_confirm)
+
+        tvTodayTomm!!.text = timeTodayTommorrow
+        if (time.size > 0) {
+            tvSelectedTimeDialog!!.text = time[0]
+        }
+
+        initWheel1(wheelPickerTime)
+
+        tvConfirm!!.setOnClickListener {
+            createOrderFirstBinding!!.tvSelectTime.text = pickTime
+            bottomServiceTimeDialog.dismiss()
+        }
+
+        bottomServiceTimeDialog!!.window!!.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
+        bottomServiceTimeDialog!!.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        bottomServiceTimeDialog!!.window!!.setLayout(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+        bottomServiceTimeDialog!!.show()
+    }
+
+    private fun initWheel1(wheel : WheelPicker?) {
+        wheel!!.data = time
+        wheel.isCurved = true
+        wheel.setIndicator(true)
+
+        wheel.setOnWheelChangeListener(this)
+        /*val scrolledListener : OnWheelScrollListener = object : OnWheelScrollListener() {
+            fun onScrollStarts(wheel : WheelView?) {
+                wheelScrolled = true
+            }
+
+            fun onScrollEnds(wheel : WheelView?) {
+                wheelScrolled = false
+                updateStatus()
+            }
+        }
+        // Wheel changed listener
+        // Wheel changed listener
+        val changedListener : OnWheelChangedListener = object : OnWheelChangedListener() {
+            fun onChanged(wheel : WheelView?, oldValue : Int, newValue : Int) {
+                if (!wheelScrolled) {
+                    updateStatus()
+                }
+            }
+        }*/
+        /* wheel.setAdapter(ArrayWheelAdapter<String>(wheelMenu1))
+         wheel.setVisibleItems(2)
+         wheel.setCurrentItem(0)
+         wheel.addChangingListener(changedListener)
+         wheel.addScrollingListener(scrolledListener)*/
+    }
+
+    override fun onWheelSelected(position : Int) {
+        tvSelectedTimeDialog!!.text = time[position]
+        pickTime = time[position]
+    }
+
+    override fun onWheelScrollStateChanged(state : Int) {
+        //  tvSelectedTimeDialog!!.text = time[state]
+    }
+
+    override fun onWheelScrolled(offset : Int) {
+        // tvSelectedTimeDialog!!.text = time[offset]
+    }
+
+    override fun onScrollChange(
+        v : View?,
+        scrollX : Int,
+        scrollY : Int,
+        oldScrollX : Int,
+        oldScrollY : Int
+    ) {
+
     }
 }

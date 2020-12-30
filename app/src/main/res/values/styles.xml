@@ -90,4 +90,7 @@
         <item name="android:textColorPrimary">@color/payumoney_text_color</item>
     </style>
 
+    <style name="spinnerItemStyle">
+        <item name="android:gravity">center</item>
+    </style>
 </resources>

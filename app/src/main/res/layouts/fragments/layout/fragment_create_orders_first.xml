@@ -469,23 +469,31 @@
 
                         <!--app:font="@{`regular`}"-->
 
-                        <Spinner
-                                android:id="@+id/txtDate"
+                        <RelativeLayout
+                                android:id="@+id/rel_date"
                                 android:layout_width="wrap_content"
-                                android:layout_height="45dp"
+                                android:layout_height="wrap_content"
                                 android:layout_alignTop="@+id/tv_select_time"
                                 android:layout_alignBottom="@+id/tv_select_time"
                                 android:layout_marginTop="2dp"
                                 android:background="@drawable/shape_round_stroke"
-                                android:gravity="center"
-                                android:minWidth="150dp"
-                                android:overlapAnchor="false"
-                                android:paddingTop="@dimen/dp_7"
-                                android:paddingBottom="@dimen/dp_7"
-                                android:spinnerMode="dropdown"
-                                android:text="Today"
-                                android:textAlignment="center"
-                                android:textColor="@color/colorBlack" />
+                                android:minWidth="150dp">
+
+                            <Spinner
+                                    android:id="@+id/txtDate"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="45dp"
+                                    android:layout_centerInParent="true"
+                                    android:gravity="center"
+                                    android:background="@null"
+                                    android:overlapAnchor="false"
+                                    android:paddingTop="@dimen/dp_7"
+                                    android:paddingBottom="@dimen/dp_7"
+                                    android:text="Today"
+                                    android:textAlignment="center"
+                                    android:textColor="@color/colorBlack" />
+
+                        </RelativeLayout>
 
                         <TextView
                                 android:id="@+id/tv_select_time"
@@ -493,7 +501,7 @@
                                 android:layout_height="45dp"
                                 android:layout_marginLeft="@dimen/dp_20"
                                 android:layout_marginTop="@dimen/dp_2"
-                                android:layout_toRightOf="@+id/txtDate"
+                                android:layout_toRightOf="@+id/rel_date"
                                 android:background="@drawable/shape_round_stroke"
                                 android:backgroundTint="#F6E3D2"
                                 android:gravity="center"

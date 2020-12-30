@@ -331,7 +331,9 @@
                                             android:onClick="@{(v) -> orderViewModel.clickListener(v)}"
                                             android:text="@string/reschedule"
                                             android:textAllCaps="false"
-                                            android:textColor="@color/colorWhite" />
+                                            android:textColor="@color/colorWhite"
+                                            android:textSize="@dimen/sp_14"
+                                            app:font="@{`regular`}" />
 
                                     <Button
                                             android:id="@+id/btnCancel"
@@ -340,11 +342,14 @@
                                             android:layout_marginLeft="10dp"
                                             android:layout_marginBottom="5dp"
                                             android:layout_weight="1"
-                                            android:background="@drawable/shape_button_back_grey"
+                                            android:background="@drawable/shape_button_back"
+                                            android:backgroundTint="@color/colorGrey1"
                                             android:onClick="@{(v) -> orderViewModel.clickListener(v)}"
                                             android:text="@string/cancel"
                                             android:textAllCaps="false"
-                                            android:textColor="@color/colorWhite" />
+                                            android:textColor="@color/colorWhite"
+                                            android:textSize="@dimen/sp_14"
+                                            app:font="@{`regular`}" />
 
                                 </LinearLayout>
 

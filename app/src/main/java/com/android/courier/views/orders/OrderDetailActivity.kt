@@ -34,25 +34,26 @@ import androidx.recyclerview.widget.RecyclerView
 import com.android.courier.R
 import com.android.courier.adapters.orders.OrderAddressListAdapter
 import com.android.courier.adapters.orders.PaymentOptionsListAdapter
-import com.bumptech.glide.Glide
 import com.android.courier.common.UtilsFunctions
-import com.android.courier.constants.GlobalConstants
 import com.android.courier.databinding.ActivityOrderDetailBinding
 import com.android.courier.maps.FusedLocationClass
 import com.android.courier.model.CommonModel
 import com.android.courier.model.order.CancelReasonsListResponse
 import com.android.courier.model.order.ListsResponse
 import com.android.courier.model.order.OrdersDetailResponse
-import com.android.courier.sharedpreference.SharedPrefClass
 import com.android.courier.utils.BaseActivity
 import com.android.courier.viewmodels.order.OrderViewModel
 import com.android.courier.views.chat.ChatActivity
 import com.android.courier.views.chat.DriverChatActivity
 import com.android.courier.views.socket.DriverTrackingActivity
+import com.bumptech.glide.Glide
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.location.*
-import com.google.android.gms.maps.*
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import com.google.android.libraries.places.api.Places
 import com.google.gson.JsonObject
@@ -459,6 +460,7 @@ class OrderDetailActivity : BaseActivity(), OnMapReadyCallback, LocationListener
                                 } else if (response.data?.orderStatus?.status.equals("7")) {
                                     activityCreateOrderBinding.toolbarCommon.imgToolbarText.text =
                                         "Delivered at Drop Location"
+                                    stoptimertask()
                                     activityCreateOrderBinding.bottomButtons.visibility = View.GONE
                                     activityCreateOrderBinding.imgNavigate.visibility = View.GONE
                                     isCompletedCancelled = true

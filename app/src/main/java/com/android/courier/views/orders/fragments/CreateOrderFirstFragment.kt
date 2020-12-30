@@ -62,6 +62,8 @@ import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonObject
+import kotlinx.android.synthetic.main.activity_create_order.view.*
+import kotlinx.android.synthetic.main.layout_custom_alert.view.*
 import org.json.JSONException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -164,13 +166,13 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
                 view : View, position : Int, id : Long
             ) {
                 time = slot(position)
-                if (time.size > 0) {
-                    pickTime = time[0]
-                    createOrderFirstBinding.tvSelectTime.text = time[0]
-                } else {
-                    pickTime = ""
-                    createOrderFirstBinding.tvSelectTime.text = "Select Time"
-                }
+                /* if (time.size > 0) {
+                     pickTime = time[0]
+                     createOrderFirstBinding.tvSelectTime.text = time[0]
+                 } else {
+                     pickTime = ""
+                     createOrderFirstBinding.tvSelectTime.text = "Select Time"
+                 }*/
 
                 timeTodayTommorrow = days[position]
                 createOrderFirstBinding.txtTime.setSelection(0)
@@ -354,8 +356,8 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
                             MyApplication.createOrdersInput.notifyRecipient = "false"
                             MyApplication.createOrdersInput.vehicleType =
                                 "9c9d2c0e-02d6-4095-a0b4-b267b736dd65"
+                            checkAllValuesInserted()
 
-                            (activity as CreateOrderActivty).setViewLine()
 
                             setPrice(
                                 payableAmount,
@@ -387,19 +389,16 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
                 }
             }
         })*/
-        /*createOrderFirstBinding.edtPickMob.setOnFocusChangeListener(View.OnFocusChangeListener { v, hasFocus->
+        createOrderFirstBinding.edtPickMob.setOnFocusChangeListener(View.OnFocusChangeListener { v, hasFocus->
             if (!hasFocus) { // code to execute when EditText loses focus
-                if (!TextUtils.isEmpty(createOrderFirstBinding.edtPickMob.text.toString()) && createOrderFirstBinding.edtPickMob.text.length < 10) {
-                    // createOrderFirstBinding.edtPickMob.requestFocus()
-                    createOrderFirstBinding.edtPickMob.error =
-                        getString(R.string.mob_no) + " " + getString(R.string.phone_min)
-                } else {
-                    pickupMobile = createOrderFirstBinding.edtPickMob.text.toString()
-                    MyApplication.createOrdersInput.pickupAddress?.phoneNumber =
-                        createOrderFirstBinding.edtPickMob.text.toString()
-                }
+                checkAllValuesInserted()
             }
-        })*/
+        })
+        createOrderFirstBinding.edtDelMob.setOnFocusChangeListener(View.OnFocusChangeListener { v, hasFocus->
+            if (!hasFocus) { // code to execute when EditText loses focus
+                checkAllValuesInserted()
+            }
+        })
         //MyApplication.createOrdersInput.pickupAddress?.phoneNumber = pickupMobile
         /* createOrderFirstBinding.edtDelMob.setOnEditorActionListener { v, actionId, event->
              if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -789,6 +788,18 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
 
     }
 
+    private fun checkAllValuesInserted() {
+        if (!TextUtils.isEmpty(createOrderFirstBinding.edtDelMob.text) && !TextUtils.isEmpty(
+                createOrderFirstBinding.edtPickMob.text
+            ) && !TextUtils.isEmpty(
+                MyApplication.createOrdersInput.totalOrderPrice
+            )
+        ) {
+            (activity as CreateOrderActivty).setViewLine()
+        }
+
+    }
+
     private fun preFilledData() {
         //createOrderFirstBinding.orderDetailModel = response.data
         if (!TextUtils.isEmpty(MyApplication.createOrdersInput.pickupAddress?.phoneNumber)) {
@@ -811,8 +822,7 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
             } else {
                 createOrderFirstBinding.txtDate.setSelection(1)
             }
-
-
+            createOrderFirstBinding!!.tvSelectTime.text = pickTime
             if (MyApplication.createOrdersInput.deliveryAddress?.size!! > 0) {
                 delMobile =
                     MyApplication.createOrdersInput.deliveryAddress!![0].phoneNumber as String

@@ -381,13 +381,22 @@ CreateOrderSecondFragment : BaseFragment() {
                         fragmentCreateOrdersSecondBinding.edtParcelValue.clearFocus()
                         fragmentCreateOrdersSecondBinding.edtItemName.clearFocus()
                         if (TextUtils.isEmpty(
-                                MyApplication.createOrdersInput.itemName
-                            ) || TextUtils.isEmpty(MyApplication.createOrdersInput.parcelValue)
-                            || TextUtils.isEmpty(MyApplication.createOrdersInput.paymentType)
-                            || TextUtils.isEmpty(MyApplication.createOrdersInput.fareCollected)
-                        ) {
-                            showToastError("Please Select all the values")
-                        } else {
+                                MyApplication.createOrdersInput.itemName)){
+                            showToastError("Please enter item name")
+                            fragmentCreateOrdersSecondBinding.edtItemName.requestFocus()
+                        }else if (TextUtils.isEmpty(
+                                MyApplication.createOrdersInput.parcelValue)){
+                            showToastError("Please enter parcel value")
+                            fragmentCreateOrdersSecondBinding.edtParcelValue.requestFocus()
+                        }
+                        /* if (TextUtils.isEmpty(
+                                 MyApplication.createOrdersInput.itemName
+                             ) || TextUtils.isEmpty(MyApplication.createOrdersInput.parcelValue)
+                             || TextUtils.isEmpty(MyApplication.createOrdersInput.paymentType)
+                             || TextUtils.isEmpty(MyApplication.createOrdersInput.fareCollected)
+                         ) {
+                             showToastError("Please Select all the values")
+                         }*/ else {
                             MyApplication.createOrdersInput.usedLPoints = lPointsTotalUsed
                             MyApplication.createOrdersInput.lPointsPrice = lPointsTotalValue
                             (activity as CreateOrderActivty).callSecondFragment(3)

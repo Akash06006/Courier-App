@@ -322,28 +322,31 @@ class OrderDetailActivity : BaseActivity(), OnMapReadyCallback, LocationListener
                                 } else {
                                     addressAdapter!!.notifyDataSetChanged()
                                 }
-                                val paymentAdapter =
-                                    PaymentOptionsListAdapter(
-                                        this,
-                                        response.data?.assignedEmployees?.payViaNew!!
-                                    )
-                                val linearLayoutManager1 = LinearLayoutManager(this)
-                                linearLayoutManager1.orientation = RecyclerView.HORIZONTAL
-                                activityCreateOrderBinding.rvPaymentOptions.layoutManager =
-                                    linearLayoutManager1
-                                activityCreateOrderBinding.rvPaymentOptions.setHasFixedSize(true)
-                                activityCreateOrderBinding.rvPaymentOptions.adapter = paymentAdapter
-                                activityCreateOrderBinding.rvPaymentOptions.addOnScrollListener(
-                                    object :
-                                        RecyclerView.OnScrollListener() {
-                                        override fun onScrolled(
-                                            recyclerView : RecyclerView,
-                                            dx : Int,
-                                            dy : Int
-                                        ) {
+                                if (response.data?.assignedEmployees != null) {
+                                    val paymentAdapter =
+                                        PaymentOptionsListAdapter(
+                                            this,
+                                            response.data?.assignedEmployees?.payViaNew!!
+                                        )
+                                    val linearLayoutManager1 = LinearLayoutManager(this)
+                                    linearLayoutManager1.orientation = RecyclerView.HORIZONTAL
+                                    activityCreateOrderBinding.rvPaymentOptions.layoutManager =
+                                        linearLayoutManager1
+                                    activityCreateOrderBinding.rvPaymentOptions.setHasFixedSize(true)
+                                    activityCreateOrderBinding.rvPaymentOptions.adapter =
+                                        paymentAdapter
+                                    activityCreateOrderBinding.rvPaymentOptions.addOnScrollListener(
+                                        object :
+                                            RecyclerView.OnScrollListener() {
+                                            override fun onScrolled(
+                                                recyclerView : RecyclerView,
+                                                dx : Int,
+                                                dy : Int
+                                            ) {
 
-                                        }
-                                    })
+                                            }
+                                        })
+                                }
                                 val source = LatLng(
                                     response.data?.pickupAddress?.lat!!.toDouble(),
                                     response.data?.pickupAddress?.long!!.toDouble()

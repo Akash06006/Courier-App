@@ -166,6 +166,10 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
                 view : View, position : Int, id : Long
             ) {
                 time = slot(position)
+                if (TextUtils.isEmpty(pickTime)) {
+                    createOrderFirstBinding.tvSelectTime.text = time[0]
+                    pickTime = time[0]
+                }
                 /* if (time.size > 0) {
                      pickTime = time[0]
                      createOrderFirstBinding.tvSelectTime.text = time[0]
@@ -182,7 +186,6 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
                         getDaysAgo(0).toString(),
                         "dd/MM/YYYY"
                     )
-
                     val c = Calendar.getInstance()
                     println("Current time => " + c.time)
                     val df = SimpleDateFormat("dd/MM/yyyy")
@@ -195,11 +198,15 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
                         getDaysAgo(1).toString(),
                         "dd/MM/YYYY"
                     )
-
-                    val c = Calendar.getInstance()
+                    /*val c = Calendar.getInstance()
                     println("Current time => " + c.time+1)
                     val df = SimpleDateFormat("dd/MM/yyyy")
-                    val formattedDate = df.format(c.time)
+                    val formattedDate = df.format(c.time+1)*/
+                    val calendar = Calendar.getInstance()
+                    calendar.add(Calendar.DAY_OF_YEAR, 1)
+                    val df = SimpleDateFormat("dd/MM/yyyy")
+                    val formattedDate = df.format(calendar.time)
+                    // return calendar.time
                     // MyApplication.createOrdersInput.pickupAddress?.date = date
                     pickupDate = formattedDate
                 }
@@ -208,10 +215,11 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
                     R.layout.spinner_item, time
                 )
                 createOrderFirstBinding.txtTime.adapter = adapter1
-
                 for (i in 0 until time.size) {
                     if (time[i].equals(pickTime)) {
-                        createOrderFirstBinding.txtTime.setSelection(i)
+                        //   createOrderFirstBinding.txtTime.setSelection(i)
+                        createOrderFirstBinding.tvSelectTime.text = time[i]
+                        pickTime = time[i]
                     }
                 }
 
@@ -298,9 +306,6 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
                     }
                 }
             })
-
-
-
 
         orderViewModel.calculatePriceRes().observe(this,
             Observer<CalculatePriceResponse> { response->
@@ -410,27 +415,32 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
             }
         })
         //MyApplication.createOrdersInput.pickupAddress?.phoneNumber = pickupMobile
-        /* createOrderFirstBinding.edtDelMob.setOnEditorActionListener { v, actionId, event->
-             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                 // doSomething()
-                 // createOrderFirstBinding.edtDelMob.clearFocus()
-                 if (!TextUtils.isEmpty(createOrderFirstBinding.edtDelMob.text.toString()) && createOrderFirstBinding.edtDelMob.text.length < 10) {
-                     // createOrderFirstBinding.edtDelMob.requestFocus()
-                     createOrderFirstBinding.edtDelMob.error =
-                         getString(R.string.mob_no) + " " + getString(R.string.phone_min)
-                 } else {
-                       val imm =
-                           activity!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                       imm.hideSoftInputFromWindow(v.windowToken, 0)
-                     delMobile = createOrderFirstBinding.edtDelMob.text.toString()
-                     *//* MyApplication.createOrdersInput.pickupAddress?.phoneNumber =
-                         createOrderFirstBinding.edtDelMob.text.toString()*//*
-                }
+        createOrderFirstBinding.edtDelMob.setOnEditorActionListener { v, actionId, event->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                // doSomething()
+                checkAllValuesInserted()
+                val imm =
+                    activity!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.hideSoftInputFromWindow(v.windowToken, 0)
                 true
             } else {
                 false
             }
-        }*/
+        }
+
+        createOrderFirstBinding.edtPickMob.setOnEditorActionListener { v, actionId, event->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                // doSomething()
+                checkAllValuesInserted()
+                val imm =
+                    activity!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.hideSoftInputFromWindow(v.windowToken, 0)
+                true
+            } else {
+                false
+            }
+        }
+
         orderViewModel.isClick().observe(
             this, Observer<String>(
                 function =
@@ -806,8 +816,9 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
             )
         ) {
             (activity as CreateOrderActivty).setViewLine()
+        } else {
+            (activity as CreateOrderActivty).setUnselectLine()
         }
-
     }
 
     private fun preFilledData() {
@@ -826,8 +837,11 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
                 getDaysAgo(0).toString(),
                 "MM/dd/YYYY"
             )
-
-            if (pickupDate.equals(date)) {
+            val c = Calendar.getInstance()
+            println("Current time => " + c.time)
+            val df = SimpleDateFormat("dd/MM/yyyy")
+            val formattedDate = df.format(c.time)
+            if (pickupDate.equals(formattedDate)) {
                 createOrderFirstBinding.txtDate.setSelection(0)
             } else {
                 createOrderFirstBinding.txtDate.setSelection(1)

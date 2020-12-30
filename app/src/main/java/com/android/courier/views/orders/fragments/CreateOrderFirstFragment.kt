@@ -151,9 +151,16 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
             activity!!,
             R.layout.spinner_item, time
         )
+        val c = Calendar.getInstance()
+        println("Current time => " + c.time)
+        val df = SimpleDateFormat("dd MMM yy")
+        val formattedDate = df.format(c.time)
+        val calendar = Calendar.getInstance()
+        calendar.add(Calendar.DAY_OF_YEAR, 1)
+        val formattedDate1 = df.format(calendar.time)
         val days = ArrayList<String>()
-        days.add("Today")
-        days.add("Tomorrow")
+        days.add("Today " + formattedDate)
+        days.add("Tomorrow " + formattedDate1)
         val adapter = ArrayAdapter(
             activity!!,
             R.layout.support_simple_spinner_dropdown_item, days

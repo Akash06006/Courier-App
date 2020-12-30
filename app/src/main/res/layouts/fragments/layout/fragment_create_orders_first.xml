@@ -499,7 +499,7 @@
                                 android:id="@+id/tv_select_time"
                                 android:layout_width="wrap_content"
                                 android:layout_height="45dp"
-                                android:layout_marginLeft="@dimen/dp_20"
+                                android:layout_marginLeft="@dimen/dp_10"
                                 android:layout_marginTop="@dimen/dp_2"
                                 android:layout_toRightOf="@+id/rel_date"
                                 android:background="@drawable/shape_round_stroke"

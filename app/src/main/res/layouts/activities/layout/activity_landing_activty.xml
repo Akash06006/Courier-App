@@ -107,7 +107,7 @@
                 android:background="@color/colorPrimary"
                 android:fitsSystemWindows="true"
                 android:paddingRight="10dp"
-                android:visibility="gone"
+                android:visibility="visible"
                 app:theme="@style/NavigationViewStyle">
 
             <!-- <android.support.design.widget.NavigationView

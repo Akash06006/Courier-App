@@ -44,13 +44,14 @@ class DiscountListAdapter(
         viewHolder = holder
         Glide.with(mContext).load(bannersList!![position].icon).placeholder(R.drawable.ic_dummy)
             .into(holder.binding!!.imgBanner)
-        /*holder.binding!!.imgBanner.setOnClickListener {
+        holder.binding.imgBanner.setOnClickListener {
             if (bannersList!![position].type.equals("coupon")) {
                 mContext.showOfferInformation(position)
             } else {
-                mContext.baseActivity.showToastSuccess("No Information")
+                mContext.showOfferInformation(position)
+                //mContext.baseActivity.showToastSuccess("No Information")
             }
-        }*/
+        }
     }
 
     override fun getItemCount() : Int {

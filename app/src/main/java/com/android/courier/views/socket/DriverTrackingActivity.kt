@@ -28,8 +28,9 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
-import com.android.courier.databinding.FragmentTrackingBinding
 import com.android.courier.R
+import com.android.courier.chatSocket.ConnectionListener
+import com.android.courier.databinding.FragmentTrackingBinding
 import com.android.courier.maps.FusedLocationClass
 import com.android.courier.maps.MapClass
 import com.android.courier.maps.MapInterface
@@ -55,13 +56,13 @@ import com.google.android.gms.maps.model.*
 import com.google.maps.DirectionsApi
 import com.google.maps.GeoApiContext
 import org.json.JSONObject
-import kotlin.collections.ArrayList
 
 open class DriverTrackingActivity : BaseActivity(), OnMapReadyCallback, LocationListener,
     SocketInterface,
     GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks, MapInterface,
     DialogssInterface,
-    GoogleMap.OnInfoWindowClickListener {
+    GoogleMap.OnInfoWindowClickListener,
+    ConnectionListener {
     private var mark1 : Marker? = null
     internal var cameraZoom = 16.0f
     private var mAddress = ""
@@ -108,14 +109,21 @@ open class DriverTrackingActivity : BaseActivity(), OnMapReadyCallback, Location
     var addressArray = ArrayList<OrdersDetailResponse.PickupAddress>()
     private lateinit var fkip : LatLng
     private lateinit var destLocation : LatLng
+    private var orderDetails : OrdersDetailResponse.Data? = null
+
     // lateinit var trackingViewModel : TrackingViewModel
     lateinit var trackingActivityBinding : FragmentTrackingBinding
+
     //private lateinit var locationsViewModel : LocationsViewModel
     var runCall = 0
     var serviceIntent : Intent? = null
     var polyPath : MutableList<LatLng>? = null
     private var confirmationDialog : Dialog? = null
     var isCompleted = false
+    val builder = LatLngBounds.Builder()
+    private var markerList : ArrayList<Marker>? = ArrayList()
+    private var sourceMarker : Marker? = null
+    private var isEventFirstHit = true
 
     companion object {
         var categoryListids : ArrayList<String>? = null
@@ -157,6 +165,11 @@ open class DriverTrackingActivity : BaseActivity(), OnMapReadyCallback, Location
         driverId =
             "" + intent.extras?.get("driverId")
         orderStatus = "" + intent.extras?.get("orderStatus")
+
+        if (intent.hasExtra("orderDetails"))
+            orderDetails = intent.getSerializableExtra("orderDetails") as OrdersDetailResponse.Data?
+
+        trackYourRiderSocket()
         //pickLat.toDouble()
         /*   try {
                mJsonObject = JSONObject(intent.extras?.get("data")?.toString())
@@ -199,7 +212,7 @@ open class DriverTrackingActivity : BaseActivity(), OnMapReadyCallback, Location
         Handler().postDelayed({
             callSocketMethods("getLocation")
         }, 2000)
-
+        // callSocketMethods("trackYourRider")
         destLocation = LatLng(destlat.toDouble(), destLong.toDouble())
         /* trackingViewModel.isClick().observe(
              this, Observer<String>(function =
@@ -239,6 +252,39 @@ open class DriverTrackingActivity : BaseActivity(), OnMapReadyCallback, Location
 
     }
 
+    private fun trackYourRiderSocket() {
+        /*try {
+            val socketConnectionManager : SocketConnectionManager =
+                SocketConnectionManager.getInstance()
+            socketConnectionManager.createConnection(
+                this,
+                HashMap<String, Emitter.Listener>()
+            )
+        } catch (e : URISyntaxException) {
+            e.printStackTrace()
+        }
+
+
+        runOnUiThread {
+            val jsonObject = JSONObject()
+            try {
+                jsonObject.put("orderId", jobId)
+                jsonObject.put("empId", driverId)
+                jsonObject.put("onGoing", "false")
+                SocketConnectionManager.getInstance()
+                    .socket.emit("trackYourRider", jsonObject)
+            } catch (e : Exception) {
+                e.printStackTrace()
+            }
+
+        }
+
+        SocketConnectionManager.getInstance()
+            .addEventListener("trackYourRider") { args->
+                val data = args[0] as JSONArray
+            }*/
+    }
+
     @Synchronized
     fun buildGoogleApiClient() {
         mGoogleApiClient = GoogleApiClient.Builder(this)
@@ -247,7 +293,6 @@ open class DriverTrackingActivity : BaseActivity(), OnMapReadyCallback, Location
             .addApi(LocationServices.API)
             .build()
         mGoogleApiClient!!.connect()
-
     }
 
     override fun onDestroy() {
@@ -300,6 +345,10 @@ open class DriverTrackingActivity : BaseActivity(), OnMapReadyCallback, Location
             pickLat.toDouble(),
             pickLong.toDouble()
         )
+        setPickupDestMarker()
+    }
+
+    private fun setPickupDestMarker() {
         var ic_source : BitmapDescriptor
         /* ic_source = bitmapDescriptorFromVector(
              this,
@@ -318,9 +367,10 @@ open class DriverTrackingActivity : BaseActivity(), OnMapReadyCallback, Location
             )
         }
         var oldLatLong = LatLng(0.0, 0.0)
-        mGoogleMap!!.addMarker(
+        sourceMarker = mGoogleMap!!.addMarker(
             MarkerOptions()
                 .position(LatLng(pickLat.toDouble(), pickLong.toDouble()))
+                .title(orderDetails!!.pickupAddress!!.address!!)
                 .icon(ic_source)
         )
         var isSourceAdded = false
@@ -335,12 +385,12 @@ open class DriverTrackingActivity : BaseActivity(), OnMapReadyCallback, Location
             if (item.isComplete.equals("false")) {
                 dest = bitmapDescriptorFromVector(
                     this,
-                    R.drawable.ic_destination
+                    R.drawable.drop_pendig
                 )
             } else {
                 dest = bitmapDescriptorFromVector(
                     this,
-                    R.drawable.ic_destination_completed
+                    R.drawable.drop_completed
                 )
             }
 
@@ -348,6 +398,7 @@ open class DriverTrackingActivity : BaseActivity(), OnMapReadyCallback, Location
             mGoogleMap!!.addMarker(
                 MarkerOptions()
                     .position(LatLng(item.lat!!.toDouble(), item.long!!.toDouble()))
+                    .title(item.address!!)
                     .icon(dest)
             )
 
@@ -360,7 +411,6 @@ open class DriverTrackingActivity : BaseActivity(), OnMapReadyCallback, Location
                 oldLatLong = destination
             }
         }
-        val builder = LatLngBounds.Builder();
         /* for (Marker marker : markers) {
              builder.include(marker);
          }*/
@@ -394,10 +444,10 @@ open class DriverTrackingActivity : BaseActivity(), OnMapReadyCallback, Location
         )
         if (mLastLocation != null) {
             val latLng = LatLng(mLastLocation.latitude, mLastLocation.longitude)
-            val markerOptions = MarkerOptions()
+            /*val markerOptions = MarkerOptions()
             markerOptions.position(latLng)
             markerOptions.title("Current Position")
-            markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA))
+            markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA))*/
         }
         val mLocationRequest = LocationRequest()
         mLocationRequest.interval = 3000 //5 seconds
@@ -494,7 +544,10 @@ open class DriverTrackingActivity : BaseActivity(), OnMapReadyCallback, Location
          vectorDrawable?.draw(canvas)
          return BitmapDescriptorFactory.fromBitmap(bitmap);
      }*/
-    fun bitmapDescriptorFromVector(context : Context, @DrawableRes vectorDrawableResourceId : Int) : BitmapDescriptor {
+    fun bitmapDescriptorFromVector(
+        context : Context,
+        @DrawableRes vectorDrawableResourceId : Int
+    ) : BitmapDescriptor {
         var background =
             ContextCompat.getDrawable(this, vectorDrawableResourceId/*R.drawable.ic_app*/);
         background?.setBounds(
@@ -534,8 +587,31 @@ open class DriverTrackingActivity : BaseActivity(), OnMapReadyCallback, Location
             } catch (e : Exception) {
                 e.printStackTrace()
             }
-        }
+/*
+            "trackYourRider"->
+            {
+                val jsonObject = JSONObject()
+                try {
+                    jsonObject.put("orderId", jobId)
+                    jsonObject.put("empId", driverId)
+                    jsonObject.put("onGoing", "false")
+                    SocketConnectionManager.getInstance()
+                        .socket.emit("trackYourRider", jsonObject)
+                } catch (e : Exception) {
+                    e.printStackTrace()
+                }
 
+                SocketConnectionManager.getInstance()
+                    .addEventListener("trackYourRider") { args ->
+                        val data = args[0] as JSONObject
+                        try {
+                        } catch (e: JSONException) {
+                        }
+                    }
+
+            }
+*/
+        }
     }
 
     override fun onSocketCall(onMethadCall : String, vararg jsonObject : Any) {
@@ -550,73 +626,117 @@ open class DriverTrackingActivity : BaseActivity(), OnMapReadyCallback, Location
                     } catch (e1 : Exception) {
                         e1.printStackTrace()
                     }
+                    "trackYourRider" -> {
+                        try {
+                            val innerResponse = serverResponse.get("data") as JSONObject
+
+                        } catch (e1 : Exception) {
+                            e1.printStackTrace()
+                        }
+                    }
                     "getLocation" -> try {
                         val innerResponse = serverResponse.get("data") as JSONObject
-                        if (jobId.equals(innerResponse.getString("id"))
-                        ) {
-                            if (innerResponse.getString("isOrderComplete").equals("true")) {
-                                if (!isCompleted) {
-                                    isCompleted = true
-                                    showCompleteAlert(this, "Order delivered successfully by rider")
+                        val trackRiderObj = innerResponse.get("trackYourRider") as JSONObject?
+                        val isPickedUp = trackRiderObj!!.getString("isPickedUp")
+                        val isAccepted = trackRiderObj.getString("isAccepted")
+
+                        if (isPickedUp == "false") {
+                            val trackDataArray = trackRiderObj.getJSONArray("data")
+
+                            if (isAccepted == "true")
+                                setDriverMarker(innerResponse)
+
+                            trackDataArray?.let {
+                                for (i in 0 until trackDataArray.length()) {
+                                    val pos = trackDataArray.getJSONObject(i)
+                                    val order = pos.getJSONObject("order")
+                                    order?.let {
+                                        val pickupAddress = order.getJSONObject("pickupAddress")
+                                        val lat = pickupAddress.getString("lat")
+                                        val lng = pickupAddress.getString("long")
+                                        val address = pickupAddress.getString("address")
+                                        var riderLocation : BitmapDescriptor
+                                        val background = ContextCompat.getDrawable(
+                                            this, R.drawable.pickup_pending
+                                        )
+                                        background?.setBounds(
+                                            0, 0,
+                                            background.intrinsicWidth, background.intrinsicHeight
+                                        )
+                                        val vectorDrawable =
+                                            ContextCompat.getDrawable(
+                                                this,
+                                                R.drawable.pickup_pending
+                                            );
+                                        vectorDrawable?.setBounds(
+                                            0,
+                                            0,
+                                            vectorDrawable.getIntrinsicWidth(),
+                                            vectorDrawable.getIntrinsicHeight()
+                                        )
+                                        val bitmap = Bitmap.createBitmap(
+                                            vectorDrawable!!.getIntrinsicWidth(),
+                                            vectorDrawable.getIntrinsicHeight(),
+                                            Bitmap.Config.ARGB_8888
+                                        )
+                                        val canvas = Canvas(bitmap)
+                                        vectorDrawable.draw(canvas)
+                                        riderLocation = BitmapDescriptorFactory.fromBitmap(bitmap)
+                                        var marker = mGoogleMap!!.addMarker(
+                                            MarkerOptions().position(
+                                                LatLng(
+                                                    lat.toDouble(),
+                                                    lng.toDouble()
+                                                )
+                                            ).title(address)
+                                                .icon(riderLocation)
+                                        )
+                                        markerList!!.add(marker)
+                                    }
                                 }
+                            }
+                        } else {
+                            if (markerList != null && markerList!!.isNotEmpty()) {
+                                for (i in 0 until markerList!!.size) {
+                                    markerList!!.remove(markerList!![i])
+                                    //  if (markerList != null)
+                                    //      markerList!!.clear()
+                                }
+                                markerList = ArrayList()
+                            }
 
-                            } else {
-                                if (!driverLat.equals(innerResponse.optString("lastLatitude")) && !driverLong.equals(
-                                        innerResponse.getString("lastLongitude")
-                                    )
-                                ) {
-                                    mark1?.remove()
-                                    //val obj = innerResponse[0] as JSONObject
-                                    driverLat = innerResponse.optString("lastLatitude")
-                                    driverLong = innerResponse.getString("lastLongitude")
-                                    //innerResponse.get("to_lat").toString()
-                                    var driverLocation : BitmapDescriptor
-                                    /* driverLocation = bitmapDescriptorFromVector(
-                                         this,
-                                         R.drawable.ic_driver
-                                     )*/
-                                    val background =
-                                        ContextCompat.getDrawable(
+                            if (jobId == innerResponse.getString("id")
+                            ) {
+                                if (innerResponse.getString("isOrderComplete").equals("true")) {
+                                    if (!isCompleted) {
+                                        isCompleted = true
+                                        showCompleteAlert(
                                             this,
-                                            R.drawable.ic_driver/*ic_driver*//*R.drawable.ic_app*/
-                                        );
-                                    background?.setBounds(
-                                        0,
-                                        0,
-                                        background.getIntrinsicWidth(),
-                                        background.getIntrinsicHeight()
+                                            "Order delivered successfully by rider"
+                                        )
+                                    }
+                                } else {
+                                    val ic_source : BitmapDescriptor
+                                    if (sourceMarker != null)
+                                        sourceMarker!!.remove()
+                                    ic_source = bitmapDescriptorFromVector(
+                                        this,
+                                        R.drawable.ic_source_completed
                                     )
-                                    val vectorDrawable =
-                                        ContextCompat.getDrawable(this, R.drawable.ic_driver);
-                                    vectorDrawable?.setBounds(
-                                        0,
-                                        0,
-                                        vectorDrawable.getIntrinsicWidth(),
-                                        vectorDrawable.getIntrinsicHeight()
-                                    )
-                                    val bitmap = Bitmap.createBitmap(
-                                        vectorDrawable!!.getIntrinsicWidth(),
-                                        vectorDrawable.getIntrinsicHeight(),
-                                        Bitmap.Config.ARGB_8888
-                                    )
-                                    val canvas = Canvas(bitmap)
-                                    // background?.draw(canvas)
-                                    vectorDrawable?.draw(canvas)
-                                    driverLocation = BitmapDescriptorFactory.fromBitmap(bitmap);
 
-                                    mark1 = mGoogleMap!!.addMarker(
+                                    sourceMarker = mGoogleMap!!.addMarker(
                                         MarkerOptions()
                                             .position(
                                                 LatLng(
-                                                    driverLat.toDouble(),
-                                                    driverLong.toDouble()
+                                                    pickLat.toDouble(),
+                                                    pickLong.toDouble()
                                                 )
                                             )
-                                            //.snippet(points[0].longitude.toString() + "")
-                                            .icon(
-                                                driverLocation
-                                            )
+                                            .title(orderDetails!!.pickupAddress!!.address!!)
+                                            .icon(ic_source)
                                     )
+
+                                    setDriverMarker(innerResponse)
                                 }
                             }
                         }
@@ -642,6 +762,83 @@ open class DriverTrackingActivity : BaseActivity(), OnMapReadyCallback, Location
                 callSocketMethods("getLocation")
             }, 5000
         )
+    }
+
+    private fun setDriverMarker(innerResponse : JSONObject) {
+        if (!driverLat.equals(innerResponse.optString("lastLatitude")) && !driverLong.equals(
+                innerResponse.getString("lastLongitude")
+            )
+        ) {
+            mark1?.remove()
+            //val obj = innerResponse[0] as JSONObject
+            driverLat = innerResponse.optString("lastLatitude")
+            driverLong = innerResponse.getString("lastLongitude")
+            //innerResponse.get("to_lat").toString()
+            var driverLocation : BitmapDescriptor
+            /* driverLocation = bitmapDescriptorFromVector(
+                                             this,
+                                             R.drawable.ic_driver
+                                         )*/
+            val background =
+                ContextCompat.getDrawable(
+                    this,
+                    R.drawable.ic_driver/*ic_driver*//*R.drawable.ic_app*/
+                );
+            background?.setBounds(
+                0,
+                0,
+                background.getIntrinsicWidth(),
+                background.getIntrinsicHeight()
+            )
+            val vectorDrawable =
+                ContextCompat.getDrawable(this, R.drawable.ic_driver);
+            vectorDrawable?.setBounds(
+                0,
+                0,
+                vectorDrawable.getIntrinsicWidth(),
+                vectorDrawable.getIntrinsicHeight()
+            )
+            val bitmap = Bitmap.createBitmap(
+                vectorDrawable!!.getIntrinsicWidth(),
+                vectorDrawable.getIntrinsicHeight(),
+                Bitmap.Config.ARGB_8888
+            )
+            val canvas = Canvas(bitmap)
+            // background?.draw(canvas)
+            vectorDrawable.draw(canvas)
+            driverLocation = BitmapDescriptorFactory.fromBitmap(bitmap)
+
+
+            mark1 = mGoogleMap!!.addMarker(
+                MarkerOptions()
+                    .position(
+                        LatLng(
+                            driverLat.toDouble(),
+                            driverLong.toDouble()
+                        )
+                    )
+                    //.snippet(points[0].longitude.toString() + "")
+                    .icon(
+                        driverLocation
+                    )
+            )
+
+            if (isEventFirstHit) {
+                builder.include(
+                    LatLng(
+                        driverLat.toDouble(),
+                        driverLong.toDouble()
+                    )
+                )
+                var bounds = builder.build();
+                var padding = 200  // offset from edges of the map in pixels
+                var cu =
+                    CameraUpdateFactory.newLatLngBounds(bounds, padding);
+                mGoogleMap!!.animateCamera(cu)
+
+                isEventFirstHit = false
+            }
+        }
     }
 
     fun showCompleteAlert(activity : Activity, message1 : String) {
@@ -926,7 +1123,8 @@ open class DriverTrackingActivity : BaseActivity(), OnMapReadyCallback, Location
             /*sourceLatLng.latitude.toString().plus(",").plus(sourceLatLng.longitude),
             destinationLatLng.latitude.toString().plus(",").plus(destinationLatLng.longitude)*/
             sourceLatLng.latitude.toString().plus(",").plus(sourceLatLng.longitude.toString()),
-            destinationLatLng.latitude.toString().plus(",").plus(destinationLatLng.longitude.toString())
+            destinationLatLng.latitude.toString().plus(",")
+                .plus(destinationLatLng.longitude.toString())
         )
         try {
             val res = req.await()
@@ -995,6 +1193,33 @@ open class DriverTrackingActivity : BaseActivity(), OnMapReadyCallback, Location
             /*polylineFinal = */mGoogleMap?.addPolyline(opts)
         }
 
+    }
+
+    override fun onConnectError() {
+        TODO("Not yet implemented")
+    }
+
+    override fun onConnected() {
+/*
+        runOnUiThread {
+            val jsonObject = JSONObject()
+            try {
+                jsonObject.put("orderId", jobId)
+                jsonObject.put("empId", driverId)
+                jsonObject.put("onGoing", "false")
+                SocketConnectionManager.getInstance()
+                    .socket.emit("trackYourRider", jsonObject)
+            } catch (e : Exception) {
+                e.printStackTrace()
+            }
+
+        }
+*/
+
+    }
+
+    override fun onDisconnected() {
+        TODO("Not yet implemented")
     }
 
 }

@@ -87,7 +87,6 @@ class SignupActivity : BaseActivity() {
             if (googleDetails.has("email")) {
                 val email = googleDetails.getString("email")
                 activitySignupbinding.edtEmail.setText(email)
-
             }
         }
         // activityLoginbinding.tvForgotPassword.paintFlags = Paint.UNDERLINE_TEXT_FLAG

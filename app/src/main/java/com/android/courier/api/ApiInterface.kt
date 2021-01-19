@@ -147,4 +147,7 @@ interface ApiInterface {
     @POST("mobile/rating/addStaffRating")
     fun addDriverRating(@Body mJsonObject : JsonObject) : Call<JsonObject>
 
+    @Multipart
+    @POST("mobile/auth/checkSocial")
+    fun checkSocial(@PartMap mHashMap : HashMap<String, RequestBody>) : Call<JsonObject>
 }

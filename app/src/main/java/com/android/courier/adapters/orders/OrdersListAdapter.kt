@@ -73,9 +73,11 @@ class OrdersListAdapter(
         holder.binding!!.llOrderCompleted.visibility = View.GONE
 
         holder.binding.txtOrderNo.text = orderList!![position].orderNo
-        holder.binding.txtKm.text =
-            orderList!![position].deliveryPoints!![0].distance + " Away"
-        holder.binding.txtTime.text = "In " + orderList!![position].deliveryPoints!![0].time
+        if(orderList!![position].deliveryPoints!!.isNotEmpty()) {
+            holder.binding.txtKm.text =
+                orderList!![position].deliveryPoints!![0].distance + " Away"
+            holder.binding.txtTime.text = "In " + orderList!![position].deliveryPoints!![0].time
+        }
         holder.binding.txtStatus.text = orderList!![position].orderStatus
         holder.binding.txtCreatedTime.text = "Created on " + orderList!![position].createdAt
         holder.binding.txtPrice.text = "₹ " + orderList!![position].totalOrderPrice

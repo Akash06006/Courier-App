@@ -114,6 +114,7 @@ class OrderDetailActivity : BaseActivity(), OnMapReadyCallback, LocationListener
     var isCancellable : String? = null
     private var assignedEmployeesStatus = ""
     private var addressAdapter : OrderAddressListAdapter? = null
+    private var orderDetails : OrdersDetailResponse.Data? = null
 
     override fun getLayoutId() : Int {
         return R.layout.activity_order_detail
@@ -250,6 +251,7 @@ class OrderDetailActivity : BaseActivity(), OnMapReadyCallback, LocationListener
                             if (response.data?.orderStatus?.status != assignedEmployeesStatus) {
                                 var oldLatLong = LatLng(0.0, 0.0)
                                 activityCreateOrderBinding.orderDetailModel = response.data
+                                orderDetails = response.data
                                 cancelledCharges = response.data?.cancellationCharges!!
                                 pickLat = response.data?.pickupAddress?.lat!!
                                 picktLong = response.data?.pickupAddress?.long!!
@@ -362,7 +364,7 @@ class OrderDetailActivity : BaseActivity(), OnMapReadyCallback, LocationListener
                                         this,
                                         R.drawable.ic_source
                                     )
-                                    activityCreateOrderBinding.imgNavigate.visibility = View.GONE
+                                    activityCreateOrderBinding.imgNavigate.visibility = View.VISIBLE
                                     mGoogleMap!!.addMarker(
                                         MarkerOptions()
                                             .position(source)
@@ -403,12 +405,12 @@ class OrderDetailActivity : BaseActivity(), OnMapReadyCallback, LocationListener
                                     if (item.isComplete.equals("false")) {
                                         dest = bitmapDescriptorFromVector(
                                             this,
-                                            R.drawable.ic_destination
+                                            R.drawable.drop_pendig
                                         )
                                     } else {
                                         dest = bitmapDescriptorFromVector(
                                             this,
-                                            R.drawable.ic_destination_completed
+                                            R.drawable.drop_completed
                                         )
                                     }
                                     mGoogleMap!!.addMarker(
@@ -514,7 +516,10 @@ class OrderDetailActivity : BaseActivity(), OnMapReadyCallback, LocationListener
                         /* */
                         // Set the fields to specify which types of place data to
                         if (!TextUtils.isEmpty(isCancellable) && isCancellable.equals("true")) {
-                            showCancelReasonDialog()
+                            if (cancelledCharges == "0")
+                                showCancelReasonDialog()
+                            else
+                                showAlertForCancelDialog()
                         } else {
                             showToastError("You can not cancel this order as your order is in transit")
                         }
@@ -547,6 +552,7 @@ class OrderDetailActivity : BaseActivity(), OnMapReadyCallback, LocationListener
                             "orderStatus",
                             isPicked
                         )
+                        intent.putExtra("orderDetails", orderDetails)
                         startActivity(intent)
                     }
                     "btnSchedule" -> {
@@ -855,7 +861,6 @@ class OrderDetailActivity : BaseActivity(), OnMapReadyCallback, LocationListener
             }
         }
 
-
         btnSend?.setOnClickListener {
             val mJsonObject = JsonObject()
             mJsonObject.addProperty(
@@ -904,6 +909,40 @@ class OrderDetailActivity : BaseActivity(), OnMapReadyCallback, LocationListener
         /*imgCross?.setOnClickListener {
             confirmationDialog?.dismiss()
         }*/
+        if (!confirmationDialog?.isShowing()!!) {
+            confirmationDialog?.show()
+        }
+
+    }
+
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+    private fun showAlertForCancelDialog() {
+        var confirmationDialog = Dialog(this, R.style.transparent_dialog)
+        confirmationDialog?.requestWindowFeature(Window.FEATURE_NO_TITLE)
+
+
+        confirmationDialog?.setContentView(R.layout.cancel_alert_dialog)
+        confirmationDialog?.setCancelable(true)
+
+        confirmationDialog?.window!!.setLayout(
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        )
+        confirmationDialog?.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        val tvAmount = confirmationDialog?.findViewById<TextView>(R.id.tv_amount)
+        val tvOk = confirmationDialog?.findViewById<TextView>(R.id.tv_ok)
+        val tvCancel = confirmationDialog?.findViewById<TextView>(R.id.tv_cancel)
+
+
+        tvAmount!!.text = "₹" + cancelledCharges + " for cancellation"
+        tvOk!!.text = "Cancel order with a fee of " + "₹" + cancelledCharges
+
+        tvOk.setOnClickListener {
+            showCancelReasonDialog()
+        }
+        tvCancel.setOnClickListener {
+            confirmationDialog.dismiss()
+        }
         if (!confirmationDialog?.isShowing()!!) {
             confirmationDialog?.show()
         }

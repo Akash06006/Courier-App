@@ -3,73 +3,82 @@
         xmlns:aigestudio="http://schemas.android.com/tools"
         xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <LinearLayout
+    <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingTop="@dimen/dp_20"
-            android:paddingBottom="@dimen/dp_20"
-            android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:background="@null">
 
-        <TextView
-                android:id="@+id/tv_today_tomm"
-                android:layout_width="wrap_content"
-                android:textColor="@color/colorPrimary"
-                android:layout_height="wrap_content"
-                app:font="@{`bold`}"
-                android:textSize="@dimen/sp_14"
-                android:layout_gravity="center_horizontal"
-                android:text="Today"/>
-
-        <TextView
-                android:id="@+id/tv_selected_time"
-                android:layout_width="wrap_content"
-                android:textColor="@color/colorWhite"
-                android:layout_height="wrap_content"
-                app:font="@{`regular`}"
-                android:background="@drawable/shape_square"
-                android:textSize="@dimen/sp_14"
-                android:paddingLeft="@dimen/dp_15"
-                android:paddingTop="7dp"
-                android:paddingBottom="7dp"
-                android:paddingRight="@dimen/dp_15"
-                android:layout_marginTop="@dimen/dp_15"
-                android:layout_gravity="center_horizontal"
-                android:text="Today"/>
-
-        <com.aigestudio.wheelpicker.WheelPicker
-                android:id="@+id/wheel_picker_time"
-                android:layout_marginTop="@dimen/dp_15"
+        <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                aigestudio:wheel_atmospheric="true"
-                aigestudio:wheel_curved="true"
-                aigestudio:wheel_cyclic="true"
-                aigestudio:wheel_item_align="right"
-                aigestudio:wheel_item_text_color="#D0D0D0"
-                aigestudio:wheel_item_text_size="24sp"
-                aigestudio:wheel_selected_item_text_color="#000000"
-                app:wheel_indicator_color="@color/colorPrimary"
-                app:wheel_selected_item_text_color="#000000" />
-
-        <TextView
-                android:id="@+id/tv_confirm"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
                 android:layout_marginLeft="@dimen/dp_20"
-                android:layout_marginTop="@dimen/dp_15"
+                android:layout_marginTop="@dimen/dp_5"
                 android:layout_marginRight="@dimen/dp_20"
-                android:background="@drawable/shape_button_back"
-                android:paddingLeft="@dimen/dp_20"
-                android:paddingTop="@dimen/dp_10"
-                android:paddingRight="@dimen/dp_20"
-                android:paddingBottom="@dimen/dp_10"
-                android:text="@string/confirm"
-                android:textAllCaps="false"
-                android:textColor="@color/colorWhite"
-                android:textSize="@dimen/sp_14"
-                app:font="@{`semibold`}" />
+                android:layout_marginBottom="@dimen/dp_5"
+                android:background="@drawable/round_layout"
+                android:orientation="vertical"
+                android:paddingTop="@dimen/dp_20"
+                android:paddingBottom="@dimen/dp_20">
 
-    </LinearLayout>
+            <Spinner
+                    android:id="@+id/tv_today_tomm"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:backgroundTint="@color/colorPrimary" />
+
+            <TextView
+                    android:id="@+id/tv_selected_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/dp_15"
+                    android:background="@drawable/shape_square"
+                    android:paddingLeft="@dimen/dp_15"
+                    android:paddingTop="7dp"
+                    android:paddingRight="@dimen/dp_15"
+                    android:paddingBottom="7dp"
+                    android:hint="Today"
+                    android:textColorHint="@color/colorWhite"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="@dimen/sp_14"
+                    app:font="@{`regular`}" />
+
+            <com.aigestudio.wheelpicker.WheelPicker
+                    android:id="@+id/wheel_picker_time"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/dp_15"
+                    aigestudio:wheel_atmospheric="true"
+                    aigestudio:wheel_curved="true"
+                    aigestudio:wheel_cyclic="true"
+                    aigestudio:wheel_item_align="right"
+                    aigestudio:wheel_item_text_color="#D0D0D0"
+                    aigestudio:wheel_item_text_size="24sp"
+                    aigestudio:wheel_selected_item_text_color="#000000"
+                    app:wheel_indicator_color="@color/colorPrimary"
+                    app:wheel_selected_item_text_color="#000000" />
+
+            <TextView
+                    android:id="@+id/tv_confirm"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="@dimen/dp_20"
+                    android:layout_marginTop="@dimen/dp_15"
+                    android:layout_marginRight="@dimen/dp_20"
+                    android:background="@drawable/shape_button_back"
+                    android:paddingLeft="@dimen/dp_20"
+                    android:paddingTop="@dimen/dp_10"
+                    android:paddingRight="@dimen/dp_20"
+                    android:paddingBottom="@dimen/dp_10"
+                    android:text="@string/confirm"
+                    android:textAllCaps="false"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="@dimen/sp_14"
+                    app:font="@{`semibold`}" />
+
+        </LinearLayout>
+    </FrameLayout>
 </layout>

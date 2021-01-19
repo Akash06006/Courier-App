@@ -68,13 +68,6 @@ class SplashActivity : BaseActivity() {
             GlobalConstants.NOTIFICATION_TOKEN,
             GlobalConstants.NOTIFICATION_TOKEN
         )
-        /*if (token != null) {
-            sharedPrefClass!!.putObject(
-                applicationContext,
-                GlobalConstants.NOTIFICATION_TOKEN,
-                token
-            )
-        }*/
 
         Timer().schedule(object : TimerTask() {
             override fun run() {

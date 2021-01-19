@@ -19,10 +19,7 @@ import com.courierdriver.databinding.ActivityProfileDetailsBinding
 import com.courierdriver.model.CommonModel
 import com.courierdriver.model.profile.ProfileDetailsModel
 import com.courierdriver.sharedpreference.SharedPrefClass
-import com.courierdriver.utils.BaseFragment
-import com.courierdriver.utils.DialogClass
-import com.courierdriver.utils.DialogssInterface
-import com.courierdriver.utils.Utils
+import com.courierdriver.utils.*
 import com.courierdriver.viewmodels.profile.ProfileViewModel
 import com.courierdriver.views.authentication.LoginActivity
 import okhttp3.MultipartBody
@@ -209,7 +206,8 @@ class ProfileDetailsFragment : BaseFragment(), DialogssInterface, SelfieCallBack
             Utils(activity!!).createPartFromString("today selfie")*/
         var userImage: MultipartBody.Part? = null
         if (fileUri.isNotEmpty()) {
-            val f1 = File(fileUri)
+            var f1 = File(fileUri)
+            f1 = File(ResizeImage.compressImage(fileUri))
             userImage =
                 Utils(activity!!).prepareFilePart(
                     "image",

@@ -38,7 +38,7 @@ class LandingActivty : BaseActivity(), View.OnClickListener, NotifyWorkStatusBut
         activityOtpVerificationBinding = viewDataBinding as ActivityLandingActivtyBinding
         homeViewModel = ViewModelProviders.of(this).get(HomeViewModel::class.java)
 
-        val fragment = HomeFragment()
+        val fragment = HomeFragment(this)
         callFragments(fragment, supportFragmentManager, false, "send_data", "")
 
         activityOtpVerificationBinding.imgOrderParent.setOnClickListener(this)
@@ -57,7 +57,7 @@ class LandingActivty : BaseActivity(), View.OnClickListener, NotifyWorkStatusBut
         when (v!!.id) {
             R.id.imgOrderParent -> {
                 visibility(View.VISIBLE, View.GONE, View.GONE, View.GONE)
-                newCallFragments(HomeFragment(), supportFragmentManager)
+                newCallFragments(HomeFragment(this), supportFragmentManager)
                 color(
                     R.color.colorWhite,
                     R.color.colorLiteWhite,
@@ -88,6 +88,39 @@ class LandingActivty : BaseActivity(), View.OnClickListener, NotifyWorkStatusBut
             }
         }
     }
+
+     fun markAvailableTrue()
+    {
+        isAvailable = false
+        available = "false"
+        activityOtpVerificationBinding.imgAvailable.setImageDrawable(
+            ContextCompat.getDrawable(this, R.drawable.ic_available)
+        )
+        activityOtpVerificationBinding.txtAvailble.setTextColor(
+            ContextCompat.getColor(
+                this,
+                R.color.colorWorking
+            )
+        )
+        activityOtpVerificationBinding.txtAvailble.text = "Working"
+    }
+
+    fun markUnAvailableTrue()
+    {
+        available = "true"
+        isAvailable = true
+        activityOtpVerificationBinding.imgAvailable.setImageDrawable(
+            ContextCompat.getDrawable(this, R.drawable.ic_not_available)
+        )
+        activityOtpVerificationBinding.txtAvailble.setTextColor(
+            ContextCompat.getColor(
+                this,
+                R.color.colorNotWorking
+            )
+        )
+        activityOtpVerificationBinding.txtAvailble.text = "Not Working"
+    }
+
 
     private fun subscribeWorkStatusReceiver() {
         val contractDetailsReceiver = WorkStatusBroadcastReceiver()
@@ -120,7 +153,7 @@ class LandingActivty : BaseActivity(), View.OnClickListener, NotifyWorkStatusBut
             activityOtpVerificationBinding.txtAvailble.setTextColor(
                 ContextCompat.getColor(
                     this,
-                    R.color.colorRed
+                    R.color.colorNotWorking
                 )
             )
             activityOtpVerificationBinding.txtAvailble.text = "Not Working"
@@ -133,7 +166,7 @@ class LandingActivty : BaseActivity(), View.OnClickListener, NotifyWorkStatusBut
             activityOtpVerificationBinding.txtAvailble.setTextColor(
                 ContextCompat.getColor(
                     this,
-                    R.color.colorSuccess
+                    R.color.colorWorking
                 )
             )
             activityOtpVerificationBinding.txtAvailble.text = "Working"
@@ -254,7 +287,7 @@ class LandingActivty : BaseActivity(), View.OnClickListener, NotifyWorkStatusBut
             activityOtpVerificationBinding.txtAvailble.setTextColor(
                 ContextCompat.getColor(
                     this,
-                    R.color.colorSuccess
+                    R.color.colorWorking
                 )
             )
             activityOtpVerificationBinding.txtAvailble.text = "Working"
@@ -267,7 +300,7 @@ class LandingActivty : BaseActivity(), View.OnClickListener, NotifyWorkStatusBut
             activityOtpVerificationBinding.txtAvailble.setTextColor(
                 ContextCompat.getColor(
                     this,
-                    R.color.colorRed
+                    R.color.colorNotWorking
                 )
             )
             activityOtpVerificationBinding.txtAvailble.text = "Not Working"

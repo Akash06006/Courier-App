@@ -204,9 +204,9 @@
                             android:layout_centerInParent="true"
                             android:layout_marginTop="@dimen/dp_5"
                             android:text="Not Working"
-                            app:font="@{`regular`}"
-                            android:textSize="@dimen/sp_12"
-                            android:textColor="@color/colorRed" />
+                            android:textColor="@color/colorRed"
+                            android:textSize="@dimen/sp_14"
+                            app:font="@{`bold`}" />
                     </RelativeLayout>
                 </RelativeLayout>
             </LinearLayout>

@@ -1,10 +1,14 @@
 package com.courierdriver.constants
 
+import com.courierdriver.application.MyApplication
+import java.io.File
+
 /*
  * Created by admin on 30-01-2018.
  */
 
 object GlobalConstants {
+    val file = File(MyApplication.instance.filesDir, "Images")
     @JvmStatic
     val SHARED_PREF = "DEMOO_APP"
 
@@ -75,7 +79,7 @@ object GlobalConstants {
     val BASE_URL = "http://stgcerb.cerebruminfotech.com:9067/api/"
 
     @JvmStatic
-    val BASE_SERVER = "http://stgcerb.cerebruminfotech.com:9067"
+    val BASE_SERVER = "http ://stgcerb.cerebruminfotech.com:9067"
     const val PLATFORM = "android"
 
     @JvmStatic

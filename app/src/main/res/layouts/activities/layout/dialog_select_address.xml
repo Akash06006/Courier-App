@@ -31,6 +31,73 @@
                 android:textSize="@dimen/sp_14"
                 app:font="@{`regular`}" />
 
+            <LinearLayout
+                android:id="@+id/lin_pickup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_10"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/pickup_address"
+                    android:textColor="@color/colorGrey"
+                    android:layout_marginLeft="@dimen/dp_15"
+                    android:layout_marginTop="@dimen/dp_10"
+                    android:layout_marginRight="@dimen/dp_15"
+                    android:textSize="@dimen/sp_12"
+                    app:font="@{`semibold`}" />
+
+                <RelativeLayout
+                    android:id="@+id/rel_pickup_address"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_10">
+
+                    <ImageView
+                        android:id="@+id/img_route"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/view_route"
+                        android:layout_alignTop="@+id/lin_route"
+                        android:layout_alignBottom="@id/lin_route"
+                        android:layout_alignParentLeft="true"
+                        android:layout_marginLeft="@dimen/dp_10"
+                        android:src="@drawable/ic_route" />
+
+                    <LinearLayout
+                        android:id="@+id/lin_route"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="@dimen/dp_20"
+                        android:layout_toRightOf="@+id/img_route"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/tv_pickup_address"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="@dimen/sp_14"
+                            app:font="@{`semibold`}" />
+                    </LinearLayout>
+
+                </RelativeLayout>
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dp_15"
+                android:layout_marginTop="@dimen/dp_10"
+                android:layout_marginRight="@dimen/dp_15"
+                android:text="@string/delivery_address"
+                android:textColor="@color/colorGrey"
+                android:textSize="@dimen/sp_12"
+                app:font="@{`semibold`}" />
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_address_list"
                 android:layout_width="match_parent"

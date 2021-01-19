@@ -37,5 +37,7 @@
     <color name="tabColor">#989393</color>
     <color name="colorTextBlue">#25666C</color>
     <color name="colorLightPink">#F6E3D2</color>
+    <color name="colorNotWorking">#A52004</color>
+    <color name="colorWorking">#016723</color>
 
 </resources>

@@ -346,7 +346,7 @@
     <string name="logout_alert">Are you sure you want to Sign out?</string>
     <string name="number">Number</string>
     <string name="payment_options_error">Please enter atleast two payment methods.</string>
-    <string name="please_select_one_address_to_drop_the_order">Please select one address to drop the order.</string>
+    <string name="please_select_one_address_to_drop_the_order">Please select one address</string>
     <string name="notification_chat">Notification/Chat</string>
     <string name="enough_points_error">You don\'t have points to convert in cash.</string>
     <string name="convert_to_cash_alert">Are you sure you want to convert all points in cash</string>

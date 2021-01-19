@@ -3,11 +3,14 @@ package com.courierdriver.viewmodels
 import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.courierdriver.application.MyApplication
 import com.courierdriver.common.UtilsFunctions
+import com.courierdriver.constants.GlobalConstants
 import com.courierdriver.model.CommonModel
 import com.courierdriver.model.LoginResponse
 import com.courierdriver.repositories.LoginRepository
 import com.courierdriver.sharedpreference.SharedPrefClass
+import com.courierdriver.utils.Utils
 import com.google.gson.JsonObject
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -23,11 +26,13 @@ class LoginViewModel : BaseViewModel() {
     private val mIsUpdating = MutableLiveData<Boolean>()
     private val postEmailError = MutableLiveData<String>()
     private val postPassError = MutableLiveData<String>()
+    private var checkForSocialList : MutableLiveData<LoginResponse>? = MutableLiveData()
 
     init {
         loginResponse = loginRepository.getLoginData(null)
         signupResponse = loginRepository.callSignupApi(null, null)
         verifyUserResponse = loginRepository.callVerifyUserApi(null)
+        checkForSocialList = loginRepository.checkSocial(null, checkForSocialList)
     }
 
     fun getLoginRes(): LiveData<LoginResponse> {
@@ -96,5 +101,23 @@ class LoginViewModel : BaseViewModel() {
             mIsUpdating.postValue(true)
         }
 
+    }
+
+    fun checkForSocial(socialId: String?, email: String?, deviceToken: String) {
+        if (UtilsFunctions.isNetworkConnected()) {
+            val mHashMap = HashMap<String, RequestBody>()
+            mHashMap["email"] =
+                Utils(MyApplication.instance).createPartFromString(email!!)
+            mHashMap["socialId"] =
+                Utils(MyApplication.instance).createPartFromString(socialId!!)
+            mHashMap["deviceToken"] =
+                Utils(MyApplication.instance).createPartFromString(GlobalConstants.NOTIFICATION_TOKEN)
+            checkForSocialList = loginRepository.checkSocial(mHashMap, checkForSocialList)
+            mIsUpdating.postValue(true)
+        }
+    }
+
+    fun checkForSocialData() : LiveData<LoginResponse> {
+        return checkForSocialList!!
     }
 }

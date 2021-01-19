@@ -30,10 +30,7 @@ import com.courierdriver.model.RegionListModel
 import com.courierdriver.model.profile.AccountDetailsModel
 import com.courierdriver.model.profile.RegionResponse
 import com.courierdriver.sharedpreference.SharedPrefClass
-import com.courierdriver.utils.BaseFragment
-import com.courierdriver.utils.DialogClass
-import com.courierdriver.utils.Utils
-import com.courierdriver.utils.ValidationsClass
+import com.courierdriver.utils.*
 import com.courierdriver.viewmodels.profile.ProfileViewModel
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -163,7 +160,8 @@ class ProfileFragment : BaseFragment(), ChoiceCallBack {
                                     Utils(activity!!).createPartFromString(vehicleId)
                                 var userImage: MultipartBody.Part? = null
                                 if (profileImage.isNotEmpty()) {
-                                    val f1 = File(profileImage)
+                                    var f1 = File(profileImage)
+                                    f1 = File(ResizeImage.compressImage(profileImage))
                                     userImage =
                                         Utils(activity!!).prepareFilePart(
                                             "profileImage",

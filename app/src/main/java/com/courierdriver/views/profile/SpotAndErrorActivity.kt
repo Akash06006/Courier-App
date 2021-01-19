@@ -110,6 +110,9 @@ class SpotAndErrorActivity : BaseActivity(), ChoiceCallBack {
                             TextUtils.isEmpty(binding!!.etDesc.text.toString()) -> {
                                 showToastError(getString(R.string.please_enter_description))
                             }
+                            imagePath == "" -> {
+                                showToastError(getString(R.string.select_image))
+                            }
                             else -> {
                                 val mHashMap = HashMap<String, RequestBody>()
                                 mHashMap["email"] = utils.createPartFromString(email!!)

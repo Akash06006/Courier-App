@@ -22,8 +22,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="@dimen/dp_20"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/dp_20">
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
@@ -100,13 +100,14 @@
                             android:layout_marginTop="@dimen/dp_10"
                             android:layout_marginRight="@dimen/dp_20"
                             android:background="@drawable/shape_round_color_primary"
+                            android:digits="0123456789"
                             android:inputType="phone"
-                            android:paddingLeft="@dimen/dp_20"
                             android:maxLength="13"
-                            android:singleLine="true"
+                            android:paddingLeft="@dimen/dp_20"
                             android:paddingTop="@dimen/dp_10"
                             android:paddingRight="@dimen/dp_20"
                             android:paddingBottom="@dimen/dp_10"
+                            android:singleLine="true"
                             android:text="@{model.body.get(0).paytmNo}"
                             android:textColor="@color/colorBlack"
                             android:textSize="@dimen/sp_16" />
@@ -190,13 +191,14 @@
                             android:layout_marginTop="@dimen/dp_10"
                             android:layout_marginRight="@dimen/dp_20"
                             android:background="@drawable/shape_round_color_primary"
+                            android:digits="0123456789"
                             android:inputType="phone"
+                            android:maxLength="13"
                             android:paddingLeft="@dimen/dp_20"
                             android:paddingTop="@dimen/dp_10"
-                            android:maxLength="13"
-                            android:singleLine="true"
                             android:paddingRight="@dimen/dp_20"
                             android:paddingBottom="@dimen/dp_10"
+                            android:singleLine="true"
                             android:text="@{model.body.get(0).gpayNo}"
                             android:textColor="@color/colorBlack"
                             android:textSize="@dimen/sp_16" />
@@ -281,12 +283,13 @@
                             android:layout_marginTop="@dimen/dp_10"
                             android:layout_marginRight="@dimen/dp_20"
                             android:background="@drawable/shape_round_color_primary"
+                            android:digits="0123456789"
                             android:inputType="phone"
+                            android:maxLength="13"
                             android:paddingLeft="@dimen/dp_20"
                             android:paddingTop="@dimen/dp_10"
                             android:paddingRight="@dimen/dp_20"
                             android:paddingBottom="@dimen/dp_10"
-                            android:maxLength="13"
                             android:singleLine="true"
                             android:text="@{model.body.get(0).phonePayNo}"
                             android:textColor="@color/colorBlack"
@@ -304,6 +307,7 @@
                 android:layout_marginLeft="@dimen/dp_10"
                 android:layout_marginTop="@dimen/dp_40"
                 android:layout_marginRight="@dimen/dp_10"
+                android:layout_marginBottom="@dimen/dp_10"
                 android:background="@drawable/round_corners_home_tab"
                 android:backgroundTint="@color/colorPrimary"
                 android:gravity="center"
@@ -313,12 +317,10 @@
                 android:paddingRight="@dimen/dp_30"
                 android:paddingBottom="@dimen/dp_10"
                 android:text="@string/submit"
-                android:layout_marginBottom="@dimen/dp_10"
                 android:textColor="@color/colorWhite"
                 android:textSize="@dimen/sp_14"
                 app:font="@{`bold`}" />
 
         </LinearLayout>
-
     </ScrollView>
 </layout>

@@ -41,13 +41,15 @@ import com.courierdriver.utils.broadcastReceiver.NotifyWorkStatus
 import com.courierdriver.utils.broadcastReceiver.WorkStatusBroadcastReceiver
 import com.courierdriver.utils.broadcastReceiver.WorkStatusChangeAvailableButton
 import com.courierdriver.viewmodels.home.HomeViewModel
+import com.courierdriver.views.home.LandingActivty
 import com.courierdriver.views.profile.HelpScreenActivity
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
 
 class
-HomeFragment : BaseFragment(), DialogssInterface, NotifyWorkStatus {
+HomeFragment(var landingActivity: LandingActivty) : BaseFragment(), DialogssInterface,
+    NotifyWorkStatus {
     private var mFusedLocationClass: FusedLocationClass? = null
     private lateinit var homeViewModel: HomeViewModel
     val PERMISSION_ID = 42
@@ -68,7 +70,7 @@ HomeFragment : BaseFragment(), DialogssInterface, NotifyWorkStatus {
     private var regionList: ArrayList<RegionListModel.Body>? = ArrayList()
     private var regionStringList: ArrayList<String>? = ArrayList()
     private var cancelStringReasonList = ArrayList<String?>()
-    private var selectedRegion: String? = null
+    private var selectedRegion: String? = ""
     private var orderId: String? = null
     private var regionId: String? = null
     private var available: String? = null
@@ -134,79 +136,87 @@ HomeFragment : BaseFragment(), DialogssInterface, NotifyWorkStatus {
                         getAvailableOrders()
                     }
                     "tv_active" -> {
-                        clearList()
-                        orderStatus = 2
-                        fragmentHomeBinding.tvActive.background.setColorFilter(
-                            ContextCompat.getColor(baseActivity, R.color.colorTextBlue),
-                            PorterDuff.Mode.SRC_ATOP
-                        )
-                        fragmentHomeBinding.tvActive.setTextColor(
-                            ContextCompat.getColor(
-                                baseActivity,
-                                R.color.colorWhite
-                            )
-                        )
-                        fragmentHomeBinding.tvAvailable.background.setColorFilter(
-                            ContextCompat.getColor(baseActivity, R.color.colorWhite),
-                            PorterDuff.Mode.SRC_ATOP
-                        )
-                        fragmentHomeBinding.tvAvailable.setTextColor(
-                            ContextCompat.getColor(
-                                baseActivity,
-                                R.color.colorBlack
-                            )
-                        )
-                        fragmentHomeBinding.tvCompleted.background.setColorFilter(
-                            ContextCompat.getColor(baseActivity, R.color.colorWhite),
-                            PorterDuff.Mode.SRC_ATOP
-                        )
-                        fragmentHomeBinding.tvCompleted.setTextColor(
-                            ContextCompat.getColor(
-                                baseActivity,
-                                R.color.colorBlack
-                            )
-                        )
-                        getOrderList(2)
+                        getActiveOrders()
                     }
                     "tv_completed" -> {
-                        clearList()
-                        orderStatus = 3
-
-                        fragmentHomeBinding.tvCompleted.background.setColorFilter(
-                            ContextCompat.getColor(baseActivity, R.color.colorTextBlue),
-                            PorterDuff.Mode.SRC_ATOP
-                        )
-                        fragmentHomeBinding.tvCompleted.setTextColor(
-                            ContextCompat.getColor(
-                                baseActivity,
-                                R.color.colorWhite
-                            )
-                        )
-                        fragmentHomeBinding.tvActive.background.setColorFilter(
-                            ContextCompat.getColor(baseActivity, R.color.colorWhite),
-                            PorterDuff.Mode.SRC_ATOP
-                        )
-                        fragmentHomeBinding.tvActive.setTextColor(
-                            ContextCompat.getColor(
-                                baseActivity,
-                                R.color.colorBlack
-                            )
-                        )
-                        fragmentHomeBinding.tvAvailable.background.setColorFilter(
-                            ContextCompat.getColor(baseActivity, R.color.colorWhite),
-                            PorterDuff.Mode.SRC_ATOP
-                        )
-                        fragmentHomeBinding.tvAvailable.setTextColor(
-                            ContextCompat.getColor(
-                                baseActivity,
-                                R.color.colorBlack
-                            )
-                        )
-                        getOrderList(3)
+                        getCompletedOrders()
                     }
                 }
             })
         )
+    }
+
+    private fun getCompletedOrders() {
+        clearList()
+        orderStatus = 3
+
+        fragmentHomeBinding.tvCompleted.background.setColorFilter(
+            ContextCompat.getColor(baseActivity, R.color.colorTextBlue),
+            PorterDuff.Mode.SRC_ATOP
+        )
+        fragmentHomeBinding.tvCompleted.setTextColor(
+            ContextCompat.getColor(
+                baseActivity,
+                R.color.colorWhite
+            )
+        )
+        fragmentHomeBinding.tvActive.background.setColorFilter(
+            ContextCompat.getColor(baseActivity, R.color.colorWhite),
+            PorterDuff.Mode.SRC_ATOP
+        )
+        fragmentHomeBinding.tvActive.setTextColor(
+            ContextCompat.getColor(
+                baseActivity,
+                R.color.colorBlack
+            )
+        )
+        fragmentHomeBinding.tvAvailable.background.setColorFilter(
+            ContextCompat.getColor(baseActivity, R.color.colorWhite),
+            PorterDuff.Mode.SRC_ATOP
+        )
+        fragmentHomeBinding.tvAvailable.setTextColor(
+            ContextCompat.getColor(
+                baseActivity,
+                R.color.colorBlack
+            )
+        )
+        getOrderList(3)
+    }
+
+    private fun getActiveOrders() {
+        clearList()
+        orderStatus = 2
+        fragmentHomeBinding.tvActive.background.setColorFilter(
+            ContextCompat.getColor(baseActivity, R.color.colorTextBlue),
+            PorterDuff.Mode.SRC_ATOP
+        )
+        fragmentHomeBinding.tvActive.setTextColor(
+            ContextCompat.getColor(
+                baseActivity,
+                R.color.colorWhite
+            )
+        )
+        fragmentHomeBinding.tvAvailable.background.setColorFilter(
+            ContextCompat.getColor(baseActivity, R.color.colorWhite),
+            PorterDuff.Mode.SRC_ATOP
+        )
+        fragmentHomeBinding.tvAvailable.setTextColor(
+            ContextCompat.getColor(
+                baseActivity,
+                R.color.colorBlack
+            )
+        )
+        fragmentHomeBinding.tvCompleted.background.setColorFilter(
+            ContextCompat.getColor(baseActivity, R.color.colorWhite),
+            PorterDuff.Mode.SRC_ATOP
+        )
+        fragmentHomeBinding.tvCompleted.setTextColor(
+            ContextCompat.getColor(
+                baseActivity,
+                R.color.colorBlack
+            )
+        )
+        getOrderList(2)
     }
 
     private fun updateAvailabilityObserver() {
@@ -432,14 +442,25 @@ HomeFragment : BaseFragment(), DialogssInterface, NotifyWorkStatus {
 
                             if (response.body!!.isNotEmpty()) {
                                 orderList = response.body
-                                if (orderStatus == 1)
+                                if (orderStatus == 1) {
+                                    val isAvailable = true
+                                    SharedPrefClass().putObject(
+                                        MyApplication.instance,
+                                        GlobalConstants.AVAILABLE,
+                                        isAvailable.toString()
+                                    )
                                     baseActivity.showToastSuccess("Updated! \nAvailable ${orderList!!.size} orders")
+                                }
 
                                 setAdapter()
                             } else {
+                                fragmentHomeBinding.tvNoRecord.text =
+                                    getString(R.string.no_record_found)
                                 fragmentHomeBinding.tvNoRecord.visibility = View.VISIBLE
                                 fragmentHomeBinding.rvOrderList.visibility = View.GONE
                             }
+
+                            landingActivity.markAvailableTrue()
                         }
                         400 -> {
                             baseActivity.showToastError(response.message)
@@ -449,6 +470,13 @@ HomeFragment : BaseFragment(), DialogssInterface, NotifyWorkStatus {
                             // account under review
                         }
                         207 -> {
+                            val isAvailable = false
+                            SharedPrefClass().putObject(
+                                MyApplication.instance,
+                                GlobalConstants.AVAILABLE,
+                                isAvailable.toString()
+                            )
+                            landingActivity.markUnAvailableTrue()
                             fragmentHomeBinding.linInProgress.visibility = View.VISIBLE
                             fragmentHomeBinding.linTabsMain.visibility = View.GONE
                             fragmentHomeBinding.linNotWorking.visibility = View.GONE
@@ -665,7 +693,13 @@ HomeFragment : BaseFragment(), DialogssInterface, NotifyWorkStatus {
         setRegionsSpinner(spinnerRegion)
 
         tvSubmit.setOnClickListener {
-            homeViewModel.profileSetup(selectedRegion!!)
+            if(TextUtils.isEmpty(selectedRegion))
+            {
+                baseActivity.showToastError("Please select region")
+            }
+            else {
+                homeViewModel.profileSetup(selectedRegion!!)
+            }
         }
         imgCross.setOnClickListener {
             submitCancelReasonDialog!!.dismiss()
@@ -731,6 +765,7 @@ HomeFragment : BaseFragment(), DialogssInterface, NotifyWorkStatus {
     }
 
     private fun setToolbarTextIcons() {
+        fragmentHomeBinding.toolbarCommon.toolbar.visibility = View.GONE
         fragmentHomeBinding.toolbarCommon.toolbar.setImageResource(R.drawable.ic_back)
         fragmentHomeBinding.toolbarCommon.imgRight.visibility = View.VISIBLE
         fragmentHomeBinding.toolbarCommon.imgRight.setImageDrawable(
@@ -739,7 +774,7 @@ HomeFragment : BaseFragment(), DialogssInterface, NotifyWorkStatus {
                 R.drawable.ic_help
             )
         )
-        fragmentHomeBinding.toolbarCommon.imgToolbarText.text = getString(R.string.home)
+        fragmentHomeBinding.toolbarCommon.imgToolbarText.text = getString(R.string.locomo)
     }
 
     //region CURRENT_LOCATION
@@ -886,8 +921,17 @@ HomeFragment : BaseFragment(), DialogssInterface, NotifyWorkStatus {
 
     override fun onResume() {
         super.onResume()
-        if(orderStatus==1)
-        getAvailableOrders()
+        when (orderStatus) {
+            1 -> {
+                getAvailableOrders()
+            }
+            2 -> {
+                getActiveOrders()
+            }
+            3 -> {
+                getCompletedOrders()
+            }
+        }
     }
 
     override fun getLayoutResId(): Int {

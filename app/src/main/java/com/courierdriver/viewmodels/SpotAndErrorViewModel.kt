@@ -33,7 +33,6 @@ class SpotAndErrorViewModel : BaseViewModel() {
         return subjectList!!
     }
 
-
     fun addComplaints(
         image: MultipartBody.Part?, bodyHashMap: HashMap<String, RequestBody>
     ) {

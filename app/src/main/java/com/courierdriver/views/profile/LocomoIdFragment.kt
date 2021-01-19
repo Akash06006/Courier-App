@@ -7,10 +7,12 @@ import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.media.RingtoneManager
+import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.view.*
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.FileProvider
@@ -28,9 +30,9 @@ import com.courierdriver.model.LocomoIdModel
 import com.courierdriver.sharedpreference.SharedPrefClass
 import com.courierdriver.utils.BaseFragment
 import com.courierdriver.utils.DialogClass
+import com.courierdriver.utils.DownloadFileCallback
 import com.courierdriver.utils.DownloadTask
 import com.courierdriver.viewmodels.profile.ProfileViewModel
-import com.uniongoods.interfaces.DownloadFileCallback
 import java.io.File
 
 class LocomoIdFragment : BaseFragment(), DownloadFileCallback {
@@ -60,7 +62,8 @@ class LocomoIdFragment : BaseFragment(), DownloadFileCallback {
                         showImagePreviewDialog()
                     }
                     "img_download" -> {
-                        DownloadTask(baseActivity, downloadUrl, this)
+                        downloadImageNew("Locomo id",downloadUrl)
+                      //  DownloadTask(baseActivity, downloadUrl, this)
                     }
                 }
             })
@@ -166,6 +169,34 @@ class LocomoIdFragment : BaseFragment(), DownloadFileCallback {
             .into(binding!!.imgProfile)
     }
 
+    private fun downloadImageNew(
+        filename: String,
+        downloadUrlOfImage: String
+    ) {
+        try {
+            val dm =
+                baseActivity.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+            val downloadUri: Uri = Uri.parse(downloadUrlOfImage)
+            val request: DownloadManager.Request = DownloadManager.Request(downloadUri)
+            request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI or DownloadManager.Request.NETWORK_MOBILE)
+                .setAllowedOverRoaming(false)
+                .setTitle(filename)
+                .setMimeType("image/jpeg") // Your file type. You can use this code to download other file types also.
+                .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+                .setDestinationInExternalPublicDir(
+                    Environment.DIRECTORY_PICTURES,
+                    File.separator + filename + ".jpg"
+                )
+            dm.enqueue(request)
+
+            baseActivity.showToastSuccess("Image downloaded successfully")
+            //Toast.makeText(baseActivity, "Image download started.", Toast.LENGTH_SHORT).show()
+        } catch (e: Exception) {
+            baseActivity.showToastError("Image download failed")
+            //Toast.makeText(baseActivity, "Image download failed.", Toast.LENGTH_SHORT).show()
+        }
+    }
+
     override fun showNotification(downloadFileName: String) {
         val SDCardRoot = Environment.getExternalStorageDirectory()
             .toString() + "/" + "GoodsDelivery" + downloadFileName
@@ -177,7 +208,7 @@ class LocomoIdFragment : BaseFragment(), DownloadFileCallback {
             file
         )
         val intent = Intent(Intent.ACTION_VIEW)
-        intent.setDataAndType(selectedUri, "application/pdf") // here we set correct type for PDF
+        intent.setDataAndType(selectedUri, "image/*") // here we set correct type for PDF
         intent.flags = Intent.FLAG_ACTIVITY_NO_HISTORY
         // val intent = Intent(this, SplashActivity::class.java)
         val pendingIntent = PendingIntent.getActivity(

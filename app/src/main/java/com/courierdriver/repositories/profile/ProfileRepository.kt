@@ -252,18 +252,22 @@ class ProfileRepository {
             mApiService.get(
                 object : ApiResponse<JsonObject> {
                     override fun onResponse(mResponse: Response<JsonObject>) {
-                        val data = gson.fromJson<CommonModel>(
-                            "" + mResponse.body()!!,
-                            CommonModel::class.java
-                        )
-                        uploadSelfieList!!.postValue(data)
+                        if (mResponse.body() != null) {
+                            val data = gson.fromJson<CommonModel>(
+                                "" + mResponse.body()!!,
+                                CommonModel::class.java
+                            )
+                            uploadSelfieList!!.postValue(data)
+                        } else {
+                            uploadSelfieList!!.postValue(null)
+                        }
                     }
 
                     override fun onError(mKey: String) {
                         uploadSelfieList!!.value = null
                         UtilsFunctions.showToastError(MyApplication.instance.getString(R.string.internal_server_error))
                     }
-                }, ApiClient.getApiInterface().uploadSelfie(userImage,type!!,orderId,addressId!!)
+                }, ApiClient.getApiInterface().uploadSelfie(userImage, type!!, orderId, addressId!!)
             )
         }
         return uploadSelfieList

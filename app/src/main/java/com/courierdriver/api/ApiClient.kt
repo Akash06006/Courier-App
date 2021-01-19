@@ -61,10 +61,10 @@ object ApiClient {
         }
 
         val httpClient = OkHttpClient.Builder()
-            .connectTimeout(1, TimeUnit.HOURS)
+           /* .connectTimeout(1, TimeUnit.HOURS)
             .readTimeout(1, TimeUnit.HOURS)
             .writeTimeout(1, TimeUnit.HOURS)
-
+*/
         val mBuilder = Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())

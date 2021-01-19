@@ -66,7 +66,7 @@
                         android:layout_marginLeft="@dimen/dp_10"
                         android:layout_marginTop="@dimen/dp_5"
                         android:layout_marginRight="@dimen/dp_10"
-                        android:drawableLeft="@drawable/ic_call"
+                        android:drawableLeft="@drawable/img_call"
                         android:drawablePadding="@dimen/dp_5"
                         android:text="@{model.phoneNumber.toString()}"
                         android:textAlignment="center"

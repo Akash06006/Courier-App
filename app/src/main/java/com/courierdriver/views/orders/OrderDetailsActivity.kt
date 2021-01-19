@@ -146,6 +146,7 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
     private var trackingService: TrackingService? = null
     private var TRACK_RIDE = 0
     private var isConnected = false
+    private var otherReasonSelected = false
 
     var customerId = ""
     override fun getLayoutId(): Int {
@@ -344,8 +345,20 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
             this, Observer<String>(function =
             fun(it: String?) {
                 when (it) {
+                    "img_call" ->
+                    {
+                        if(orderDetail!!.pickupAddress!!.phoneNumber != null) {
+                            val dialIntent = Intent(Intent.ACTION_DIAL)
+                            dialIntent.data =
+                                Uri.parse("tel:" + orderDetail!!.pickupAddress!!.phoneNumber)
+                            mContext!!.startActivity(dialIntent)
+                        }
+                    }
                     "rel_navigation" -> {
-                        settNavigationIconAddress()
+                        val intent = Intent(this, TrackMapActivity::class.java)
+                        intent.putExtra("orderDetails", orderDetail)
+                        startActivity(intent)
+                        //settNavigationIconAddress()
                     }
                     "tv_available_accept_order" -> {
                         orderViewModel.acceptOrder(orderId)
@@ -445,6 +458,16 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
                     val message = response.message
                     when (response.code) {
                         200 -> {
+
+                            val mJsonObject = JSONObject()
+                            mJsonObject.put("driverId", userId)
+                            mJsonObject.put("currentLat", currentLatitude)
+                            mJsonObject.put("currentLong", currentLongitude)
+                            //  mJsonObject.put("methodName", "updateRiderLocation")
+                            mJsonObject.put("empId", userId)
+                            mSocket!!.emit("updateRiderLocation", mJsonObject)
+
+                            emitLocation(mSocket!!, currentLatitude, currentLongitude)
                             orderViewModel.orderDetail(orderId)
                             UtilsFunctions.showToastSuccess(message!!)
                         }
@@ -585,14 +608,13 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
 
         builder.include(marker!!.position)
 
-
         val icDestinationDelivered = bitmapDescriptorFromVector(
             this,
-            R.drawable.ic_loc_dest
+            R.drawable.drop_completed
         )
         val icDestination = bitmapDescriptorFromVector(
             this,
-            R.drawable.ic_current_location
+            R.drawable.drop_pendig
         )
 
         for (i in 0 until response.data?.deliveryAddress!!.size) {
@@ -869,7 +891,7 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
 
     private fun showTakeSelfieAlert(orderStatus: String) {
         if (checkAndRequestPermissions()) {
-            selfieDialog = mDialogClass.setUploadSelfieConfirmationDialog(
+            selfieDialog = mDialogClass.setUploadProductConfirmationDialog(
                 this,
                 this, orderStatus
             )
@@ -922,12 +944,14 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
         val orderStatus = data.orderStatus?.status // 1 available, 2 active, 3 completed
         val orderStatusName = data.orderStatus?.statusName
         if (orderStatus.equals("1")) {
+            activityCreateOrderBinding.imgCall.visibility = View.GONE
             activityCreateOrderBinding.linChatHelp.visibility = View.GONE
             activityCreateOrderBinding.relNavigation.visibility = View.GONE
             activityCreateOrderBinding.llAvailable.visibility = View.VISIBLE
             activityCreateOrderBinding.llAcceptedTakeOrder.visibility = View.GONE
             activityCreateOrderBinding.llCompleteOrder.visibility = View.GONE
         } else if (orderStatus.equals("2")) {
+            activityCreateOrderBinding.imgCall.visibility = View.VISIBLE
             if (orderStatusName.equals("Picked Up")) {
                 activityCreateOrderBinding.relNavigation.visibility = View.VISIBLE
                 activityCreateOrderBinding.linChatHelp.visibility = View.VISIBLE
@@ -937,7 +961,7 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
                 activityCreateOrderBinding.llCompleteOrder.visibility = View.VISIBLE
             } else {
                 getTimeDifference()
-                activityCreateOrderBinding.relNavigation.visibility = View.GONE
+                activityCreateOrderBinding.relNavigation.visibility = View.VISIBLE
                 activityCreateOrderBinding.linChatHelp.visibility = View.VISIBLE
                 activityCreateOrderBinding.tvTimer.visibility = View.VISIBLE
                 activityCreateOrderBinding.llAvailable.visibility = View.GONE
@@ -946,6 +970,7 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
             }
 
         } else if (orderStatus.equals("3")) {
+            activityCreateOrderBinding.imgCall.visibility = View.GONE
             if (orderStatusName == "Cancelled-User")
                 showCancelledOrderAlert("Order is cancelled by customer")
 
@@ -956,6 +981,7 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
             activityCreateOrderBinding.llAcceptedTakeOrder.visibility = View.GONE
             activityCreateOrderBinding.llCompleteOrder.visibility = View.GONE
         } else if (orderStatus.equals("4")) {
+            activityCreateOrderBinding.imgCall.visibility = View.GONE
             if (orderStatusName.equals("Cancelled-Driver")) {
                 activityCreateOrderBinding.linChatHelp.visibility = View.GONE
                 activityCreateOrderBinding.tvTimer.visibility = View.GONE
@@ -993,7 +1019,7 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
     private fun setDeliveryAddressAdapter(deliveryAddressList: ArrayList<OrdersDetailResponse.PickupAddress>?) {
         val linearLayoutManager = LinearLayoutManager(this)
         val deliveryAddressAdapter =
-            DetailDeliveryAddressAdapter(this, deliveryAddressList!!)
+            DetailDeliveryAddressAdapter(this, deliveryAddressList!!,orderDetail)
         linearLayoutManager.orientation = RecyclerView.VERTICAL
         activityCreateOrderBinding.rvDeliveryAddress.layoutManager = linearLayoutManager
         activityCreateOrderBinding.rvDeliveryAddress.adapter = deliveryAddressAdapter
@@ -1242,8 +1268,10 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
         tvSubmit.setOnClickListener {
             if (TextUtils.isEmpty(cancellationReason))
                 UtilsFunctions.showToastError(getString(R.string.please_select_reason))
+            else if (otherReasonSelected && TextUtils.isEmpty(etOtherReason.text.toString().trim()))
+                showToastError("Please enter reason")
             else
-                cancelOrderApi(etOtherReason.text.toString())
+                cancelOrderApi(etOtherReason.text.toString().trim())
         }
         imgCross.setOnClickListener {
             submitCancelReasonDialog!!.dismiss()
@@ -1287,11 +1315,15 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
                 if (position != 0) {
                     cancellationReason = cancelReasonList!![position - 1].reason
                     //  UtilsFunctions.showToastSuccess(cancellationReason!!)
-                    if (position == 1)
+                    if (position == 1) {
+                        otherReasonSelected = true
                         relOtherReason.visibility = View.VISIBLE
-                    else
+                    } else {
+                        otherReasonSelected = false
                         relOtherReason.visibility = View.GONE
+                    }
                 } else {
+                    otherReasonSelected = false
                     relOtherReason.visibility = View.GONE
                     cancellationReason = null
                 }
@@ -1353,7 +1385,8 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
             Utils(this).createPartFromString(orderId)
         var userImage: MultipartBody.Part? = null
         if (fileUri.isNotEmpty()) {
-            val f1 = File(fileUri)
+            var f1 = File(fileUri)
+            f1 = File(ResizeImage.compressImage(fileUri))
             userImage =
                 Utils(this).prepareFilePart(
                     "image",
@@ -1631,7 +1664,7 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
     private fun setNavigationAddressAdapter(rvAddressList: RecyclerView) {
         Log.d("TAG", "listSize=---- ${dialogDelAddressList!!.size}")
         val linearLayoutManager = LinearLayoutManager(this)
-        val adapter = NavigationAddressAdapter(this, dialogDelAddressList)
+        val adapter = NavigationAddressAdapter(this, null, dialogDelAddressList)
         linearLayoutManager.orientation = RecyclerView.VERTICAL
         rvAddressList.layoutManager = linearLayoutManager
         rvAddressList.adapter = adapter

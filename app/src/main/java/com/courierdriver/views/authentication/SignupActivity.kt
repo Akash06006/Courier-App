@@ -70,7 +70,7 @@ class SignupActivity : BaseActivity(), ChoiceCallBack {
     private fun getIntentData() {
         val fbSocial = intent.extras.get("fbSocial").toString()
         val googleSocial = intent.extras.get("googleSocial").toString()
-        if (fbSocial.equals("true")) {
+        if (fbSocial == "true") {
             isSocial = true
             socialType = "facebook"
             val fbDetails = JSONObject(intent.extras.get("fbData").toString())
@@ -186,6 +186,10 @@ class SignupActivity : BaseActivity(), ChoiceCallBack {
                             }
                             TextUtils.isEmpty(profileImage) -> {
                                 showToastError("Please select image")
+                            }
+                            !activitySignupbinding.checkBox.isChecked ->
+                            {
+                                showToastError("Please agree to terms and conditions.")
                             }
                             /* password.isEmpty() -> showError(
                                  activitySignupbinding.edtPassword,

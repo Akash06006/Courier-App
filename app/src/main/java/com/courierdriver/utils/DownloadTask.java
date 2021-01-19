@@ -10,7 +10,7 @@ import android.view.ContextThemeWrapper;
 import android.widget.Toast;
 
 import com.courierdriver.R;
-import com.uniongoods.interfaces.DownloadFileCallback;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;

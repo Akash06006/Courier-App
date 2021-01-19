@@ -368,6 +368,18 @@
                             android:src="@drawable/ic_download" />
                     </RelativeLayout>
 
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/dp_10"
+                        android:layout_marginRight="@dimen/dp_10"
+                        android:gravity="start"
+                        android:paddingTop="@dimen/dp_10"
+                        android:text="Show this ID card to the any Govt. Officer to deliver the parcel without any concerns."
+                        android:textColor="@color/colorBlack"
+                        android:textSize="@dimen/sp_14"
+                        app:font="@{`regular`}" />
+
                 </LinearLayout>
 
             </LinearLayout>

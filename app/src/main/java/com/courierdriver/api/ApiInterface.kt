@@ -246,4 +246,8 @@ interface ApiInterface {
 
     @POST("delivery/orders/payComission")
     fun payComission(@Body jsonObject: JsonObject): Call<JsonObject>
+
+    @Multipart
+    @POST("delivery/auth/checkSocial")
+    fun checkSocial(@PartMap mHashMap : HashMap<String, RequestBody>) : Call<JsonObject>
 }

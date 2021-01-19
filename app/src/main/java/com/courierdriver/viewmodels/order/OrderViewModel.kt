@@ -21,11 +21,11 @@ class OrderViewModel : BaseViewModel() {
     private val btnClick = MutableLiveData<String>()
 
     init {
-        if (UtilsFunctions.isNetworkConnectedReturn()) {
+       // if (UtilsFunctions.isNetworkConnected()) {
             profileDetail = orderRepository.getUserProfile(null)
             data = orderRepository.updateUserProfile(null, null)
             listsResponse = orderRepository.getDataLists()
-        }
+      //  }
 
     }
 

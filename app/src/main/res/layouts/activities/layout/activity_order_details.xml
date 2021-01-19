@@ -219,36 +219,56 @@
                                         android:id="@+id/img_route"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:layout_alignTop="@+id/lin_route"
-                                        android:layout_alignBottom="@+id/lin_route"
+                                        android:layout_alignTop="@+id/rel_pickup_address"
+                                        android:layout_alignBottom="@+id/rel_pickup_address"
                                         android:layout_alignParentLeft="true"
                                         android:layout_marginLeft="@dimen/dp_10"
                                         android:src="@drawable/ic_route" />
 
-                                    <LinearLayout
-                                        android:id="@+id/lin_route"
+                                    <RelativeLayout
+                                        android:id="@+id/rel_pickup_address"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
-                                        android:layout_marginLeft="@dimen/dp_20"
-                                        android:layout_toRightOf="@+id/img_route"
-                                        android:orientation="vertical">
+                                        android:layout_toRightOf="@+id/img_route">
 
-                                        <TextView
+                                        <LinearLayout
+                                            android:id="@+id/lin_route"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginLeft="@dimen/dp_20"
+                                            android:layout_toLeftOf="@+id/img_call"
+                                            android:orientation="vertical">
+
+                                            <TextView
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:text="@string/pickup_address"
+                                                android:textColor="@color/colorGrey"
+                                                android:textSize="@dimen/sp_12"
+                                                app:font="@{`regular`}" />
+
+                                            <TextView
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:text="@{orderDetailModel.pickupAddress.address}"
+                                                android:textColor="@color/colorBlack"
+                                                android:textSize="@dimen/sp_14"
+                                                app:font="@{`semibold`}" />
+                                        </LinearLayout>
+
+                                        <ImageView
+                                            android:id="@+id/img_call"
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
-                                            android:text="@string/pickup_address"
-                                            android:textColor="@color/colorGrey"
-                                            android:textSize="@dimen/sp_12"
-                                            app:font="@{`regular`}" />
+                                            android:layout_alignParentRight="true"
+                                            android:layout_marginTop="@dimen/dp_5"
+                                            android:onClick="@{(v) -> orderDetailViewModel.clickListener(v)}"
+                                            android:paddingLeft="@dimen/dp_10"
+                                            android:paddingRight="@dimen/dp_10"
+                                            android:src="@drawable/ic_call" />
 
-                                        <TextView
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:text="@{orderDetailModel.pickupAddress.address}"
-                                            android:textColor="@color/colorBlack"
-                                            android:textSize="@dimen/sp_14"
-                                            app:font="@{`semibold`}" />
-                                    </LinearLayout>
+
+                                    </RelativeLayout>
 
                                     <androidx.recyclerview.widget.RecyclerView
                                         android:id="@+id/rv_delivery_address"
@@ -502,8 +522,8 @@
                                                 android:layout_height="wrap_content"
                                                 android:text="@string/collect_from_customer"
                                                 android:textColor="@color/colorGrey"
-                                                android:textSize="@dimen/sp_11"
-                                                app:font="@{`regular`}" />
+                                                android:textSize="@dimen/sp_13"
+                                                app:font="@{`bold`}" />
 
                                             <LinearLayout
                                                 android:layout_width="match_parent"
@@ -752,7 +772,7 @@
 
                         <TextView
                             android:id="@+id/tv_accepted_take_order"
-                            android:layout_width="@dimen/dp_100"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="@dimen/dp_10"
                             android:layout_marginRight="@dimen/dp_10"

@@ -2,8 +2,9 @@ package com.courierdriver.model.order
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
-class OrdersDetailResponse {
+class OrdersDetailResponse : Serializable {
     @SerializedName("body")
     @Expose
     var data: Data? = null
@@ -16,7 +17,7 @@ class OrdersDetailResponse {
     @Expose
     var code: Int? = null
 
-    class Data {
+    class Data : Serializable {
         @SerializedName("pickupAddress")
         @Expose
         var pickupAddress: PickupAddress? = null
@@ -214,7 +215,7 @@ class OrdersDetailResponse {
         var additionalCharges: AdditionalCharges? = null
     }
 
-    class AdditionalCharges {
+    class AdditionalCharges : Serializable {
         @SerializedName("total")
         @Expose
         var total: String? = null
@@ -228,7 +229,7 @@ class OrdersDetailResponse {
         var cancellationCharges: String? = null
     }
 
-    class OrderStatus {
+    class OrderStatus : Serializable {
         @SerializedName("statusName")
         @Expose
         var statusName: String? = null
@@ -242,7 +243,7 @@ class OrdersDetailResponse {
         var parentStatus: String? = null
     }
 
-    class PickupAddress {
+    class PickupAddress : Serializable {
         @SerializedName("address")
         @Expose
         var address: String? = null
@@ -278,7 +279,7 @@ class OrdersDetailResponse {
         var isSelected = false
     }
 
-    class VehicleData {
+    class VehicleData : Serializable {
         @SerializedName("icon")
         @Expose
         var icon: String? = null
@@ -301,7 +302,7 @@ class OrdersDetailResponse {
 
     }
 
-    class WeightData {
+    class WeightData : Serializable {
         @SerializedName("icon")
         @Expose
         var icon: String? = null
@@ -323,7 +324,7 @@ class OrdersDetailResponse {
         var price: String? = null
     }
 
-    class DeliveryOptionData {
+    class DeliveryOptionData : Serializable {
         @SerializedName("id")
         @Expose
         var id: String? = null
@@ -342,7 +343,7 @@ class OrdersDetailResponse {
 
     }
 
-    class BannersData {
+    class BannersData : Serializable {
         @SerializedName("url")
         @Expose
         var url: String? = null

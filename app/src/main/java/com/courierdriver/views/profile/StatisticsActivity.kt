@@ -49,7 +49,7 @@ class StatisticsActivity : BaseFragment(), DialogssInterface {
     var TAG =
         "mainActivity"
     var PAYMENT_CODE = 857
-    private var selectedMonth = "0"
+    private var selectedMonth = "1"
     private var selectedYear = "2020"
     private var selectedWeek = "1"
     private var additionalChargesData: StatisticsModel.Body.CommissionData? = null
@@ -80,30 +80,31 @@ class StatisticsActivity : BaseFragment(), DialogssInterface {
                         //  makePayment()
                         if (!TextUtils.isEmpty(payableAmount) && payableAmount.toDouble() > 0) {
 //                            binding!!.tvPayNow.isEnabled = true
-                             if (earnedPoints > payableAmount.toDouble()) {
-                                 viewModel!!.payComission(
-                                     "0",
-                                     payableAmount,
-                                     additionalChargesData!!.additionalCharges!!.securityFee,
-                                     additionalChargesData!!.additionalCharges!!.cancelChargesCust,
-                                     additionalChargesData!!.additionalCharges!!.cancellationCharges,
-                                     additionalChargesData!!.usedCash,
-                                     additionalChargesData!!.usedPoints
-                                 )
-                             } else {
-                             val intent = Intent(baseActivity, PaymentButtonActivity::class.java)
-                             intent.putExtra("amount", payableAmount)
-                             startActivityForResult(intent, PAYMENT_CODE)
+                            if (earnedPoints > payableAmount.toDouble()) {
+                                viewModel!!.payComission(
+                                    "0",
+                                    payableAmount,
+                                    additionalChargesData!!.additionalCharges!!.securityFee,
+                                    additionalChargesData!!.additionalCharges!!.cancelChargesCust,
+                                    additionalChargesData!!.additionalCharges!!.cancellationCharges,
+                                    additionalChargesData!!.usedCash,
+                                    additionalChargesData!!.usedPoints
+                                )
+                            } else {
+                                val intent = Intent(baseActivity, PaymentButtonActivity::class.java)
+                                intent.putExtra("amount", payableAmount)
+                                startActivityForResult(intent, PAYMENT_CODE)
 
 /*
-                            viewModel!!.payComission(
-                                "0",
-                                payableAmount,
-                                additionalChargesData!!.additionalCharges!!.securityFee,
-                                additionalChargesData!!.additionalCharges!!.cancelChargesCust,
-                                additionalChargesData!!.additionalCharges!!.cancellationCharges,
-                                additionalChargesData!!.usedCash, additionalChargesData!!.usedPoints
-                            )
+                                viewModel!!.payComission(
+                                    "0",
+                                    payableAmount,
+                                    additionalChargesData!!.additionalCharges!!.securityFee,
+                                    additionalChargesData!!.additionalCharges!!.cancelChargesCust,
+                                    additionalChargesData!!.additionalCharges!!.cancellationCharges,
+                                    additionalChargesData!!.usedCash,
+                                    additionalChargesData!!.usedPoints
+                                )
 */
 
                             }
@@ -339,7 +340,8 @@ class StatisticsActivity : BaseFragment(), DialogssInterface {
                 parent: AdapterView<*>,
                 view: View, position: Int, id: Long
             ) {
-                selectedMonth = position.toString()
+                val pos = position + 1
+                selectedMonth = pos.toString()
 
                 viewModel!!.statistics(
                     GlobalConstants.STATISTICS,

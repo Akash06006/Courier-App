@@ -1,4 +1,4 @@
-package com.uniongoods.interfaces
+package com.courierdriver.utils
 
 interface DownloadFileCallback {
     fun showNotification(message: String)

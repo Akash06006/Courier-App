@@ -11,12 +11,13 @@ import com.courierdriver.R
 import com.courierdriver.databinding.RowDeliveryAddressBinding
 import com.courierdriver.model.order.OrdersDetailResponse
 import com.courierdriver.views.orders.OrderDetailsActivity
+import com.courierdriver.views.orders.TrackMapActivity
 
 class NavigationAddressAdapter(
-    var mContext: OrderDetailsActivity,
+    var mOrderDetailsActivity: OrderDetailsActivity?,
+    var mTrackMapActivity: TrackMapActivity?,
     var deliveryAddress: ArrayList<OrdersDetailResponse.PickupAddress>?
-) :
-    RecyclerView.Adapter<NavigationAddressAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<NavigationAddressAdapter.ViewHolder>() {
 
     private var viewHolder: ViewHolder? = null
 
@@ -28,34 +29,60 @@ class NavigationAddressAdapter(
             parent,
             false
         ) as RowDeliveryAddressBinding
-        return ViewHolder(binding.root, viewType, binding, mContext, deliveryAddress)
+        return ViewHolder(binding.root, viewType, binding, mOrderDetailsActivity,mTrackMapActivity, deliveryAddress)
     }
 
     override fun onBindViewHolder(@NonNull holder: ViewHolder, position: Int) {
         viewHolder = holder
         holder.binding!!.model = deliveryAddress!![position]
 
-        holder.binding.relMain.setBackgroundColor(
-            ContextCompat.getColor(
-                mContext,
-                R.color.colorWhite
-            )
-        )
-
-        if (deliveryAddress!![position].isSelected)
+        if(mOrderDetailsActivity!=null) {
             holder.binding.relMain.setBackgroundColor(
                 ContextCompat.getColor(
-                    mContext,
-                    R.color.colorGreyLight
-                )
-            )
-        else
-            holder.binding.relMain.setBackgroundColor(
-                ContextCompat.getColor(
-                    mContext,
+                    mOrderDetailsActivity!!,
                     R.color.colorWhite
                 )
             )
+
+            if (deliveryAddress!![position].isSelected)
+                holder.binding.relMain.setBackgroundColor(
+                    ContextCompat.getColor(
+                        mOrderDetailsActivity!!,
+                        R.color.colorGreyLight
+                    )
+                )
+            else
+                holder.binding.relMain.setBackgroundColor(
+                    ContextCompat.getColor(
+                        mOrderDetailsActivity!!,
+                        R.color.colorWhite
+                    )
+                )
+        }
+        else
+        {
+            holder.binding.relMain.setBackgroundColor(
+                ContextCompat.getColor(
+                    mTrackMapActivity!!,
+                    R.color.colorWhite
+                )
+            )
+
+            if (deliveryAddress!![position].isSelected)
+                holder.binding.relMain.setBackgroundColor(
+                    ContextCompat.getColor(
+                        mTrackMapActivity!!,
+                        R.color.colorGreyLight
+                    )
+                )
+            else
+                holder.binding.relMain.setBackgroundColor(
+                    ContextCompat.getColor(
+                        mTrackMapActivity!!,
+                        R.color.colorWhite
+                    )
+                )
+        }
     }
 
     override fun getItemCount(): Int {
@@ -66,7 +93,8 @@ class NavigationAddressAdapter(
         (
         v: View, val viewType: Int, //These are the general elements in the RecyclerView
         val binding: RowDeliveryAddressBinding?,
-        mContext: OrderDetailsActivity,
+        mOrderDetailsActivity: OrderDetailsActivity?,
+        var mTrackMapActivity: TrackMapActivity?,
         orderList: ArrayList<OrdersDetailResponse.PickupAddress>?
     ) : RecyclerView.ViewHolder(v) {
         var lastChecked = 0
@@ -78,15 +106,28 @@ class NavigationAddressAdapter(
                     orderList[i].isSelected = false
                     // notifyDataSetChanged()
                 }
-                binding.relMain.setBackgroundColor(
-                    ContextCompat.getColor(
-                        mContext,
-                        R.color.colorGreyLight
+                if(mOrderDetailsActivity!=null) {
+                    binding.relMain.setBackgroundColor(
+                        ContextCompat.getColor(
+                            mOrderDetailsActivity,
+                            R.color.colorGreyLight
+                        )
                     )
-                )
+                }
+                else{
+                    binding.relMain.setBackgroundColor(
+                        ContextCompat.getColor(
+                            mTrackMapActivity!!,
+                            R.color.colorGreyLight
+                        )
+                    )
+                }
                 orderList[adapterPosition].isSelected = true
                 orderList[adapterPosition].isComplete = true
-                mContext.navigateIcon(orderList[adapterPosition])
+                if(mOrderDetailsActivity!=null)
+                    mOrderDetailsActivity.navigateIcon(orderList[adapterPosition])
+                else
+                    mTrackMapActivity!!.navigateIcon(orderList[adapterPosition])
                 notifyDataSetChanged()
             }
         }

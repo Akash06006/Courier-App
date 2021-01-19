@@ -18,7 +18,6 @@ class Utils(internal var context: Context) {
 
     fun monthList(): ArrayList<String> {
         val monthList = ArrayList<String>()
-        monthList.add("All")
         monthList.add("Jan")
         monthList.add("Feb")
         monthList.add("Mar")

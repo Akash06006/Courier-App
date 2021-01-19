@@ -6,6 +6,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Environment
 import android.provider.MediaStore
+import android.text.TextUtils
 import android.util.Log
 import android.view.View
 import android.widget.AdapterView
@@ -28,6 +29,7 @@ import com.courierdriver.model.ProfileDocumentModel
 import com.courierdriver.sharedpreference.SharedPrefClass
 import com.courierdriver.utils.BaseFragment
 import com.courierdriver.utils.DialogClass
+import com.courierdriver.utils.ResizeImage
 import com.courierdriver.utils.Utils
 import com.courierdriver.viewmodels.DocVerifyViewModel
 import okhttp3.MultipartBody
@@ -116,6 +118,7 @@ class ProfileDocumentFragment : BaseFragment(), ChoiceCallBack, SelfieCallBack {
                         200 -> {
                             // UtilsFunctions.showToastSuccess(response.message!!)
                             activityDocVeribinding.model = response.body
+                            makeEnableDisableViews(false)
 /*
                             response.body!!.transport?.let {
                                 vehicleId = response.body.transport!!.id.toString()
@@ -181,71 +184,82 @@ class ProfileDocumentFragment : BaseFragment(), ChoiceCallBack, SelfieCallBack {
                     }
                     "btn_submit" -> {
                         dlNumber = activityDocVeribinding.etDrivingLicenseNo.text.toString()
-                        val mHashMap = HashMap<String, RequestBody>()
-                        mHashMap["dlNumber"] =
-                            Utils(baseActivity).createPartFromString(dlNumber)
-                        mHashMap["transportType"] =
-                            Utils(baseActivity).createPartFromString(activityDocVeribinding.tvTransport.text.toString())
-                        //  mHashMap["password"] = Utils(baseActivity).createPartFromString(password)
-                        var poaFront: MultipartBody.Part? = null
-                        if (aadharFrontImg.isNotEmpty()) {
-                            val f1 = File(aadharFrontImg)
-                            poaFront =
-                                Utils(baseActivity).prepareFilePart(
-                                    "poaFront",
-                                    f1
-                                )
+                        if(TextUtils.isEmpty(dlNumber))
+                        {
+                            baseActivity.showToastError("Please enter driving license number")
                         }
+                        else {
+                            val mHashMap = HashMap<String, RequestBody>()
+                            mHashMap["dlNumber"] =
+                                Utils(baseActivity).createPartFromString(dlNumber)
+                            mHashMap["transportType"] =
+                                Utils(baseActivity).createPartFromString(activityDocVeribinding.tvTransport.text.toString())
+                            //  mHashMap["password"] = Utils(baseActivity).createPartFromString(password)
+                            var poaFront: MultipartBody.Part? = null
+                            if (aadharFrontImg.isNotEmpty()) {
+                                var f1 = File(aadharFrontImg)
+                                f1 = File(ResizeImage.compressImage(aadharFrontImg))
+                                poaFront =
+                                    Utils(baseActivity).prepareFilePart(
+                                        "poaFront",
+                                        f1
+                                    )
+                            }
 
-                        var poaBack: MultipartBody.Part? = null
-                        if (aadharBackImg.isNotEmpty()) {
-                            val f1 = File(aadharBackImg)
-                            poaBack =
-                                Utils(baseActivity).prepareFilePart(
-                                    "poaBack",
-                                    f1
-                                )
-                        }
-                        var licenseFront: MultipartBody.Part? = null
-                        if (drivingFrontImg.isNotEmpty()) {
-                            val f1 = File(drivingFrontImg)
-                            licenseFront =
-                                Utils(baseActivity).prepareFilePart(
-                                    "licenseFront",
-                                    f1
-                                )
-                        }
+                            var poaBack: MultipartBody.Part? = null
+                            if (aadharBackImg.isNotEmpty()) {
+                                var f1 = File(aadharBackImg)
+                                f1 = File(ResizeImage.compressImage(aadharBackImg))
+                                poaBack =
+                                    Utils(baseActivity).prepareFilePart(
+                                        "poaBack",
+                                        f1
+                                    )
+                            }
+                            var licenseFront: MultipartBody.Part? = null
+                            if (drivingFrontImg.isNotEmpty()) {
+                                var f1 = File(drivingFrontImg)
+                                f1 = File(ResizeImage.compressImage(drivingFrontImg))
+                                licenseFront =
+                                    Utils(baseActivity).prepareFilePart(
+                                        "licenseFront",
+                                        f1
+                                    )
+                            }
 
-                        var licenseBack: MultipartBody.Part? = null
-                        if (drivingBackImg.isNotEmpty()) {
-                            val f1 = File(drivingBackImg)
-                            licenseBack =
-                                Utils(baseActivity).prepareFilePart(
-                                    "licenseBack",
-                                    f1
-                                )
-                        }
+                            var licenseBack: MultipartBody.Part? = null
+                            if (drivingBackImg.isNotEmpty()) {
+                                var f1 = File(drivingBackImg)
+                                f1 = File(ResizeImage.compressImage(drivingBackImg))
+                                licenseBack =
+                                    Utils(baseActivity).prepareFilePart(
+                                        "licenseBack",
+                                        f1
+                                    )
+                            }
 
-                        var panCard: MultipartBody.Part? = null
-                        if (panCardImage.isNotEmpty()) {
-                            val f1 = File(panCardImage)
-                            panCard =
-                                Utils(baseActivity).prepareFilePart(
-                                    "panCard",
-                                    f1
-                                )
-                        }
+                            var panCard: MultipartBody.Part? = null
+                            if (panCardImage.isNotEmpty()) {
+                                var f1 = File(panCardImage)
+                                f1 = File(ResizeImage.compressImage(panCardImage))
+                                panCard =
+                                    Utils(baseActivity).prepareFilePart(
+                                        "panCard",
+                                        f1
+                                    )
+                            }
 
-                        if (UtilsFunctions.isNetworkConnected()) {
-                            baseActivity.startProgressDialog()
-                            docVerifyViewModel.hitDocVerifyApi(
-                                mHashMap,
-                                poaFront,
-                                poaBack,
-                                licenseFront,
-                                licenseBack,
-                                panCard
-                            )
+                            if (UtilsFunctions.isNetworkConnected()) {
+                                baseActivity.startProgressDialog()
+                                docVerifyViewModel.hitDocVerifyApi(
+                                    mHashMap,
+                                    poaFront,
+                                    poaBack,
+                                    licenseFront,
+                                    licenseBack,
+                                    panCard
+                                )
+                            }
                         }
                     }
                     "ll_front_aadhar" -> {

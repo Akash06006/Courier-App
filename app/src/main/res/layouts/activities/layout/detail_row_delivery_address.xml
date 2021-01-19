@@ -35,7 +35,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_toLeftOf="@+id/img_completed"
+            android:layout_toLeftOf="@+id/lin_call"
             android:layout_marginLeft="@dimen/dp_20"
             android:layout_marginTop="@dimen/dp_10"
             android:layout_toRightOf="@+id/img_route"
@@ -59,17 +59,34 @@
                 app:font="@{`semibold`}" />
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/lin_call"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_below="@+id/view_route"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true">
         <ImageView
             android:id="@+id/img_completed"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/view_route"
-            android:layout_alignParentRight="true"
-            android:visibility="gone"
-            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/img_call"
+            android:visibility="visible"
             android:layout_marginLeft="@dimen/dp_10"
             android:layout_marginRight="@dimen/dp_20"
             android:src="@drawable/ic_check_mark" />
+
+        <ImageView
+            android:id="@+id/img_call"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/view_route"
+            android:layout_centerVertical="true"
+            android:paddingLeft="@dimen/dp_10"
+            android:paddingRight="@dimen/dp_10"
+            android:src="@drawable/ic_call" />
+        </LinearLayout>
     </RelativeLayout>
 
 </layout>

@@ -236,6 +236,7 @@
     <string name="pickup_address">Pickup Address</string>
     <string name="delivery_address">Delivery Address</string>
     <string name="mob_no">Mobile No</string>
+    <string name="mob_no_star">Mobile No*</string>
     <string name="delivery_location">Drop Location*</string>
     <string name="add_address">Add Address</string>
     <string name="item_name">Item Name</string>

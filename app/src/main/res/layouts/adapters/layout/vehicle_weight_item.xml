@@ -56,8 +56,9 @@
                     android:text="1kg"
                     android:textAllCaps="false"
                     android:textColor="@color/colorBlack"
-                    android:textSize="@dimen/sp_12"
-                    app:font="@{`regular`}" />
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:font="@{`semibold`}"  />
 
         </LinearLayout>
 

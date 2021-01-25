@@ -306,6 +306,7 @@
                     android:text="Fare"
                     android:textAllCaps="true"
                     android:textColor="#FAFAFA"
+                    android:visibility="gone"
                     app:font="@{`regular`}" />
 
             <TextView
@@ -313,13 +314,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/txtFareDummy"
+                    android:layout_centerVertical="true"
                     android:layout_marginLeft="20dp"
-
                     android:drawablePadding="5dp"
                     android:text="₹ 0"
                     android:textAllCaps="true"
                     android:textColor="#F6E3D2"
-                    android:textSize="15sp"
+                    android:textSize="20sp"
                     app:font="@{`regular`}" />
 
             <ImageView
@@ -328,6 +329,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignTop="@+id/txtFare"
                     android:layout_alignBottom="@+id/txtFare"
+                    android:layout_centerVertical="true"
                     android:layout_toRightOf="@+id/txtFare"
                     android:onClick="@{(v) -> orderViewModel.clickListener(v)}"
                     android:padding="5dp"
@@ -341,11 +343,13 @@
                     android:layout_centerVertical="true"
                     android:layout_marginRight="20dp"
                     android:background="@drawable/round_button_layout"
+
                     android:minWidth="130dp"
                     android:onClick="@{(v) -> orderViewModel.clickListener(v)}"
                     android:text="@string/proceed"
                     android:textAllCaps="false"
                     android:textColor="@color/colorWhite"
+                    android:textSize="20sp"
                     app:font="@{`regular`}" />
 
         </RelativeLayout>
@@ -456,12 +460,12 @@
                                     android:layout_centerHorizontal="true"
                                     android:layout_centerVertical="true"
                                     android:background="@null"
-                                    android:imeOptions="actionDone"
                                     android:digits="0123456789"
+                                    android:imeOptions="actionDone"
                                     android:inputType="number"
+                                    android:maxLength="7"
                                     android:onClick="@{(v) -> orderViewModel.clickListener(v)}"
                                     android:paddingTop="10dp"
-                                    android:maxLength="7"
                                     android:paddingRight="10dp"
                                     android:paddingBottom="15dp"
                                     android:textColorHint="@color/colorGrey1"
@@ -508,9 +512,9 @@
                                     android:enabled="false"
                                     android:hint="Promo Code"
                                     android:imeOptions="actionDone"
+                                    android:maxLength="20"
                                     android:onClick="@{(v) -> orderViewModel.clickListener(v)}"
                                     android:paddingTop="10dp"
-                                    android:maxLength="20"
                                     android:paddingRight="10dp"
                                     android:paddingBottom="15dp"
                                     android:singleLine="true"

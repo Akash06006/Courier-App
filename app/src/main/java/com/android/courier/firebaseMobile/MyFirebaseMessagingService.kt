@@ -109,6 +109,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
                 .setOngoing(false)
                 .setDefaults(Notification.DEFAULT_ALL)
                 .setSound(defaultSoundUri)
+                .setPriority(Notification.FLAG_HIGH_PRIORITY)
                 .setContentIntent(pendingIntent)
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

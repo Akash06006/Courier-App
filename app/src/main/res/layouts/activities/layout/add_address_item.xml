@@ -121,7 +121,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
                         android:layout_centerVertical="true"
-                        android:hint="@string/mob_no"
+                        android:hint="@string/mob_no_star"
                         android:imeOptions="actionDone"
                         android:inputType="number"
                         android:paddingRight="10dp"

@@ -381,7 +381,8 @@
                         android:paddingRight="30dp"
                         android:text="Confirm Order"
                         android:textAllCaps="false"
-                        android:textColor="@color/colorWhite" />
+                        android:textColor="@color/colorWhite"
+                        android:textSize="20sp" />
 
             </RelativeLayout>
 

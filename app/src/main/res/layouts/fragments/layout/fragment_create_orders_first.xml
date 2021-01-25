@@ -305,6 +305,7 @@
                     android:text="Fare"
                     android:textAllCaps="true"
                     android:textColor="#FAFAFA"
+                    android:visibility="gone"
                     app:font="@{`regular`}" />
 
             <TextView
@@ -312,13 +313,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/txtFareDummy"
+                    android:layout_centerVertical="true"
                     android:layout_marginLeft="20dp"
-
                     android:drawablePadding="5dp"
                     android:text="₹ 0"
                     android:textAllCaps="true"
                     android:textColor="#F6E3D2"
-                    android:textSize="15sp"
+                    android:textSize="20sp"
                     app:font="@{`regular`}" />
 
             <ImageView
@@ -326,7 +327,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignTop="@+id/txtFare"
+
                     android:layout_alignBottom="@+id/txtFare"
+                    android:layout_centerVertical="true"
                     android:layout_toRightOf="@+id/txtFare"
                     android:onClick="@{(v) -> orderViewModel.clickListener(v)}"
                     android:padding="5dp"
@@ -339,6 +342,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="20dp"
+                    android:textSize="20sp"
                     android:background="@drawable/round_button_layout"
                     android:minWidth="130dp"
                     android:onClick="@{(v) -> orderViewModel.clickListener(v)}"
@@ -484,8 +488,8 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="45dp"
                                     android:layout_centerInParent="true"
-                                    android:gravity="center"
                                     android:background="@null"
+                                    android:gravity="center"
                                     android:overlapAnchor="false"
                                     android:paddingTop="@dimen/dp_7"
                                     android:paddingBottom="@dimen/dp_7"

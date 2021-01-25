@@ -481,8 +481,23 @@
                                 android:layout_alignTop="@+id/tv_select_time"
                                 android:layout_alignBottom="@+id/tv_select_time"
                                 android:layout_marginTop="2dp"
-                                android:background="@drawable/shape_round_stroke"
                                 android:minWidth="150dp">
+
+                            <TextView
+                                    android:id="@+id/tvDatetomtoday"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="45dp"
+                                    android:layout_marginLeft="@dimen/dp_10"
+                                    android:layout_marginTop="@dimen/dp_2"
+                                    android:background="@drawable/shape_round_stroke"
+                                    android:gravity="center"
+                                    android:minWidth="150dp"
+                                    android:onClick="@{(v) -> orderViewModel.clickListener(v)}"
+                                    android:paddingTop="@dimen/dp_7"
+                                    android:paddingBottom="@dimen/dp_7"
+                                    android:text="Today"
+                                    android:textColor="@color/colorPrimary"
+                                    android:textSize="@dimen/sp_14" />
 
                             <Spinner
                                     android:id="@+id/txtDate"
@@ -496,7 +511,8 @@
                                     android:paddingBottom="@dimen/dp_7"
                                     android:text="Today"
                                     android:textAlignment="center"
-                                    android:textColor="@color/colorBlack" />
+                                    android:textColor="@color/colorBlack"
+                                    android:visibility="gone" />
 
                         </RelativeLayout>
 
@@ -512,11 +528,9 @@
                                 android:gravity="center"
                                 android:minWidth="150dp"
                                 android:onClick="@{(v) -> orderViewModel.clickListener(v)}"
-
                                 android:paddingTop="@dimen/dp_7"
-
                                 android:paddingBottom="@dimen/dp_7"
-                                android:text="Select Time"
+                                android:hint="Select Time"
                                 android:textColor="@color/colorPrimary"
                                 android:textSize="@dimen/sp_14" />
 

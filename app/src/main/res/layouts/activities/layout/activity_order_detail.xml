@@ -128,11 +128,9 @@
                                     android:layout_toLeftOf="@+id/llCalls"
                                     android:layout_toRightOf="@+id/imgDriver"
                                     android:gravity="left"
-                                    android:text="Akash Gharu"
                                     android:textColor="@color/colorWhite"
                                     android:textSize="17sp"
                                     android:textStyle="bold"
-
                                     app:font="@{`bold`}" />
 
                             <TextView
@@ -229,7 +227,7 @@
                                             android:layout_marginLeft="5dp"
                                             android:layout_marginRight="5dp"
                                             android:gravity="left"
-                                            android:text="@string/rider_receipts"
+                                            android:text="Rider Accept"
                                             android:textSize="16sp"
                                             android:textStyle="bold"
                                             app:font="@{`bold`}" />

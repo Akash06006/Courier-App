@@ -1,13 +1,8 @@
 package com.android.courier.viewmodels
 
-import android.annotation.SuppressLint
+import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import android.content.Intent
-import android.text.TextUtils
-import android.view.View
-import android.widget.ImageView
-import com.android.courier.R
 import com.android.courier.application.MyApplication
 import com.android.courier.common.UtilsFunctions
 import com.android.courier.constants.GlobalConstants
@@ -15,15 +10,16 @@ import com.android.courier.model.CommonModel
 import com.android.courier.model.LoginResponse
 import com.android.courier.repositories.LoginRepository
 import com.android.courier.sharedpreference.SharedPrefClass
-import com.android.courier.utils.ValidationsClass
-import com.android.courier.views.authentication.ForgotPasswrodActivity
+import com.android.courier.utils.Utils
 import com.google.gson.JsonObject
+import okhttp3.RequestBody
 
 class LoginViewModel : BaseViewModel() {
     private val isClick = MutableLiveData<String>()
     private var loginResponse : MutableLiveData<LoginResponse>? = null
     private var signupResponse : MutableLiveData<LoginResponse>? = null
     private var verifyUserResponse : MutableLiveData<CommonModel>? = null
+    private var checkForSocialList : MutableLiveData<LoginResponse>? = MutableLiveData()
     private var loginRepository = LoginRepository()
     private var sharedPrefClass = SharedPrefClass()
     private val mIsUpdating = MutableLiveData<Boolean>()
@@ -34,6 +30,7 @@ class LoginViewModel : BaseViewModel() {
         loginResponse = loginRepository.getLoginData(null)
         signupResponse = loginRepository.callSignupApi(null)
         verifyUserResponse = loginRepository.callVerifyUserApi(null)
+        checkForSocialList = loginRepository.checkSocial(null, checkForSocialList)
     }
 
     fun getLoginRes() : LiveData<LoginResponse> {
@@ -98,6 +95,23 @@ class LoginViewModel : BaseViewModel() {
             verifyUserResponse = loginRepository.callVerifyUserApi(mJsonObject)
             mIsUpdating.postValue(true)
         }
+    }
 
+    fun checkForSocial(socialId : String?, email : String?, deviceToken : String?) {
+        if (UtilsFunctions.isNetworkConnected()) {
+            val mHashMap = HashMap<String, RequestBody>()
+            mHashMap["email"] =
+                Utils(MyApplication.instance).createPartFromString(email!!)
+            mHashMap["socialId"] =
+                Utils(MyApplication.instance).createPartFromString(socialId!!)
+            mHashMap["deviceToken"] =
+                Utils(MyApplication.instance).createPartFromString(GlobalConstants.NOTIFICATION_TOKEN)
+            checkForSocialList = loginRepository.checkSocial(mHashMap, checkForSocialList)
+            mIsUpdating.postValue(true)
+        }
+    }
+
+    fun checkForSocialData() : LiveData<LoginResponse> {
+        return checkForSocialList!!
     }
 }

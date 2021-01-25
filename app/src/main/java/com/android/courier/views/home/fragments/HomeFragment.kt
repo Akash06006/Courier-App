@@ -79,7 +79,7 @@ HomeFragment : BaseFragment() {
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(activity!!)
         // initRecyclerView()
         val name = SharedPrefClass().getPrefValue(activity!!, GlobalConstants.USERNAME).toString()
-        fragmentHomeBinding.imgToolbarText.setText("Welcome, " + name)
+        fragmentHomeBinding.imgToolbarText.text = "Welcome, " + name
         fragmentHomeBinding.toolbar.setImageResource(R.drawable.ic_side_menu)
         val userImage =
             SharedPrefClass().getPrefValue(activity!!, GlobalConstants.USER_IMAGE).toString()
@@ -312,12 +312,12 @@ HomeFragment : BaseFragment() {
         layoutBottomSheet?.setAnimation(animation)
         layoutBottomSheet?.animate()
         animation.start()
-        /*txtCouponName.setText("Offer Name: " + bannersList[pos].name)
+        txtCouponName.setText("Offer Name: " + bannersList[pos].name)
         txtCouponCode.setText(bannersList[pos].code)
         txtCouponDesc.setText(Html.fromHtml(bannersList[pos].description).toString())
         txtCouponDiscount.setText(bannersList[pos].discount + "% OFF")
 
-        Glide.with(this).load(bannersList[pos].icon).into(imgOffer)*/
+        Glide.with(this).load(bannersList[pos].icon).into(imgOffer)
         btnSubmit?.setOnClickListener {
             confirmationDialog?.dismiss()
         }

@@ -11,6 +11,7 @@ import com.android.courier.model.CommonModel
 import com.android.courier.model.LoginResponse
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonObject
+import okhttp3.RequestBody
 import retrofit2.Response
 
 class LoginRepository {
@@ -178,7 +179,33 @@ class LoginRepository {
 
         }
         return data1!!
-
     }
 
+    fun checkSocial(
+        mJsonObject : HashMap<String, RequestBody>?,
+        profileDetails : MutableLiveData<LoginResponse>?
+    ): MutableLiveData<LoginResponse>? {
+
+        if (UtilsFunctions.isNetworkConnected() && mJsonObject != null) {
+            val mApiService = ApiService<JsonObject>()
+            mApiService.get(
+                object : ApiResponse<JsonObject> {
+                    override fun onResponse(mResponse: Response<JsonObject>) {
+                        val data = gson.fromJson<LoginResponse>(
+                            "" + mResponse.body()!!,
+                            LoginResponse::class.java
+                        )
+                        profileDetails!!.postValue(data)
+                    }
+
+                    override fun onError(mKey: String) {
+                        profileDetails!!.value = null
+                        UtilsFunctions.showToastError(MyApplication.instance.getString(R.string.internal_server_error))
+                    }
+                }, ApiClient.getApiInterface().checkSocial(mJsonObject)
+            )
+        }
+
+        return profileDetails
+    }
 }

@@ -7,17 +7,21 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.android.courier.R
 import com.android.courier.application.MyApplication
+import com.android.courier.common.FirebaseFunctions
 import com.android.courier.common.UtilsFunctions
 import com.android.courier.constants.GlobalConstants
 import com.android.courier.databinding.ActivityLoginBinding
 import com.android.courier.model.LoginResponse
 import com.android.courier.sharedpreference.SharedPrefClass
 import com.android.courier.utils.BaseActivity
-import com.android.courier.utils.ValidationsClass
 import com.android.courier.viewmodels.LoginViewModel
 import com.android.courier.views.home.LandingActivty
-import com.facebook.*
+import com.facebook.CallbackManager
+import com.facebook.FacebookCallback
+import com.facebook.FacebookException
+import com.facebook.GraphRequest
 import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -30,8 +34,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.gson.JsonObject
 import org.json.JSONObject
-import com.android.courier.R
-import com.android.courier.common.FirebaseFunctions
 import java.util.*
 
 class LoginActivity : BaseActivity() {
@@ -40,10 +42,15 @@ class LoginActivity : BaseActivity() {
     private var callbackManager : CallbackManager? = null
     private val EMAIL = "email"
     val RC_SIGN_IN : Int = 1
-    lateinit var mGoogleSignInClient : GoogleSignInClient
+    private var mGoogleSignInClient : GoogleSignInClient? = null
     lateinit var mGoogleSignInOptions : GoogleSignInOptions
     private lateinit var firebaseAuth : FirebaseAuth
     val mOtpJsonObject = JsonObject()
+    private var googleSiginJSONObject = JsonObject()
+    private var fbSiginJSONObject = JSONObject()
+    private var loginWith = ""
+    private var deviceToken = ""
+
     override fun getLayoutId() : Int {
         return R.layout.activity_login
     }
@@ -52,10 +59,12 @@ class LoginActivity : BaseActivity() {
         if (!checkAndRequestPermissions()) {
             checkAndRequestPermissions()
         }
-        val token = SharedPrefClass().getPrefValue(
+        deviceToken = SharedPrefClass().getPrefValue(
             MyApplication.instance,
             GlobalConstants.NOTIFICATION_TOKEN
-        )
+        ).toString()
+        if (deviceToken != null || deviceToken != "null")
+            GlobalConstants.NOTIFICATION_TOKEN = deviceToken
 
 
         activityLoginbinding =
@@ -67,6 +76,7 @@ class LoginActivity : BaseActivity() {
         configureGoogleSignIn()
         //setupUI()
         firebaseAuth = FirebaseAuth.getInstance()
+        checkSocialObserver()
         loginViewModel.getLoginRes().observe(this,
             Observer<LoginResponse> { loginResponse->
                 stopProgressDialog()
@@ -181,6 +191,7 @@ class LoginActivity : BaseActivity() {
             fun(it : String?) {
                 when (it) {
                     "googleLogin" -> {
+                        loginWith = "google"
                         signIn()
                     }
                     "txtSignup" -> {
@@ -254,6 +265,7 @@ class LoginActivity : BaseActivity() {
                         }
                     }
                     "fbLogin" -> {
+                        loginWith = "facebook"
                         callbackManager = CallbackManager.Factory.create()
                         LoginManager.getInstance().logInWithReadPermissions(
                             this,
@@ -284,10 +296,7 @@ class LoginActivity : BaseActivity() {
                                         "Facebook detail: " + loginResult.toString()
                                     )
                                     startActivity(
-                                        Intent(
-                                            applicationContext,
-                                            SignupActivity::class.java
-                                        )
+                                        Intent(                                                                                                                                                                                                                                                                                                                   )
                                     )*/
                                     val request =
                                         GraphRequest.newMeRequest(loginResult.accessToken) { `object`, response->
@@ -301,6 +310,7 @@ class LoginActivity : BaseActivity() {
                                                     Log.e("FBLOGIN_FAILD", `object`.toString())
                                                 }
 
+                                                LoginManager.getInstance().logOut()
                                             } catch (e : Exception) {
                                                 e.printStackTrace()
                                                 // dismissDialogLogin()
@@ -357,17 +367,20 @@ class LoginActivity : BaseActivity() {
     }
 
     private fun signIn() {
-        val signInIntent : Intent = mGoogleSignInClient.signInIntent
+        val signInIntent : Intent = mGoogleSignInClient!!.signInIntent
         startActivityForResult(signInIntent, RC_SIGN_IN)
     }
 
     private fun handleSignInResultFacebook(jsonObject : JSONObject?) {
-        val intent = Intent(this, SignupActivity::class.java)
-        intent.putExtra("social", "false")
-        intent.putExtra("fbSocial", "true")
-        intent.putExtra("googleSocial", "false")
-        intent.putExtra("fbData", jsonObject.toString())
-        startActivity(intent)
+        fbSiginJSONObject = jsonObject!!
+        loginWith = "facebook"
+        val socialId = jsonObject.getString("id")
+        var email = ""
+        if (jsonObject.has("email")) {
+            email = jsonObject.getString("email")
+        }
+
+        loginViewModel.checkForSocial(socialId, email, deviceToken)
 
     }
 
@@ -389,7 +402,6 @@ class LoginActivity : BaseActivity() {
         } else {
             callbackManager?.onActivityResult(requestCode, resultCode, data)
         }
-
     }
 
     private fun firebaseAuthWithGoogle(acct : GoogleSignInAccount) {
@@ -398,17 +410,16 @@ class LoginActivity : BaseActivity() {
         firebaseAuth.signInWithCredential(credential).addOnCompleteListener {
             if (it.isSuccessful) {
                 // startActivity(HomeActivity.getLaunchIntent(this))
+                loginWith = "google"
                 val jsonObject = JsonObject()
                 jsonObject.addProperty("name", acct.displayName)
                 jsonObject.addProperty("email", acct.email)
                 jsonObject.addProperty("id", acct.id)
-                val intent = Intent(this, SignupActivity::class.java)
-                intent.putExtra("social", "false")
-                intent.putExtra("fbSocial", "false")
-                intent.putExtra("googleSocial", "true")
-                intent.putExtra("fbData", "")
-                intent.putExtra("googleData", jsonObject.toString())
-                startActivity(intent)
+                googleSiginJSONObject = jsonObject
+                loginViewModel.checkForSocial(acct.id, acct.email, deviceToken)
+
+                mGoogleSignInClient!!.signOut()
+                mGoogleSignInClient!!.revokeAccess()
                 // showToastSuccess("Google Login Success")
 
             } else {
@@ -417,4 +428,102 @@ class LoginActivity : BaseActivity() {
         }
     }
 
+    private fun checkSocialObserver() {
+        loginViewModel.checkForSocialData().observe(this,
+            Observer<LoginResponse> { loginResponse->
+                stopProgressDialog()
+                if (loginResponse != null) {
+                    when (loginResponse.code) {
+                        200 -> {
+                            try {
+                                if (loginResponse.data!!.privacyLink != null) {
+                                    SharedPrefClass().putObject(
+                                        MyApplication.instance,
+                                        GlobalConstants.PRIVACY_POLICY,
+                                        loginResponse.data!!.privacyLink
+                                    )
+                                }
+                                SharedPrefClass().putObject(
+                                    MyApplication.instance,
+                                    GlobalConstants.TERMS_CONDITION,
+                                    loginResponse.data!!.termsLink
+                                )
+                            } catch (e : Exception) {
+                                e.printStackTrace()
+                            }
+                            SharedPrefClass().putObject(
+                                MyApplication.instance,
+                                GlobalConstants.ACCESS_TOKEN,
+                                loginResponse.data!!.token
+                            )
+                            SharedPrefClass().putObject(
+                                MyApplication.instance,
+                                GlobalConstants.USERID,
+                                loginResponse.data!!.id
+                            )
+                            SharedPrefClass().putObject(
+                                MyApplication.instance,
+                                GlobalConstants.USER_IMAGE,
+                                loginResponse.data!!.image
+                            )
+                            SharedPrefClass().putObject(
+                                MyApplication.instance,
+                                GlobalConstants.USEREMAIL,
+                                loginResponse.data!!.email
+                            )
+                            SharedPrefClass().putObject(
+                                MyApplication.instance,
+                                GlobalConstants.USERNAME,
+                                loginResponse.data!!.firstName + " " + loginResponse.data!!.lastName
+                            )
+                            SharedPrefClass().putObject(
+                                MyApplication.instance,
+                                GlobalConstants.CUSTOMER_IAMGE,
+                                loginResponse.data!!.image
+                            )
+                            SharedPrefClass().putObject(
+                                MyApplication.instance,
+                                GlobalConstants.REFERRAL_CODE,
+                                loginResponse.data!!.referralCode
+                            )
+                            SharedPrefClass().putObject(
+                                MyApplication.instance,
+                                "isLogin",
+                                true
+                            )
+
+                            GlobalConstants.VERIFICATION_TYPE = "login"
+                            val intent = Intent(this, LandingActivty::class.java)
+                            intent.flags =
+                                Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                            startActivity(intent)
+                            finish()
+                        }
+                        211 -> {
+                            if (loginWith == "facebook") {
+                                val intent = Intent(this, SignupActivity::class.java)
+                                intent.putExtra("social", "false")
+                                intent.putExtra("fbSocial", "true")
+                                intent.putExtra("googleSocial", "false")
+                                intent.putExtra("fbData", fbSiginJSONObject.toString())
+                                startActivity(intent)
+                            } else {
+                                val intent = Intent(this, SignupActivity::class.java)
+                                intent.putExtra("social", "false")
+                                intent.putExtra("fbSocial", "false")
+                                intent.putExtra("googleSocial", "true")
+                                intent.putExtra("fbData", "")
+                                intent.putExtra("googleData", googleSiginJSONObject.toString())
+                                startActivity(intent)
+                            }
+                        }
+                        else -> {
+                            UtilsFunctions.showToastError(loginResponse.message!!)
+                        }
+                    }
+                } else {
+                    UtilsFunctions.showToastError(resources.getString(R.string.internal_server_error))
+                }
+            })
+    }
 }

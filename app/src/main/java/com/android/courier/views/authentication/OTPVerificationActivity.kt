@@ -8,6 +8,7 @@ import android.content.Intent
 import android.os.Build
 import android.os.CountDownTimer
 import android.text.TextUtils
+import android.view.WindowManager
 import com.android.courier.R
 import com.android.courier.application.MyApplication
 import com.android.courier.common.FirebaseFunctions
@@ -42,6 +43,12 @@ class OTPVerificationActivity : BaseActivity() {
     var countryCode = ""
     override fun getLayoutId() : Int {
         return R.layout.activity_otp_verification
+    }
+
+    override fun onResume() {
+        super.onResume()
+        getWindow().setSoftInputMode(
+            WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
 
     @SuppressLint("SetTextI18n")
@@ -215,50 +222,50 @@ class OTPVerificationActivity : BaseActivity() {
 
     private fun signInWithPhoneAuthCredential(credential : PhoneAuthCredential) {
         mAuth.signInWithCredential(credential)
-            .addOnCompleteListener(this,
-                { task->
-                    stopProgressDialog()
-                    if (task.isSuccessful) {
-                        SharedPrefClass().putObject(
-                            MyApplication.instance,
-                            "isLogin",
-                            true
-                        )
-                        //showToastSuccess("OTP Verified")
-                        if (GlobalConstants.VERIFICATION_TYPE.equals("signup")) {
-                            callVerifyUserApi()
-                        } else {
-                            /* val intent = Intent(this, ResetPasswrodActivity::class.java)
-                             startActivity(intent)
-                             finish()*/
-                            val intent = Intent(this, LandingActivty::class.java)
-                            intent.flags =
-                                Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                            startActivity(intent)
-                            finish()
-
-                        }
-                        /*  var dob = SharedPrefClass().getPrefValue(this, "dob").toString()
-                          var intent: Intent? = null
-                          if (TextUtils.isEmpty(dob) || dob.equals("null")) {
-                              intent = Intent(this, DatesActivity::class.java)
-                          } else {
-                              intent = Intent(this, LandingMainActivity::class.java)
-                          }*/
-
+            .addOnCompleteListener(this
+            ) { task->
+                stopProgressDialog()
+                if (task.isSuccessful) {
+                    SharedPrefClass().putObject(
+                        MyApplication.instance,
+                        "isLogin",
+                        true
+                    )
+                    //showToastSuccess("OTP Verified")
+                    if (GlobalConstants.VERIFICATION_TYPE.equals("signup")) {
+                        callVerifyUserApi()
                     } else {
-                        //verification unsuccessful.. display an error message
-                        var message = getString(R.string.something_error)
-
-                        if (task.exception is FirebaseAuthException) {
-                            message = getString(R.string.invalid_otp)
-                        }
-
-                        showToastError(message)
-                        //Toast.makeText(OtpVerificationFirebase.this, message, Toast.LENGTH_SHORT).show();
+                        /* val intent = Intent(this, ResetPasswrodActivity::class.java)
+                                     startActivity(intent)
+                                     finish()*/
+                        val intent = Intent(this, LandingActivty::class.java)
+                        intent.flags =
+                            Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        startActivity(intent)
+                        finish()
 
                     }
-                })
+                    /*  var dob = SharedPrefClass().getPrefValue(this, "dob").toString()
+                                  var intent: Intent? = null
+                                  if (TextUtils.isEmpty(dob) || dob.equals("null")) {
+                                      intent = Intent(this, DatesActivity::class.java)
+                                  } else {
+                                      intent = Intent(this, LandingMainActivity::class.java)
+                                  }*/
+
+                } else {
+                    //verification unsuccessful.. display an error message
+                    var message = getString(R.string.something_error)
+
+                    if (task.exception is FirebaseAuthException) {
+                        message = getString(R.string.invalid_otp)
+                    }
+
+                    showToastError(message)
+                    //Toast.makeText(OtpVerificationFirebase.this, message, Toast.LENGTH_SHORT).show();
+
+                }
+            }
     }
 
     private fun callVerifyUserApi() {

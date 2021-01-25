@@ -5,6 +5,7 @@ import android.content.Intent
 import android.text.TextUtils
 import android.view.Gravity
 import android.view.View
+import android.view.WindowManager
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
@@ -49,8 +50,15 @@ class LandingActivty : BaseActivity(), DialogssInterface {
     private var ratingDialog : Dialog? = null
     private var mDialogClass = DialogClass()
     var pos = 0
+
     override fun getLayoutId() : Int {
         return R.layout.activity_landing_activty
+    }
+
+    override fun onResume() {
+        super.onResume()
+        getWindow().setSoftInputMode(
+            WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
 
     override fun onBackPressed() {

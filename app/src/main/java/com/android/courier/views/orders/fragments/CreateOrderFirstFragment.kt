@@ -62,8 +62,6 @@ import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonObject
-import kotlinx.android.synthetic.main.activity_create_order.view.*
-import kotlinx.android.synthetic.main.layout_custom_alert.view.*
 import org.json.JSONException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -124,6 +122,9 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
     var time = ArrayList<String>()
     var tvSelectedTimeDialog : TextView? = null
     var timeTodayTommorrow = ""
+    private var selectedDate = ""
+    private var selectedTime = ""
+    private var isDialogInitialized = false
 
     // lateinit var sheetBehavior : BottomSheetBehavior
     //var categoriesList = null
@@ -153,11 +154,14 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
         )
         val c = Calendar.getInstance()
         println("Current time => " + c.time)
-        val df = SimpleDateFormat("dd MMM yy")
+        val df = SimpleDateFormat("dd MMM")
         val formattedDate = df.format(c.time)
         val calendar = Calendar.getInstance()
         calendar.add(Calendar.DAY_OF_YEAR, 1)
         val formattedDate1 = df.format(calendar.time)
+        pickupDate = formattedDate
+        createOrderFirstBinding.tvDatetomtoday.text = "Today " + formattedDate
+        selectedDate = "Today " + formattedDate
         val days = ArrayList<String>()
         days.add("Today " + formattedDate)
         days.add("Tomorrow " + formattedDate1)
@@ -453,11 +457,14 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
                 function =
                 fun(it : String?) {
                     when (it) {
+                        "tvDatetomtoday" -> {
+                            showBottomSheetDialog()
+                        }
                         "tv_select_time" -> {
-                            if (time.size > 0)
-                                showBottomSheetDialog()
-                            else
-                                showToastError("No time slots available.")
+//                            if (time.size > 0)
+                            showBottomSheetDialog()
+                            /*else
+                                showToastError("No time slots available.")*/
                         }
                         "imgDelInfo" -> {
                             showToastInfo(
@@ -1253,7 +1260,7 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
         val intent = Autocomplete.IntentBuilder(
             AutocompleteActivityMode.FULLSCREEN,
             fields
-        )
+        ).setCountry("IN")
             .build(activity!!)
         startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE)
     }
@@ -1604,7 +1611,7 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
         val cal = Calendar.getInstance()
         if (position == 0/*DateUtils.isToday(outputDate.time)*/) {
             if (cal.get(Calendar.MINUTE) >= 30)
-                cal.add(Calendar.HOUR_OF_DAY, 2);
+                cal.add(Calendar.HOUR_OF_DAY, 2)
             else
                 cal.add(Calendar.HOUR_OF_DAY, 1)
 
@@ -1634,6 +1641,10 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
             var time = start + " - " + end
             timeList.add(time)
 
+        }
+
+        if (timeList.isNotEmpty()) {
+            createOrderFirstBinding.tvSelectTime.text = timeList[0]
         }
         return timeList
         Log.d("data", timeList.toString())
@@ -1789,7 +1800,7 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     private fun showBottomSheetDialog() {
-        val bottomServiceTimeDialog = BottomSheetDialog(baseActivity)
+        val bottomServiceTimeDialog = BottomSheetDialog(baseActivity, R.style.BottomSheetDialog)
         bottomServiceTimeDialog!!.requestWindowFeature(Window.FEATURE_NO_TITLE)
         val dialogBinding =
             DataBindingUtil.inflate<ViewDataBinding>(
@@ -1803,19 +1814,89 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
         val wheelPickerTime =
             bottomServiceTimeDialog!!.findViewById<WheelPicker>(R.id.wheel_picker_time)
         tvSelectedTimeDialog =
-            bottomServiceTimeDialog!!.findViewById<TextView>(R.id.tv_selected_time)
-        var tvTodayTomm = bottomServiceTimeDialog!!.findViewById<TextView>(R.id.tv_today_tomm)
+            bottomServiceTimeDialog!!.findViewById(R.id.tv_selected_time)
+        var tvTodayTomm = bottomServiceTimeDialog!!.findViewById<Spinner>(R.id.tv_today_tomm)
         var tvConfirm = bottomServiceTimeDialog!!.findViewById<TextView>(R.id.tv_confirm)
+        //  tvTodayTomm!!.text = timeTodayTommorrow
+        tvSelectedTimeDialog!!.text = pickTime
 
-        tvTodayTomm!!.text = timeTodayTommorrow
-        if (time.size > 0) {
-            tvSelectedTimeDialog!!.text = time[0]
+        isDialogInitialized = true
+        var todayTomm = ""
+        val c = Calendar.getInstance()
+        println("Current time => " + c.time)
+        val df = SimpleDateFormat("dd MMM")
+        val formattedDate = df.format(c.time)
+        val calendar = Calendar.getInstance()
+        calendar.add(Calendar.DAY_OF_YEAR, 1)
+        val formattedDate1 = df.format(calendar.time)
+        val days = ArrayList<String>()
+        days.add("Today " + formattedDate)
+        days.add("Tomorrow " + formattedDate1)
+        val adapter = ArrayAdapter(
+            activity!!,
+            R.layout.support_simple_spinner_dropdown_item, days
+        )
+        tvTodayTomm!!.adapter = adapter
+
+        tvTodayTomm.post {
+            days?.let {
+                for (item in 0 until days!!.size) {
+                    if (days!![item] == selectedDate) {
+                        tvTodayTomm.setSelection(item)
+                    }
+                }
+            }
         }
 
-        initWheel1(wheelPickerTime)
+
+        tvTodayTomm!!.onItemSelectedListener = object :
+            AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(parent : AdapterView<*>?) {
+            }
+
+            override fun onItemSelected(
+                parent : AdapterView<*>,
+                view : View, position : Int, id : Long
+            ) {
+                time = slot(position)
+                if (time.size > 0) {
+                    if (TextUtils.isEmpty(pickTime)) {
+                        createOrderFirstBinding.tvSelectTime.text = time[0]
+                        pickTime = time[0]
+                    }
+                } else {
+                    showToastError("No time slots available.")
+                }
+                timeTodayTommorrow = days[position]
+                createOrderFirstBinding.txtTime.setSelection(0)
+                if (position == 0) {
+                    val c = Calendar.getInstance()
+                    println("Current time => " + c.time)
+                    val df = SimpleDateFormat("dd/MM/yyyy")
+                    val formattedDate = df.format(c.time)
+                    pickupDate = formattedDate
+                    selectedDate = days[position]
+                } else {
+                    val calendar = Calendar.getInstance()
+                    calendar.add(Calendar.DAY_OF_YEAR, 1)
+                    val df = SimpleDateFormat("dd/MM/yyyy")
+                    val formattedDate = df.format(calendar.time)
+                    pickupDate = formattedDate
+                    selectedDate = days[position]
+                }
+
+                initWheel1(wheelPickerTime)
+/*
+                if(time.isNotEmpty())
+                    tvSelectedTimeDialog!!.text = time[0]
+*/
+            }
+        }
 
         tvConfirm!!.setOnClickListener {
+            isDialogInitialized = false
             createOrderFirstBinding!!.tvSelectTime.text = pickTime
+            createOrderFirstBinding.tvDatetomtoday.text = selectedDate
             bottomServiceTimeDialog.dismiss()
         }
 
@@ -1833,34 +1914,32 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
         wheel.isCurved = true
         wheel.setIndicator(true)
 
-        wheel.setOnWheelChangeListener(this)
-        /*val scrolledListener : OnWheelScrollListener = object : OnWheelScrollListener() {
-            fun onScrollStarts(wheel : WheelView?) {
-                wheelScrolled = true
+        if (isDialogInitialized) {
+            wheel.post {
+                time.let {
+                    for (item in 0 until time.size) {
+                        if (time[item] == pickTime) {
+                            wheel.selectedItemPosition = item
+                            tvSelectedTimeDialog!!.text = time[item]
+                        }
+                    }
+                }
             }
-
-            fun onScrollEnds(wheel : WheelView?) {
-                wheelScrolled = false
-                updateStatus()
-            }
-        }
-        // Wheel changed listener
-        // Wheel changed listener
-        val changedListener : OnWheelChangedListener = object : OnWheelChangedListener() {
-            fun onChanged(wheel : WheelView?, oldValue : Int, newValue : Int) {
-                if (!wheelScrolled) {
-                    updateStatus()
+            isDialogInitialized = false
+        } /*else {
+            wheel.post {
+                time.let {
+                    wheel.selectedItemPosition = 0
+                    tvSelectedTimeDialog!!.text = time[0]
                 }
             }
         }*/
-        /* wheel.setAdapter(ArrayWheelAdapter<String>(wheelMenu1))
-         wheel.setVisibleItems(2)
-         wheel.setCurrentItem(0)
-         wheel.addChangingListener(changedListener)
-         wheel.addScrollingListener(scrolledListener)*/
+
+        wheel.setOnWheelChangeListener(this)
     }
 
     override fun onWheelSelected(position : Int) {
+        isDialogInitialized = false
         tvSelectedTimeDialog!!.text = time[position]
         pickTime = time[position]
     }

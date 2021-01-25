@@ -44,8 +44,6 @@ object BindingAdapters {
             .into(imageView)
     }
 
-
-
     @BindingAdapter("backOnClick")
     @JvmStatic
     fun bindOnImageButtonClickListener(imageView: ImageView, text: String?) {

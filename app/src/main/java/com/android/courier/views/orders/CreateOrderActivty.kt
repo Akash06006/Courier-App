@@ -1,11 +1,13 @@
 package com.android.courier.views.orders
 
+import android.app.Activity
 import android.app.Dialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.text.TextUtils
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -14,21 +16,17 @@ import com.android.courier.application.MyApplication
 import com.android.courier.common.UtilsFunctions
 import com.android.courier.constants.GlobalConstants
 import com.android.courier.databinding.ActivityCreateOrderBinding
-import com.android.courier.model.order.*
+import com.android.courier.model.order.CreateOrdersInput
+import com.android.courier.model.order.OrdersDetailResponse
 import com.android.courier.sharedpreference.SharedPrefClass
 import com.android.courier.utils.BaseActivity
 import com.android.courier.utils.DialogClass
 import com.android.courier.utils.DialogssInterface
 import com.android.courier.viewmodels.order.OrderViewModel
-import com.android.courier.views.home.fragments.HomeFragment
 import com.android.courier.views.orders.fragments.CreateOrderFirstFragment
 import com.android.courier.views.orders.fragments.CreateOrderPreviewFragment
 import com.android.courier.views.orders.fragments.CreateOrderSecondFragment
-import com.bumptech.glide.Glide
 import com.google.android.libraries.places.api.Places
-import com.google.gson.JsonObject
-import kotlinx.android.synthetic.main.activity_create_order.view.*
-import kotlin.collections.ArrayList
 
 class CreateOrderActivty : BaseActivity(), DialogssInterface {
     private lateinit var activityCreateOrderBinding : ActivityCreateOrderBinding
@@ -349,6 +347,10 @@ class CreateOrderActivty : BaseActivity(), DialogssInterface {
                         confirmationDialog?.show()
                     }
                     "toolbar" -> {
+                        val view = View(this)
+                        val imm = MyApplication.instance
+                            .getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+                        imm.hideSoftInputFromInputMethod(view.windowToken, 0)
                         onBackPressed()
                     }
                     "imgPriceDetails" -> {
@@ -389,12 +391,10 @@ class CreateOrderActivty : BaseActivity(), DialogssInterface {
                                 ""
                             )
                         }
-
                     }
                 }
             })
         )
-
     }
 
     override fun onDialogConfirmAction(mView : View?, mKey : String?) {
@@ -488,6 +488,7 @@ class CreateOrderActivty : BaseActivity(), DialogssInterface {
     fun setViewLine() {
         activityCreateOrderBinding.imgOne.setImageResource(R.drawable.ic_tick)
     }
+
     fun setUnselectLine() {
         activityCreateOrderBinding.imgOne.setImageResource(R.drawable.ic_stepper_unselected)
     }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -14,37 +14,106 @@
     </data>
 
     <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".view.home1.TrackingFragment">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context=".view.home1.TrackingFragment">
 
         <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
             <fragment
-                android:id="@+id/map_view"
-                android:name="com.google.android.gms.maps.SupportMapFragment"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@+id/common_tool_bar"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent" />
+                    android:id="@+id/map_view"
+                    android:name="com.google.android.gms.maps.SupportMapFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_above="@+id/rel_info"
+                    android:layout_below="@+id/common_tool_bar"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent" />
 
             <Button
-                android:id="@+id/btn_clear"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/dp_40"
-                android:layout_alignParentBottom="true"
-                android:layout_gravity="center"
-                android:layout_marginLeft="@dimen/dp_10"
-                android:layout_marginRight="@dimen/dp_10"
-                android:layout_marginBottom="@dimen/dp_20"
-                android:elevation="@dimen/dp_10"
-                android:textAllCaps="true"
-                android:visibility="gone" />
+                    android:id="@+id/btn_clear"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_40"
+                    android:layout_alignParentBottom="true"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="@dimen/dp_10"
+                    android:layout_marginRight="@dimen/dp_10"
+                    android:layout_marginBottom="@dimen/dp_20"
+                    android:elevation="@dimen/dp_10"
+                    android:textAllCaps="true"
+                    android:visibility="gone" />
+
+            <LinearLayout
+                    android:id="@+id/rel_info"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/white"
+                    android:orientation="vertical"
+                    android:paddingLeft="@dimen/dp_15"
+                    android:paddingRight="@dimen/dp_15"
+                    android:paddingTop="@dimen/dp_10"
+                    android:paddingBottom="@dimen/dp_10">
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableLeft="@drawable/ic_source"
+                        android:drawablePadding="@dimen/sp_12"
+                        android:gravity="center"
+                        android:text="Not visited addresses of your order"
+                        android:textAlignment="center"
+                        app:font="@{`regular`}" />
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableLeft="@drawable/ic_source_completed"
+                        android:drawablePadding="@dimen/sp_12"
+                        android:gravity="center"
+                        android:paddingTop="@dimen/dp_5"
+                        android:text="Visited addresses of your order"
+                        android:textAlignment="center"
+                        app:font="@{`regular`}" />
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableLeft="@drawable/drop_completed"
+                        android:drawablePadding="@dimen/sp_12"
+                        android:gravity="center"
+                        android:paddingTop="@dimen/dp_5"
+                        android:text="Order dropped at address"
+                        android:textAlignment="center"
+                        app:font="@{`regular`}" />
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableLeft="@drawable/drop_pendig"
+                        android:drawablePadding="@dimen/sp_12"
+                        android:gravity="center"
+                        android:paddingTop="@dimen/dp_5"
+                        android:text="Order's drop pending"
+                        android:textAlignment="center"
+                        app:font="@{`regular`}" />
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableLeft="@drawable/pickup_pending"
+                        android:drawablePadding="@dimen/sp_12"
+                        android:gravity="center"
+                        android:paddingTop="@dimen/dp_5"
+                        android:text="Driver's other pickups"
+                        android:textAlignment="center"
+                        app:font="@{`regular`}" />
+
+            </LinearLayout>
 
             <!--<TextView-->
             <!--android:id="@+id/txt_average"-->

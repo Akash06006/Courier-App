@@ -47,7 +47,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             GlobalConstants.NOTIFICATION_TOKEN,
             token
         )
-        GlobalConstants.NOTIFICATION_TOKEN = token
+       // GlobalConstants.NOTIFICATION_TOKEN = token
         Log.d("token", token + "")
         // If you want to send messages to this application instance or
         // manage this apps subscriptions on the server side, send the

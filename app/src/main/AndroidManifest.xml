@@ -45,7 +45,10 @@
                 android:name=".views.tutorials.TutorialActivity"
                 android:screenOrientation="portrait"
                 android:windowSoftInputMode="stateHidden"></activity>
-        <activity android:name=".views.home.LandingActivty" />
+        <activity
+                android:name=".views.home.LandingActivty"
+                android:screenOrientation="portrait"
+                android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity
                 android:name=".views.SplashActivity"
                 android:screenOrientation="portrait"

@@ -23,7 +23,8 @@
             android:background="@color/colorWhite"
             android:focusable="true"
             android:focusableInTouchMode="true"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            app:hideKeyBoardOnClick="@{`back` }">
 
         <include
                 android:id="@+id/common_tool_bar"
@@ -213,6 +214,7 @@
                               android:layout_height="wrap_content" />-->
 
                     <!-- app:dropdownItem_compound_drawable_selected="@drawable/ic_done_black_24dp"-->
+
                     <com.google.android.material.textfield.TextInputLayout
 
                             android:layout_width="match_parent"
@@ -233,6 +235,7 @@
                                 android:singleLine="true"
                                 android:text="@{model.firstName}"
                                 android:textColor="@color/colorblack"
+                                android:textCursorDrawable="@drawable/cursor"
                                 android:textSize="14sp"
                                 app:font="@{`regular`}"
                                 tools:ignore="MissingConstraints" />

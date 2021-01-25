@@ -349,8 +349,9 @@
                     android:text="@string/proceed"
                     android:textAllCaps="false"
                     android:textColor="@color/colorWhite"
-                    android:textSize="20sp"
-                    app:font="@{`regular`}" />
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:font="@{`bold`}" />
 
         </RelativeLayout>
 

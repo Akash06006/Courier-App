@@ -1275,24 +1275,24 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
                     data?.let {
                         val place = Autocomplete.getPlaceFromIntent(data)
                         Log.e("Create Order", "Place: ${place.name}, ${place.id}")
-                        selectedAddress = place.address.toString()
+                        selectedAddress = place.name + "," + place.address.toString()
                         selectedlatLong = place.latLng!!
                         if (clickedForLocation.equals("pickup")) {
-                            createOrderInput.pickupAddress?.address = place.address.toString()
+                            createOrderInput.pickupAddress?.address = place.name + "," +place.address.toString()
                             createOrderInput.pickupAddress?.lat = place.latLng!!.latitude.toString()
                             createOrderInput.pickupAddress?.long =
                                 place.latLng!!.longitude.toString()
 
                             latLongArrayList.add(place.latLng!!)
-                            createOrderFirstBinding.edtPickupLoc.setText(place.address.toString())
-                            pickupAddress = place.address.toString()
+                            createOrderFirstBinding.edtPickupLoc.setText(place.name + "," + place.address.toString())
+                            pickupAddress = place.name + "," +place.address.toString()
                             pickLat = place.latLng!!.latitude.toString()
                             pickLong = place.latLng!!.longitude.toString()
 
                             MyApplication.createOrdersInput.pickupAddress?.address =
-                                place.address.toString()
+                                place.name + "," + place.address.toString()
                             MyApplication.createOrdersInput.address1 =
-                                place.address.toString()
+                                place.name + "," + place.address.toString()
                             MyApplication.createOrdersInput.pickupAddress?.lat =
                                 place.latLng!!.latitude.toString()
                             MyApplication.createOrdersInput.pickupAddress?.long =
@@ -1300,8 +1300,8 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
                             createOrderFirstBinding.edtPickMob.requestFocus()
                         } else if (clickedForLocation.equals("delivery")) {
                             calculatePrice()
-                            createOrderFirstBinding.edtDelAddress.setText(place.address.toString())
-                            delAddress = place.address.toString()
+                            createOrderFirstBinding.edtDelAddress.setText(place.name + "," + place.address.toString())
+                            delAddress = place.name + "," + place.address.toString()
                             delLat = place.latLng!!.latitude.toString()
                             delLong = place.latLng!!.longitude.toString()
                             distance = "0"
@@ -1314,7 +1314,7 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
                             val tag = edtDelAddress?.id
                             for (items in addressList) {
                                 if (tag == items.id) {
-                                    items.address = place.address.toString()
+                                    items.address = place.name + "," + place.address.toString()
                                     items.lat =
                                         place.latLng!!.latitude.toString()
                                     items.long =

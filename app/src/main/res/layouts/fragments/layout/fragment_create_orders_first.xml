@@ -342,14 +342,15 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="20dp"
-                    android:textSize="20sp"
                     android:background="@drawable/round_button_layout"
                     android:minWidth="130dp"
                     android:onClick="@{(v) -> orderViewModel.clickListener(v)}"
                     android:text="@string/proceed"
                     android:textAllCaps="false"
                     android:textColor="@color/colorWhite"
-                    app:font="@{`regular`}" />
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:font="@{`bold`}" />
 
         </RelativeLayout>
 

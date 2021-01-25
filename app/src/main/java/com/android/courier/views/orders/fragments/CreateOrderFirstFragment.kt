@@ -1611,7 +1611,7 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
         val cal = Calendar.getInstance()
         if (position == 0/*DateUtils.isToday(outputDate.time)*/) {
             if (cal.get(Calendar.MINUTE) >= 30)
-                cal.add(Calendar.HOUR_OF_DAY, 2);
+                cal.add(Calendar.HOUR_OF_DAY, 2)
             else
                 cal.add(Calendar.HOUR_OF_DAY, 1)
 

@@ -18,6 +18,7 @@ import android.os.Environment
 import android.provider.MediaStore
 import android.text.TextUtils
 import android.view.View
+import android.view.WindowManager
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.TextView
@@ -162,7 +163,7 @@ class ProfileFragment : BaseFragment(), ChoiceCallBack {
             Observer<RegionResponse> { response->
                 baseActivity.stopProgressDialog()
                 if (UtilsFunctions.isNetworkConnected()) {
-                    baseActivity.startProgressDialog()
+                   // baseActivity.startProgressDialog()
                     profieViewModel.getProfileDetail(mJsonObject)
                 }
                 if (response != null) {
@@ -256,6 +257,9 @@ class ProfileFragment : BaseFragment(), ChoiceCallBack {
                         startActivity(intent)
                     }
                     "toolbar" -> {
+                        activity!!.getWindow().setSoftInputMode(
+                            WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
+                        );
                         (activity as LandingActivty).openCloseDrawer()
                     }
                     "img_right" -> {

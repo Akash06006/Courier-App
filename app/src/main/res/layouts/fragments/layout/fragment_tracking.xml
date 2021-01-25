@@ -54,64 +54,137 @@
                     android:layout_alignParentBottom="true"
                     android:background="@color/white"
                     android:orientation="vertical"
-                    android:paddingLeft="@dimen/dp_15"
-                    android:paddingRight="@dimen/dp_15"
-                    android:paddingTop="@dimen/dp_10"
-                    android:paddingBottom="@dimen/dp_10">
+                    android:padding="@dimen/dp_10">
 
-                <TextView
-                        android:layout_width="wrap_content"
+                <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:drawableLeft="@drawable/ic_source"
-                        android:drawablePadding="@dimen/sp_12"
-                        android:gravity="center"
-                        android:text="Not visited addresses of your order"
-                        android:textAlignment="center"
-                        app:font="@{`regular`}" />
+                        android:layout_alignParentBottom="true"
+                        android:background="@color/white"
+                        android:gravity="center|left"
+                        android:orientation="horizontal">
 
-                <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:drawableLeft="@drawable/ic_source_completed"
-                        android:drawablePadding="@dimen/sp_12"
-                        android:gravity="center"
-                        android:paddingTop="@dimen/dp_5"
-                        android:text="Visited addresses of your order"
-                        android:textAlignment="center"
-                        app:font="@{`regular`}" />
+                    <ImageView
+                            android:layout_width="35dp"
+                            android:layout_height="35dp"
+                            android:src="@drawable/ic_source" />
 
-                <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:drawableLeft="@drawable/drop_completed"
-                        android:drawablePadding="@dimen/sp_12"
-                        android:gravity="center"
-                        android:paddingTop="@dimen/dp_5"
-                        android:text="Order dropped at address"
-                        android:textAlignment="center"
-                        app:font="@{`regular`}" />
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="5dp"
+                            android:gravity="center_vertical"
+                            android:text="Not visited addresses of your order"
+                            android:textStyle="bold"
+                            app:font="@{`bold`}" />
 
-                <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:drawableLeft="@drawable/drop_pendig"
-                        android:drawablePadding="@dimen/sp_12"
-                        android:gravity="center"
-                        android:paddingTop="@dimen/dp_5"
-                        android:text="Order's drop pending"
-                        android:textAlignment="center"
-                        app:font="@{`regular`}" />
+                </LinearLayout>
 
-                <TextView
-                        android:layout_width="wrap_content"
+                <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:drawableLeft="@drawable/pickup_pending"
-                        android:drawablePadding="@dimen/sp_12"
-                        android:gravity="center"
-                        android:paddingTop="@dimen/dp_5"
-                        android:text="Driver's other pickups"
-                        android:textAlignment="center"
-                        app:font="@{`regular`}" />
+                        android:layout_alignParentBottom="true"
+                        android:background="@color/white"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                    <ImageView
+                            android:layout_width="35dp"
+                            android:layout_height="35dp"
+                            android:src="@drawable/ic_source_completed" />
+
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginBottom="5dp"
+                            android:text="Visited addresses of your order"
+                            android:textStyle="bold"
+                            app:font="@{`bold`}" />
+                </LinearLayout>
+
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:background="@color/white"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                    <ImageView
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:src="@drawable/drop_pendig" />
+
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginBottom="5dp"
+                            android:gravity="center"
+                            android:paddingTop="5dp"
+                            android:text="Delivery pending"
+                            android:textAlignment="center"
+                            android:textStyle="bold"
+                            app:font="@{`bold`}" />
+                </LinearLayout>
+
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginTop="5dp"
+                        android:background="@color/white"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                    <ImageView
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:src="@drawable/drop_completed" />
+
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginBottom="5dp"
+                            android:gravity="center"
+                            android:paddingTop="5dp"
+
+                            android:text="Order delivered"
+                            android:textAlignment="center"
+                            android:textStyle="bold"
+                            app:font="@{`bold`}" />
+                </LinearLayout>
+
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginTop="5dp"
+                        android:background="@color/white"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                    <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="30dp"
+                            android:src="@drawable/pickup_pending" />
+
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginBottom="5dp"
+                            android:drawablePadding="@dimen/sp_12"
+                            android:gravity="center"
+                            android:paddingTop="5dp"
+                            android:text="Prior order to finish"
+                            android:textAlignment="center"
+                            android:textStyle="bold"
+                            app:font="@{`bold`}" />
+                </LinearLayout>
 
             </LinearLayout>
 

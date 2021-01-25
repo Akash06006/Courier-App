@@ -48,11 +48,8 @@
         <activity
                 android:name=".views.home.LandingActivty"
                 android:screenOrientation="portrait"
-                android:windowSoftInputMode="stateHidden|adjustPan" />
-                android:windowSoftInputMode="stateHidden"/>
-        <activity android:name=".views.home.LandingActivty"
-                android:screenOrientation="portrait"
-                android:windowSoftInputMode="stateHidden|adjustPan" />
+                android:windowSoftInputMode="stateHidden|adjustPan"/>
+
         <activity
                 android:name=".views.SplashActivity"
                 android:screenOrientation="portrait"
@@ -140,61 +137,61 @@
                 android:screenOrientation="portrait" />
         <activity
                 android:name=".views.home.MyBookingsActivity"
-                android:windowSoftInputMode="stateHidden"
-                android:screenOrientation="portrait" />
+                android:screenOrientation="portrait"
+                android:windowSoftInputMode="stateHidden" />
         <activity
                 android:name=".views.activity.DashboardActivity"
-                android:windowSoftInputMode="stateHidden"
-                android:screenOrientation="portrait" />
+                android:screenOrientation="portrait"
+                android:windowSoftInputMode="stateHidden" />
         <activity
                 android:name=".views.services.CreateBookingActivity"
-                android:windowSoftInputMode="stateHidden"
-                android:screenOrientation="portrait" />
+                android:screenOrientation="portrait"
+                android:windowSoftInputMode="stateHidden" />
         <activity
                 android:name=".views.services.ServiceDetail"
-                android:windowSoftInputMode="stateHidden"
-                android:screenOrientation="portrait" />
+                android:screenOrientation="portrait"
+                android:windowSoftInputMode="stateHidden" />
         <activity
                 android:name=".views.history.HistoryBookingActivity"
-                android:windowSoftInputMode="stateHidden"
-                android:screenOrientation="portrait" />
+                android:screenOrientation="portrait"
+                android:windowSoftInputMode="stateHidden" />
         <activity
                 android:name=".views.chat.ChatInnerListActivity"
-                android:windowSoftInputMode="stateHidden"
-                android:screenOrientation="portrait" />
+                android:screenOrientation="portrait"
+                android:windowSoftInputMode="stateHidden" />
         <activity
                 android:name=".views.booking.BookedServiceDetail"
-                android:windowSoftInputMode="stateHidden"
-                android:screenOrientation="portrait" />
+                android:screenOrientation="portrait"
+                android:windowSoftInputMode="stateHidden" />
         <activity
                 android:name=".views.booking.BookingRulesDetail"
-                android:windowSoftInputMode="stateHidden"
-                android:screenOrientation="portrait" />
+                android:screenOrientation="portrait"
+                android:windowSoftInputMode="stateHidden" />
         <activity
                 android:name=".views.booking.EmployeeProfileDetail"
-                android:windowSoftInputMode="stateHidden"
-                android:screenOrientation="portrait" />
+                android:screenOrientation="portrait"
+                android:windowSoftInputMode="stateHidden" />
         <activity
                 android:name=".views.authentication.UserOptionActivity"
-                android:windowSoftInputMode="stateHidden"
-                android:screenOrientation="portrait" />
+                android:screenOrientation="portrait"
+                android:windowSoftInputMode="stateHidden" />
         <activity
                 android:name=".views.booking.ServiceDescriptionActivity"
-                android:windowSoftInputMode="stateHidden"
-                android:screenOrientation="portrait" />
+                android:screenOrientation="portrait"
+                android:windowSoftInputMode="stateHidden" />
         <activity
                 android:name=".views.contactus.ContactUsActivity"
-                android:windowSoftInputMode="stateHidden"
-                android:screenOrientation="portrait" />
+                android:screenOrientation="portrait"
+                android:windowSoftInputMode="stateHidden" />
         <activity
                 android:name=".views.socket.DriverTrackingActivity"
-                android:windowSoftInputMode="stateHidden"
-                android:screenOrientation="portrait" />
+                android:screenOrientation="portrait"
+                android:windowSoftInputMode="stateHidden" />
 
         <activity
                 android:name=".views.authentication.MyAccountsActivity"
-                android:windowSoftInputMode="stateHidden"
-                android:screenOrientation="portrait" />
+                android:screenOrientation="portrait"
+                android:windowSoftInputMode="stateHidden" />
 
         <provider
                 android:name="androidx.core.content.FileProvider"

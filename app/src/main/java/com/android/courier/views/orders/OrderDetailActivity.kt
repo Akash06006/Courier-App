@@ -42,6 +42,7 @@ import com.android.courier.model.order.CancelReasonsListResponse
 import com.android.courier.model.order.ListsResponse
 import com.android.courier.model.order.OrdersDetailResponse
 import com.android.courier.utils.BaseActivity
+import com.android.courier.viewmodels.home.HomeViewModel
 import com.android.courier.viewmodels.order.OrderViewModel
 import com.android.courier.views.chat.ChatActivity
 import com.android.courier.views.chat.DriverChatActivity
@@ -99,6 +100,7 @@ class OrderDetailActivity : BaseActivity(), OnMapReadyCallback, LocationListener
     internal var cameraZoom = 16.0f
     private var mAddress = ""
     var orderId = ""
+    private lateinit var homeViewModel : HomeViewModel
     internal lateinit var mLastLocation : Location
     internal lateinit var mLocationCallback : LocationCallback
     internal var mCurrLocationMarker : Marker? = null
@@ -156,6 +158,7 @@ class OrderDetailActivity : BaseActivity(), OnMapReadyCallback, LocationListener
          }*/
 
         super.onResume()
+        assignedEmployeesStatus = ""
         reasons.clear()
         reasons.add("Select Your Reason")
         if (UtilsFunctions.isNetworkConnected()) {
@@ -168,6 +171,7 @@ class OrderDetailActivity : BaseActivity(), OnMapReadyCallback, LocationListener
     override fun initViews() {
         // Initialize the SDK
         deliveryAddress = ArrayList()
+        assignedEmployeesStatus = ""
         Places.initialize(applicationContext, getString(R.string.maps_api_key))
         // Create a new PlacesClient instance
         val placesClient = Places.createClient(this)
@@ -178,6 +182,7 @@ class OrderDetailActivity : BaseActivity(), OnMapReadyCallback, LocationListener
         activityCreateOrderBinding = viewDataBinding as ActivityOrderDetailBinding
         orderViewModel = ViewModelProviders.of(this).get(OrderViewModel::class.java)
         activityCreateOrderBinding.orderViewModel = orderViewModel
+        homeViewModel = ViewModelProviders.of(this).get(HomeViewModel::class.java)
         mContext = this
         /* val userImage =
              SharedPrefClass().getPrefValue(this, GlobalConstants.USER_IMAGE).toString()
@@ -249,6 +254,10 @@ class OrderDetailActivity : BaseActivity(), OnMapReadyCallback, LocationListener
                     when {
                         response.code == 200 -> {
                             if (response.data?.orderStatus?.status != assignedEmployeesStatus) {
+                                mGoogleMap!!.clear()
+                                /*  if (!TextUtils.isEmpty(response.data?.completedorder?.empId)) {
+                                      showDeliveryBoyRatingDialog(response.data?.completedorder)
+                                  }*/
                                 var oldLatLong = LatLng(0.0, 0.0)
                                 activityCreateOrderBinding.orderDetailModel = response.data
                                 orderDetails = response.data
@@ -601,6 +610,7 @@ class OrderDetailActivity : BaseActivity(), OnMapReadyCallback, LocationListener
         }
         //mGoogleMap?.uiSettings?.setAllGesturesEnabled(true)
         // mGoogleMap?.uiSettings?.isScrollGesturesEnabled = true
+        mGoogleMap!!.uiSettings.isMapToolbarEnabled = false
         mGoogleMap!!.uiSettings.isZoomControlsEnabled = true
         //    mGoogleMap?.setOnCameraIdleListener(this)
     }
@@ -1038,31 +1048,66 @@ class OrderDetailActivity : BaseActivity(), OnMapReadyCallback, LocationListener
         }
 
     }
-    /*fun bitmapDescriptorFromVector(
-        context : Context
-    ) : BitmapDescriptor {
-        val background = ContextCompat.getDrawable(context, R.drawable.ic_map_pin_filled_blue_48dp);
-        background?.setBounds(
-            0,
-            0,
-            background!!.getIntrinsicWidth(),
-            background.getIntrinsicHeight()
-        );
-        val vectorDrawable = ContextCompat.getDrawable(context, vectorDrawableResourceId);
-        vectorDrawable?.setBounds(
-            40,
-            20,
-            vectorDrawable.getIntrinsicWidth() + 40,
-            vectorDrawable.getIntrinsicHeight() + 20
-        );
-        var bitmap = Bitmap.createBitmap(
-            background!!.getIntrinsicWidth(),
-            background.getIntrinsicHeight(),
-            Bitmap.Config.ARGB_8888
-        );
-        var canvas = Canvas(bitmap);
-        background?.draw(canvas);
-        vectorDrawable?.draw(canvas);
-        return BitmapDescriptorFactory.fromBitmap(bitmap);
-    }*/
+
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+    private fun showDeliveryBoyRatingDialog(completedorder : ListsResponse.CompletedOrder?) {
+        val confirmationDialog = Dialog(this, R.style.transparent_dialog)
+        confirmationDialog?.requestWindowFeature(Window.FEATURE_NO_TITLE)
+
+
+        confirmationDialog?.setContentView(R.layout.add_delivery_rating_dialog)
+        confirmationDialog?.setCancelable(false)
+
+        confirmationDialog?.window!!.setLayout(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.MATCH_PARENT
+        )
+        confirmationDialog?.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        val imgCross = confirmationDialog?.findViewById<ImageView>(R.id.imgCross)
+        val imgUser = confirmationDialog?.findViewById<ImageView>(R.id.user_img)
+        val txtUserName = confirmationDialog?.findViewById<TextView>(R.id.txtUserName)
+        val rbRatings = confirmationDialog?.findViewById<RatingBar>(R.id.rb_ratings)
+        val etReview = confirmationDialog?.findViewById<EditText>(R.id.et_review)
+        val btnSubmit = confirmationDialog?.findViewById<Button>(R.id.btnSubmit)
+        val rlBottom = confirmationDialog?.findViewById<RelativeLayout>(R.id.rlBottom)
+        val animation = AnimationUtils.loadAnimation(this, R.anim.anim)
+        animation.setDuration(1000)
+        rlBottom?.setAnimation(animation)
+        rlBottom?.animate()
+        animation.start()
+
+        txtUserName?.setText(completedorder?.firstName + " " + completedorder?.lastName)
+
+        Glide.with(this).load(completedorder?.image).placeholder(R.drawable.ic_person)
+            .into(imgUser!!)
+        btnSubmit?.setOnClickListener {
+            val mJsonObject = JsonObject()
+            mJsonObject.addProperty(
+                "companyId", completedorder?.companyId
+            )
+            mJsonObject.addProperty(
+                "rating", rbRatings?.getRating()
+            )
+            mJsonObject.addProperty(
+                "review", etReview?.getText().toString()
+            )
+            mJsonObject.addProperty(
+                "orderId", completedorder?.orderId
+            )
+            mJsonObject.addProperty(
+                "empId", completedorder?.empId
+            )
+
+            homeViewModel.addDriverRating(mJsonObject)
+            confirmationDialog?.dismiss()
+        }
+
+        imgCross?.setOnClickListener {
+            confirmationDialog?.dismiss()
+        }
+        if (!confirmationDialog?.isShowing()!!) {
+            confirmationDialog?.show()
+        }
+
+    }
 }

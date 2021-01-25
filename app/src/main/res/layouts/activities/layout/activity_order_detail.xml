@@ -227,7 +227,7 @@
                                             android:layout_marginLeft="5dp"
                                             android:layout_marginRight="5dp"
                                             android:gravity="left"
-                                            android:text="Rider Accept"
+                                            android:text="Rider Accepts"
                                             android:textSize="16sp"
                                             android:textStyle="bold"
                                             app:font="@{`bold`}" />

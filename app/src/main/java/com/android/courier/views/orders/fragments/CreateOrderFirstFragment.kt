@@ -44,6 +44,7 @@ import com.android.courier.utils.BaseFragment
 import com.android.courier.utils.DialogClass
 import com.android.courier.utils.DialogssInterface
 import com.android.courier.utils.Utils
+import com.android.courier.viewmodels.home.HomeViewModel
 import com.android.courier.viewmodels.order.OrderViewModel
 import com.android.courier.views.contacts.ContactListActivity
 import com.android.courier.views.orders.AddAddressActivity
@@ -110,6 +111,7 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
     var selectedAddress = ""
     var selectedlatLong = LatLng(0.0, 0.0)
     var distance = "0"
+    private var isaddAltered = false
     var deliveryType = "1"
     var deliveryTypeList = ArrayList<ListsResponse.DeliveryOptionData>()
     var deliveryTypeAdapter : DeliveryTypesAdapter? = null
@@ -147,6 +149,7 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
         mFusedLocationClass = FusedLocationClass(activity)
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(activity!!)
         // initRecyclerView()
+
         createOrderFirstBinding.imgPriceDetails.isEnabled = false
         var adapter1 = ArrayAdapter(
             activity!!,
@@ -162,6 +165,8 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
         pickupDate = formattedDate
         createOrderFirstBinding.tvDatetomtoday.text = "Today " + formattedDate
         selectedDate = "Today " + formattedDate
+
+        time = slot(0)
         val days = ArrayList<String>()
         days.add("Today " + formattedDate)
         days.add("Tomorrow " + formattedDate1)
@@ -308,10 +313,7 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
                             }
 
                             preFilledData()
-                            //  initDiscountsAdapter()
-                            /*initWeightAdapter()
-                            initVehiclesAdapter()
-                            */
+
                         }
                         else -> message?.let { UtilsFunctions.showToastError(it) }
                     }
@@ -331,18 +333,6 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
 
                             createOrderFirstBinding.imgPriceDetails.isEnabled = true
 
-
-                            if (discountApplied.equals("")) {
-                                /*activityCreateOrderBinding.rlOriginalPrice.visibility = View.GONE
-                                activityCreateOrderBinding.txtTotalAmount.setText("")
-                                activityCreateOrderBinding.txtDelCharges.setText(deliveryCharges + "₹")
-                                activityCreateOrderBinding.edtPromoCode.isEnabled = true*/
-                            } else {
-                                /*activityCreateOrderBinding.txtDelCharges.setText(response.data?.afterDiscount + "₹")
-                                activityCreateOrderBinding.edtPromoCode.isEnabled = false
-                                activityCreateOrderBinding.rlOriginalPrice.visibility = View.VISIBLE
-                                activityCreateOrderBinding.txtTotalAmount.setText(deliveryCharges + "₹")*/
-                            }
                             if (response.data?.cancelOrder != null && response.data?.cancelOrder?.orders!!.size > 0) {
                                 cancelOrderDetail = response.data?.cancelOrder!!
                                 cancelOrderIds = ""
@@ -358,13 +348,8 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
                                 //activityCreateOrderBinding.cancelLayout.visibility = View.VISIBLE
                                 totalCancellationCharges =
                                     response.data?.cancelOrder?.totalCancelPrice as String
-                                // activityCreateOrderBinding.txtCancellationCharges.text =response.data?.cancelOrder?.totalCancelPrice + "₹" + " View Details"
-                                // cancellationCharges =  response.data?.cancelOrder?.totalCancelPrice as String
                             } else {
                                 totalCancellationCharges = "0"
-                                /*  activityCreateOrderBinding.cancelLayout.visibility = View.GONE
-                                  response.data?.cancelOrder?.totalCancelPrice = ""
-                                  activityCreateOrderBinding.txtCancellationCharges.text = "0"*/
                             }
 
                             MyApplication.createOrdersInput.deliveryCharges =
@@ -403,18 +388,7 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
                     }
                 }
             })
-        // var time = ArrayList<String>()/*slot(position)*/
-        /*createOrderFirstBinding.edtDelMob.setOnFocusChangeListener(View.OnFocusChangeListener { v, hasFocus->
-            if (!hasFocus) { // code to execute when EditText loses focus
-                if (!TextUtils.isEmpty(createOrderFirstBinding.edtDelMob.text.toString()) && createOrderFirstBinding.edtDelMob.text.length < 10) {
-                    createOrderFirstBinding.edtDelMob.requestFocus()
-                    createOrderFirstBinding.edtDelMob.error =
-                        getString(R.string.mob_no) + " " + getString(R.string.phone_min)
-                } else {
-                    delMobile = createOrderFirstBinding.edtDelMob.text.toString()
-                }
-            }
-        })*/
+
         createOrderFirstBinding.edtPickMob.setOnFocusChangeListener(View.OnFocusChangeListener { v, hasFocus->
             if (!hasFocus) { // code to execute when EditText loses focus
                 checkAllValuesInserted()
@@ -521,32 +495,7 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
                             } else if (delMobile.length < 10) {
                                 createOrderFirstBinding.edtDelMob.requestFocus()
                                 showToastError("Please enter valid phone number")
-                            }
-                            /*if (TextUtils.isEmpty(
-                                    pickupDate
-                                ) || TextUtils.isEmpty(
-                                    pickTime
-                                ) || TextUtils.isEmpty(
-                                    pickupMobile
-                                ) || TextUtils.isEmpty(
-                                    delAddress
-                                ) || TextUtils.isEmpty(
-                                    delMobile
-                                ) || TextUtils.isEmpty(
-                                    MyApplication.createOrdersInput.deliveryOption
-                                ) || TextUtils.isEmpty(MyApplication.createOrdersInput.weight)
-                                || TextUtils.isEmpty(MyApplication.createOrdersInput.distance) || MyApplication.createOrdersInput.distance.equals(
-                                    "0"
-                                )
-                            ) {
-                                showToastError("Please fill all details")
-                            } else if (pickupMobile.length < 10) {
-                                createOrderFirstBinding.edtPickMob.requestFocus()
-                                showToastError("Please enter valid phone number")
-                            } else if (delMobile.length < 10) {
-                                createOrderFirstBinding.edtDelMob.requestFocus()
-                                showToastError("Please enter valid phone number")
-                            }*/ else {
+                            } else {
                                 val pickupAdd = CreateOrdersInput.PickupAddress()
                                 pickupAdd.address = pickupAddress
                                 pickupAdd.id = 0
@@ -569,6 +518,8 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
                                 deliveryAddressList.add(address)
                                 MyApplication.createOrdersInput.deliveryAddress =
                                     deliveryAddressList
+                                MyApplication.createOrdersInput.isaddAltered = "" +
+                                        isaddAltered
                                 var isAllDetailAded = true
                                 for (item in addressList) {
                                     if (TextUtils.isEmpty(item.address) || TextUtils.isEmpty(
@@ -1285,14 +1236,16 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
                         selectedAddress = place.name + "," + place.address.toString()
                         selectedlatLong = place.latLng!!
                         if (clickedForLocation.equals("pickup")) {
-                            createOrderInput.pickupAddress?.address = place.name + "," +place.address.toString()
+                            isaddAltered = true
+                            createOrderInput.pickupAddress?.address =
+                                place.name + "," + place.address.toString()
                             createOrderInput.pickupAddress?.lat = place.latLng!!.latitude.toString()
                             createOrderInput.pickupAddress?.long =
                                 place.latLng!!.longitude.toString()
 
                             latLongArrayList.add(place.latLng!!)
                             createOrderFirstBinding.edtPickupLoc.setText(place.name + "," + place.address.toString())
-                            pickupAddress = place.name + "," +place.address.toString()
+                            pickupAddress = place.name + "," + place.address.toString()
                             pickLat = place.latLng!!.latitude.toString()
                             pickLong = place.latLng!!.longitude.toString()
 
@@ -1307,6 +1260,7 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
                             createOrderFirstBinding.edtPickMob.requestFocus()
                         } else if (clickedForLocation.equals("delivery")) {
                             calculatePrice()
+                            isaddAltered = true
                             createOrderFirstBinding.edtDelAddress.setText(place.name + "," + place.address.toString())
                             delAddress = place.name + "," + place.address.toString()
                             delLat = place.latLng!!.latitude.toString()
@@ -1316,6 +1270,7 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
                             createOrderFirstBinding.edtDelMob.requestFocus()
                             //}
                         } else {
+                            isaddAltered = true
                             calculatePrice()
                             edtDelAddress?.setText(place.address.toString())
                             val tag = edtDelAddress?.id
@@ -1635,6 +1590,14 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
             var startdate = Date(diff)
             val sdf = SimpleDateFormat("hh:mmaa")
             var start = sdf.format(startdate.time)
+            if (position == 0) {
+                if (timeList.size == 0) {
+                    var time = "Now" + " - " + start
+                    timeList.add(time)
+
+                }
+            }
+
             diff += 1800000
             var enddate = Date(diff)
             var end = sdf.format(enddate.time)
@@ -1645,6 +1608,8 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
 
         if (timeList.isNotEmpty()) {
             createOrderFirstBinding.tvSelectTime.text = timeList[0]
+            pickTime = timeList[0]
+
         }
         return timeList
         Log.d("data", timeList.toString())
@@ -1721,7 +1686,7 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
 
         }*/
 
-        if (!deliveryFee.equals("0") && !deliveryFee.equals("")) {
+        if (!deliveryFee.equals("0.00") && !deliveryFee.equals("0") && !deliveryFee.equals("")) {
             createOrderFirstBinding.txtDelivery.text = "₹ " + deliveryFee
             createOrderFirstBinding.view1.visibility = View.VISIBLE
             createOrderFirstBinding.rlDelivery.visibility = View.VISIBLE
@@ -1729,7 +1694,7 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
             createOrderFirstBinding.rlDelivery.visibility = View.GONE
             createOrderFirstBinding.view1.visibility = View.GONE
         }
-        if (!weightFee.equals("0") && !weightFee.equals("")) {
+        if (!weightFee.equals("0.00") && !weightFee.equals("0") && !weightFee.equals("")) {
             createOrderFirstBinding.txtWeight.text = "₹ " + weightFee
             createOrderFirstBinding.view2.visibility = View.VISIBLE
             createOrderFirstBinding.rlWeight.visibility = View.VISIBLE
@@ -1737,7 +1702,10 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
             createOrderFirstBinding.rlWeight.visibility = View.GONE
             createOrderFirstBinding.view2.visibility = View.GONE
         }
-        if (!securityFee.equals("0") && !securityFee.equals("") && !securityFee.equals("null")) {
+        if (!securityFee.equals("0.00") && !securityFee.equals("0") && !securityFee.equals("") && !securityFee.equals(
+                "null"
+            )
+        ) {
             createOrderFirstBinding.txtSecurity.text = "₹ " + securityFee
             createOrderFirstBinding.view3.visibility = View.VISIBLE
             createOrderFirstBinding.rlSecurity.visibility = View.VISIBLE
@@ -1746,7 +1714,10 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
             createOrderFirstBinding.view3.visibility = View.GONE
         }
 
-        if (!totalCancellationCharges.equals("0") && !totalCancellationCharges.equals("")) {
+        if (!totalCancellationCharges.equals("0.00") && !totalCancellationCharges.equals("0") && !totalCancellationCharges.equals(
+                ""
+            )
+        ) {
             createOrderFirstBinding.txtCancellation.text = "₹ " + totalCancellationCharges
             createOrderFirstBinding.view4.visibility = View.VISIBLE
             createOrderFirstBinding.rlCancel.visibility = View.VISIBLE
@@ -1754,14 +1725,20 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
             createOrderFirstBinding.rlCancel.visibility = View.GONE
             createOrderFirstBinding.view4.visibility = View.GONE
         }
-        if (!couponDeduction.equals("0") && !couponDeduction.equals("")) {
+        if (!couponDeduction.equals("0.00") && !couponDeduction.equals("0") && !couponDeduction.equals(
+                ""
+            )
+        ) {
             createOrderFirstBinding.txtCouponDeduction.text = "₹ " + couponDeduction
             createOrderFirstBinding.rlCouponDeduction.visibility = View.VISIBLE
         } else {
             createOrderFirstBinding.rlCouponDeduction.visibility = View.GONE
         }
 
-        if (!deliveryTypeCharges.equals("0") && !deliveryTypeCharges.equals("")) {
+        if (!deliveryTypeCharges.equals("0.00") && !deliveryTypeCharges.equals("0") && !deliveryTypeCharges.equals(
+                ""
+            )
+        ) {
             createOrderFirstBinding.view5.visibility = View.VISIBLE
             createOrderFirstBinding.txtDeliveryTypeCharges.text = "₹ " + deliveryTypeCharges
             createOrderFirstBinding.rlDeliveryTypeCharges.visibility = View.VISIBLE

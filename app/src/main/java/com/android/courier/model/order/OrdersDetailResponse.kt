@@ -16,6 +16,9 @@ class OrdersDetailResponse() : Serializable {
 
     /*deliveryOption -> {JsonPrimitive@8505} ""51b1c365-b88b-4ca4-bf01-4361c0a1ee3c""*/
     class Data : Serializable {
+        @SerializedName("completedorder")
+        @Expose
+        var completedorder : ListsResponse.CompletedOrder? = null
         @SerializedName("pickupAddress")
         @Expose
         var pickupAddress : PickupAddress? = null
@@ -155,6 +158,27 @@ class OrdersDetailResponse() : Serializable {
         @SerializedName("phoneNumber")
         @Expose
         var phoneNumber : String? = null
+    }
+
+    inner class CompletedOrder {
+        @SerializedName("empId")
+        @Expose
+        var empId : String? = null
+        @SerializedName("orderId")
+        @Expose
+        var orderId : String? = null
+        @SerializedName("firstName")
+        @Expose
+        var firstName : String? = null
+        @SerializedName("lastName")
+        @Expose
+        var lastName : String? = null
+        @SerializedName("image")
+        @Expose
+        var image : String? = null
+        @SerializedName("companyId")
+        @Expose
+        var companyId : String? = null
     }
 
     class PickupAddress : Serializable {

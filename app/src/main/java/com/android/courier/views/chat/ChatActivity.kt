@@ -39,7 +39,8 @@ import java.net.URISyntaxException
 import java.util.*
 import kotlin.collections.ArrayList
 
-class ChatActivity : BaseActivity(),
+class
+ChatActivity : BaseActivity(),
     ConnectionListener {
     private val sharedPrefClass = SharedPrefClass()
     private var chatList : ArrayList<ChatListModel>? = null
@@ -70,7 +71,7 @@ class ChatActivity : BaseActivity(),
     override fun initViews() {
         chatBinding = viewDataBinding as ActivityChatBinding
         chatBinding.commonToolBar.imgRight.visibility = View.GONE
-        chatBinding.commonToolBar.imgToolbarText.text = "Help"
+        chatBinding.commonToolBar.imgToolbarText.text = "Chat With Locomo Support"
         chatList = ArrayList()
         orderId = intent.extras?.get("orderId").toString()
         mMessageAdapter = MessageListAdapter(

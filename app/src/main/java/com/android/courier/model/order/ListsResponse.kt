@@ -2,6 +2,7 @@ package com.android.courier.model.order
 
 import com.google.gson.annotations.SerializedName
 import com.google.gson.annotations.Expose
+import java.io.Serializable
 
 class ListsResponse {
     @SerializedName("body")
@@ -45,7 +46,7 @@ class ListsResponse {
 
     }/**/
 
-    inner class CompletedOrder {
+    inner class CompletedOrder : Serializable {
         @SerializedName("empId")
         @Expose
         var empId : String? = null

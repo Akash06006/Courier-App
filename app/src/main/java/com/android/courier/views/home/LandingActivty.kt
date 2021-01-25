@@ -150,6 +150,9 @@ class LandingActivty : BaseActivity(), DialogssInterface {
         landingBinding!!.tablayout.addOnTabSelectedListener(object :
             TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab : TabLayout.Tab?) {
+
+                getWindow().setSoftInputMode(
+                    WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
                 landingBinding!!.tablayout!!.getTabAt(0)!!
                     .setIcon(resources.getDrawable(R.drawable.ic_tab_home));
                 landingBinding!!.tablayout!!.getTabAt(1)!!
@@ -232,7 +235,10 @@ class LandingActivty : BaseActivity(), DialogssInterface {
             this, Observer<String>(function =
             fun(it : String?) {
                 drawer!!.closeDrawer(Gravity.LEFT)
+                getWindow().setSoftInputMode(
+                    WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
                 when (it) {
+
                     "tv_nav_my_account" -> {
                         val fragment = ProfileFragment()
                         landingBinding!!.drawerLayout.closeDrawers()
@@ -415,6 +421,8 @@ class LandingActivty : BaseActivity(), DialogssInterface {
     }
 
     fun openCloseDrawer() {
+        getWindow().setSoftInputMode(
+            WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         val name = SharedPrefClass().getPrefValue(
             MyApplication.instance.applicationContext,
             GlobalConstants.USERNAME

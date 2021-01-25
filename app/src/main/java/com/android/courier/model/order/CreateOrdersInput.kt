@@ -64,6 +64,11 @@ class CreateOrdersInput {
     @SerializedName("totalOrderPrice")
     @Expose
     var totalOrderPrice : String? = null
+    @SerializedName("isaddAltered")
+    @Expose
+    var isaddAltered : String? = null
+
+
     @SerializedName("companyId")
     @Expose
     var companyId : String? = null

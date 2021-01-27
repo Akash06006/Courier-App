@@ -93,7 +93,8 @@ OrdersFragment : BaseFragment() {
             splitRes[0].substring(0, 1).toUpperCase() + splitRes[0].substring(1).toLowerCase()
         val lastName : String =
             splitRes[1].substring(0, 1).toUpperCase() + splitRes[1].substring(1).toLowerCase()
-        fragmentOrdersBinding.imgToolbarText.text = "Welcome, " + firstName + " " + lastName
+        fragmentOrdersBinding.imgToolbarText.text =
+            "Orders"/*Welcome, " + firstName + " " + lastName*/
         //fragmentOrdersBinding.txtWelcome.setText("Welcome, " + name)
         reasons.add("Select Reason")
         if (UtilsFunctions.isNetworkConnected()) {

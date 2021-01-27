@@ -15,11 +15,14 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
+import android.os.SystemClock
 import android.provider.Settings
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.Window
+import android.view.animation.AccelerateDecelerateInterpolator
+import android.view.animation.Interpolator
 import android.widget.Button
 import android.widget.TextView
 import androidx.annotation.DrawableRes
@@ -124,6 +127,8 @@ open class DriverTrackingActivity : BaseActivity(), OnMapReadyCallback, Location
     private var markerList : ArrayList<Marker>? = ArrayList()
     private var sourceMarker : Marker? = null
     private var isEventFirstHit = true
+    private var isDriverMarkerAdded = false
+    private var driverOldLatLng : LatLng? = null
 
     companion object {
         var categoryListids : ArrayList<String>? = null
@@ -769,7 +774,7 @@ open class DriverTrackingActivity : BaseActivity(), OnMapReadyCallback, Location
                 innerResponse.getString("lastLongitude")
             )
         ) {
-            mark1?.remove()
+            // mark1?.remove()
             //val obj = innerResponse[0] as JSONObject
             driverLat = innerResponse.optString("lastLatitude")
             driverLong = innerResponse.getString("lastLongitude")
@@ -809,19 +814,31 @@ open class DriverTrackingActivity : BaseActivity(), OnMapReadyCallback, Location
             driverLocation = BitmapDescriptorFactory.fromBitmap(bitmap)
 
 
-            mark1 = mGoogleMap!!.addMarker(
-                MarkerOptions()
-                    .position(
-                        LatLng(
-                            driverLat.toDouble(),
-                            driverLong.toDouble()
+            if (!isDriverMarkerAdded) {
+                mark1 = mGoogleMap!!.addMarker(
+                    MarkerOptions()
+                        .position(
+                            LatLng(
+                                driverLat.toDouble(),
+                                driverLong.toDouble()
+                            )
                         )
-                    )
-                    //.snippet(points[0].longitude.toString() + "")
-                    .icon(
-                        driverLocation
-                    )
-            )
+                        //.snippet(points[0].longitude.toString() + "")
+                        .icon(
+                            driverLocation
+                        )
+                )
+                driverOldLatLng = LatLng(driverLat.toDouble(), driverLong.toDouble())
+                isDriverMarkerAdded = true
+            } else {
+                animatedMarker(
+                    driverOldLatLng!!,
+                    LatLng(driverLat.toDouble(), driverLong.toDouble()),
+                    mark1!!
+                )
+                driverOldLatLng = LatLng(driverLat.toDouble(), driverLong.toDouble())
+            }
+
 
             if (isEventFirstHit) {
                 builder.include(
@@ -839,6 +856,42 @@ open class DriverTrackingActivity : BaseActivity(), OnMapReadyCallback, Location
                 isEventFirstHit = false
             }
         }
+    }
+
+    fun animatedMarker(
+        startPosition : LatLng,
+        nextPosition : LatLng,
+        mMarker : Marker
+    ) {
+        val handler = Handler()
+        val start : Long = SystemClock.uptimeMillis()
+        val interpolator : Interpolator = AccelerateDecelerateInterpolator()
+        val durationInMs = 3000f
+        handler.post(object : Runnable {
+            var elapsed : Long = 0
+            var t = 0f
+            var v = 0f
+            override fun run() {
+                // Calculate progress using interpolator
+                elapsed = SystemClock.uptimeMillis() - start
+                t = elapsed / durationInMs
+                v = interpolator.getInterpolation(t)
+                val currentPosition = LatLng(
+                    startPosition.latitude * (1 - t) + nextPosition.latitude * t,
+                    startPosition.longitude * (1 - t) + nextPosition.longitude * t
+                )
+                mMarker.setPosition(currentPosition)
+                // Repeat till progress is complete.
+                if (t < 1) {
+                    // Post again 16ms later.
+                    handler.postDelayed(this, 16)
+                } else {
+
+                        mMarker.isVisible = true
+
+                }
+            }
+        })
     }
 
     fun showCompleteAlert(activity : Activity, message1 : String) {

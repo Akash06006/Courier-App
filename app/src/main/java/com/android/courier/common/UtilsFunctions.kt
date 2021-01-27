@@ -137,7 +137,7 @@ object UtilsFunctions {
         layout.setBackgroundColor(
             ContextCompat.getColor(
                 MyApplication.instance,
-                R.color.colorOrange
+                R.color.colorMustad
             )
         )
         toast.setGravity(Gravity.FILL_HORIZONTAL or Gravity.BOTTOM, 0, 0)

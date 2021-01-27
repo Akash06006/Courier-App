@@ -16,7 +16,6 @@ import android.provider.Settings
 import android.text.Html
 import android.text.TextUtils
 import android.view.LayoutInflater
-import android.view.View
 import android.view.Window
 import android.view.animation.AnimationUtils
 import android.widget.*
@@ -28,25 +27,24 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.android.courier.databinding.FragmentHomeBinding
-import com.android.courier.constants.GlobalConstants
-import com.android.courier.maps.FusedLocationClass
-import com.android.courier.sharedpreference.SharedPrefClass
-import com.android.courier.utils.BaseFragment
-import com.android.courier.viewmodels.home.HomeViewModel
-import com.android.courier.views.home.LandingActivty
-import com.android.courier.views.orders.CreateOrderActivty
-import com.google.android.gms.location.*
 import com.android.courier.R
 import com.android.courier.adapters.orders.DiscountListAdapter
 import com.android.courier.common.UtilsFunctions
 import com.android.courier.common.UtilsFunctions.showToastError
 import com.android.courier.common.UtilsFunctions.showToastSuccess
+import com.android.courier.constants.GlobalConstants
+import com.android.courier.databinding.FragmentHomeBinding
+import com.android.courier.maps.FusedLocationClass
 import com.android.courier.model.CommonModel
 import com.android.courier.model.order.ListsResponse
+import com.android.courier.sharedpreference.SharedPrefClass
+import com.android.courier.utils.BaseFragment
+import com.android.courier.viewmodels.home.HomeViewModel
+import com.android.courier.views.home.LandingActivty
+import com.android.courier.views.orders.CreateOrderActivty
+import com.bumptech.glide.Glide
+import com.google.android.gms.location.*
 import com.google.gson.JsonObject
-import kotlinx.android.synthetic.main.activity_profile.view.*
 
 class
 HomeFragment : BaseFragment() {
@@ -58,6 +56,7 @@ HomeFragment : BaseFragment() {
     var currentLong = ""
     var bannersList = ArrayList<ListsResponse.BannersData>()
     private lateinit var fragmentHomeBinding : FragmentHomeBinding
+
     //var categoriesList = null
     override fun getLayoutResId() : Int {
         return R.layout.fragment_home
@@ -79,7 +78,12 @@ HomeFragment : BaseFragment() {
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(activity!!)
         // initRecyclerView()
         val name = SharedPrefClass().getPrefValue(activity!!, GlobalConstants.USERNAME).toString()
-        fragmentHomeBinding.imgToolbarText.text = "Welcome, " + name
+        val splitRes = name.split(" ")
+        val firstName : String =
+            splitRes[0].substring(0, 1).toUpperCase() + splitRes[0].substring(1).toLowerCase()
+        val lastName : String =
+            splitRes[1].substring(0, 1).toUpperCase() + splitRes[1].substring(1).toLowerCase()
+        fragmentHomeBinding.imgToolbarText.text = "Welcome, " + firstName + " " + lastName
         fragmentHomeBinding.toolbar.setImageResource(R.drawable.ic_side_menu)
         val userImage =
             SharedPrefClass().getPrefValue(activity!!, GlobalConstants.USER_IMAGE).toString()

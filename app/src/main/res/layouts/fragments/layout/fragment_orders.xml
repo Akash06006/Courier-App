@@ -168,15 +168,22 @@
                         android:textColor="@color/colorPrimary"
                         android:textStyle="bold" />
 
-                <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/rvOrders"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/dp_5"
-                        android:layout_marginTop="@dimen/dp_5"
-                        android:layout_marginRight="@dimen/dp_5"
-                        android:padding="@dimen/dp_5"
-                        android:visibility="visible" />
+                <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                        android:id="@+id/itemsswipetorefresh"
+                        android:layout_width="wrap_content"
+                        android:layout_height="0px"
+                        android:layout_weight="1">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/rvOrders"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/dp_5"
+                            android:layout_marginTop="@dimen/dp_5"
+                            android:layout_marginRight="@dimen/dp_5"
+                            android:padding="@dimen/dp_5"
+                            android:visibility="visible" />
+                </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
             </LinearLayout>
 
             <LinearLayout

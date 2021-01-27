@@ -11,15 +11,18 @@ import android.graphics.drawable.ColorDrawable
 import android.location.Location
 import android.location.LocationManager
 import android.os.Build
+import android.os.Handler
 import android.os.Looper
 import android.provider.Settings
 import android.text.TextUtils
+import android.util.Log
 import android.view.View
 import android.view.Window
 import android.view.animation.AnimationUtils
 import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -28,6 +31,9 @@ import com.bumptech.glide.Glide
 import com.android.courier.databinding.FragmentOrdersBinding
 import com.android.courier.R
 import com.android.courier.adapters.orders.OrdersListAdapter
+import com.android.courier.application.MyApplication
+import com.android.courier.chatSocket.ConnectionListener
+import com.android.courier.chatSocket.SocketConnectionManager
 import com.android.courier.common.UtilsFunctions
 import com.android.courier.common.UtilsFunctions.showToastError
 import com.android.courier.common.UtilsFunctions.showToastSuccess
@@ -40,11 +46,17 @@ import com.android.courier.sharedpreference.SharedPrefClass
 import com.android.courier.utils.BaseFragment
 import com.android.courier.viewmodels.order.OrderViewModel
 import com.android.courier.views.home.LandingActivty
+import com.example.services.socket.SocketClass
+import com.example.services.socket.SocketInterface
 import com.google.android.gms.location.*
 import com.google.gson.JsonObject
+import io.socket.emitter.Emitter
+import org.json.JSONException
+import org.json.JSONObject
+import java.net.URISyntaxException
+import java.util.HashMap
 
-class
-OrdersFragment : BaseFragment() {
+class OrdersFragment : BaseFragment(), ConnectionListener, SocketInterface {
     private var mFusedLocationClass : FusedLocationClass? = null
     private lateinit var orderViewModel : OrderViewModel
     val PERMISSION_ID = 42
@@ -54,8 +66,11 @@ OrdersFragment : BaseFragment() {
     var currentLong = ""
     var isActive = "true"
     var orderType = "active"
+    private var socket = SocketClass.socket
     var reasons = java.util.ArrayList<String>()
     private lateinit var fragmentOrdersBinding : FragmentOrdersBinding
+    var isFirstTime = false
+
     //var categoriesList = null
     override fun getLayoutResId() : Int {
         return R.layout.fragment_orders
@@ -74,6 +89,7 @@ OrdersFragment : BaseFragment() {
 
     //api/mobile/services/getSubcat/b21a7c8f-078f-4323-b914-8f59054c4467
     override fun initView() {
+        isFirstTime = false
         fragmentOrdersBinding = viewDataBinding as FragmentOrdersBinding
         orderViewModel = ViewModelProviders.of(this).get(OrderViewModel::class.java)
         fragmentOrdersBinding.orderViewModel = orderViewModel
@@ -87,7 +103,40 @@ OrdersFragment : BaseFragment() {
         Glide.with(activity!!).load(userImage).placeholder(R.drawable.ic_user)
             .into(fragmentOrdersBinding.imgRight)
 
-        fragmentOrdersBinding.txtWelcome.setText("Welcome, " + name)
+        fragmentOrdersBinding.imgToolbarText.text =
+            "Orders"/*Welcome, " + firstName + " " + lastName*/
+        socket.updateSocketInterface(this)
+        socket.onConnect()
+
+        Handler().postDelayed({
+            callSocketMethods("getLocation")
+        }, 2000)
+
+        try {
+            val socketConnectionManager : SocketConnectionManager =
+                SocketConnectionManager.getInstance()
+            socketConnectionManager.createConnection(
+                this,
+                HashMap<String, Emitter.Listener>()
+            )
+        } catch (e : URISyntaxException) {
+            e.printStackTrace()
+        }
+        SocketConnectionManager.getInstance()
+            .addEventListener("updateOrderStatus") { args->
+                val data = args[0] as JSONObject
+                try {
+                    Log.d("updateOrderStatus", "updateOrderStatus")
+                    val orderStatus = data.getString("orderStatus")
+                    if (UtilsFunctions.isNetworkConnected()) {
+                        //baseActivity.startProgressDialog()
+                        orderViewModel.getOrderList(orderType)
+                    }
+                } catch (e : Exception) {
+                }
+            }
+
+
 
         reasons.add("Select Reason")
         if (UtilsFunctions.isNetworkConnected()) {
@@ -95,6 +144,21 @@ OrdersFragment : BaseFragment() {
             // orderViewModel.getOrderList(orderType)
             // orderViewModel.cancelReason("reason")
         }
+
+
+        fragmentOrdersBinding.itemsswipetorefresh.setProgressBackgroundColorSchemeColor(
+            ContextCompat.getColor(activity!!, R.color.colorPrimary)
+        )
+        fragmentOrdersBinding.itemsswipetorefresh.setColorSchemeColors(Color.WHITE)
+
+        fragmentOrdersBinding.itemsswipetorefresh.setOnRefreshListener {
+            if (UtilsFunctions.isNetworkConnected()) {
+                //baseActivity.startProgressDialog()
+                orderViewModel.getOrderList(orderType)
+            }
+            fragmentOrdersBinding.itemsswipetorefresh.isRefreshing = false
+        }
+
         orderViewModel.orderListRes().observe(this,
             Observer<OrdersListResponse> { response->
                 baseActivity.stopProgressDialog()
@@ -207,6 +271,7 @@ OrdersFragment : BaseFragment() {
                     }
                     "txtActive" -> {
                         if (isActive.equals("false")) {
+                            isFirstTime = false
                             unselectButtons()
                             isActive = "true"
                             orderType = "active"
@@ -224,6 +289,7 @@ OrdersFragment : BaseFragment() {
                     }
                     "txtCompleted" -> {
                         if (isActive.equals("true")) {
+                            isFirstTime = false
                             unselectButtons()
                             isActive = "false"
                             orderType = "complete"
@@ -347,10 +413,13 @@ OrdersFragment : BaseFragment() {
                 activity!!,
                 isActive
             )
-        val controller =
-            AnimationUtils.loadLayoutAnimation(activity, R.anim.layout_animation_from_left)
-        fragmentOrdersBinding.rvOrders.setLayoutAnimation(controller);
-        fragmentOrdersBinding.rvOrders.scheduleLayoutAnimation();
+        if (isFirstTime) {
+            isFirstTime = true
+            val controller =
+                AnimationUtils.loadLayoutAnimation(activity, R.anim.layout_animation_from_left)
+            fragmentOrdersBinding.rvOrders.setLayoutAnimation(controller);
+            fragmentOrdersBinding.rvOrders.scheduleLayoutAnimation();
+        }
         val linearLayoutManager = LinearLayoutManager(activity!!)
         linearLayoutManager.orientation = RecyclerView.VERTICAL
         fragmentOrdersBinding.rvOrders.layoutManager = linearLayoutManager
@@ -480,6 +549,77 @@ OrdersFragment : BaseFragment() {
             confirmationDialog?.show()
         }
 
+    }
+
+    override fun onConnectError() {
+        TODO("Not yet implemented")
+    }
+
+    override fun onConnected() {
+        Log.e("Socket", "OnConnected")
+
+    }
+
+    override fun onDisconnected() {
+        activity!!.runOnUiThread {
+            Toast.makeText(activity!!, "disconnected", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun callSocketMethods(methodName : String) {
+        val object5 = JSONObject()
+        when (methodName) {
+            "getLocation" -> try {
+                socket.sendDataToServer(methodName, object5)
+            } catch (e : Exception) {
+                e.printStackTrace()
+            }
+/*
+            "trackYourRider"->
+            {
+                val jsonObject = JSONObject()
+                try {
+                    jsonObject.put("orderId", jobId)
+                    jsonObject.put("empId", driverId)
+                    jsonObject.put("onGoing", "false")
+                    SocketConnectionManager.getInstance()
+                        .socket.emit("trackYourRider", jsonObject)
+                } catch (e : Exception) {
+                    e.printStackTrace()
+                }
+
+                SocketConnectionManager.getInstance()
+                    .addEventListener("trackYourRider") { args ->
+                        val data = args[0] as JSONObject
+                        try {
+                        } catch (e: JSONException) {
+                        }
+                    }
+
+            }
+*/
+        }
+    }
+
+    override fun onSocketCall(onMethadCall : String, vararg jsonObject : Any) {
+        val serverResponse = jsonObject[0] as JSONObject
+        try {
+            val innerResponse = serverResponse.get("data") as JSONObject
+            if (UtilsFunctions.isNetworkConnected()) {
+                //baseActivity.startProgressDialog()
+                orderViewModel.getOrderList(orderType)
+            }
+        } catch (e1 : Exception) {
+            e1.printStackTrace()
+        }
+    }
+
+    override fun onSocketConnect(vararg args : Any) {
+        Log.e("Socket", "Socket onSocketConnect")
+    }
+
+    override fun onSocketDisconnect(vararg args : Any) {
+        Log.e("Socket", "Socket onSocketDisconnect")
     }
 
 }

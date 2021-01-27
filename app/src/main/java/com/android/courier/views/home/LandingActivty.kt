@@ -2,6 +2,10 @@ package com.android.courier.views.home
 
 import android.app.Dialog
 import android.content.Intent
+import android.media.audiofx.BassBoost
+import android.net.Uri
+import android.provider.Settings
+import android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS
 import android.text.TextUtils
 import android.view.Gravity
 import android.view.View
@@ -12,7 +16,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.android.courier.R
-import com.bumptech.glide.Glide
 import com.android.courier.application.MyApplication
 import com.android.courier.constants.GlobalConstants
 import com.android.courier.databinding.ActivityLandingActivtyBinding
@@ -23,7 +26,6 @@ import com.android.courier.utils.DialogClass
 import com.android.courier.utils.DialogssInterface
 import com.android.courier.viewmodels.home.DashboardViewModel
 import com.android.courier.views.authentication.LoginActivity
-import com.android.courier.views.chat.ChatActivity
 import com.android.courier.views.contactus.ContactUsActivity
 import com.android.courier.views.home.fragments.HomeFragment
 import com.android.courier.views.notifications.NotificationsFragment
@@ -35,9 +37,7 @@ import com.android.courier.views.promocode.PromoCodeActivity
 import com.android.courier.views.refer.LoyaltyPointsListActivity
 import com.android.courier.views.refer.ReferAndEarn
 import com.android.courier.views.tutorials.TutorialActivity
-import com.android.courier.views.webviews.WebViewActivity
-import com.github.tamir7.contacts.Contact
-import com.github.tamir7.contacts.Contacts
+import com.bumptech.glide.Glide
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.tabs.TabLayout
 
@@ -58,7 +58,8 @@ class LandingActivty : BaseActivity(), DialogssInterface {
     override fun onResume() {
         super.onResume()
         getWindow().setSoftInputMode(
-            WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+            WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
+        );
     }
 
     override fun onBackPressed() {
@@ -88,6 +89,14 @@ class LandingActivty : BaseActivity(), DialogssInterface {
         drawer = landingBinding!!.drawerLayout
         drawer!!.closeDrawer(Gravity.LEFT)
         // ic_profile
+        /*val i = Intent()
+        i.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+        i.addCategory(Intent.CATEGORY_DEFAULT)
+        i.data = Uri.parse("package:" + getPackageName())
+        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        i.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
+        i.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS)
+        startActivity(i)*/
         val userId = SharedPrefClass().getPrefValue(
             MyApplication.instance.applicationContext,
             GlobalConstants.USERID
@@ -150,9 +159,9 @@ class LandingActivty : BaseActivity(), DialogssInterface {
         landingBinding!!.tablayout.addOnTabSelectedListener(object :
             TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab : TabLayout.Tab?) {
-
                 getWindow().setSoftInputMode(
-                    WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+                    WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
+                );
                 landingBinding!!.tablayout!!.getTabAt(0)!!
                     .setIcon(resources.getDrawable(R.drawable.ic_tab_home));
                 landingBinding!!.tablayout!!.getTabAt(1)!!
@@ -236,9 +245,9 @@ class LandingActivty : BaseActivity(), DialogssInterface {
             fun(it : String?) {
                 drawer!!.closeDrawer(Gravity.LEFT)
                 getWindow().setSoftInputMode(
-                    WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+                    WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
+                );
                 when (it) {
-
                     "tv_nav_my_account" -> {
                         val fragment = ProfileFragment()
                         landingBinding!!.drawerLayout.closeDrawers()
@@ -422,7 +431,8 @@ class LandingActivty : BaseActivity(), DialogssInterface {
 
     fun openCloseDrawer() {
         getWindow().setSoftInputMode(
-            WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+            WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
+        );
         val name = SharedPrefClass().getPrefValue(
             MyApplication.instance.applicationContext,
             GlobalConstants.USERNAME

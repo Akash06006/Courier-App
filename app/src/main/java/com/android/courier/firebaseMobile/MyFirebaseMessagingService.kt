@@ -1,6 +1,7 @@
 package com.android.courier.firebaseMobile
 
 import android.app.Notification
+import android.app.Notification.PRIORITY_MAX
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -10,6 +11,7 @@ import android.media.RingtoneManager
 import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationCompat.PRIORITY_MAX
 import androidx.core.app.NotificationManagerCompat
 import com.android.courier.R
 import com.android.courier.constants.GlobalConstants
@@ -85,7 +87,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
                 .setOngoing(false)
                 .setContentText(displayMessage)
                 .setDefaults(Notification.DEFAULT_ALL)
-                .setPriority(NotificationCompat.PRIORITY_MAX)
+                .setPriority(NotificationManager.IMPORTANCE_MAX)
                 .setStyle(
                     NotificationCompat.BigTextStyle()
                         .bigText(displayMessage)
@@ -96,7 +98,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
                 val channel = NotificationChannel(
                     packageName,
                     getString(R.string.app_name),
-                    NotificationManager.IMPORTANCE_DEFAULT
+                    NotificationManager.IMPORTANCE_HIGH
                 )
                 notificationManager.createNotificationChannel(channel)
             }

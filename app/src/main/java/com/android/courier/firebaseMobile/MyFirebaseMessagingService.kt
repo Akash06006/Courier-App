@@ -47,7 +47,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             GlobalConstants.NOTIFICATION_TOKEN,
             token
         )
-       // GlobalConstants.NOTIFICATION_TOKEN = token
+        // GlobalConstants.NOTIFICATION_TOKEN = token
         Log.d("token", token + "")
         // If you want to send messages to this application instance or
         // manage this apps subscriptions on the server side, send the
@@ -85,7 +85,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
                 .setOngoing(false)
                 .setContentText(displayMessage)
                 .setDefaults(Notification.DEFAULT_ALL)
-                .setPriority(Notification.FLAG_HIGH_PRIORITY)
+                .setPriority(NotificationCompat.PRIORITY_MAX)
                 .setStyle(
                     NotificationCompat.BigTextStyle()
                         .bigText(displayMessage)
@@ -109,7 +109,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
                 .setOngoing(false)
                 .setDefaults(Notification.DEFAULT_ALL)
                 .setSound(defaultSoundUri)
-                .setPriority(Notification.FLAG_HIGH_PRIORITY)
+                .setPriority(NotificationCompat.PRIORITY_MAX)
                 .setContentIntent(pendingIntent)
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

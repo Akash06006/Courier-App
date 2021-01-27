@@ -20,6 +20,7 @@ import android.view.animation.AnimationUtils
 import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -56,6 +57,7 @@ OrdersFragment : BaseFragment() {
     var orderType = "active"
     var reasons = java.util.ArrayList<String>()
     private lateinit var fragmentOrdersBinding : FragmentOrdersBinding
+
     //var categoriesList = null
     override fun getLayoutResId() : Int {
         return R.layout.fragment_orders
@@ -86,15 +88,34 @@ OrdersFragment : BaseFragment() {
             SharedPrefClass().getPrefValue(activity!!, GlobalConstants.USER_IMAGE).toString()
         Glide.with(activity!!).load(userImage).placeholder(R.drawable.ic_user)
             .into(fragmentOrdersBinding.imgRight)
-
-        fragmentOrdersBinding.txtWelcome.setText("Welcome, " + name)
-
+        val splitRes = name.split(" ")
+        val firstName : String =
+            splitRes[0].substring(0, 1).toUpperCase() + splitRes[0].substring(1).toLowerCase()
+        val lastName : String =
+            splitRes[1].substring(0, 1).toUpperCase() + splitRes[1].substring(1).toLowerCase()
+        fragmentOrdersBinding.imgToolbarText.text = "Welcome, " + firstName + " " + lastName
+        //fragmentOrdersBinding.txtWelcome.setText("Welcome, " + name)
         reasons.add("Select Reason")
         if (UtilsFunctions.isNetworkConnected()) {
             // baseActivity.startProgressDialog()
             // orderViewModel.getOrderList(orderType)
             // orderViewModel.cancelReason("reason")
         }
+
+
+        fragmentOrdersBinding.itemsswipetorefresh.setProgressBackgroundColorSchemeColor(
+            ContextCompat.getColor(activity!!, R.color.colorPrimary)
+        )
+        fragmentOrdersBinding.itemsswipetorefresh.setColorSchemeColors(Color.WHITE)
+
+        fragmentOrdersBinding.itemsswipetorefresh.setOnRefreshListener {
+            if (UtilsFunctions.isNetworkConnected()) {
+                //baseActivity.startProgressDialog()
+                orderViewModel.getOrderList(orderType)
+            }
+            fragmentOrdersBinding.itemsswipetorefresh.isRefreshing = false
+        }
+
         orderViewModel.orderListRes().observe(this,
             Observer<OrdersListResponse> { response->
                 baseActivity.stopProgressDialog()

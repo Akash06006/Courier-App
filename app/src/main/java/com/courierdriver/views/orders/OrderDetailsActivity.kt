@@ -1004,8 +1004,8 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
                 activityCreateOrderBinding.llAcceptedTakeOrder.visibility = View.GONE
                 activityCreateOrderBinding.llCompleteOrder.visibility = View.VISIBLE
             } else {
-                if(!isTimerStarted)
-                getTimeDifference()
+                if (!isTimerStarted)
+                    getTimeDifference()
                 activityCreateOrderBinding.relNavigation.visibility = View.VISIBLE
                 activityCreateOrderBinding.linChatHelp.visibility = View.VISIBLE
                 activityCreateOrderBinding.tvTimer.visibility = View.VISIBLE

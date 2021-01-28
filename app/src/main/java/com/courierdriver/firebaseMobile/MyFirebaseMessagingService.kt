@@ -9,6 +9,7 @@ import android.content.Context
 import android.content.Intent
 import android.media.RingtoneManager
 import android.os.Build
+import android.text.TextUtils
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -42,12 +43,15 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     }
 
     override fun onNewToken(token: String) {
-        SharedPrefClass().putObject(
-            applicationContext,
-            GlobalConstants.NOTIFICATION_TOKENPref,
-            token
-        )
-        GlobalConstants.NOTIFICATION_TOKEN = token
+        if (!TextUtils.isEmpty(token)) {
+            SharedPrefClass().putObject(
+                applicationContext,
+                GlobalConstants.NOTIFICATION_TOKENPref,
+                token
+            )
+            GlobalConstants.NOTIFICATION_TOKEN = token
+        }
+
         Log.d("token", token + "")
         // If you want to send messages to this application instance or
         // manage this apps subscriptions on the server side, send the

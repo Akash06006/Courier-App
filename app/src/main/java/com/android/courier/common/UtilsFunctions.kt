@@ -156,7 +156,7 @@ object UtilsFunctions {
         val image = layout.findViewById<ImageView>(R.id.image)
         image.setImageResource(R.drawable.ic_info)
         val text = layout.findViewById<TextView>(R.id.text)
-        text.setTextColor(MyApplication.instance.getColor(R.color.colorPrimary))
+        text.setTextColor(MyApplication.instance.getColor(R.color.colorMustad))
         text.text = message
         val toast = Toast(MyApplication.instance)
         toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0)

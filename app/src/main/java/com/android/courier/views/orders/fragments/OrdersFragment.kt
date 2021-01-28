@@ -126,10 +126,10 @@ class OrdersFragment : BaseFragment(), ConnectionListener, SocketInterface {
         }
         SocketConnectionManager.getInstance()
             .addEventListener("updateOrderStatus") { args->
-                val data = args[0] as JSONObject
+                //val data = args[0] as JSONObject
                 try {
                     Log.d("updateOrderStatus", "updateOrderStatus")
-                    val orderStatus = data.getString("orderStatus")
+                    // val orderStatus = data.getString("orderStatus")
                     if (UtilsFunctions.isNetworkConnected()) {
                         //baseActivity.startProgressDialog()
                         orderViewModel.getOrderList(orderType)
@@ -616,7 +616,7 @@ class OrdersFragment : BaseFragment(), ConnectionListener, SocketInterface {
     }
 
     override fun onSocketCall(onMethadCall : String, vararg jsonObject : Any) {
-        val serverResponse = jsonObject[0] as JSONObject
+        /*val serverResponse = jsonObject[0] as JSONObject
         var methodName = serverResponse.get("method")
         try {
             baseActivity.runOnUiThread {
@@ -646,7 +646,7 @@ class OrdersFragment : BaseFragment(), ConnectionListener, SocketInterface {
             }
         } catch (e : Exception) {
             e.printStackTrace()
-        }
+        }*/
     }
 
     override fun onSocketConnect(vararg args : Any) {

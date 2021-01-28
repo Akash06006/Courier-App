@@ -1,6 +1,5 @@
 package com.android.courier.views.profile
 
-import android.Manifest
 import android.Manifest.permission.CAMERA
 import android.Manifest.permission.READ_EXTERNAL_STORAGE
 import android.app.Activity
@@ -8,15 +7,11 @@ import android.app.Activity.RESULT_OK
 import android.app.Dialog
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.content.res.ColorStateList
-import android.graphics.Color
 import android.net.Uri
-import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.text.TextUtils
+import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.widget.AdapterView
@@ -29,20 +24,21 @@ import androidx.core.content.FileProvider
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.android.courier.R
-import com.bumptech.glide.Glide
 import com.android.courier.application.MyApplication
 import com.android.courier.callbacks.ChoiceCallBack
 import com.android.courier.common.UtilsFunctions
 import com.android.courier.common.UtilsFunctions.showToastError
 import com.android.courier.common.UtilsFunctions.showToastSuccess
 import com.android.courier.constants.GlobalConstants
+import com.android.courier.databinding.ActivityProfileBinding
 import com.android.courier.model.LoginResponse
+import com.android.courier.model.profile.RegionResponse
 import com.android.courier.sharedpreference.SharedPrefClass
-import com.android.courier.utils.BaseFragment
-import com.android.courier.utils.DialogClass
-import com.android.courier.utils.Utils
-import com.android.courier.utils.ValidationsClass
+import com.android.courier.utils.*
 import com.android.courier.viewmodels.profile.ProfileViewModel
+import com.android.courier.views.authentication.ChangePasswrodActivity
+import com.android.courier.views.home.LandingActivty
+import com.bumptech.glide.Glide
 import com.google.gson.JsonObject
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -50,11 +46,6 @@ import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
-import com.android.courier.databinding.ActivityProfileBinding
-import com.android.courier.model.profile.RegionResponse
-import com.android.courier.views.authentication.ChangePasswrodActivity
-import com.android.courier.views.home.LandingActivty
-import kotlinx.android.synthetic.main.activity_profile.view.*
 import kotlin.collections.HashMap
 
 class ProfileFragment : BaseFragment(), ChoiceCallBack {
@@ -75,6 +66,11 @@ class ProfileFragment : BaseFragment(), ChoiceCallBack {
     var region = ArrayList<String>()
     override fun getLayoutResId() : Int {
         return R.layout.activity_profile
+    }
+
+    override fun onResume() {
+        super.onResume()
+        activity!!.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
     }
 
     override fun initView() {
@@ -109,7 +105,18 @@ class ProfileFragment : BaseFragment(), ChoiceCallBack {
         mJsonObject.addProperty(
             "userId", userId
         )
+        KeyboardUtils.addKeyboardToggleListener(activity!!, object :
+            KeyboardUtils.SoftKeyboardToggleListener {
+            override fun onToggleSoftKeyboard(isVisible : Boolean) {
+                if(isVisible){
+                    (activity as LandingActivty).hideShowTab(false)
+                }else{
+                    (activity as LandingActivty).hideShowTab(true)
+                }
 
+
+            }
+        })
 
 
         profieViewModel.getDetail().observe(this,
@@ -163,7 +170,7 @@ class ProfileFragment : BaseFragment(), ChoiceCallBack {
             Observer<RegionResponse> { response->
                 baseActivity.stopProgressDialog()
                 if (UtilsFunctions.isNetworkConnected()) {
-                   // baseActivity.startProgressDialog()
+                    // baseActivity.startProgressDialog()
                     profieViewModel.getProfileDetail(mJsonObject)
                 }
                 if (response != null) {
@@ -260,6 +267,7 @@ class ProfileFragment : BaseFragment(), ChoiceCallBack {
                         activity!!.getWindow().setSoftInputMode(
                             WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
                         );
+                        makeEnableDisableViews(false)
                         (activity as LandingActivty).openCloseDrawer()
                     }
                     "img_right" -> {

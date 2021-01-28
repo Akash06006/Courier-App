@@ -342,7 +342,8 @@ open class DriverTrackingActivity : BaseActivity(), OnMapReadyCallback, Location
         buildGoogleApiClient()
         googleMap.uiSettings.isCompassEnabled = false
         googleMap.isTrafficEnabled = false
-        googleMap.isMyLocationEnabled = true
+        mGoogleMap!!.uiSettings.isMapToolbarEnabled = false
+        googleMap.isMyLocationEnabled = false
         // mHandler.postDelayed(mRunnable, 500)
         mPermissionCheck = false
         check = 0
@@ -886,8 +887,7 @@ open class DriverTrackingActivity : BaseActivity(), OnMapReadyCallback, Location
                     // Post again 16ms later.
                     handler.postDelayed(this, 16)
                 } else {
-
-                        mMarker.isVisible = true
+                    mMarker.isVisible = true
 
                 }
             }

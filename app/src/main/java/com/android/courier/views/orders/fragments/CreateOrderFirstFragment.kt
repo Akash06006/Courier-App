@@ -149,7 +149,6 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
         mFusedLocationClass = FusedLocationClass(activity)
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(activity!!)
         // initRecyclerView()
-
         createOrderFirstBinding.imgPriceDetails.isEnabled = false
         var adapter1 = ArrayAdapter(
             activity!!,
@@ -162,10 +161,15 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
         val calendar = Calendar.getInstance()
         calendar.add(Calendar.DAY_OF_YEAR, 1)
         val formattedDate1 = df.format(calendar.time)
-        pickupDate = formattedDate
+        //pickupDate = formattedDate
         createOrderFirstBinding.tvDatetomtoday.text = "Today " + formattedDate
         selectedDate = "Today " + formattedDate
 
+        pickupDate = Utils(activity!!).getDateLocal(
+            "EEE MMM dd HH:mm:ss zzzz yyyy",
+            getDaysAgo(0).toString(),
+            "dd/MM/YYYY"
+        )
         time = slot(0)
         val days = ArrayList<String>()
         days.add("Today " + formattedDate)
@@ -304,9 +308,9 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
                                 GlobalConstants.DELIVERY_TYPE = deliveryTypeId
                                 MyApplication.createOrdersInput.deliveryOption = deliveryTypeId
                                 if (deliveryTypeList[0].title!!.contains("Reg")) {
-                                    MyApplication.createOrdersInput.deliveryValue = "1"
+                                    MyApplication.createOrdersInput.deliveryType = "1"
                                 } else {
-                                    MyApplication.createOrdersInput.deliveryValue = "2"
+                                    MyApplication.createOrdersInput.deliveryType = "2"
                                 }
 
                                 initDeliveryTypeAdapter()
@@ -932,9 +936,9 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
         GlobalConstants.DELIVERY_TYPE = deliveryTypeId
         MyApplication.createOrdersInput.deliveryOption = deliveryTypeId
         if (deliveryTypeList[position].title!!.contains("Reg")) {
-            MyApplication.createOrdersInput.deliveryValue = "1"
+            MyApplication.createOrdersInput.deliveryType = "1"
         } else {
-            MyApplication.createOrdersInput.deliveryValue = "2"
+            MyApplication.createOrdersInput.deliveryType = "2"
         }
 
         calculatePrice()

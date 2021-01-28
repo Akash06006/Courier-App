@@ -158,6 +158,7 @@ class OrderDetailActivity : BaseActivity(), OnMapReadyCallback, LocationListener
          }*/
 
         super.onResume()
+
         assignedEmployeesStatus = ""
         reasons.clear()
         reasons.add("Select Your Reason")
@@ -255,9 +256,10 @@ class OrderDetailActivity : BaseActivity(), OnMapReadyCallback, LocationListener
                         response.code == 200 -> {
                             if (response.data?.orderStatus?.status != assignedEmployeesStatus) {
                                 mGoogleMap!!.clear()
-                                /*  if (!TextUtils.isEmpty(response.data?.completedorder?.empId)) {
-                                      showDeliveryBoyRatingDialog(response.data?.completedorder)
-                                  }*/
+                                driverId = ""
+                                if (!response.data?.completedorder?.empId.isNullOrEmpty()  /*!TextUtils.isEmpty(response.data?.completedorder?.empId)*/) {
+                                    showDeliveryBoyRatingDialog(response.data?.completedorder)
+                                }
                                 var oldLatLong = LatLng(0.0, 0.0)
                                 activityCreateOrderBinding.orderDetailModel = response.data
                                 orderDetails = response.data

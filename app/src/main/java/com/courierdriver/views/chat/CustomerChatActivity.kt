@@ -69,7 +69,7 @@ class CustomerChatActivity : BaseActivity(),
         chatBinding = viewDataBinding as ActivityChatScreenBinding
         chatBinding.commonToolBar.imgRight.visibility = View.GONE
         chatBinding.commonToolBar.imgToolbarText.text =
-            resources.getString(R.string.chat)
+            "Chat with customer"
         chatList = ArrayList()
         orderId = intent.extras?.get("orderId").toString()
         customerId = intent.extras?.get("cust_id").toString()

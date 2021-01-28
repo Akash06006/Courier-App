@@ -80,8 +80,8 @@
                     android:orientation="horizontal">
 
                     <ImageView
-                        android:layout_width="35dp"
-                        android:layout_height="35dp"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
                         android:src="@drawable/ic_pickup_pending" />
 
                     <TextView
@@ -105,8 +105,8 @@
                     android:orientation="horizontal">
 
                     <ImageView
-                        android:layout_width="35dp"
-                        android:layout_height="35dp"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
                         android:src="@drawable/ic_pickup" />
 
                     <TextView

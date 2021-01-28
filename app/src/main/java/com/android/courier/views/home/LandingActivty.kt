@@ -57,9 +57,7 @@ class LandingActivty : BaseActivity(), DialogssInterface {
 
     override fun onResume() {
         super.onResume()
-        getWindow().setSoftInputMode(
-            WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
-        );
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
     }
 
     override fun onBackPressed() {

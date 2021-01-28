@@ -235,7 +235,6 @@
                                 android:singleLine="true"
                                 android:text="@{model.firstName}"
                                 android:textColor="@color/colorblack"
-                                android:textCursorDrawable="@drawable/cursor"
                                 android:textSize="14sp"
                                 app:font="@{`regular`}"
                                 tools:ignore="MissingConstraints" />

@@ -68,7 +68,7 @@ class ChatActivity : BaseActivity(),
         chatBinding = viewDataBinding as ActivityChatScreenBinding
         chatBinding.commonToolBar.imgRight.visibility = View.GONE
         chatBinding.commonToolBar.imgToolbarText.text =
-            resources.getString(R.string.chat)
+            "Chat with locomo support"
         chatList = ArrayList()
         orderId = intent.extras?.get("orderId").toString()
 

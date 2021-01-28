@@ -67,7 +67,7 @@
                         android:text="Profile details"
                         android:textAlignment="center"
                         android:textColor="@color/colorTextBlue"
-                        android:textSize="@dimen/sp_14"
+                        android:textSize="@dimen/sp_16"
                         app:font="@{`bold`}" />
 
                     <TextView
@@ -82,7 +82,7 @@
                         android:text="Statistics"
                         android:textAlignment="center"
                         android:textColor="@color/colorBlack"
-                        android:textSize="@dimen/sp_14"
+                        android:textSize="@dimen/sp_16"
                         app:font="@{`bold`}" />
 
                     <TextView
@@ -97,7 +97,7 @@
                         android:text="Account"
                         android:textAlignment="center"
                         android:textColor="@color/colorBlack"
-                        android:textSize="@dimen/sp_14"
+                        android:textSize="@dimen/sp_16"
                         app:font="@{`bold`}" />
 
                     <TextView
@@ -112,7 +112,7 @@
                         android:text="ID and Proofs"
                         android:textAlignment="center"
                         android:textColor="@color/colorBlack"
-                        android:textSize="@dimen/sp_14"
+                        android:textSize="@dimen/sp_16"
                         app:font="@{`bold`}" />
 
                     <TextView
@@ -127,7 +127,7 @@
                         android:text="Payment options"
                         android:textAlignment="center"
                         android:textColor="@color/colorBlack"
-                        android:textSize="@dimen/sp_14"
+                        android:textSize="@dimen/sp_16"
                         app:font="@{`bold`}" />
 
                     <TextView
@@ -142,7 +142,7 @@
                         android:text="Locomo Id"
                         android:textAlignment="center"
                         android:textColor="@color/colorBlack"
-                        android:textSize="@dimen/sp_14"
+                        android:textSize="@dimen/sp_16"
                         app:font="@{`bold`}" />
                 </LinearLayout>
             </HorizontalScrollView>

@@ -84,7 +84,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
                 .setOngoing(false)
 //                .setContentText(displayMessage)
                 .setDefaults(Notification.DEFAULT_ALL)
-                .setPriority(Notification.FLAG_HIGH_PRIORITY)
+                .setPriority(NotificationManager.IMPORTANCE_MAX)
                 .setStyle(
                     NotificationCompat.BigTextStyle()
                         .bigText(displayMessage)
@@ -95,7 +95,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
                 val channel = NotificationChannel(
                     packageName,
                     getString(R.string.app_name),
-                    NotificationManager.IMPORTANCE_DEFAULT
+                    NotificationManager.IMPORTANCE_HIGH
                 )
                 notificationManager.createNotificationChannel(channel)
             }

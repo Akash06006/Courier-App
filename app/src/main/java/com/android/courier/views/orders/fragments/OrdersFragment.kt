@@ -27,17 +27,15 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.android.courier.databinding.FragmentOrdersBinding
 import com.android.courier.R
 import com.android.courier.adapters.orders.OrdersListAdapter
-import com.android.courier.application.MyApplication
 import com.android.courier.chatSocket.ConnectionListener
 import com.android.courier.chatSocket.SocketConnectionManager
 import com.android.courier.common.UtilsFunctions
 import com.android.courier.common.UtilsFunctions.showToastError
 import com.android.courier.common.UtilsFunctions.showToastSuccess
 import com.android.courier.constants.GlobalConstants
+import com.android.courier.databinding.FragmentOrdersBinding
 import com.android.courier.maps.FusedLocationClass
 import com.android.courier.model.CommonModel
 import com.android.courier.model.order.CancelReasonsListResponse
@@ -46,15 +44,16 @@ import com.android.courier.sharedpreference.SharedPrefClass
 import com.android.courier.utils.BaseFragment
 import com.android.courier.viewmodels.order.OrderViewModel
 import com.android.courier.views.home.LandingActivty
+import com.bumptech.glide.Glide
 import com.example.services.socket.SocketClass
 import com.example.services.socket.SocketInterface
 import com.google.android.gms.location.*
 import com.google.gson.JsonObject
 import io.socket.emitter.Emitter
-import org.json.JSONException
 import org.json.JSONObject
 import java.net.URISyntaxException
-import java.util.HashMap
+import java.util.*
+import kotlin.collections.ArrayList
 
 class OrdersFragment : BaseFragment(), ConnectionListener, SocketInterface {
     private var mFusedLocationClass : FusedLocationClass? = null
@@ -70,6 +69,7 @@ class OrdersFragment : BaseFragment(), ConnectionListener, SocketInterface {
     var reasons = java.util.ArrayList<String>()
     private lateinit var fragmentOrdersBinding : FragmentOrdersBinding
     var isFirstTime = false
+    private var orderListClicked = 0 // 0 - Active , 1 - History
 
     //var categoriesList = null
     override fun getLayoutResId() : Int {
@@ -111,6 +111,8 @@ class OrdersFragment : BaseFragment(), ConnectionListener, SocketInterface {
         Handler().postDelayed({
             callSocketMethods("getLocation")
         }, 2000)
+
+        callSocketMethods("updateOrderStatus")
 
         try {
             val socketConnectionManager : SocketConnectionManager =
@@ -280,6 +282,7 @@ class OrdersFragment : BaseFragment(), ConnectionListener, SocketInterface {
                                     R.drawable.ic_active_selected
                                 )
                             )
+                            orderListClicked = 0
                             if (UtilsFunctions.isNetworkConnected()) {
                                 baseActivity.startProgressDialog()
                                 orderViewModel.getOrderList("active")
@@ -298,6 +301,7 @@ class OrdersFragment : BaseFragment(), ConnectionListener, SocketInterface {
                                     R.drawable.ic_completed_selected
                                 )
                             )
+                            orderListClicked = 1
                             if (UtilsFunctions.isNetworkConnected()) {
                                 baseActivity.startProgressDialog()
                                 orderViewModel.getOrderList("complete")
@@ -552,7 +556,8 @@ class OrdersFragment : BaseFragment(), ConnectionListener, SocketInterface {
     }
 
     override fun onConnectError() {
-        TODO("Not yet implemented")
+        Log.e("Socket", "OnConnectedError")
+
     }
 
     override fun onConnected() {
@@ -569,10 +574,19 @@ class OrdersFragment : BaseFragment(), ConnectionListener, SocketInterface {
     private fun callSocketMethods(methodName : String) {
         val object5 = JSONObject()
         when (methodName) {
+/*
             "getLocation" -> try {
                 socket.sendDataToServer(methodName, object5)
             } catch (e : Exception) {
                 e.printStackTrace()
+            }
+*/
+            "updateOrderStatus" -> {
+                try {
+                    socket.sendDataToServer(methodName, object5)
+                } catch (e : Exception) {
+                    e.printStackTrace()
+                }
             }
 /*
             "trackYourRider"->
@@ -603,14 +617,35 @@ class OrdersFragment : BaseFragment(), ConnectionListener, SocketInterface {
 
     override fun onSocketCall(onMethadCall : String, vararg jsonObject : Any) {
         val serverResponse = jsonObject[0] as JSONObject
+        var methodName = serverResponse.get("method")
         try {
-            val innerResponse = serverResponse.get("data") as JSONObject
-            if (UtilsFunctions.isNetworkConnected()) {
-                //baseActivity.startProgressDialog()
-                orderViewModel.getOrderList(orderType)
+            baseActivity.runOnUiThread {
+                when (methodName) {
+                    "updateOrderStatus" -> try {
+                      when(orderListClicked)
+                      {
+                          0->
+                          {
+                              if (UtilsFunctions.isNetworkConnected()) {
+                                  baseActivity.startProgressDialog()
+                                  orderViewModel.getOrderList("active")
+                              }
+                          }
+                          1->
+                          {
+                              if (UtilsFunctions.isNetworkConnected()) {
+                                  baseActivity.startProgressDialog()
+                                  orderViewModel.getOrderList("complete")
+                              }
+                          }
+                      }
+                    } catch (e1 : Exception) {
+                        e1.printStackTrace()
+                    }
+                }
             }
-        } catch (e1 : Exception) {
-            e1.printStackTrace()
+        } catch (e : Exception) {
+            e.printStackTrace()
         }
     }
 

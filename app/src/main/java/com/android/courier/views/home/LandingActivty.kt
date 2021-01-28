@@ -1,15 +1,15 @@
 package com.android.courier.views.home
 
 import android.app.Dialog
+import android.content.Context
 import android.content.Intent
-import android.media.audiofx.BassBoost
-import android.net.Uri
-import android.provider.Settings
-import android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS
 import android.text.TextUtils
 import android.view.Gravity
+import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
+import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
@@ -454,6 +454,24 @@ class LandingActivty : BaseActivity(), DialogssInterface {
         //drawer!!.openDrawer(Gravity.RIGHT)
         //}
 
+    }
+
+    override fun dispatchTouchEvent(ev : MotionEvent) : Boolean {
+        val view = currentFocus
+        if (view != null && (ev.action == MotionEvent.ACTION_UP || ev.action == MotionEvent.ACTION_MOVE)/* && view is EditText && !view.getClass()
+                .getName().startsWith("android.webkit.")*/
+        ) {
+            val scrcoords = IntArray(2)
+            view.getLocationOnScreen(scrcoords)
+            val x = ev.rawX + view.getLeft() - scrcoords[0]
+            val y = ev.rawY + view.getTop() - scrcoords[1]
+            if (x < view.getLeft() || x > view.getRight() || y < view.getTop() || y > view.getBottom()) (this.getSystemService(
+                Context.INPUT_METHOD_SERVICE
+            ) as InputMethodManager).hideSoftInputFromWindow(
+                this.window.decorView.applicationWindowToken, 0
+            )
+        }
+        return super.dispatchTouchEvent(ev)
     }
 
 }

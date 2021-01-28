@@ -735,7 +735,6 @@ class DocumentVerificatonActivity : BaseActivity(), ChoiceCallBack, SelfieCallBa
             // val imageBitmap = extras!!.get("data") as Bitmap
             //getImageUri(imageBitmap)
         }
-
     }
 
     private fun setAndStoreImage(picturePath: String) {
@@ -774,7 +773,6 @@ class DocumentVerificatonActivity : BaseActivity(), ChoiceCallBack, SelfieCallBa
                 drivingBackImg = picturePath
                 addDoc(drivingBackImg)
             }
-
         }
     }
 
@@ -790,7 +788,6 @@ class DocumentVerificatonActivity : BaseActivity(), ChoiceCallBack, SelfieCallBa
             docVerifyViewModel.addDoc(imgMultipart)
         }
     }
-
 
     private fun setImageAadharFront(path: String) {
         Glide.with(this)

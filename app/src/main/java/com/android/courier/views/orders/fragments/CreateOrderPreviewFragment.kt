@@ -44,7 +44,6 @@ CreateOrderPreviewFragment : BaseFragment() {
 
     override fun onResume() {
         super.onResume()
-
     }
 
     //api/mobile/services/getSubcat/b21a7c8f-078f-4323-b914-8f59054c4467
@@ -127,14 +126,13 @@ CreateOrderPreviewFragment : BaseFragment() {
                 }
             })
         )
-
     }
 
-    public fun preFillData() {
+    fun preFillData() {
         if (MyApplication.createOrdersInput.deliveryType.equals("1")) {
-            orderPreviewBinding.txtDeliveryOption.setText("Regular")
+            orderPreviewBinding.txtDeliveryOption.text = "Regular"
         } else {
-            orderPreviewBinding.txtDeliveryOption.setText("Express")
+            orderPreviewBinding.txtDeliveryOption.text = "Express"
         }
 
         orderPreviewBinding.txtFare.setText(MyApplication.createOrdersInput.orderPrice)
@@ -167,8 +165,8 @@ CreateOrderPreviewFragment : BaseFragment() {
               confirmationDialog?.dismiss()
           }*/
 
-        orderPreviewBinding.btnConfirm?.setOnClickListener {
-            if (orderPreviewBinding.chkTermsAndPrivacy.isChecked == true) {
+        orderPreviewBinding.btnConfirm.setOnClickListener {
+            if (orderPreviewBinding.chkTermsAndPrivacy.isChecked) {
                 if (UtilsFunctions.isNetworkConnected()) {
                     baseActivity.startProgressDialog()
                     orderViewModel.createOrder(MyApplication.createOrdersInput)

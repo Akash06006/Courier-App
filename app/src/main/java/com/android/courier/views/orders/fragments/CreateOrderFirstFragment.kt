@@ -111,7 +111,7 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
     var selectedAddress = ""
     var selectedlatLong = LatLng(0.0, 0.0)
     var distance = "0"
-    private var isaddAltered = false
+    private var isaddAltered : String = "false"
     var deliveryType = "1"
     var deliveryTypeList = ArrayList<ListsResponse.DeliveryOptionData>()
     var deliveryTypeAdapter : DeliveryTypesAdapter? = null
@@ -523,7 +523,7 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
                                 MyApplication.createOrdersInput.deliveryAddress =
                                     deliveryAddressList
                                 MyApplication.createOrdersInput.isaddAltered = "" +
-                                        isaddAltered
+                                        isaddAltered.toString()
                                 var isAllDetailAded = true
                                 for (item in addressList) {
                                     if (TextUtils.isEmpty(item.address) || TextUtils.isEmpty(
@@ -793,6 +793,7 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
     private fun preFilledData() {
         //createOrderFirstBinding.orderDetailModel = response.data
         if (!TextUtils.isEmpty(MyApplication.createOrdersInput.pickupAddress?.phoneNumber)) {
+            isaddAltered = MyApplication.createOrdersInput.isaddAltered!!
             pickupMobile = MyApplication.createOrdersInput.pickupAddress?.phoneNumber as String
             pickupDate = MyApplication.createOrdersInput.pickupAddress?.date as String
             pickupAddress = MyApplication.createOrdersInput.pickupAddress?.address as String
@@ -1240,7 +1241,7 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
                         selectedAddress = place.name + "," + place.address.toString()
                         selectedlatLong = place.latLng!!
                         if (clickedForLocation.equals("pickup")) {
-                            isaddAltered = true
+                            isaddAltered = "true"
                             createOrderInput.pickupAddress?.address =
                                 place.name + "," + place.address.toString()
                             createOrderInput.pickupAddress?.lat = place.latLng!!.latitude.toString()
@@ -1264,7 +1265,7 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
                             createOrderFirstBinding.edtPickMob.requestFocus()
                         } else if (clickedForLocation.equals("delivery")) {
                             calculatePrice()
-                            isaddAltered = true
+                            isaddAltered = "true"
                             createOrderFirstBinding.edtDelAddress.setText(place.name + "," + place.address.toString())
                             delAddress = place.name + "," + place.address.toString()
                             delLat = place.latLng!!.latitude.toString()
@@ -1274,7 +1275,7 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
                             createOrderFirstBinding.edtDelMob.requestFocus()
                             //}
                         } else {
-                            isaddAltered = true
+                            isaddAltered = "true"
                             calculatePrice()
                             edtDelAddress?.setText(place.address.toString())
                             val tag = edtDelAddress?.id
@@ -1313,6 +1314,7 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
             val address = data?.getStringExtra("address")
             if (!TextUtils.isEmpty(lat)) {
                 if (clickedForLocation.equals("pickup")) {
+                    isaddAltered = "true"
                     createOrderFirstBinding.edtPickupLoc.setText(address)
                     pickLat = lat as String
                     pickLong = long.toString()
@@ -1324,6 +1326,7 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
                     MyApplication.createOrdersInput.pickupAddress?.long = pickLong
                     createOrderFirstBinding.edtPickMob.requestFocus()
                 } else if (clickedForLocation.equals("delivery")) {
+                    isaddAltered = "true"
                     calculatePrice()
                     createOrderFirstBinding.edtDelAddress.setText(address)
                     delLat = lat as String
@@ -1334,6 +1337,7 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
                     callDistanceAPI()
                     createOrderFirstBinding.edtDelMob.requestFocus()
                 } else {
+                    isaddAltered = "true"
                     calculatePrice()
                     edtDelAddress?.setText(address)
                     val tag = edtDelAddress?.id
@@ -1356,6 +1360,7 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
             val num = data?.getStringExtra("num")
             if (!TextUtils.isEmpty(num)) {
                 if (clickedForLocation.equals("pickup")) {
+                    isaddAltered = "true"
                     if (num?.length!! > 9) {
                         createOrderFirstBinding.edtPickMob.setText(num)
                         pickupMobile = num.toString()
@@ -1365,6 +1370,7 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
                     }
                     createOrderFirstBinding.edtPickMob.requestFocus()
                 } else if (clickedForLocation.equals("delivery")) {
+                    isaddAltered = "true"
                     if (num?.length!! > 9) {
                         createOrderFirstBinding.edtDelMob.setText(num)
                         delMobile = num.toString()
@@ -1375,6 +1381,7 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
                     createOrderFirstBinding.edtDelMob.requestFocus()
 
                 } else {
+                    isaddAltered = "true"
                     if (num?.length!! > 9) {
                         edtDeliveryMob?.setText(num.toString())
                         val tag = edtDeliveryMob?.id

@@ -63,6 +63,7 @@ class LandingActivty : BaseActivity(), DialogssInterface {
     }
 
     override fun onBackPressed() {
+        //  landingBinding!!.tablayout.visibility = View.GONE
         if (pos == 0) {
             finish()
         } else {
@@ -78,6 +79,14 @@ class LandingActivty : BaseActivity(), DialogssInterface {
 
         }
 
+    }
+
+    fun hideShowTab(isShow : Boolean) {
+        if (isShow) {
+            landingBinding!!.tabRelative.visibility = View.VISIBLE
+        } else {
+            landingBinding!!.tabRelative.visibility = View.GONE
+        }
     }
 
     override fun initViews() {

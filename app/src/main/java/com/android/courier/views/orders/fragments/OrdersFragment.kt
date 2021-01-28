@@ -126,10 +126,10 @@ class OrdersFragment : BaseFragment(), ConnectionListener, SocketInterface {
         }
         SocketConnectionManager.getInstance()
             .addEventListener("updateOrderStatus") { args->
-                val data = args[0] as JSONObject
+                //val data = args[0] as JSONObject
                 try {
                     Log.d("updateOrderStatus", "updateOrderStatus")
-                   // val orderStatus = data.getString("orderStatus")
+                    // val orderStatus = data.getString("orderStatus")
                     if (UtilsFunctions.isNetworkConnected()) {
                         //baseActivity.startProgressDialog()
                         orderViewModel.getOrderList(orderType)

@@ -55,6 +55,7 @@ class
 CreateOrderSecondFragment : BaseFragment() {
     private lateinit var orderViewModel : OrderViewModel
     private lateinit var fragmentCreateOrdersSecondBinding : FragmentCreateOrdersSecondBinding
+
     //var categoriesList = null
     private var isUsableLoyalty = false
     var discountApplied = ""
@@ -259,7 +260,8 @@ CreateOrderSecondFragment : BaseFragment() {
                             GlobalConstants.isUsableLoyalty = true
                             lPointsTotalUsed = loyaltyPointsData.usabelPoints!!
                             lPointsTotalValue =
-                                (loyaltyPointsData.usabelPoints?.toDouble()?.times(loyaltyPointsData.pricePerPoint!!.toDouble())).toString()
+                                (loyaltyPointsData.usabelPoints?.toDouble()
+                                    ?.times(loyaltyPointsData.pricePerPoint!!.toDouble())).toString()
                             MyApplication.createOrdersInput.usedLPoints = lPointsTotalUsed
                             MyApplication.createOrdersInput.lPointsPrice = lPointsTotalValue
                             calculatePrice()
@@ -381,11 +383,15 @@ CreateOrderSecondFragment : BaseFragment() {
                         fragmentCreateOrdersSecondBinding.edtParcelValue.clearFocus()
                         fragmentCreateOrdersSecondBinding.edtItemName.clearFocus()
                         if (TextUtils.isEmpty(
-                                MyApplication.createOrdersInput.itemName)){
+                                MyApplication.createOrdersInput.itemName
+                            )
+                        ) {
                             showToastError("Please enter item name")
                             fragmentCreateOrdersSecondBinding.edtItemName.requestFocus()
-                        }else if (TextUtils.isEmpty(
-                                MyApplication.createOrdersInput.parcelValue)){
+                        } else if (TextUtils.isEmpty(
+                                MyApplication.createOrdersInput.parcelValue
+                            )
+                        ) {
                             showToastError("Please enter parcel value")
                             fragmentCreateOrdersSecondBinding.edtParcelValue.requestFocus()
                         }
@@ -657,7 +663,7 @@ CreateOrderSecondFragment : BaseFragment() {
 
         }*/
 
-        if (!deliveryFee.equals("0") && !deliveryFee.equals("")) {
+        if (!deliveryFee.equals("0.00") && !deliveryFee.equals("0") && !deliveryFee.equals("")) {
             fragmentCreateOrdersSecondBinding.txtDelivery.text = "₹ " + deliveryFee
             fragmentCreateOrdersSecondBinding.view1.visibility = View.VISIBLE
             fragmentCreateOrdersSecondBinding.rlDelivery.visibility = View.VISIBLE
@@ -665,7 +671,7 @@ CreateOrderSecondFragment : BaseFragment() {
             fragmentCreateOrdersSecondBinding.rlDelivery.visibility = View.GONE
             fragmentCreateOrdersSecondBinding.view1.visibility = View.GONE
         }
-        if (!weightFee.equals("0") && !weightFee.equals("")) {
+        if (!weightFee.equals("0.00") && !weightFee.equals("0") && !weightFee.equals("")) {
             fragmentCreateOrdersSecondBinding.txtWeight.text = "₹ " + weightFee
             fragmentCreateOrdersSecondBinding.view2.visibility = View.VISIBLE
             fragmentCreateOrdersSecondBinding.rlWeight.visibility = View.VISIBLE
@@ -673,7 +679,10 @@ CreateOrderSecondFragment : BaseFragment() {
             fragmentCreateOrdersSecondBinding.rlWeight.visibility = View.GONE
             fragmentCreateOrdersSecondBinding.view2.visibility = View.GONE
         }
-        if (!securityFee.equals("0") && !securityFee.equals("") && !securityFee.equals("null")) {
+        if (!securityFee.equals("0.00") && !securityFee.equals("0") && !securityFee.equals("") && !securityFee.equals(
+                "null"
+            )
+        ) {
             fragmentCreateOrdersSecondBinding.txtSecurity.text = "₹ " + securityFee
             fragmentCreateOrdersSecondBinding.view3.visibility = View.VISIBLE
             fragmentCreateOrdersSecondBinding.rlSecurity.visibility = View.VISIBLE
@@ -682,7 +691,10 @@ CreateOrderSecondFragment : BaseFragment() {
             fragmentCreateOrdersSecondBinding.view3.visibility = View.GONE
         }
 
-        if (!totalCancellationCharges.equals("0") && !totalCancellationCharges.equals("")) {
+        if (!totalCancellationCharges.equals("0.00") && !totalCancellationCharges.equals("0") && !totalCancellationCharges.equals(
+                ""
+            )
+        ) {
             fragmentCreateOrdersSecondBinding.txtCancellation.text = "₹ " + totalCancellationCharges
             fragmentCreateOrdersSecondBinding.view4.visibility = View.VISIBLE
             fragmentCreateOrdersSecondBinding.rlCancel.visibility = View.VISIBLE
@@ -690,14 +702,20 @@ CreateOrderSecondFragment : BaseFragment() {
             fragmentCreateOrdersSecondBinding.rlCancel.visibility = View.GONE
             fragmentCreateOrdersSecondBinding.view4.visibility = View.GONE
         }
-        if (!couponDeduction.equals("0") && !couponDeduction.equals("")) {
+        if (!couponDeduction.equals("0.00") && !couponDeduction.equals("0") && !couponDeduction.equals(
+                ""
+            )
+        ) {
             fragmentCreateOrdersSecondBinding.txtCouponDeduction.text = "₹ " + couponDeduction
             fragmentCreateOrdersSecondBinding.rlCouponDeduction.visibility = View.VISIBLE
         } else {
             fragmentCreateOrdersSecondBinding.rlCouponDeduction.visibility = View.GONE
         }
 
-        if (!deliveryTypeCharges.equals("0") && !deliveryTypeCharges.equals("")) {
+        if (!deliveryTypeCharges.equals("0.00") && !deliveryTypeCharges.equals("0") && !deliveryTypeCharges.equals(
+                ""
+            )
+        ) {
             fragmentCreateOrdersSecondBinding.view5.visibility = View.VISIBLE
             fragmentCreateOrdersSecondBinding.txtDeliveryTypeCharges.text =
                 "₹ " + deliveryTypeCharges
@@ -753,7 +771,9 @@ CreateOrderSecondFragment : BaseFragment() {
     }
 
     private fun checkTikMark() {
-        if (!TextUtils.isEmpty(fragmentCreateOrdersSecondBinding.edtItemName.text.toString().trim()) && !TextUtils.isEmpty(
+        if (!TextUtils.isEmpty(
+                fragmentCreateOrdersSecondBinding.edtItemName.text.toString().trim()
+            ) && !TextUtils.isEmpty(
                 fragmentCreateOrdersSecondBinding.edtParcelValue.text.toString().trim()
             )
         ) {

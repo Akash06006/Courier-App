@@ -129,9 +129,9 @@ class CreateOrdersInput {
     @SerializedName("weightValue")
     @Expose
     var weightValue : String? = null
-    @SerializedName("deliveryValue")
+    @SerializedName("deliveryType")
     @Expose
-    var deliveryValue : String? = null
+    var deliveryType : String? = null
 
     class OrderStatus {
         @SerializedName("statusName")

@@ -34,6 +34,7 @@ class
 CreateOrderPreviewFragment : BaseFragment() {
     private lateinit var orderViewModel : OrderViewModel
     private lateinit var orderPreviewBinding : ActivityOrderPreviewBinding
+
     //var categoriesList = null
     var orderId = ""
 
@@ -130,7 +131,7 @@ CreateOrderPreviewFragment : BaseFragment() {
     }
 
     public fun preFillData() {
-        if (MyApplication.createOrdersInput.deliveryValue.equals("1")) {
+        if (MyApplication.createOrdersInput.deliveryType.equals("1")) {
             orderPreviewBinding.txtDeliveryOption.setText("Regular")
         } else {
             orderPreviewBinding.txtDeliveryOption.setText("Express")

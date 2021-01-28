@@ -100,6 +100,7 @@ class OrderDetailActivity : BaseActivity(), OnMapReadyCallback, LocationListener
     internal var cameraZoom = 16.0f
     private var mAddress = ""
     var orderId = ""
+    var isFistTime = false
     private lateinit var homeViewModel : HomeViewModel
     internal lateinit var mLastLocation : Location
     internal lateinit var mLocationCallback : LocationCallback
@@ -170,6 +171,7 @@ class OrderDetailActivity : BaseActivity(), OnMapReadyCallback, LocationListener
     }
 
     override fun initViews() {
+        isFistTime = false
         // Initialize the SDK
         deliveryAddress = ArrayList()
         assignedEmployeesStatus = ""
@@ -301,41 +303,12 @@ class OrderDetailActivity : BaseActivity(), OnMapReadyCallback, LocationListener
                             if(response.data?.orderStatus.contains("")){
 
                             }*/
-
-                                if (addressAdapter == null) {
-                                    addressAdapter =
-                                        OrderAddressListAdapter(
-                                            this,
-                                            response.data?.deliveryAddress,
-                                            response.data?.pickupAddress
-                                        )
-                                    val controller =
-                                        AnimationUtils.loadLayoutAnimation(
-                                            this,
-                                            R.anim.layout_animation_from_left
-                                        )
-                                    activityCreateOrderBinding.rvAddress.setLayoutAnimation(
-                                        controller
-                                    );
-                                    activityCreateOrderBinding.rvAddress.scheduleLayoutAnimation();
-                                    val linearLayoutManager = LinearLayoutManager(this)
-                                    linearLayoutManager.orientation = RecyclerView.VERTICAL
-                                    activityCreateOrderBinding.rvAddress.layoutManager =
-                                        linearLayoutManager
-                                    activityCreateOrderBinding.rvAddress.setHasFixedSize(true)
-                                    activityCreateOrderBinding.rvAddress.adapter = addressAdapter
-                                    activityCreateOrderBinding.rvAddress.addOnScrollListener(object :
-                                        RecyclerView.OnScrollListener() {
-                                        override fun onScrolled(
-                                            recyclerView : RecyclerView,
-                                            dx : Int,
-                                            dy : Int
-                                        ) {
-                                        }
-                                    })
-                                } else {
-                                    addressAdapter!!.notifyDataSetChanged()
-                                }
+                                //if (addressAdapter == null) {
+                                addressAdapter = null
+                                setAddressAdapter(response)
+                                /* } else {
+                                     addressAdapter!!.notifyDataSetChanged()
+                                 }*/
                                 if (response.data?.assignedEmployees != null) {
                                     val paymentAdapter =
                                         PaymentOptionsListAdapter(
@@ -580,6 +553,43 @@ class OrderDetailActivity : BaseActivity(), OnMapReadyCallback, LocationListener
             })
         )
 
+    }
+
+    private fun setAddressAdapter(response : OrdersDetailResponse) {
+        addressAdapter =
+            OrderAddressListAdapter(
+                this,
+                response.data?.deliveryAddress,
+                response.data?.pickupAddress
+            )
+       /// showToastSuccess("set adapter")
+        if (!isFistTime) {
+            isFistTime = true
+            val controller =
+                AnimationUtils.loadLayoutAnimation(
+                    this,
+                    R.anim.layout_animation_from_left
+                )
+            activityCreateOrderBinding.rvAddress.setLayoutAnimation(
+                controller
+            );
+            activityCreateOrderBinding.rvAddress.scheduleLayoutAnimation();
+        }
+        val linearLayoutManager = LinearLayoutManager(this)
+        linearLayoutManager.orientation = RecyclerView.VERTICAL
+        activityCreateOrderBinding.rvAddress.layoutManager =
+            linearLayoutManager
+        activityCreateOrderBinding.rvAddress.setHasFixedSize(true)
+        activityCreateOrderBinding.rvAddress.adapter = addressAdapter
+        activityCreateOrderBinding.rvAddress.addOnScrollListener(object :
+            RecyclerView.OnScrollListener() {
+            override fun onScrolled(
+                recyclerView : RecyclerView,
+                dx : Int,
+                dy : Int
+            ) {
+            }
+        })
     }
 
     /*override fun onMapReady(googleMap : GoogleMap) {

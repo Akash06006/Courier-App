@@ -741,30 +741,35 @@ class DocumentVerificatonActivity : BaseActivity(), ChoiceCallBack, SelfieCallBa
     private fun setAndStoreImage(picturePath: String) {
         when (buttonClickedId) {
             "cv_aadhar_front" -> {
+                activityDocVeribinding.imgAadharFront.visibility = View.GONE
                 setImageAadharFront(picturePath)
                 aadharFrontImg = picturePath
                 addDoc(aadharFrontImg)
             }
 
             "cv_adadhr_back" -> {
+                activityDocVeribinding.imgAadharBack.visibility = View.GONE
                 setImageAadharBack(picturePath)
                 aadharBackImg = picturePath
                 addDoc(aadharBackImg)
             }
 
             "cv_pan_card" -> {
+                activityDocVeribinding.imgPanCard.visibility = View.GONE
                 setImagePanCard(picturePath)
                 panCardImage = picturePath
                 addDoc(panCardImage)
             }
 
             "cv_driving_front" -> {
+                activityDocVeribinding.imgDrivingFront.visibility = View.GONE
                 setImageDrivingFront(picturePath)
                 drivingFrontImg = picturePath
                 addDoc(drivingFrontImg)
             }
 
             "cv_driving_back" -> {
+                activityDocVeribinding.imgDrivingBack.visibility = View.GONE
                 setImageDrivingBack(picturePath)
                 drivingBackImg = picturePath
                 addDoc(drivingBackImg)

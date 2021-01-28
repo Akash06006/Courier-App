@@ -84,6 +84,7 @@
                         android:orientation="vertical">
 
                         <ImageView
+                            android:id="@+id/img_aadhar_front"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:src="@drawable/add_icon" />
@@ -128,6 +129,7 @@
                         android:orientation="vertical">
 
                         <ImageView
+                            android:id="@+id/img_aadhar_back"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:src="@drawable/add_icon" />
@@ -187,6 +189,7 @@
                         android:orientation="vertical">
 
                         <ImageView
+                            android:id="@+id/img_pan_card"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:src="@drawable/add_icon" />
@@ -298,6 +301,7 @@
                         android:orientation="vertical">
 
                         <ImageView
+                            android:id="@+id/img_driving_front"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:src="@drawable/add_icon" />
@@ -343,6 +347,7 @@
                         android:orientation="vertical">
 
                         <ImageView
+                            android:id="@+id/img_driving_back"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:src="@drawable/add_icon" />

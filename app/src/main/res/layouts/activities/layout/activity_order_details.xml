@@ -387,7 +387,7 @@
                                             android:drawablePadding="@dimen/dp_5"
                                             android:text="@{orderDetailModel.deliveryoption.title}"
                                             android:textColor="@color/colorBlack"
-                                            android:textSize="@dimen/sp_12"
+                                            android:textSize="@dimen/sp_16"
                                             app:font="@{`bold`}" />
 
                                     </LinearLayout>
@@ -406,7 +406,8 @@
                                             android:text="@string/fare_to_be_collected"
                                             android:textColor="@color/colorGrey"
                                             android:textSize="@dimen/sp_11"
-                                            app:font="@{`regular`}" />
+                                            android:textStyle="bold"
+                                            app:font="@{`bold`}" />
 
                                         <TextView
                                             android:layout_width="wrap_content"
@@ -418,8 +419,9 @@
                                             android:drawableTint="@color/colorPrimary"
                                             android:text="@{orderDetailModel.fareCollected}"
                                             android:textColor="@color/colorBlack"
-                                            android:textSize="@dimen/sp_12"
-                                            app:font="@{`semibold`}" />
+                                            android:textSize="@dimen/sp_14"
+                                            android:textStyle="bold"
+                                            app:font="@{`bold`}" />
 
                                     </LinearLayout>
                                 </LinearLayout>

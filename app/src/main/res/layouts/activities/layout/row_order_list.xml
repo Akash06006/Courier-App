@@ -28,8 +28,8 @@
             android:id="@+id/cv_order_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/round_layout_without_stroke"
             android:layout_margin="@dimen/dp_10"
+            android:background="@drawable/round_layout_without_stroke"
             android:elevation="@dimen/dp_5"
             app:cardElevation="@dimen/dp_5">
 
@@ -47,32 +47,32 @@
                         android:id="@+id/lin_order_number"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:layout_centerVertical="true"
                         android:layout_alignParentLeft="true"
+                        android:layout_centerVertical="true"
+                        android:gravity="center_vertical"
                         android:orientation="vertical">
 
                         <TextView
                             android:id="@+id/tv_order_number"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:text="@{model.orderNo}"
                             android:textColor="@color/colorBlack"
                             android:textSize="@dimen/sp_13"
-                            android:text="@{model.orderNo}"
                             app:font="@{`bold`}" />
 
                         <TextView
                             android:id="@+id/tv_date"
-                            android:textSize="@dimen/sp_11"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/tv_order_number"
-                            android:textColor="@color/colorGrey"
-                            android:visibility="gone"
                             android:text="@{BindingUtils.convertDateIntoDayMonthDate(model.pickupAddress.date,`DayMonthDate`)}"
+                            android:textColor="@color/colorGrey"
+                            android:textSize="@dimen/sp_11"
+                            android:visibility="gone"
                             app:font="@{`bold`}" />
 
-<!--                        android:text="@{BindingUtils.convertDateIntoDayMonthDate(model.pickupAddress.date,`DayMonthDate`)}"-->
+                        <!--                        android:text="@{BindingUtils.convertDateIntoDayMonthDate(model.pickupAddress.date,`DayMonthDate`)}"-->
 
                     </LinearLayout>
 
@@ -90,7 +90,8 @@
                         android:paddingBottom="@dimen/dp_5"
                         android:text="@{model.deliveryoption.title}"
                         android:textColor="@color/colorPrimary"
-                        android:textSize="@dimen/sp_14"
+                        android:textSize="@dimen/sp_16"
+                        android:textStyle="bold"
                         app:font="@{`bold`}" />
 
                     <TextView
@@ -107,7 +108,7 @@
                         android:textColor="@color/colorTextBlue"
                         android:textSize="@dimen/sp_16"
                         app:font="@{`bold`}" />
-<!--                    android:text="@{currencySign+model.totalOrderPrice}"-->
+                    <!--                    android:text="@{currencySign+model.totalOrderPrice}"-->
                 </RelativeLayout>
 
                 <View

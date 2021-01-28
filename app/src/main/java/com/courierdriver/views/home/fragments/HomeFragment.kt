@@ -104,6 +104,7 @@ HomeFragment(var landingActivity: LandingActivty) : BaseFragment(), DialogssInte
         subscribeWorkStatusReceiver()
         subscribeWorkStatusButtonReceiver()
         updateAvailabilityObserver()
+        pullToRefresh()
     }
 
     private fun loaderObserver() {
@@ -250,7 +251,6 @@ HomeFragment(var landingActivity: LandingActivty) : BaseFragment(), DialogssInte
                 }
             })
     }
-
 
     private fun getAvailableOrders() {
         clearList()
@@ -554,6 +554,23 @@ HomeFragment(var landingActivity: LandingActivty) : BaseFragment(), DialogssInte
             })
     }
 
+
+    private fun pullToRefresh() {
+        val pullToRefresh = fragmentHomeBinding.pullToRefresh
+        pullToRefresh.setOnRefreshListener {
+
+            when (orderStatus) {
+                1 -> getAvailableOrders()
+                2 -> getActiveOrders()
+                3 -> getCompletedOrders()
+            }
+
+            pullToRefresh.isRefreshing = false
+        }
+    }
+
+
+
     private fun cancelReasonObserver() {
         homeViewModel.cancelReason()
         homeViewModel.cancelReasonData().observe(this,
@@ -765,16 +782,13 @@ HomeFragment(var landingActivity: LandingActivty) : BaseFragment(), DialogssInte
     }
 
     private fun setToolbarTextIcons() {
-        fragmentHomeBinding.toolbarCommon.toolbar.visibility = View.GONE
-        fragmentHomeBinding.toolbarCommon.toolbar.setImageResource(R.drawable.ic_back)
-        fragmentHomeBinding.toolbarCommon.imgRight.visibility = View.VISIBLE
-        fragmentHomeBinding.toolbarCommon.imgRight.setImageDrawable(
+        fragmentHomeBinding.imgRight.visibility = View.VISIBLE
+        fragmentHomeBinding.imgRight.setImageDrawable(
             ContextCompat.getDrawable(
                 baseActivity,
                 R.drawable.ic_help
             )
         )
-        fragmentHomeBinding.toolbarCommon.imgToolbarText.text = getString(R.string.locomo)
     }
 
     //region CURRENT_LOCATION

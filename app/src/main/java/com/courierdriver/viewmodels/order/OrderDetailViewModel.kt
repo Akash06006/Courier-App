@@ -251,7 +251,7 @@ class OrderDetailViewModel : BaseViewModel() {
     fun orderDetail(orderStatus: String) {
         if (UtilsFunctions.isNetworkConnected()) {
             orderDetail = orderRepository.orderDetail(orderStatus)
-            mIsUpdating.postValue(true)
+           // mIsUpdating.postValue(true)
 
         }
     }

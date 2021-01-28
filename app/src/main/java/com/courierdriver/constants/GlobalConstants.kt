@@ -9,6 +9,7 @@ import java.io.File
 
 object GlobalConstants {
     val file = File(MyApplication.instance.filesDir, "Images")
+
     @JvmStatic
     val SHARED_PREF = "DEMOO_APP"
 
@@ -172,10 +173,28 @@ object GlobalConstants {
 
     @JvmStatic
     val SOCKET_CHAT_URL = "http://stgcerb.cerebruminfotech.com:9067/"
+
     @JvmStatic
     var ROOM_ID = "roomID"
+
     @JvmStatic
     var ADMIN_ID = "25cbf58b-46ba-4ba2-b25d-8f8f653e9f11"
+
     @JvmStatic
     val TERMS_AND_CONDITIONS = "https://www.cerebruminfotech.com/"
+
+    @JvmStatic
+    val Aadhar_front = 1
+
+    @JvmStatic
+    val Aadhar_back = 2
+
+    @JvmStatic
+    val Pan_card = 3
+
+    @JvmStatic
+    val Driving_license_front = 4
+
+    @JvmStatic
+    val Driving_license_back = 5
 }

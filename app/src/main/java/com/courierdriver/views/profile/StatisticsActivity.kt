@@ -19,6 +19,7 @@ import com.courierdriver.adapters.profile.StatisticsAdapter
 import com.courierdriver.common.UtilsFunctions
 import com.courierdriver.constants.GlobalConstants
 import com.courierdriver.databinding.ActivityStatisticsBinding
+
 import com.courierdriver.model.CommonModel
 import com.courierdriver.model.StatisticsModel
 import com.courierdriver.utils.BaseFragment

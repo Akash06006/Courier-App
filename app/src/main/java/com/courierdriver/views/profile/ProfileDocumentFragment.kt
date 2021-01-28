@@ -23,9 +23,7 @@ import com.courierdriver.callbacks.SelfieCallBack
 import com.courierdriver.common.UtilsFunctions
 import com.courierdriver.constants.GlobalConstants
 import com.courierdriver.databinding.ActivityProfileDocumentBinding
-import com.courierdriver.model.GetVehiclesModel
-import com.courierdriver.model.LoginResponse
-import com.courierdriver.model.ProfileDocumentModel
+import com.courierdriver.model.*
 import com.courierdriver.sharedpreference.SharedPrefClass
 import com.courierdriver.utils.BaseFragment
 import com.courierdriver.utils.DialogClass
@@ -59,6 +57,12 @@ class ProfileDocumentFragment : BaseFragment(), ChoiceCallBack, SelfieCallBack {
     private var vehicleList: ArrayList<GetVehiclesModel.Body>? = ArrayList()
     private var vehicleStringList: ArrayList<String>? = ArrayList()
     private var vehicleId = "0"
+    private var imageSelected = 0
+    private var dlFrontStr = ""
+    private var dlBackStr = ""
+    private var panCardStr = ""
+    private var aadharFrontStr = ""
+    private var aadharBackStr = ""
 
     override fun initView() {
         activityDocVeribinding = viewDataBinding as ActivityProfileDocumentBinding
@@ -72,6 +76,8 @@ class ProfileDocumentFragment : BaseFragment(), ChoiceCallBack, SelfieCallBack {
         getProfileDetailsObserver()
         verifyDocObserver()
         loaderObserver()
+        addDocObserver()
+        uploadDocNewObserver()
     }
 
     private fun loaderObserver() {
@@ -92,7 +98,7 @@ class ProfileDocumentFragment : BaseFragment(), ChoiceCallBack, SelfieCallBack {
     private fun verifyDocObserver() {
         docVerifyViewModel.getDocVerify().observe(this,
             Observer<LoginResponse> { response ->
-               baseActivity.stopProgressDialog()
+                baseActivity.stopProgressDialog()
                 if (response != null) {
                     val message = response.message
                     when {
@@ -107,6 +113,42 @@ class ProfileDocumentFragment : BaseFragment(), ChoiceCallBack, SelfieCallBack {
                 }
             })
     }
+
+    private fun addDocObserver() {
+        docVerifyViewModel.addDocData().observe(this,
+            Observer<AddDocModel> { response ->
+                baseActivity.stopProgressDialog()
+                if (response != null) {
+                    val message = response.message
+                    when (response.code) {
+                        200 -> {
+                            val data = response.body
+                            when (imageSelected) {
+                                GlobalConstants.Driving_license_front -> {
+                                    dlFrontStr = data!!.image!!
+                                }
+                                GlobalConstants.Driving_license_back -> {
+                                    dlBackStr = data!!.image!!
+                                }
+                                GlobalConstants.Pan_card -> {
+                                    panCardStr = data!!.image!!
+                                }
+                                GlobalConstants.Aadhar_front -> {
+                                    aadharFrontStr = data!!.image!!
+                                }
+                                GlobalConstants.Aadhar_back -> {
+                                    aadharBackStr = data!!.image!!
+                                }
+                            }
+                           // message?.let { UtilsFunctions.showToastSuccess(it) }
+                        }
+                        else -> message?.let { UtilsFunctions.showToastError(it) }
+                    }
+
+                }
+            })
+    }
+
 
     private fun getProfileDetailsObserver() {
         docVerifyViewModel.documentDetails(GlobalConstants.DOCUMENTS_TAB)
@@ -177,92 +219,57 @@ class ProfileDocumentFragment : BaseFragment(), ChoiceCallBack, SelfieCallBack {
             this, Observer<String>(function =
             fun(it: String?) {
                 buttonClickedId = it.toString()
- 
+
                 when (it) {
                     "img_edit" -> {
                         makeEnableDisableViews(true)
                     }
                     "btn_submit" -> {
                         dlNumber = activityDocVeribinding.etDrivingLicenseNo.text.toString()
-                        if(TextUtils.isEmpty(dlNumber))
-                        {
-                            baseActivity.showToastError("Please enter driving license number")
-                        }
-                        else {
-                            val mHashMap = HashMap<String, RequestBody>()
-                            mHashMap["dlNumber"] =
-                                Utils(baseActivity).createPartFromString(dlNumber)
-                            mHashMap["transportType"] =
-                                Utils(baseActivity).createPartFromString(activityDocVeribinding.tvTransport.text.toString())
-                            //  mHashMap["password"] = Utils(baseActivity).createPartFromString(password)
-                            var poaFront: MultipartBody.Part? = null
-                            if (aadharFrontImg.isNotEmpty()) {
-                                var f1 = File(aadharFrontImg)
-                                f1 = File(ResizeImage.compressImage(aadharFrontImg))
-                                poaFront =
-                                    Utils(baseActivity).prepareFilePart(
-                                        "poaFront",
-                                        f1
-                                    )
+                        when {
+                            TextUtils.isEmpty(dlNumber) -> {
+                                baseActivity.showToastError("Please enter driving license number")
                             }
+                           /* TextUtils.isEmpty(aadharFrontStr) -> {
+                                baseActivity.showToastError("Please select Aadhar front photo")
+                            }
+                            TextUtils.isEmpty(aadharBackStr) -> {
+                                baseActivity.showToastError("Please select Aadhar back photo")
+                            }
+                            TextUtils.isEmpty(panCardStr) -> {
+                                baseActivity.showToastError("Please select PAN card image")
+                                }
+                            TextUtils.isEmpty(dlFrontStr) -> {
+                                baseActivity.showToastError("Please select Driving license front image")
+                            }
+                            TextUtils.isEmpty(dlBackStr) -> {
+                                baseActivity.showToastError("Please select Driving license back image")
+                            }*/
+                            else -> {
+                                val mHashMap = HashMap<String, RequestBody>()
+                                mHashMap["dlNumber"] =
+                                    Utils(baseActivity).createPartFromString(dlNumber)
+                                mHashMap["transportType"] =
+                                    Utils(baseActivity).createPartFromString(activityDocVeribinding.tvTransport.text.toString())
+                                mHashMap["poaFront"] =
+                                    Utils(baseActivity).createPartFromString(aadharFrontStr)
+                                mHashMap["poaBack"] =
+                                    Utils(baseActivity).createPartFromString(aadharBackStr)
+                                mHashMap["licenseFront"] =
+                                    Utils(baseActivity).createPartFromString(dlFrontStr)
+                                mHashMap["licenseBack"] =
+                                    Utils(baseActivity).createPartFromString(dlBackStr)
+                                mHashMap["panCard"] =
+                                    Utils(baseActivity).createPartFromString(panCardStr)
+                                mHashMap["isUpdate"] =
+                                    Utils(baseActivity).createPartFromString("true")
 
-                            var poaBack: MultipartBody.Part? = null
-                            if (aadharBackImg.isNotEmpty()) {
-                                var f1 = File(aadharBackImg)
-                                f1 = File(ResizeImage.compressImage(aadharBackImg))
-                                poaBack =
-                                    Utils(baseActivity).prepareFilePart(
-                                        "poaBack",
-                                        f1
-                                    )
-                            }
-                            var licenseFront: MultipartBody.Part? = null
-                            if (drivingFrontImg.isNotEmpty()) {
-                                var f1 = File(drivingFrontImg)
-                                f1 = File(ResizeImage.compressImage(drivingFrontImg))
-                                licenseFront =
-                                    Utils(baseActivity).prepareFilePart(
-                                        "licenseFront",
-                                        f1
-                                    )
-                            }
-
-                            var licenseBack: MultipartBody.Part? = null
-                            if (drivingBackImg.isNotEmpty()) {
-                                var f1 = File(drivingBackImg)
-                                f1 = File(ResizeImage.compressImage(drivingBackImg))
-                                licenseBack =
-                                    Utils(baseActivity).prepareFilePart(
-                                        "licenseBack",
-                                        f1
-                                    )
-                            }
-
-                            var panCard: MultipartBody.Part? = null
-                            if (panCardImage.isNotEmpty()) {
-                                var f1 = File(panCardImage)
-                                f1 = File(ResizeImage.compressImage(panCardImage))
-                                panCard =
-                                    Utils(baseActivity).prepareFilePart(
-                                        "panCard",
-                                        f1
-                                    )
-                            }
-
-                            if (UtilsFunctions.isNetworkConnected()) {
-                                baseActivity.startProgressDialog()
-                                docVerifyViewModel.hitDocVerifyApi(
-                                    mHashMap,
-                                    poaFront,
-                                    poaBack,
-                                    licenseFront,
-                                    licenseBack,
-                                    panCard
-                                )
+                                docVerifyViewModel.uploadDocNew(mHashMap)
                             }
                         }
                     }
                     "ll_front_aadhar" -> {
+                        imageSelected = GlobalConstants.Aadhar_front
                         if (baseActivity.checkAndRequestPermissions()) {
                             confirmationDialog =
                                 mDialogClass.setUploadConfirmationDialog(
@@ -274,6 +281,7 @@ class ProfileDocumentFragment : BaseFragment(), ChoiceCallBack, SelfieCallBack {
 
                     }
                     "ll_back_aadhar" -> {
+                        imageSelected = GlobalConstants.Aadhar_back
                         if (baseActivity.checkAndRequestPermissions()) {
                             confirmationDialog =
                                 mDialogClass.setUploadConfirmationDialog(
@@ -285,6 +293,7 @@ class ProfileDocumentFragment : BaseFragment(), ChoiceCallBack, SelfieCallBack {
 
                     }
                     "ll_pan_card" -> {
+                        imageSelected = GlobalConstants.Pan_card
                         if (baseActivity.checkAndRequestPermissions()) {
                             confirmationDialog =
                                 mDialogClass.setUploadConfirmationDialog(
@@ -296,6 +305,7 @@ class ProfileDocumentFragment : BaseFragment(), ChoiceCallBack, SelfieCallBack {
 
                     }
                     "ll_front_driving" -> {
+                        imageSelected = GlobalConstants.Driving_license_front
                         if (baseActivity.checkAndRequestPermissions()) {
                             confirmationDialog =
                                 mDialogClass.setUploadConfirmationDialog(
@@ -307,6 +317,7 @@ class ProfileDocumentFragment : BaseFragment(), ChoiceCallBack, SelfieCallBack {
 
                     }
                     "ll_back_driving" -> {
+                        imageSelected = GlobalConstants.Driving_license_back
                         if (baseActivity.checkAndRequestPermissions()) {
                             confirmationDialog =
                                 mDialogClass.setUploadConfirmationDialog(
@@ -321,6 +332,82 @@ class ProfileDocumentFragment : BaseFragment(), ChoiceCallBack, SelfieCallBack {
             })
         )
     }
+
+/*
+    private fun uploadDocOldApi() {
+        val mHashMap = HashMap<String, RequestBody>()
+        mHashMap["dlNumber"] =
+            Utils(baseActivity).createPartFromString(dlNumber)
+        mHashMap["transportType"] =
+            Utils(baseActivity).createPartFromString(activityDocVeribinding.tvTransport.text.toString())
+        //  mHashMap["password"] = Utils(baseActivity).createPartFromString(password)
+        var poaFront: MultipartBody.Part? = null
+        if (aadharFrontImg.isNotEmpty()) {
+            var f1 = File(aadharFrontImg)
+            f1 = File(ResizeImage.compressImage(aadharFrontImg))
+            poaFront =
+                Utils(baseActivity).prepareFilePart(
+                    "poaFront",
+                    f1
+                )
+        }
+
+        var poaBack: MultipartBody.Part? = null
+        if (aadharBackImg.isNotEmpty()) {
+            var f1 = File(aadharBackImg)
+            f1 = File(ResizeImage.compressImage(aadharBackImg))
+            poaBack =
+                Utils(baseActivity).prepareFilePart(
+                    "poaBack",
+                    f1
+                )
+        }
+        var licenseFront: MultipartBody.Part? = null
+        if (drivingFrontImg.isNotEmpty()) {
+            var f1 = File(drivingFrontImg)
+            f1 = File(ResizeImage.compressImage(drivingFrontImg))
+            licenseFront =
+                Utils(baseActivity).prepareFilePart(
+                    "licenseFront",
+                    f1
+                )
+        }
+
+        var licenseBack: MultipartBody.Part? = null
+        if (drivingBackImg.isNotEmpty()) {
+            var f1 = File(drivingBackImg)
+            f1 = File(ResizeImage.compressImage(drivingBackImg))
+            licenseBack =
+                Utils(baseActivity).prepareFilePart(
+                    "licenseBack",
+                    f1
+                )
+        }
+
+        var panCard: MultipartBody.Part? = null
+        if (panCardImage.isNotEmpty()) {
+            var f1 = File(panCardImage)
+            f1 = File(ResizeImage.compressImage(panCardImage))
+            panCard =
+                Utils(baseActivity).prepareFilePart(
+                    "panCard",
+                    f1
+                )
+        }
+
+        if (UtilsFunctions.isNetworkConnected()) {
+            baseActivity.startProgressDialog()
+            docVerifyViewModel.hitDocVerifyApi(
+                mHashMap,
+                poaFront,
+                poaBack,
+                licenseFront,
+                licenseBack,
+                panCard
+            )
+        }
+    }
+*/
 
     override fun photoFromCamera(mKey: String) {
         Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
@@ -411,27 +498,44 @@ class ProfileDocumentFragment : BaseFragment(), ChoiceCallBack, SelfieCallBack {
     private fun setAndStoreImage(picturePath: String) {
         when (buttonClickedId) {
             "ll_front_aadhar" -> {
-                Log.d("TAG","cv_aadhar_front")
+                Log.d("TAG", "cv_aadhar_front")
                 setImageAadharFront(picturePath)
                 aadharFrontImg = picturePath
+                addDoc(aadharFrontImg)
             }
             "ll_back_aadhar" -> {
                 setImageAadharBack(picturePath)
                 aadharBackImg = picturePath
+                addDoc(aadharBackImg)
             }
             "ll_pan_card" -> {
                 setImagePanCard(picturePath)
                 panCardImage = picturePath
+                addDoc(panCardImage)
             }
             "ll_front_driving" -> {
                 setImageDrivingFront(picturePath)
                 drivingFrontImg = picturePath
+                addDoc(drivingFrontImg)
             }
             "ll_back_driving" -> {
                 setImageDrivingBack(picturePath)
                 drivingBackImg = picturePath
+                addDoc(drivingBackImg)
             }
+        }
+    }
 
+    private fun addDoc(imageDoc: String) {
+        var imgMultipart: MultipartBody.Part? = null
+        if (imageDoc.isNotEmpty()) {
+            val f1 = File(ResizeImage.compressImage(imageDoc))
+            imgMultipart =
+                Utils(baseActivity).prepareFilePart(
+                    "image",
+                    f1
+                )
+            docVerifyViewModel.addDoc(imgMultipart)
         }
     }
 
@@ -494,9 +598,28 @@ class ProfileDocumentFragment : BaseFragment(), ChoiceCallBack, SelfieCallBack {
                                     activityDocVeribinding.tvTransport.text = vehicleList!![0].name
                                 }
 
-                                  //  setVehiclesSpinner(activityDocVeribinding.spTransport)
+                                //  setVehiclesSpinner(activityDocVeribinding.spTransport)
                             }
                         }
+                    }
+                } else {
+                    UtilsFunctions.showToastError(resources.getString(R.string.internal_server_error))
+                }
+            })
+    }
+
+    private fun uploadDocNewObserver() {
+        docVerifyViewModel.uploadDocNewDataList().observe(this,
+            Observer<LoginResponse> { response ->
+                baseActivity.stopProgressDialog()
+                if (response != null) {
+                    when (response.code) {
+                        200 -> {
+                            makeEnableDisableViews(false)
+                            docVerifyViewModel.documentDetails(GlobalConstants.DOCUMENTS_TAB)
+                            response.message?.let { UtilsFunctions.showToastSuccess(it) }
+                        }
+                        else -> response.message?.let { UtilsFunctions.showToastError(it) }
                     }
                 } else {
                     UtilsFunctions.showToastError(resources.getString(R.string.internal_server_error))

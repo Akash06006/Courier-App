@@ -84,9 +84,9 @@
                         android:paddingRight="@dimen/dp_10"
                         android:text="Sign Out"
                         android:textAlignment="center"
-                        android:textColor="@color/colorWhite"
+                        android:textColor="@color/colorRed"
                         android:textSize="@dimen/sp_14"
-                        app:font="@{`semibold`}" />
+                        app:font="@{`bold`}" />
 
 
                 </LinearLayout>

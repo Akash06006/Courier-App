@@ -24,11 +24,13 @@ import com.courierdriver.callbacks.SelfieCallBack
 import com.courierdriver.common.UtilsFunctions
 import com.courierdriver.constants.GlobalConstants
 import com.courierdriver.databinding.ActivityDocumentVerificatonBinding
+import com.courierdriver.model.AddDocModel
 import com.courierdriver.model.GetVehiclesModel
 import com.courierdriver.model.LoginResponse
 import com.courierdriver.sharedpreference.SharedPrefClass
 import com.courierdriver.utils.BaseActivity
 import com.courierdriver.utils.DialogClass
+import com.courierdriver.utils.ResizeImage
 import com.courierdriver.utils.Utils
 import com.courierdriver.viewmodels.DocVerifyViewModel
 import com.courierdriver.views.home.LandingActivty
@@ -68,6 +70,12 @@ class DocumentVerificatonActivity : BaseActivity(), ChoiceCallBack, SelfieCallBa
     private var googlePay = ""
     private var phonePe = ""
     private var notificationToken = ""
+    private var imageSelected = 0
+    private var dlFrontStr = ""
+    private var dlBackStr = ""
+    private var panCardStr = ""
+    private var aadharFrontStr = ""
+    private var aadharBackStr = ""
 
     override fun getLayoutId(): Int {
         return R.layout.activity_document_verificaton
@@ -85,7 +93,140 @@ class DocumentVerificatonActivity : BaseActivity(), ChoiceCallBack, SelfieCallBa
         loaderObserver()
         sharedPrefValue()
         getVehicleListObserver()
+        addDocObserver()
+        uploadDocNewObserver()
 
+        viewClicks()
+        docVerifyViewModel.getDocVerify().observe(this,
+            Observer<LoginResponse> { response ->
+                stopProgressDialog()
+                if (response != null) {
+                    val message = response.message
+                    when (response.code) {
+                        200 -> {
+                            SharedPrefClass().putObject(
+                                MyApplication.instance,
+                                GlobalConstants.IS_DOC_UPLOADED,
+                                "true"
+                            )
+                            val intent1 = Intent(this, LandingActivty::class.java)
+                            startActivity(intent1)
+                            finish()
+                            message?.let { UtilsFunctions.showToastSuccess(it) }
+                        }
+                        408 -> {
+                            showToastError("User not available anymore")
+                            SharedPrefClass().putObject(
+                                this,
+                                "isLogin",
+                                false
+                            )
+                            SharedPrefClass().clearAll(this)
+                            SharedPrefClass().putObject(
+                                this,
+                                GlobalConstants.NOTIFICATION_TOKENPref,
+                                notificationToken
+                            )
+                            GlobalConstants.NOTIFICATION_TOKEN = notificationToken
+                            val i = Intent(
+                                MyApplication.instance.applicationContext,
+                                LoginActivity::class.java
+                            )
+                            i.flags =
+                                Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                            startActivity(i)
+                        }
+                        else -> message?.let { UtilsFunctions.showToastError(it) }
+                    }
+
+                }
+            })
+
+    }
+
+    private fun addDocObserver() {
+        docVerifyViewModel.addDocData().observe(this,
+            Observer<AddDocModel> { response ->
+                stopProgressDialog()
+                if (response != null) {
+                    val message = response.message
+                    when (response.code) {
+                        200 -> {
+                            val data = response.body
+                            when (imageSelected) {
+                                GlobalConstants.Driving_license_front -> {
+                                    dlFrontStr = data!!.image!!
+                                }
+                                GlobalConstants.Driving_license_back -> {
+                                    dlBackStr = data!!.image!!
+                                }
+                                GlobalConstants.Pan_card -> {
+                                    panCardStr = data!!.image!!
+                                }
+                                GlobalConstants.Aadhar_front -> {
+                                    aadharFrontStr = data!!.image!!
+                                }
+                                GlobalConstants.Aadhar_back -> {
+                                    aadharBackStr = data!!.image!!
+                                }
+                            }
+                          //  message?.let { UtilsFunctions.showToastSuccess(it) }
+                        }
+                        else -> message?.let { UtilsFunctions.showToastError(it) }
+                    }
+
+                }
+            })
+    }
+
+    private fun uploadDocNewObserver() {
+        docVerifyViewModel.uploadDocNewDataList().observe(this,
+            Observer<LoginResponse> { response ->
+                stopProgressDialog()
+                if (response != null) {
+                    val message = response.message
+                    when (response.code) {
+                        200 -> {
+                            SharedPrefClass().putObject(
+                                MyApplication.instance,
+                                GlobalConstants.IS_DOC_UPLOADED,
+                                "true"
+                            )
+                            val intent1 = Intent(this, LandingActivty::class.java)
+                            startActivity(intent1)
+                            finish()
+                            message?.let { UtilsFunctions.showToastSuccess(it) }
+                        }
+                        408 -> {
+                            showToastError("User not available anymore")
+                            SharedPrefClass().putObject(
+                                this,
+                                "isLogin",
+                                false
+                            )
+                            SharedPrefClass().clearAll(this)
+                            SharedPrefClass().putObject(
+                                this,
+                                GlobalConstants.NOTIFICATION_TOKENPref,
+                                notificationToken
+                            )
+                            GlobalConstants.NOTIFICATION_TOKEN = notificationToken
+                            val i = Intent(
+                                MyApplication.instance.applicationContext,
+                                LoginActivity::class.java
+                            )
+                            i.flags =
+                                Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                            startActivity(i)
+                        }
+                        else -> message?.let { UtilsFunctions.showToastError(it) }
+                    }
+
+                }
+            })
+    }
+
+    private fun viewClicks() {
         docVerifyViewModel.isClick().observe(
             this, Observer<String>(function =
             fun(it: String?) {
@@ -171,19 +312,19 @@ class DocumentVerificatonActivity : BaseActivity(), ChoiceCallBack, SelfieCallBa
                         }
 
                         //  mHashMap["password"] = Utils(this).createPartFromString(password)
-                        if (TextUtils.isEmpty(aadharFrontImg)) {
+                        if (TextUtils.isEmpty(aadharFrontStr)) {
                             showToastError("Please select Aadhar front photo")
-                        } else if (TextUtils.isEmpty(aadharBackImg)) {
+                        } else if (TextUtils.isEmpty(aadharBackStr)) {
                             showToastError("Please select Aadhar back photo")
-                        } else if (TextUtils.isEmpty(panCardImage)) {
+                        } else if (TextUtils.isEmpty(panCardStr)) {
                             showToastError("Please select PAN card image")
                         } else if (TextUtils.isEmpty(transportType)) {
                             showToastError("Please select vehicle type")
                         } else if (TextUtils.isEmpty(dlNumber)) {
                             showToastError("Please enter driving license number")
-                        } else if (TextUtils.isEmpty(drivingFrontImg)) {
+                        } else if (TextUtils.isEmpty(dlFrontStr)) {
                             showToastError("Please select Driving license front image")
-                        } else if (TextUtils.isEmpty(drivingBackImg)) {
+                        } else if (TextUtils.isEmpty(dlBackStr)) {
                             showToastError("Please select Driving license back image")
                         } else if (!TextUtils.isEmpty(activityDocVeribinding.etPhonePaytm.text.toString())
                             && (activityDocVeribinding.etPhonePaytm.text.toString()).length < 10
@@ -227,64 +368,20 @@ class DocumentVerificatonActivity : BaseActivity(), ChoiceCallBack, SelfieCallBa
                                 Utils(this).createPartFromString(activityDocVeribinding.etPhonePhonePe.text.toString())
                             mHashMap["paytmNo"] =
                                 Utils(this).createPartFromString(activityDocVeribinding.etPhonePaytm.text.toString())
-
-                            var poaFront: MultipartBody.Part? = null
-                            if (aadharFrontImg.isNotEmpty()) {
-                                val f1 = File(aadharFrontImg)
-                                poaFront =
-                                    Utils(this).prepareFilePart(
-                                        "poaFront",
-                                        f1
-                                    )
-                            }
-
-                            var poaBack: MultipartBody.Part? = null
-                            if (aadharBackImg.isNotEmpty()) {
-                                val f1 = File(aadharBackImg)
-                                poaBack =
-                                    Utils(this).prepareFilePart(
-                                        "poaBack",
-                                        f1
-                                    )
-                            }
-                            var licenseFront: MultipartBody.Part? = null
-                            if (drivingFrontImg.isNotEmpty()) {
-                                val f1 = File(drivingFrontImg)
-                                licenseFront =
-                                    Utils(this).prepareFilePart(
-                                        "licenseFront",
-                                        f1
-                                    )
-                            }
-
-                            var licenseBack: MultipartBody.Part? = null
-                            if (drivingBackImg.isNotEmpty()) {
-                                val f1 = File(drivingBackImg)
-                                licenseBack =
-                                    Utils(this).prepareFilePart(
-                                        "licenseBack",
-                                        f1
-                                    )
-                            }
-
-                            var panCard: MultipartBody.Part? = null
-                            if (panCardImage.isNotEmpty()) {
-                                val f1 = File(panCardImage)
-                                panCard =
-                                    Utils(this).prepareFilePart(
-                                        "panCard",
-                                        f1
-                                    )
-                            }
-
-
-                            docVerifyViewModel.hitDocVerifyApi(
-                                mHashMap,
-                                poaFront,
-                                poaBack,
-                                licenseFront,
-                                licenseBack,
-                                panCard
+                            mHashMap["poaFront"] =
+                                Utils(this).createPartFromString(aadharFrontStr)
+                            mHashMap["poaBack"] =
+                                Utils(this).createPartFromString(aadharBackStr)
+                            mHashMap["licenseFront"] =
+                                Utils(this).createPartFromString(dlFrontStr)
+                            mHashMap["licenseBack"] =
+                                Utils(this).createPartFromString(dlBackStr)
+                            mHashMap["panCard"] =
+                                Utils(this).createPartFromString(panCardStr)
+                            mHashMap["isUpdate"] =
+                                Utils(this).createPartFromString("false")
+                            docVerifyViewModel.uploadDocNew(
+                                mHashMap
                             )
                         }
                     }
@@ -292,8 +389,8 @@ class DocumentVerificatonActivity : BaseActivity(), ChoiceCallBack, SelfieCallBa
                         // editImage = 0
                         //  showPictureDialog()
                     }
-
                     "cv_aadhar_front" -> {
+                        imageSelected = GlobalConstants.Aadhar_front
                         if (checkAndRequestPermissions()) {
                             confirmationDialog =
                                 mDialogClass.setUploadConfirmationDialog(
@@ -305,6 +402,7 @@ class DocumentVerificatonActivity : BaseActivity(), ChoiceCallBack, SelfieCallBa
 
                     }
                     "cv_adadhr_back" -> {
+                        imageSelected = GlobalConstants.Aadhar_back
                         if (checkAndRequestPermissions()) {
                             confirmationDialog =
                                 mDialogClass.setUploadConfirmationDialog(
@@ -316,6 +414,7 @@ class DocumentVerificatonActivity : BaseActivity(), ChoiceCallBack, SelfieCallBa
 
                     }
                     "cv_pan_card" -> {
+                        imageSelected = GlobalConstants.Pan_card
                         if (checkAndRequestPermissions()) {
                             confirmationDialog =
                                 mDialogClass.setUploadConfirmationDialog(
@@ -327,6 +426,7 @@ class DocumentVerificatonActivity : BaseActivity(), ChoiceCallBack, SelfieCallBa
 
                     }
                     "cv_driving_front" -> {
+                        imageSelected = GlobalConstants.Driving_license_front
                         if (checkAndRequestPermissions()) {
                             confirmationDialog =
                                 mDialogClass.setUploadConfirmationDialog(
@@ -338,6 +438,7 @@ class DocumentVerificatonActivity : BaseActivity(), ChoiceCallBack, SelfieCallBa
 
                     }
                     "cv_driving_back" -> {
+                        imageSelected = GlobalConstants.Driving_license_back
                         if (checkAndRequestPermissions()) {
                             confirmationDialog =
                                 mDialogClass.setUploadConfirmationDialog(
@@ -350,51 +451,126 @@ class DocumentVerificatonActivity : BaseActivity(), ChoiceCallBack, SelfieCallBa
                 }
             })
         )
-        docVerifyViewModel.getDocVerify().observe(this,
-            Observer<LoginResponse> { response ->
-                stopProgressDialog()
-                if (response != null) {
-                    val message = response.message
-                    when (response.code) {
-                        200 -> {
-                            SharedPrefClass().putObject(
-                                MyApplication.instance,
-                                GlobalConstants.IS_DOC_UPLOADED,
-                                "true"
-                            )
-                            val intent1 = Intent(this, LandingActivty::class.java)
-                            startActivity(intent1)
-                            finish()
-                            message?.let { UtilsFunctions.showToastSuccess(it) }
-                        }
-                        408 -> {
-                            showToastError("User not available anymore")
-                            SharedPrefClass().putObject(
-                                this,
-                                "isLogin",
-                                false
-                            )
-                            SharedPrefClass().clearAll(this)
-                            SharedPrefClass().putObject(
-                                this,
-                                GlobalConstants.NOTIFICATION_TOKENPref,
-                                notificationToken
-                            )
-                            GlobalConstants.NOTIFICATION_TOKEN = notificationToken
-                            val i = Intent(
-                                MyApplication.instance.applicationContext,
-                                LoginActivity::class.java
-                            )
-                            i.flags =
-                                Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                            startActivity(i)
-                        }
-                        else -> message?.let { UtilsFunctions.showToastError(it) }
-                    }
+    }
 
-                }
-            })
 
+    private fun uploadDocOldApi() {
+        if (TextUtils.isEmpty(aadharFrontImg)) {
+            showToastError("Please select Aadhar front photo")
+        } else if (TextUtils.isEmpty(aadharBackImg)) {
+            showToastError("Please select Aadhar back photo")
+        } else if (TextUtils.isEmpty(panCardImage)) {
+            showToastError("Please select PAN card image")
+        } else if (TextUtils.isEmpty(transportType)) {
+            showToastError("Please select vehicle type")
+        } else if (TextUtils.isEmpty(dlNumber)) {
+            showToastError("Please enter driving license number")
+        } else if (TextUtils.isEmpty(drivingFrontImg)) {
+            showToastError("Please select Driving license front image")
+        } else if (TextUtils.isEmpty(drivingBackImg)) {
+            showToastError("Please select Driving license back image")
+        } else if (!TextUtils.isEmpty(activityDocVeribinding.etPhonePaytm.text.toString())
+            && (activityDocVeribinding.etPhonePaytm.text.toString()).length < 10
+        ) {
+            showError(
+                activityDocVeribinding.etPhonePaytm,
+                getString(R.string.paytm) + " " + getString(R.string.phone_number)
+                        + " " + getString(R.string.phone_min)
+            )
+        } else if (!TextUtils.isEmpty(activityDocVeribinding.etPhoneGooglePay.text.toString())
+            && (activityDocVeribinding.etPhoneGooglePay.text.toString()).length < 10
+        ) {
+            showError(
+                activityDocVeribinding.etPhoneGooglePay,
+                getString(R.string.google_pay) + " " + getString(R.string.phone_number)
+                        + " " + getString(R.string.phone_min)
+            )
+        } else if (!TextUtils.isEmpty(activityDocVeribinding.etPhonePhonePe.text.toString())
+            && (activityDocVeribinding.etPhonePhonePe.text.toString()).length < 10
+        ) {
+            showError(
+                activityDocVeribinding.etPhonePhonePe,
+                getString(R.string.phone_pe) + " " + getString(R.string.phone_number)
+                        + " " + getString(R.string.phone_min)
+            )
+        } else if (count < 2) {
+            UtilsFunctions.showToastError(getString(R.string.payment_options_error))
+        } else {
+            paymentType = paytm + googlePay + phonePe
+
+            val mHashMap = HashMap<String, RequestBody>()
+            mHashMap["dlNumber"] =
+                Utils(this).createPartFromString(dlNumber)
+            mHashMap["transportType"] =
+                Utils(this).createPartFromString(transportType)
+            mHashMap["paymentType"] =
+                Utils(this).createPartFromString(paymentType)
+            mHashMap["gpayNo"] =
+                Utils(this).createPartFromString(activityDocVeribinding.etPhoneGooglePay.text.toString())
+            mHashMap["phonePayNo"] =
+                Utils(this).createPartFromString(activityDocVeribinding.etPhonePhonePe.text.toString())
+            mHashMap["paytmNo"] =
+                Utils(this).createPartFromString(activityDocVeribinding.etPhonePaytm.text.toString())
+
+            var poaFront: MultipartBody.Part? = null
+            if (aadharFrontImg.isNotEmpty()) {
+                val f1 = File(aadharFrontImg)
+                poaFront =
+                    Utils(this).prepareFilePart(
+                        "poaFront",
+                        f1
+                    )
+            }
+
+            var poaBack: MultipartBody.Part? = null
+            if (aadharBackImg.isNotEmpty()) {
+                val f1 = File(aadharBackImg)
+                poaBack =
+                    Utils(this).prepareFilePart(
+                        "poaBack",
+                        f1
+                    )
+            }
+            var licenseFront: MultipartBody.Part? = null
+            if (drivingFrontImg.isNotEmpty()) {
+                val f1 = File(drivingFrontImg)
+                licenseFront =
+                    Utils(this).prepareFilePart(
+                        "licenseFront",
+                        f1
+                    )
+            }
+
+            var licenseBack: MultipartBody.Part? = null
+            if (drivingBackImg.isNotEmpty()) {
+                val f1 = File(drivingBackImg)
+                licenseBack =
+                    Utils(this).prepareFilePart(
+                        "licenseBack",
+                        f1
+                    )
+            }
+
+            var panCard: MultipartBody.Part? = null
+            if (panCardImage.isNotEmpty()) {
+                val f1 = File(panCardImage)
+                panCard =
+                    Utils(this).prepareFilePart(
+                        "panCard",
+                        f1
+                    )
+            }
+
+
+            docVerifyViewModel.hitDocVerifyApi(
+                mHashMap,
+                poaFront,
+                poaBack,
+                licenseFront,
+                licenseBack,
+                panCard
+            )
+        }
     }
 
     private fun sharedPrefValue() {
@@ -567,30 +743,49 @@ class DocumentVerificatonActivity : BaseActivity(), ChoiceCallBack, SelfieCallBa
             "cv_aadhar_front" -> {
                 setImageAadharFront(picturePath)
                 aadharFrontImg = picturePath
+                addDoc(aadharFrontImg)
             }
 
             "cv_adadhr_back" -> {
                 setImageAadharBack(picturePath)
                 aadharBackImg = picturePath
+                addDoc(aadharBackImg)
             }
 
             "cv_pan_card" -> {
                 setImagePanCard(picturePath)
                 panCardImage = picturePath
+                addDoc(panCardImage)
             }
 
             "cv_driving_front" -> {
                 setImageDrivingFront(picturePath)
                 drivingFrontImg = picturePath
+                addDoc(drivingFrontImg)
             }
 
             "cv_driving_back" -> {
                 setImageDrivingBack(picturePath)
                 drivingBackImg = picturePath
+                addDoc(drivingBackImg)
             }
 
         }
     }
+
+    private fun addDoc(imageDoc: String) {
+        var imgMultipart: MultipartBody.Part? = null
+        if (imageDoc.isNotEmpty()) {
+            val f1 = File(ResizeImage.compressImage(imageDoc))
+            imgMultipart =
+                Utils(this).prepareFilePart(
+                    "image",
+                    f1
+                )
+            docVerifyViewModel.addDoc(imgMultipart)
+        }
+    }
+
 
     private fun setImageAadharFront(path: String) {
         Glide.with(this)

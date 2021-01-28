@@ -250,4 +250,12 @@ interface ApiInterface {
     @Multipart
     @POST("delivery/auth/checkSocial")
     fun checkSocial(@PartMap mHashMap : HashMap<String, RequestBody>) : Call<JsonObject>
+
+    @Multipart
+    @POST("/api/delivery/auth/addDoc")
+    fun addDoc(@Part image: MultipartBody.Part?): Call<JsonObject>
+
+    @Multipart
+    @POST("/api/delivery/auth/uploadDocNew")
+    fun uploadDocNew(@PartMap mHashMap : HashMap<String, RequestBody>): Call<JsonObject>
 }

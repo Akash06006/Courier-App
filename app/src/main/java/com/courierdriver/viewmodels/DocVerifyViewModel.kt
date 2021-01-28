@@ -4,20 +4,18 @@ import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.courierdriver.common.UtilsFunctions
-import com.courierdriver.model.GetVehiclesModel
-import com.courierdriver.model.LoginResponse
-import com.courierdriver.model.ProfileDocumentModel
-import com.courierdriver.model.profile.AccountDetailsModel
+import com.courierdriver.model.*
 import com.courierdriver.model.profile.RegionResponse
 import com.courierdriver.repositories.DocVerifyRepository
 import com.courierdriver.repositories.profile.ProfileRepository
-import com.example.services.repositories.home.HomeRepository
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 
 class DocVerifyViewModel : BaseViewModel() {
     private var regionResponse = MutableLiveData<RegionResponse>()
     private var data = MutableLiveData<LoginResponse>()
+    private var uploadDocNewData = MutableLiveData<LoginResponse>()
+    private var addDocDataList = MutableLiveData<AddDocModel>()
     private var docVerifyRepository = DocVerifyRepository()
     private val mIsUpdating = MutableLiveData<Boolean>()
     private val btnClick = MutableLiveData<String>()
@@ -28,7 +26,9 @@ class DocVerifyViewModel : BaseViewModel() {
     init {
         if (UtilsFunctions.isNetworkConnectedReturn()) {
             data = docVerifyRepository.docVerify(null, null, null, null, null, null)
+            addDocDataList = docVerifyRepository.addDoc(null,addDocDataList)
             documentDetails = profileRepository.documentsData(null, documentDetails)
+            uploadDocNewData  = docVerifyRepository.uploadDocNew(null,uploadDocNewData)
         }
     }
 
@@ -55,10 +55,6 @@ class DocVerifyViewModel : BaseViewModel() {
         return documentDetails!!
     }
 
-    fun getDocVerify(): LiveData<LoginResponse> {
-        return data
-    }
-
     fun getRegionsRes(): LiveData<RegionResponse> {
         return regionResponse
     }
@@ -74,7 +70,6 @@ class DocVerifyViewModel : BaseViewModel() {
     override fun clickListener(v: View) {
         btnClick.value = v.resources.getResourceName(v.id).split("/")[1]
     }
-
 
     fun hitDocVerifyApi(
         hashMap: HashMap<String, RequestBody>,
@@ -96,6 +91,38 @@ class DocVerifyViewModel : BaseViewModel() {
             mIsUpdating.postValue(true)
 
         }
+    }
+
+    fun getDocVerify(): LiveData<LoginResponse> {
+        return data
+    }
+
+    fun addDoc(docImage: MultipartBody.Part?
+    ) {
+        if (UtilsFunctions.isNetworkConnected()) {
+            addDocDataList = docVerifyRepository.addDoc(
+                docImage,
+                addDocDataList
+            )
+            mIsUpdating.postValue(true)
+        }
+    }
+
+    fun addDocData(): LiveData<AddDocModel> {
+        return addDocDataList
+    }
+
+    fun uploadDocNew(mHashMap: HashMap<String, RequestBody>) {
+
+        if(UtilsFunctions.isNetworkConnected())
+        {
+            uploadDocNewData  = docVerifyRepository.uploadDocNew(mHashMap,uploadDocNewData)
+            mIsUpdating.postValue(true)
+        }
+    }
+
+    fun uploadDocNewDataList(): LiveData<LoginResponse> {
+        return uploadDocNewData
     }
 
     /*fun getRegions(hashMap : HashMap<String, RequestBody>, image : MultipartBody.Part?) {

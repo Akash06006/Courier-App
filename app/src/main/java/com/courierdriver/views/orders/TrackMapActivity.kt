@@ -273,16 +273,20 @@ class TrackMapActivity : BaseActivity(), NotiFyRestartTrackingReceiver, NetworkC
         val tvSubmit = setNavigationIconDialog!!.findViewById<TextView>(R.id.tv_submit)
         val tvCancel = setNavigationIconDialog!!.findViewById<TextView>(R.id.tv_cancel)
         val linPickup = setNavigationIconDialog!!.findViewById<LinearLayout>(R.id.lin_pickup)
-        val tvPickupAddress = setNavigationIconDialog!!.findViewById<TextView>(R.id.tv_pickup_address)
-        val relPickupAddress = setNavigationIconDialog!!.findViewById<RelativeLayout>(R.id.rel_pickup_address)
+        val tvPickupAddress =
+            setNavigationIconDialog!!.findViewById<TextView>(R.id.tv_pickup_address)
+        val relPickupAddress =
+            setNavigationIconDialog!!.findViewById<RelativeLayout>(R.id.rel_pickup_address)
         tvSubmit.visibility = View.VISIBLE
         tvCancel.visibility = View.GONE
 
-        if(orderDetails!!.orderStatus?.status == "2") {
+        if (orderDetails!!.pickupAddress != null)
+            tvPickupAddress.text = orderDetails!!.pickupAddress!!.address
+
+        if (orderDetails!!.orderStatus?.status == "2") {
             if (orderDetails!!.orderStatus?.statusName.equals("Picked Up")) {
                 linPickup.visibility = View.GONE
             } else {
-                tvPickupAddress.text = orderDetails!!.pickupAddress!!.address
                 linPickup.visibility = View.VISIBLE
             }
         }

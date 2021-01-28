@@ -388,7 +388,7 @@
                                             android:text="@{orderDetailModel.deliveryoption.title}"
                                             android:textColor="@color/colorBlack"
                                             android:textSize="@dimen/sp_12"
-                                            app:font="@{`semibold`}" />
+                                            app:font="@{`bold`}" />
 
                                     </LinearLayout>
 

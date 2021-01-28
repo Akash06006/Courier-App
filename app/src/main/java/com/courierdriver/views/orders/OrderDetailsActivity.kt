@@ -147,6 +147,7 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
     private var TRACK_RIDE = 0
     private var isConnected = false
     private var otherReasonSelected = false
+    private var isTimerStarted = false
 
     var customerId = ""
     override fun getLayoutId(): Int {
@@ -179,11 +180,32 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
         uploadSelfieObserver()
 
         initiateSocket()
+        startTimer()
 
         trackingService = TrackingService()
         val mServiceIntent = Intent(this, trackingService!!::class.java)
         if (!isMyServiceRunning(trackingService!!::class.java)) {
             startService(mServiceIntent)
+        }
+    }
+
+    private var timer: Timer? = null
+    private var timerTask: TimerTask? = null
+    fun startTimer() {
+        timer = Timer()
+        timerTask = object : TimerTask() {
+            override fun run() {
+                Log.i("timer going", "=========  ")
+                orderViewModel.orderDetail(orderId)
+            }
+        }
+        timer!!.schedule(timerTask, 10000, 10000) //
+    }
+
+    fun stoptimertask() {
+        if (timer != null) {
+            timer!!.cancel()
+            timer = null
         }
     }
 
@@ -207,6 +229,9 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
         }
 */
         //stopService(mServiceIntent);
+
+        stoptimertask()
+
         val broadcastIntent = Intent()
         broadcastIntent.action = "restartService"
         broadcastIntent.setClass(this, RestartTrackingBroadcastReceiver::class.java)
@@ -331,8 +356,25 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
         mJsonObject.put("empId", userId)
         mSocket.emit("socketFromClient", mJsonObject)
         //  method name  "updateLocation", "updateVehicleLocation", "getLocation"
+
+        //updateOrderStatus orderSttaus1-1 accept , 2 - cancel
+
+
+        // updateOrderStatus from customer
     }
     //endregion
+
+
+    private fun updateOrderStatus(orderStatus: String?) {
+        Log.d("TAG", "emitingSocket")
+        val mJsonObject = JSONObject()
+        mJsonObject.put("methodName", "updateOrderStatus")
+        mJsonObject.put("orderId", orderId)
+        mJsonObject.put("driverId", userId)
+        mJsonObject.put("orderStatus", orderStatus)
+        mSocket!!.emit("socketFromClient", mJsonObject)
+    }
+
 
     private fun initMap() {
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
@@ -345,9 +387,8 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
             this, Observer<String>(function =
             fun(it: String?) {
                 when (it) {
-                    "img_call" ->
-                    {
-                        if(orderDetail!!.pickupAddress!!.phoneNumber != null) {
+                    "img_call" -> {
+                        if (orderDetail!!.pickupAddress!!.phoneNumber != null) {
                             val dialIntent = Intent(Intent.ACTION_DIAL)
                             dialIntent.data =
                                 Uri.parse("tel:" + orderDetail!!.pickupAddress!!.phoneNumber)
@@ -468,6 +509,7 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
                             mSocket!!.emit("updateRiderLocation", mJsonObject)
 
                             emitLocation(mSocket!!, currentLatitude, currentLongitude)
+                            updateOrderStatus("1")
                             orderViewModel.orderDetail(orderId)
                             UtilsFunctions.showToastSuccess(message!!)
                         }
@@ -494,6 +536,7 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
                             cancelledCharges = response.data?.cancellationCharges!!
                             setDeliveryAddressAdapter(response.data?.deliveryAddress)
                             hideUnhideButtons(response.data!!)
+
 
                             if (orderDetail!!.additionalCharges!!.cancellationCharges != null &&
                                 orderDetail!!.additionalCharges!!.cancellationCharges != "0"
@@ -833,6 +876,7 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
                             showToastSuccess(
                                 "Order Cancelled Successfully"
                             )
+                            updateOrderStatus("2")
                             finish()
                             // activityCreateOrderBinding.orderDetailModel = response.data
                         }
@@ -946,7 +990,7 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
         if (orderStatus.equals("1")) {
             activityCreateOrderBinding.imgCall.visibility = View.GONE
             activityCreateOrderBinding.linChatHelp.visibility = View.GONE
-            activityCreateOrderBinding.relNavigation.visibility = View.GONE
+            activityCreateOrderBinding.relNavigation.visibility = View.VISIBLE
             activityCreateOrderBinding.llAvailable.visibility = View.VISIBLE
             activityCreateOrderBinding.llAcceptedTakeOrder.visibility = View.GONE
             activityCreateOrderBinding.llCompleteOrder.visibility = View.GONE
@@ -960,6 +1004,7 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
                 activityCreateOrderBinding.llAcceptedTakeOrder.visibility = View.GONE
                 activityCreateOrderBinding.llCompleteOrder.visibility = View.VISIBLE
             } else {
+                if(!isTimerStarted)
                 getTimeDifference()
                 activityCreateOrderBinding.relNavigation.visibility = View.VISIBLE
                 activityCreateOrderBinding.linChatHelp.visibility = View.VISIBLE
@@ -982,6 +1027,7 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
             activityCreateOrderBinding.llCompleteOrder.visibility = View.GONE
         } else if (orderStatus.equals("4")) {
             activityCreateOrderBinding.imgCall.visibility = View.GONE
+            activityCreateOrderBinding.relNavigation.visibility = View.GONE
             if (orderStatusName.equals("Cancelled-Driver")) {
                 activityCreateOrderBinding.linChatHelp.visibility = View.GONE
                 activityCreateOrderBinding.tvTimer.visibility = View.GONE
@@ -1019,7 +1065,7 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
     private fun setDeliveryAddressAdapter(deliveryAddressList: ArrayList<OrdersDetailResponse.PickupAddress>?) {
         val linearLayoutManager = LinearLayoutManager(this)
         val deliveryAddressAdapter =
-            DetailDeliveryAddressAdapter(this, deliveryAddressList!!,orderDetail)
+            DetailDeliveryAddressAdapter(this, deliveryAddressList!!, orderDetail)
         linearLayoutManager.orientation = RecyclerView.VERTICAL
         activityCreateOrderBinding.rvDeliveryAddress.layoutManager = linearLayoutManager
         activityCreateOrderBinding.rvDeliveryAddress.adapter = deliveryAddressAdapter
@@ -1577,6 +1623,7 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
     private fun countDown(dateDiff: String) {
         object : CountDownTimer(dateDiff.toLong(), 1000) {
             override fun onTick(millisUntilFinished: Long) {
+                isTimerStarted = true
                 // activityOtpVerificationBinding.resendOTP = 1
                 val millis: Long = millisUntilFinished
                 val hms = String.format(

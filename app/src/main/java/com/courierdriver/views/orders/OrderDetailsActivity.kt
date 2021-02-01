@@ -185,7 +185,12 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
         uploadSelfieObserver()
 
         initiateSocket()
-        startTimer()
+        //  startTimer()
+        if (UtilsFunctions.isNetworkConnected()) {
+            //baseActivity.startProgressDialog()
+            orderViewModel.orderDetail(orderId)
+        }
+
 
         try {
             val socketConnectionManager: SocketConnectionManager =
@@ -205,7 +210,7 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
                     // val orderStatus = data.getString("orderStatus")
                     if (UtilsFunctions.isNetworkConnected()) {
                         //baseActivity.startProgressDialog()
-                        orderDetailObserver()
+                        orderViewModel.orderDetail(orderId)
                     }
                 } catch (e: Exception) {
                 }
@@ -668,6 +673,8 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
         val text = dialog.findViewById(R.id.text) as TextView
         text.text = "Order has been taken by othe rider."
         val dialogButton = dialog.findViewById(R.id.dialogButtonOK) as Button
+        val dialogButtonCancel = dialog.findViewById(R.id.dialogButtonCancel) as Button
+        dialogButtonCancel.visibility = View.GONE
         // if button is clicked, close the custom dialog
         dialogButton.setOnClickListener {
 
@@ -1884,15 +1891,15 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
     }
 
     override fun onConnectError() {
-        TODO("Not yet implemented")
+        // TODO("Not yet implemented")
     }
 
     override fun onConnected() {
-        TODO("Not yet implemented")
+        //TODO("Not yet implemented")
     }
 
     override fun onDisconnected() {
-        TODO("Not yet implemented")
+        //TODO("Not yet implemented")
     }
 
 }

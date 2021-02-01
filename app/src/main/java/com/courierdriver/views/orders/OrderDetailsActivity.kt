@@ -42,6 +42,8 @@ import com.courierdriver.adapters.orders.DetailDeliveryAddressAdapter
 import com.courierdriver.adapters.orders.NavigationAddressAdapter
 import com.courierdriver.application.MyApplication
 import com.courierdriver.callbacks.SelfieCallBack
+import com.courierdriver.chatSocket.ConnectionListener
+import com.courierdriver.chatSocket.SocketConnectionManager
 import com.courierdriver.common.UtilsFunctions
 import com.courierdriver.constants.GlobalConstants
 import com.courierdriver.databinding.ActivityOrderDetailsBinding
@@ -58,6 +60,7 @@ import com.courierdriver.utils.service.TrackingService
 import com.courierdriver.viewmodels.order.OrderDetailViewModel
 import com.courierdriver.views.chat.ChatActivity
 import com.courierdriver.views.chat.CustomerChatActivity
+import com.example.fleet.socket.SocketInterface
 import com.github.nkzawa.emitter.Emitter
 import com.github.nkzawa.socketio.client.Socket
 import com.google.android.gms.common.ConnectionResult
@@ -82,6 +85,7 @@ import org.json.JSONObject
 import java.io.File
 import java.io.IOException
 import java.net.SocketTimeoutException
+import java.net.URISyntaxException
 import java.text.DateFormat
 import java.text.ParseException
 import java.text.SimpleDateFormat
@@ -90,6 +94,7 @@ import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
 
 class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListener,
+    ConnectionListener,
     GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
     GoogleMap.OnCameraIdleListener, DialogssInterface, SelfieCallBack,
     NetworkChangeCallback, NotiFyRestartTrackingReceiver {
@@ -148,7 +153,7 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
     private var isConnected = false
     private var otherReasonSelected = false
     private var isTimerStarted = false
-
+    var isFirst = true
     var customerId = ""
     override fun getLayoutId(): Int {
         return R.layout.activity_order_details
@@ -156,7 +161,7 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
 
     override fun initViews() {
         setBindingAndViewModel()
-
+        isFirst = true
         // Initialize the SDK
         Places.initialize(applicationContext, getString(R.string.maps_api_key))
         dialog = Dialog(this)
@@ -181,6 +186,31 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
 
         initiateSocket()
         startTimer()
+
+        try {
+            val socketConnectionManager: SocketConnectionManager =
+                SocketConnectionManager.getInstance()
+            socketConnectionManager.createConnection(
+                this,
+                HashMap<String, io.socket.emitter.Emitter.Listener>()
+            )
+        } catch (e: URISyntaxException) {
+            e.printStackTrace()
+        }
+        SocketConnectionManager.getInstance()
+            .addEventListener("updateOrderStatus") { args ->
+                //val data = args[0] as JSONObject
+                try {
+                    Log.d("updateOrderStatus", "updateOrderStatus")
+                    // val orderStatus = data.getString("orderStatus")
+                    if (UtilsFunctions.isNetworkConnected()) {
+                        //baseActivity.startProgressDialog()
+                        orderDetailObserver()
+                    }
+                } catch (e: Exception) {
+                }
+            }
+
 
         trackingService = TrackingService()
         val mServiceIntent = Intent(this, trackingService!!::class.java)
@@ -440,6 +470,7 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
     }
 
     private fun completeOrderObserver() {
+        isFirst = true
         orderViewModel.completeOrderData().observe(this,
             Observer<CommonModel> { response ->
                 stopProgressDialog()
@@ -473,6 +504,7 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
     }
 
     private fun pickupOrderObserver() {
+        isFirst = true
         orderViewModel.pickupOrderData().observe(this,
             Observer<CommonModel> { response ->
                 stopProgressDialog()
@@ -492,6 +524,7 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
     }
 
     private fun acceptOrderObserver() {
+        isFirst = true
         orderViewModel.acceptOrderData().observe(this,
             Observer<CommonModel> { response ->
                 stopProgressDialog()
@@ -578,7 +611,6 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
                                 )
                             }
 
-                            setPickupDestinationMarker(response)
 
                             /* var currentLatLng = LatLng(currentLatitude, currentLongitude)
                              for (i in 0 until response.data?.deliveryAddress!!.size) {
@@ -589,27 +621,61 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
                                  drawPolyline(currentLatLng, destLatLng, false)
                              }*/
 
-                            deliveryList = response.data!!.deliveryAddress!!
-                            customerId = response.data!!.userId!!
-                            dialogDelAddressList = ArrayList()
-                            if (dialogDelAddressList!!.size > 0)
-                                dialogDelAddressList!!.clear()
-                            var count = 0
-                            Log.d("TAG", "deliveryList=---- " + deliveryList!!.count())
-                            for (i in 0 until deliveryList!!.count()) {
-                                if (deliveryList!![i].isComplete == false) {
-                                    count += 1
-                                    Log.d("TAG", "count=---- $count")
-                                    Log.d("TAG", "address=---- " + deliveryList!![i].address)
+                            if (isFirst) {
+                                isFirst = false
+                                setPickupDestinationMarker(response)
+                                deliveryList = response.data!!.deliveryAddress!!
+                                customerId = response.data!!.userId!!
+                                dialogDelAddressList = ArrayList()
+                                if (dialogDelAddressList!!.size > 0)
+                                    dialogDelAddressList!!.clear()
+                                var count = 0
+                                Log.d("TAG", "deliveryList=---- " + deliveryList!!.count())
+                                for (i in 0 until deliveryList!!.count()) {
+                                    if (deliveryList!![i].isComplete == false) {
+                                        count += 1
+                                        Log.d("TAG", "count=---- $count")
+                                        Log.d("TAG", "address=---- " + deliveryList!![i].address)
 
-                                    dialogDelAddressList!!.add(deliveryList!![i])
+                                        dialogDelAddressList!!.add(deliveryList!![i])
+                                    }
                                 }
                             }
+
+                        }
+                        203 -> {
+                            showOrderTakenAlert()
                         }
                         else -> message?.let { UtilsFunctions.showToastError(it) }
                     }
                 }
             })
+    }
+
+    fun showOrderTakenAlert() {
+        val binding =
+            DataBindingUtil.inflate<ViewDataBinding>(
+                LayoutInflater.from(this),
+                R.layout.layout_custom_alert,
+                null,
+                false
+            )
+        val dialog = Dialog(this)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setContentView(binding.root)
+        dialog.setTitle(getString(R.string.app_name))
+        // set the custom dialog components - text, image and button
+        val text = dialog.findViewById(R.id.text) as TextView
+        text.text = "Order has been taken by othe rider."
+        val dialogButton = dialog.findViewById(R.id.dialogButtonOK) as Button
+        // if button is clicked, close the custom dialog
+        dialogButton.setOnClickListener {
+
+            dialog.dismiss()
+            finish()
+        }
+        dialog.show()
+
     }
 
     private fun setPickupDestinationMarker(response: OrdersDetailResponse) {
@@ -866,6 +932,7 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
     //endregion
 
     private fun cancelOrderObserver() {
+        isFirst = true
         orderViewModel.cancelOrderRes().observe(this,
             Observer<CommonModel> { response ->
                 stopProgressDialog()
@@ -903,6 +970,7 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
     }
 
     private fun cancelReasonObserver() {
+
         orderViewModel.cancelReason()
         orderViewModel.cancelReasonData().observe(this,
             Observer<CancelReasonModel> { response ->
@@ -1443,6 +1511,7 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
     }
 
     private fun uploadSelfieObserver() {
+        isFirst = true
         orderViewModel.uploadSelfieListData().observe(
             this,
             Observer<CommonModel> { response ->
@@ -1813,4 +1882,17 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
         }
 
     }
+
+    override fun onConnectError() {
+        TODO("Not yet implemented")
+    }
+
+    override fun onConnected() {
+        TODO("Not yet implemented")
+    }
+
+    override fun onDisconnected() {
+        TODO("Not yet implemented")
+    }
+
 }

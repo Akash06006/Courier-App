@@ -8,6 +8,7 @@ import android.graphics.drawable.ColorDrawable
 import android.text.*
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.Window
@@ -29,11 +30,21 @@ import com.android.courier.utils.BaseFragment
 import com.android.courier.viewmodels.order.OrderViewModel
 import com.android.courier.views.orders.CreateOrderActivty
 import com.android.courier.views.orders.OrderDetailActivity
+import com.example.services.socket.SocketClass
+import com.example.services.socket.SocketInterface
+import com.github.nkzawa.emitter.Emitter
+import com.github.nkzawa.socketio.client.Socket
+import org.json.JSONException
+import org.json.JSONObject
+import java.io.IOException
+import java.lang.Exception
 
 class
-CreateOrderPreviewFragment : BaseFragment() {
+CreateOrderPreviewFragment : BaseFragment(), SocketInterface {
     private lateinit var orderViewModel : OrderViewModel
     private lateinit var orderPreviewBinding : ActivityOrderPreviewBinding
+    private var socket = SocketClass.socket
+    var mSocket : Socket? = null
 
     //var categoriesList = null
     var orderId = ""
@@ -47,6 +58,30 @@ CreateOrderPreviewFragment : BaseFragment() {
 
     }
 
+    /*
+        @Throws(IOException::class)
+        fun initiateSocket() {
+            try {
+                val app = (MyApplication)
+                mSocket = app.instance.getSocketInstance()
+                if (mSocket!!.connected()) {
+                    //mSocket!!.on(Socket.EVENT_CONNECT, onConnect)
+                    *//* mSocket!!.on(Socket.EVENT_DISCONNECT, onDisconnect)
+                 mSocket!!.on(Socket.EVENT_CONNECT_ERROR, onConnectError)
+                 mSocket!!.on(Socket.EVENT_CONNECT_TIMEOUT, onConnectError)*//*
+                mSocket!!.on("socketFromClient", object : Emitter.Listener {
+                    override fun call(vararg args : Any) {
+                        val obj = args[0] as JSONObject
+                        Log.i("data", "" + obj)
+                    }
+                })
+                //mSocket!!.on("trackDriver",trackDriver)
+            }
+        } catch (e : JSONException) {
+            // TODO Auto-generated catch block
+            e.printStackTrace()
+        }
+    }*/
     //api/mobile/services/getSubcat/b21a7c8f-078f-4323-b914-8f59054c4467
     override fun initView() {
         orderPreviewBinding = viewDataBinding as ActivityOrderPreviewBinding
@@ -54,6 +89,11 @@ CreateOrderPreviewFragment : BaseFragment() {
         orderPreviewBinding.orderViewModel = orderViewModel
         // categoriesList=List<Service>()
         preFillData()
+        // initiateSocket()
+        orderId = MyApplication.createOrdersInput.orderId + ""
+        Log.e("Connect Socket", "Track activity")
+        socket.updateSocketInterface(this)
+        socket.onConnect()
 
         orderViewModel.createOrderRes().observe(this,
             Observer<CreateOrderResponse> { response->
@@ -63,6 +103,17 @@ CreateOrderPreviewFragment : BaseFragment() {
                     val message = response.message
                     when {
                         response.code == 200 -> {
+                            Log.d("TAG", "emitingSocket")
+                            Log.d("Socket", MyApplication.createOrdersInput.orderId+"--------"+orderId)
+                            val mJsonObject = JSONObject()
+
+                            mJsonObject.put("methodName", "updateOrderStatus")
+                            mJsonObject.put("orderId", MyApplication.createOrdersInput.orderId)
+                            mJsonObject.put("driverId", "")
+                            mJsonObject.put("orderStatus", "3")
+                            //  mSocket!!.emit("socketFromClient", mJsonObject)
+                            socket.sendDataToServer("updateOrderStatus", mJsonObject)
+
                             orderId = response.data?.id.toString()
                             // if (paymentType.equals("2")) {
                             // showPaymentSuccessDialog()
@@ -247,5 +298,26 @@ CreateOrderPreviewFragment : BaseFragment() {
         this.movementMethod =
             LinkMovementMethod.getInstance() // without LinkMovementMethod, link can not click
         this.setText(spannableString, TextView.BufferType.SPANNABLE)
+    }
+
+    override fun onSocketCall(onMethadCall : String, vararg jsonObject : Any) {
+        val serverResponse = jsonObject[0] as JSONObject
+        var methodName = serverResponse.get("method")
+        /*  try {
+              activity!!.runOnUiThread {
+                  when (methodName) {
+                  }
+              }
+          } catch (e : Exception) {
+              e.printStackTrace()
+          }*/
+    }
+
+    override fun onSocketConnect(vararg args : Any) {
+        Log.d("Socket: ", "Connected")
+    }
+
+    override fun onSocketDisconnect(vararg args : Any) {
+        Log.d("Socket: ", "Disconnected")
     }
 }

@@ -928,6 +928,7 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
     }
 
     fun selectedDeliveryType(position : Int, isSelected : String) {
+        isaddAltered = "true"
         for (i in 0 until deliveryTypeList.count()) {
             deliveryTypeList[i].selected = "false"
         }

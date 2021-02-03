@@ -34,6 +34,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.android.courier.R
 import com.android.courier.adapters.orders.OrderAddressListAdapter
 import com.android.courier.adapters.orders.PaymentOptionsListAdapter
+import com.android.courier.application.MyApplication
 import com.android.courier.common.UtilsFunctions
 import com.android.courier.databinding.ActivityOrderDetailBinding
 import com.android.courier.maps.FusedLocationClass
@@ -48,6 +49,8 @@ import com.android.courier.views.chat.ChatActivity
 import com.android.courier.views.chat.DriverChatActivity
 import com.android.courier.views.socket.DriverTrackingActivity
 import com.bumptech.glide.Glide
+import com.example.services.socket.SocketClass
+import com.example.services.socket.SocketInterface
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.location.*
@@ -60,12 +63,13 @@ import com.google.android.libraries.places.api.Places
 import com.google.gson.JsonObject
 import com.google.maps.DirectionsApi
 import com.google.maps.GeoApiContext
+import org.json.JSONObject
 import java.util.*
 import kotlin.collections.ArrayList
 
 class OrderDetailActivity : BaseActivity(), OnMapReadyCallback, LocationListener,
     GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
-    GoogleMap.OnCameraIdleListener {
+    GoogleMap.OnCameraIdleListener, SocketInterface {
     private lateinit var deliveryAddress : ArrayList<OrdersDetailResponse.PickupAddress>
     private lateinit var activityCreateOrderBinding : ActivityOrderDetailBinding
     private lateinit var orderViewModel : OrderViewModel
@@ -118,6 +122,7 @@ class OrderDetailActivity : BaseActivity(), OnMapReadyCallback, LocationListener
     private var assignedEmployeesStatus = ""
     private var addressAdapter : OrderAddressListAdapter? = null
     private var orderDetails : OrdersDetailResponse.Data? = null
+    private var socket = SocketClass.socket
 
     override fun getLayoutId() : Int {
         return R.layout.activity_order_detail
@@ -179,6 +184,9 @@ class OrderDetailActivity : BaseActivity(), OnMapReadyCallback, LocationListener
         // Create a new PlacesClient instance
         val placesClient = Places.createClient(this)
 
+        socket.updateSocketInterface(this)
+        socket.onConnect()
+
         if (UtilsFunctions.isNetworkConnected()) {
             startProgressDialog()
         }
@@ -236,6 +244,20 @@ class OrderDetailActivity : BaseActivity(), OnMapReadyCallback, LocationListener
                     val message = response.message
                     when {
                         response.code == 200 -> {
+                            Log.d("TAG", "emitingSocket")
+                            Log.d(
+                                "Socket",
+                                MyApplication.createOrdersInput.orderId + "--------" + orderId
+                            )
+                            val mJsonObject = JSONObject()
+
+                            mJsonObject.put("methodName", "updateOrderStatus")
+                            mJsonObject.put("orderId", MyApplication.createOrdersInput.orderId)
+                            mJsonObject.put("driverId", "")
+                            mJsonObject.put("orderStatus", "3")
+                            //  mSocket!!.emit("socketFromClient", mJsonObject)
+                            socket.sendDataToServer("updateOrderStatus", mJsonObject)
+
                             showToastSuccess(
                                 "Order Cancelled Successfully"
                             )
@@ -562,7 +584,7 @@ class OrderDetailActivity : BaseActivity(), OnMapReadyCallback, LocationListener
                 response.data?.deliveryAddress,
                 response.data?.pickupAddress
             )
-       /// showToastSuccess("set adapter")
+        /// showToastSuccess("set adapter")
         if (!isFistTime) {
             isFistTime = true
             val controller =
@@ -1121,5 +1143,14 @@ class OrderDetailActivity : BaseActivity(), OnMapReadyCallback, LocationListener
             confirmationDialog?.show()
         }
 
+    }
+
+    override fun onSocketCall(onMethadCall : String, vararg args : Any) {
+    }
+
+    override fun onSocketConnect(vararg args : Any) {
+    }
+
+    override fun onSocketDisconnect(vararg args : Any) {
     }
 }

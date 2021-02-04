@@ -133,7 +133,7 @@ class SignupActivity : BaseActivity(), ChoiceCallBack {
                     "btnSignup" -> {
                         val fName = activitySignupbinding.edtFirstName.text.toString()
                         val lName = activitySignupbinding.edtLastName.text.toString()
-                        val email = activitySignupbinding.edtEmail.text.toString()
+                        val email = activitySignupbinding.edtEmail.text.toString().trim()
                         val phone = activitySignupbinding.edtPhone.text.toString()
                         val password = activitySignupbinding.edtPassword.text.toString()
                         val confirmPassword =

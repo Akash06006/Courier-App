@@ -16,6 +16,8 @@ import com.courierdriver.databinding.ActivityOtpVerificationBinding
 import com.courierdriver.model.CommonModel
 import com.courierdriver.sharedpreference.SharedPrefClass
 import com.courierdriver.utils.BaseActivity
+import com.courierdriver.utils.broadcastReceiver.SmsListener
+import com.courierdriver.utils.broadcastReceiver.SmsReceiver
 import com.courierdriver.viewmodels.LoginViewModel
 import com.courierdriver.viewmodels.OTPVerificationModel
 import com.courierdriver.views.home.DefineWorkActivity
@@ -27,6 +29,7 @@ import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthProvider
 import com.google.gson.JsonObject
 import org.json.JSONException
+
 
 class OTPVerificationActivity : BaseActivity() {
     private lateinit var otpVerificationModel: OTPVerificationModel
@@ -63,11 +66,17 @@ class OTPVerificationActivity : BaseActivity() {
         getVerifyUserObserver()
         loaderObserver()
         viewClicks()
+
+        SmsReceiver.bindListener(object : SmsListener {
+            override fun messageReceived(messageText: String?) {
+                activityOtpVerificationBinding.pinview.value = messageText
+            }
+        })
     }
 
     private fun viewClicks() {
         otpVerificationModel.isClick().observe(
-            this, Observer<String>(function =
+            this, Observer(function =
             fun(it: String?) {
                 val otp = activityOtpVerificationBinding.pinview.value.toString()
                 when (it) {

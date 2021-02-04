@@ -42,8 +42,7 @@ class CustomerChatActivity : BaseActivity(),
     private var chatList: ArrayList<ChatListModel>? = null
     private val gson = GsonBuilder().serializeNulls().create()
     lateinit var chatBinding: ActivityChatScreenBinding
-    private var mMessageAdapter: MessageListAdapter? =
-        null
+    private var mMessageAdapter: MessageListAdapter? = null
     private var boatMessageAdapter: BoatChatMessageListAdapter? = null
     val RC_CODE_PICKER = 2000
     var images: MutableList<com.esafirm.imagepicker.model.Image> = mutableListOf()
@@ -80,6 +79,10 @@ class CustomerChatActivity : BaseActivity(),
         )
         chatBinding.reyclerviewMessageList.layoutManager = LinearLayoutManager(this)
         chatBinding.reyclerviewMessageList.adapter = mMessageAdapter
+        if (chatList!!.isNotEmpty()) {
+            mMessageAdapter!!.notifyDataSetChanged()
+            chatBinding.reyclerviewMessageList.smoothScrollToPosition(chatList!!.size)
+        }
 
         Log.e("Socket", " Init")
 
@@ -157,6 +160,7 @@ class CustomerChatActivity : BaseActivity(),
                     }
                     mMessageAdapter!!.setData(chatList)
                     mMessageAdapter!!.notifyDataSetChanged()
+                    chatBinding.reyclerviewMessageList.smoothScrollToPosition(chatList!!.size)
                 }
             }
 
@@ -206,6 +210,7 @@ class CustomerChatActivity : BaseActivity(),
                     )
                     mMessageAdapter!!.setData(chatList)
                     mMessageAdapter!!.notifyDataSetChanged()
+                    chatBinding.reyclerviewMessageList.smoothScrollToPosition(chatList!!.size)
                     // chatBinding.reyclerviewMessageList.scrollToPosition(chatList?.size?.minus(1))
                 }
             }

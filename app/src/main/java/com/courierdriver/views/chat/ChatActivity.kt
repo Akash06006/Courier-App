@@ -72,7 +72,6 @@ class ChatActivity : BaseActivity(),
         chatList = ArrayList()
         orderId = intent.extras?.get("orderId").toString()
 
-
         mMessageAdapter = MessageListAdapter(
             this,
             chatList,
@@ -80,6 +79,10 @@ class ChatActivity : BaseActivity(),
         )
         chatBinding.reyclerviewMessageList.layoutManager = LinearLayoutManager(this)
         chatBinding.reyclerviewMessageList.adapter = mMessageAdapter
+        if(chatList!!.isNotEmpty()) {
+            mMessageAdapter!!.notifyDataSetChanged()
+            chatBinding.reyclerviewMessageList.smoothScrollToPosition(chatList!!.size)
+        }
 
         Log.e("Socket", " Init")
 
@@ -151,6 +154,7 @@ class ChatActivity : BaseActivity(),
                     }
                     mMessageAdapter!!.setData(chatList)
                     mMessageAdapter!!.notifyDataSetChanged()
+                    chatBinding.reyclerviewMessageList.smoothScrollToPosition(chatList!!.size)
                 }
             }
 
@@ -197,6 +201,7 @@ class ChatActivity : BaseActivity(),
                     )
                     mMessageAdapter!!.setData(chatList)
                     mMessageAdapter!!.notifyDataSetChanged()
+                    chatBinding.reyclerviewMessageList.smoothScrollToPosition(chatList!!.size)
                     // chatBinding.reyclerviewMessageList.scrollToPosition(chatList?.size?.minus(1))
                 }
             }

@@ -3,7 +3,6 @@ package com.android.courier.views.orders.fragments
 import android.app.Dialog
 import android.content.Intent
 import android.graphics.Color
-import android.graphics.Typeface
 import android.graphics.drawable.ColorDrawable
 import android.text.*
 import android.text.method.LinkMovementMethod
@@ -32,12 +31,8 @@ import com.android.courier.views.orders.CreateOrderActivty
 import com.android.courier.views.orders.OrderDetailActivity
 import com.example.services.socket.SocketClass
 import com.example.services.socket.SocketInterface
-import com.github.nkzawa.emitter.Emitter
 import com.github.nkzawa.socketio.client.Socket
-import org.json.JSONException
 import org.json.JSONObject
-import java.io.IOException
-import java.lang.Exception
 
 class
 CreateOrderPreviewFragment : BaseFragment(), SocketInterface {
@@ -103,13 +98,19 @@ CreateOrderPreviewFragment : BaseFragment(), SocketInterface {
                     when {
                         response.code == 200 -> {
                             Log.d("TAG", "emitingSocket")
-                            Log.d("Socket", MyApplication.createOrdersInput.orderId+"--------"+orderId)
+                            Log.d(
+                                "Socket",
+                                MyApplication.createOrdersInput.orderId + "--------" + orderId
+                            )
                             val mJsonObject = JSONObject()
 
                             mJsonObject.put("methodName", "updateOrderStatus")
                             mJsonObject.put("orderId", MyApplication.createOrdersInput.orderId)
                             mJsonObject.put("driverId", "")
-                            mJsonObject.put("orderStatus", "3")
+                            if (MyApplication.createOrdersInput.isaddAltered == "true")
+                                mJsonObject.put("orderStatus", "4")
+                            else
+                                mJsonObject.put("orderStatus", "3")
                             //  mSocket!!.emit("socketFromClient", mJsonObject)
                             socket.sendDataToServer("updateOrderStatus", mJsonObject)
 

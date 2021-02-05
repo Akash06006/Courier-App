@@ -28,7 +28,6 @@ object FirebaseFunctions {
             override fun onCancelled(@NonNull databaseError : DatabaseError) {
                 //Not in use
             }
-
         })
     }
 

@@ -15,7 +15,6 @@ import com.bumptech.glide.Glide
 import com.courierdriver.R
 import com.courierdriver.application.MyApplication
 import com.courierdriver.callbacks.ChoiceCallBack
-import com.courierdriver.common.FirebaseFunctions
 import com.courierdriver.common.UtilsFunctions
 import com.courierdriver.constants.GlobalConstants
 import com.courierdriver.databinding.ActivitySignupBinding
@@ -29,6 +28,7 @@ import com.courierdriver.utils.ValidationsClass
 import com.courierdriver.viewmodels.LoginViewModel
 import com.courierdriver.views.home.LandingActivty
 import com.google.gson.JsonObject
+import com.google.i18n.phonenumbers.PhoneNumberUtil
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import org.json.JSONObject
@@ -49,6 +49,7 @@ class SignupActivity : BaseActivity(), ChoiceCallBack {
     private var profileImage = ""
     private var confirmationDialog: Dialog? = null
     private var mDialogClass = DialogClass()
+    val phoneUtil = PhoneNumberUtil.getInstance()
 
     override fun getLayoutId(): Int {
         return R.layout.activity_signup
@@ -187,8 +188,7 @@ class SignupActivity : BaseActivity(), ChoiceCallBack {
                             TextUtils.isEmpty(profileImage) -> {
                                 showToastError("Please select image")
                             }
-                            !activitySignupbinding.checkBox.isChecked ->
-                            {
+                            !activitySignupbinding.checkBox.isChecked -> {
                                 showToastError("Please agree to terms and conditions.")
                             }
                             /* password.isEmpty() -> showError(
@@ -212,56 +212,68 @@ class SignupActivity : BaseActivity(), ChoiceCallBack {
                                  MyApplication.instance.getString(R.string.mismatch_paaword)
                              )*/
                             else -> {
-                                mOtpJsonObject.addProperty(
-                                    "countryCode",
-                                    "+" + activitySignupbinding.btnCcp.selectedCountryCode
-                                )
-                                mOtpJsonObject.addProperty("phoneNumber", phone)
+                                val numberProto =
+                                    phoneUtil.parse(
+                                        "+" + activitySignupbinding.btnCcp.selectedCountryCode + activitySignupbinding.edtPhone.text.toString(),
+                                        "RU"
+                                    ) // Pass number & Country code
+                                //check whether the number is valid or no.
+                                val isValid = phoneUtil.isValidNumber(numberProto)
 
-                                val mHashMap = HashMap<String, RequestBody>()
-                                mHashMap["countryCode"] =
-                                    Utils(this).createPartFromString("+" + activitySignupbinding.btnCcp.selectedCountryCode)
-                                mHashMap["phoneNumber"] =
-                                    Utils(this).createPartFromString(phone)
-                                mHashMap["firstName"] =
-                                    Utils(this).createPartFromString(fName)
-                                mHashMap["lastName"] =
-                                    Utils(this).createPartFromString(lName)
-                                /* mHashMap["phoneNumber"] =
+                                if (!isValid)
+                                    showToastError("Invalid Phone Number")
+                                else {
+                                    mOtpJsonObject.addProperty(
+                                        "countryCode",
+                                        "+" + activitySignupbinding.btnCcp.selectedCountryCode
+                                    )
+                                    mOtpJsonObject.addProperty("phoneNumber", phone)
+
+                                    val mHashMap = HashMap<String, RequestBody>()
+                                    mHashMap["countryCode"] =
+                                        Utils(this).createPartFromString("+" + activitySignupbinding.btnCcp.selectedCountryCode)
+                                    mHashMap["phoneNumber"] =
+                                        Utils(this).createPartFromString(phone)
+                                    mHashMap["firstName"] =
+                                        Utils(this).createPartFromString(fName)
+                                    mHashMap["lastName"] =
+                                        Utils(this).createPartFromString(lName)
+                                    /* mHashMap["phoneNumber"] =
                                      Utils(this!!).createPartFromString(phone)*/
-                                mHashMap["email"] =
-                                    Utils(this).createPartFromString(email)
-                                /* mHashMap["password"] =
+                                    mHashMap["email"] =
+                                        Utils(this).createPartFromString(email)
+                                    /* mHashMap["password"] =
                                      Utils(this!!).createPartFromString(password)*/
-                                mHashMap["isSocial"] =
-                                    Utils(this).createPartFromString(isSocial.toString())
-    /*
+                                    mHashMap["isSocial"] =
+                                        Utils(this).createPartFromString(isSocial.toString())
+                                    /*
+                                                                mHashMap["deviceToken"] =
+                                                                    Utils(this!!).createPartFromString("deviceToken")
+                                */
+                                    mHashMap["platform"] =
+                                        Utils(this).createPartFromString("android")
+                                    mHashMap["socialType"] =
+                                        Utils(this).createPartFromString(socialType)
+                                    mHashMap["socialId"] =
+                                        Utils(this).createPartFromString(socialId)
                                     mHashMap["deviceToken"] =
-                                        Utils(this!!).createPartFromString("deviceToken")
-    */
-                                mHashMap["platform"] =
-                                    Utils(this).createPartFromString("android")
-                                mHashMap["socialType"] =
-                                    Utils(this).createPartFromString(socialType)
-                                mHashMap["socialId"] =
-                                    Utils(this).createPartFromString(socialId)
-                                mHashMap["deviceToken"] =
-                                    Utils(this).createPartFromString(GlobalConstants.NOTIFICATION_TOKEN)
-                                mHashMap["referralCode"] =
-                                    Utils(this).createPartFromString(activitySignupbinding.etReferralCode.text.toString())
+                                        Utils(this).createPartFromString(GlobalConstants.NOTIFICATION_TOKEN)
+                                    mHashMap["referralCode"] =
+                                        Utils(this).createPartFromString(activitySignupbinding.etReferralCode.text.toString())
 
-                                var userImage: MultipartBody.Part? = null
-                                if (profileImage.isNotEmpty()) {
-                                    val f1 = File(profileImage)
-                                    userImage =
-                                        Utils(this).prepareFilePart(
-                                            "profileImage",
-                                            f1
-                                        )
-                                }
+                                    var userImage: MultipartBody.Part? = null
+                                    if (profileImage.isNotEmpty()) {
+                                        val f1 = File(profileImage)
+                                        userImage =
+                                            Utils(this).prepareFilePart(
+                                                "profileImage",
+                                                f1
+                                            )
+                                    }
 
-                                if (UtilsFunctions.isNetworkConnected()) {
-                                    loginViewModel.callSignupApi(mHashMap, userImage)
+                                    if (UtilsFunctions.isNetworkConnected()) {
+                                        loginViewModel.callSignupApi(mHashMap, userImage)
+                                    }
                                 }
                             }
                         }
@@ -317,70 +329,80 @@ class SignupActivity : BaseActivity(), ChoiceCallBack {
                 if (loginResponse != null) {
                     val message = loginResponse.message
 
-                    if (loginResponse.code == 200) {
-                        /* SharedPrefClass().putObject(
-                             MyApplication.instance,
-                             "isLogin",
-                             true
-                         )*/
-                        GlobalConstants.VERIFICATION_TYPE = "signup"
-                        FirebaseFunctions.sendOTP("login", mOtpJsonObject, this)
-                        /* mOtpJsonObject.addProperty("phoneNumber", response.data?.phoneNumber)
-                         mOtpJsonObject.addProperty("countryCode", response.data?.countryCode)*/
-                        SharedPrefClass().putObject(
-                            MyApplication.instance,
-                            GlobalConstants.ACCESS_TOKEN,
-                            loginResponse.data!!.token
-                        )
-                        SharedPrefClass().putObject(
-                            MyApplication.instance,
-                            GlobalConstants.USERID,
-                            loginResponse.data!!.id
-                        )
-                        SharedPrefClass().putObject(
-                            MyApplication.instance,
-                            GlobalConstants.USER_ID,
-                            loginResponse.data!!.id
-                        )
-                        SharedPrefClass().putObject(
-                            MyApplication.instance,
-                            GlobalConstants.IS_SOCIAL,
-                            isSocial
-                        )
-                        SharedPrefClass().putObject(
-                            MyApplication.instance,
-                            GlobalConstants.REGION_ID,
-                            ""
-                        )
-                        SharedPrefClass().putObject(
-                            MyApplication.instance,
-                            GlobalConstants.IS_DOC_UPLOADED,
-                            "false"
-                        )
-                        SharedPrefClass().putObject(
-                            MyApplication.instance,
-                            GlobalConstants.AVAILABLE,
-                            "true"
-                        )
+                    when (loginResponse.code) {
+                        200 -> {
+                            /* SharedPrefClass().putObject(
+                                             MyApplication.instance,
+                                             "isLogin",
+                                             true
+                                         )*/
 
-                        SharedPrefClass().putObject(
-                            MyApplication.instance,
-                            GlobalConstants.USERNAME,
-                            activitySignupbinding.edtFirstName.text.toString() + " " + activitySignupbinding.edtLastName.text.toString()
-                        )
-                        /* val mJsonObject = JsonObject()
-                         mJsonObject.addProperty("userId", loginResponse.data!!.id)
-                         mJsonObject.addProperty("sessionToken", loginResponse.data!!.token)
-                         loginViewModel.callVerifyUserApi(mJsonObject)*/
-                        /* showToastSuccess(message)
-                         val intent = Intent(this, OTPVerificationActivity::class.java)
-                         startActivity(intent)
-                         finish()*/
+                            GlobalConstants.VERIFICATION_TYPE = "signup"
+                            // FirebaseFunctions.sendOTP("login", mOtpJsonObject, this)
+                            /* mOtpJsonObject.addProperty("phoneNumber", response.data?.phoneNumber)
+                                         mOtpJsonObject.addProperty("countryCode", response.data?.countryCode)*/
+                            SharedPrefClass().putObject(
+                                MyApplication.instance,
+                                GlobalConstants.ACCESS_TOKEN,
+                                loginResponse.data!!.token
+                            )
+                            SharedPrefClass().putObject(
+                                MyApplication.instance,
+                                GlobalConstants.USERID,
+                                loginResponse.data!!.id
+                            )
+                            SharedPrefClass().putObject(
+                                MyApplication.instance,
+                                GlobalConstants.USER_ID,
+                                loginResponse.data!!.id
+                            )
+                            SharedPrefClass().putObject(
+                                MyApplication.instance,
+                                GlobalConstants.IS_SOCIAL,
+                                isSocial
+                            )
+                            SharedPrefClass().putObject(
+                                MyApplication.instance,
+                                GlobalConstants.REGION_ID,
+                                ""
+                            )
+                            SharedPrefClass().putObject(
+                                MyApplication.instance,
+                                GlobalConstants.IS_DOC_UPLOADED,
+                                "false"
+                            )
+                            SharedPrefClass().putObject(
+                                MyApplication.instance,
+                                GlobalConstants.AVAILABLE,
+                                "true"
+                            )
 
-                    } else if (loginResponse.code == 408) {
-                        showToastError(message)
-                    } else {
-                        showToastError(message)
+                            SharedPrefClass().putObject(
+                                MyApplication.instance,
+                                GlobalConstants.USERNAME,
+                                activitySignupbinding.edtFirstName.text.toString() + " " + activitySignupbinding.edtLastName.text.toString()
+                            )
+
+                            val intent = Intent(this, OTPVerificationActivity::class.java)
+                            intent.putExtra("phoneNumber",activitySignupbinding.edtPhone.text.toString())
+                            intent.putExtra("countryCode", "+" + activitySignupbinding.btnCcp.selectedCountryCode)
+                            intent.putExtra("data", mOtpJsonObject.toString())
+                            intent.putExtra("action", "")
+                            startActivity(intent)
+
+
+                            /* showToastSuccess(message)
+                                         val intent = Intent(this, OTPVerificationActivity::class.java)
+                                         startActivity(intent)
+                                         finish()*/
+
+                        }
+                        408 -> {
+                            showToastError(message)
+                        }
+                        else -> {
+                            showToastError(message)
+                        }
                     }
 
                 }

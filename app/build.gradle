@@ -128,6 +128,10 @@ dependencies {
     def lottieVersion = "3.4.0"
     implementation "com.airbnb.android:lottie:$lottieVersion"
 
+    //OTP Autofill
+    implementation 'com.google.android.gms:play-services-auth:17.0.0'
+     implementation 'com.google.android.gms:play-services-auth-api-phone:17.4.0'
+
     //Image Picker
     implementation 'com.github.esafirm.android-image-picker:imagepicker:2.2.0'
 }

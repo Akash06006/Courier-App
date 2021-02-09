@@ -1,11 +1,15 @@
 package com.courierdriver.views.authentication
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.annotation.TargetApi
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Build
 import android.os.CountDownTimer
 import android.text.TextUtils
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.courierdriver.R
@@ -16,6 +20,7 @@ import com.courierdriver.databinding.ActivityOtpVerificationBinding
 import com.courierdriver.model.CommonModel
 import com.courierdriver.sharedpreference.SharedPrefClass
 import com.courierdriver.utils.BaseActivity
+import com.courierdriver.utils.broadcastReceiver.OTP_Receiver
 import com.courierdriver.viewmodels.LoginViewModel
 import com.courierdriver.viewmodels.OTPVerificationModel
 import com.courierdriver.views.home.DefineWorkActivity
@@ -27,6 +32,7 @@ import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthProvider
 import com.google.gson.JsonObject
 import org.json.JSONException
+
 
 class OTPVerificationActivity : BaseActivity() {
     private lateinit var otpVerificationModel: OTPVerificationModel
@@ -59,10 +65,23 @@ class OTPVerificationActivity : BaseActivity() {
         countDown()
         sharedPrefValue()
 
-        getIntentData()
         getVerifyUserObserver()
         loaderObserver()
         viewClicks()
+        requestsmspermission()
+        getIntentData()
+        OTP_Receiver().setEditText(activityOtpVerificationBinding.pinview)
+    }
+
+    private fun requestsmspermission() {
+        val smspermission: String = Manifest.permission.RECEIVE_SMS
+        val grant = ContextCompat.checkSelfPermission(this, smspermission)
+        //check if read SMS permission is granted or not
+        if (grant != PackageManager.PERMISSION_GRANTED) {
+            val permission_list = arrayOfNulls<String>(1)
+            permission_list[0] = smspermission
+            ActivityCompat.requestPermissions(this, permission_list, 1)
+        }
     }
 
     private fun viewClicks() {
@@ -99,10 +118,8 @@ class OTPVerificationActivity : BaseActivity() {
                                 }
                                 startProgressDialog()
                                 verifyVerificationCode(otp)
-
                             }
                         }
-
                     }
                     "tv_resend" -> {
                         if (!isTimeRunning) {
@@ -157,15 +174,13 @@ class OTPVerificationActivity : BaseActivity() {
                             startActivity(intent)
                             finish()
                         } else {
-                            if(GlobalConstants.VERIFICATION_TYPE == "signup")
-                            {
+                            if (GlobalConstants.VERIFICATION_TYPE == "signup") {
                                 val intent = Intent(this, DefineWorkActivity::class.java)
                                 intent.flags =
                                     Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                                 startActivity(intent)
                                 finish()
-                            }
-                            else {
+                            } else {
                                 val intent = Intent(this, DocumentVerificatonActivity::class.java)
                                 intent.flags =
                                     Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
@@ -184,20 +199,38 @@ class OTPVerificationActivity : BaseActivity() {
 
     private fun getIntentData() {
         try {
-            number = intent.extras?.get("phoneNumber").toString()
+            /*number = intent.extras?.get("phoneNumber").toString()
             countryCode = intent.extras?.get("countryCode").toString()
             mJsonObject.addProperty("phoneNumber", number)
             mJsonObject.addProperty("countryCode", countryCode)
             number = number.replace("\"", "")
-            countryCode = countryCode.replace("\"", "")
-            /* mJsonObject = JSONObject(intent.extras.get("data").toString())
-             var mob = mJsonObject.get("phoneNumber").toString()*/
+            countryCode = countryCode.replace("\"", "")*/
+
+            number = intent.getStringExtra("phoneNumber")
+            countryCode = intent.getStringExtra("countryCode")
+
+            mJsonObject = JsonObject()
+
+            mJsonObject.addProperty(
+                "countryCode",
+                "+" + countryCode
+            )
+            mJsonObject.addProperty(
+                "phoneNumber",
+                number
+            )
+
+            GlobalConstants.VERIFICATION_TYPE = "signup"
+            FirebaseFunctions.sendOTP("login", mJsonObject, this)
+
             val msg = activityOtpVerificationBinding.tvOtpSent.text.toString()
             activityOtpVerificationBinding.tvOtpSent.text = "$msg $number"
 
         } catch (e: JSONException) {
             e.printStackTrace()
         }
+
+
     }
 
     private fun sharedPrefValue() {
@@ -243,7 +276,8 @@ class OTPVerificationActivity : BaseActivity() {
 
     private fun signInWithPhoneAuthCredential(credential: PhoneAuthCredential) {
         mAuth.signInWithCredential(credential)
-            .addOnCompleteListener(this
+            .addOnCompleteListener(
+                this
             ) { task ->
                 stopProgressDialog()
                 if (task.isSuccessful) {

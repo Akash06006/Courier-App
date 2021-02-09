@@ -47,8 +47,7 @@ import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
 
-class
-HomeFragment(var landingActivity: LandingActivty) : BaseFragment(), DialogssInterface,
+class HomeFragment() : BaseFragment(), DialogssInterface,
     NotifyWorkStatus {
     private var mFusedLocationClass: FusedLocationClass? = null
     private lateinit var homeViewModel: HomeViewModel
@@ -76,6 +75,11 @@ HomeFragment(var landingActivity: LandingActivty) : BaseFragment(), DialogssInte
     private var available: String? = null
     private var locationCallback: LocationCallback? = null
     private var locationRequest: LocationRequest? = null
+    private var landingActivity: LandingActivty? = null
+
+    constructor(landingActivity: LandingActivty) : this() {
+        this.landingActivity = landingActivity
+    }
 
     override fun initView() {
         fragmentHomeBinding = viewDataBinding as FragmentHomeBinding
@@ -428,6 +432,7 @@ HomeFragment(var landingActivity: LandingActivty) : BaseFragment(), DialogssInte
             Observer<OrderListModel> { response ->
                 baseActivity.stopProgressDialog()
                 if (response != null) {
+                    landingActivity!!.markAvailableTrue()
                     fragmentHomeBinding.linTabsMain.visibility = View.VISIBLE
                     fragmentHomeBinding.linInProgress.visibility = View.GONE
                     fragmentHomeBinding.tvNoRecord.visibility = View.GONE
@@ -460,7 +465,7 @@ HomeFragment(var landingActivity: LandingActivty) : BaseFragment(), DialogssInte
                                 fragmentHomeBinding.rvOrderList.visibility = View.GONE
                             }
 
-                            landingActivity.markAvailableTrue()
+                            landingActivity!!.markAvailableTrue()
                         }
                         400 -> {
                             baseActivity.showToastError(response.message)
@@ -476,7 +481,7 @@ HomeFragment(var landingActivity: LandingActivty) : BaseFragment(), DialogssInte
                                 GlobalConstants.AVAILABLE,
                                 isAvailable.toString()
                             )
-                            landingActivity.markUnAvailableTrue()
+                            landingActivity!!.markUnAvailableTrue()
                             fragmentHomeBinding.linInProgress.visibility = View.VISIBLE
                             fragmentHomeBinding.linTabsMain.visibility = View.GONE
                             fragmentHomeBinding.linNotWorking.visibility = View.GONE
@@ -490,7 +495,7 @@ HomeFragment(var landingActivity: LandingActivty) : BaseFragment(), DialogssInte
                             fragmentHomeBinding.linInProgress.visibility = View.GONE
                         }
                         206 -> {
-                            val isAvailable = false
+                            /*val isAvailable = false
                             SharedPrefClass().putObject(
                                 MyApplication.instance,
                                 GlobalConstants.AVAILABLE,
@@ -499,6 +504,14 @@ HomeFragment(var landingActivity: LandingActivty) : BaseFragment(), DialogssInte
                             val workStatusData = Intent("workStatusButtonReceiver")
                             LocalBroadcastManager.getInstance(baseActivity)
                                 .sendBroadcast(workStatusData)
+*/
+                            val isAvailable = false
+                            SharedPrefClass().putObject(
+                                MyApplication.instance,
+                                GlobalConstants.AVAILABLE,
+                                isAvailable.toString()
+                            )
+                            landingActivity!!.markUnAvailableTrue()
 
                             fragmentHomeBinding.linNotWorking.visibility = View.VISIBLE
                             fragmentHomeBinding.linInProgress.visibility = View.GONE
@@ -515,7 +528,7 @@ HomeFragment(var landingActivity: LandingActivty) : BaseFragment(), DialogssInte
 
     private fun acceptOrderObserver() {
         homeViewModel.acceptOrderData().observe(this,
-            Observer<CommonModel> { response ->
+            Observer { response ->
                 baseActivity.stopProgressDialog()
                 if (response != null) {
                     val message = response.message
@@ -568,7 +581,6 @@ HomeFragment(var landingActivity: LandingActivty) : BaseFragment(), DialogssInte
             pullToRefresh.isRefreshing = false
         }
     }
-
 
 
     private fun cancelReasonObserver() {
@@ -710,11 +722,9 @@ HomeFragment(var landingActivity: LandingActivty) : BaseFragment(), DialogssInte
         setRegionsSpinner(spinnerRegion)
 
         tvSubmit.setOnClickListener {
-            if(TextUtils.isEmpty(selectedRegion))
-            {
+            if (TextUtils.isEmpty(selectedRegion)) {
                 baseActivity.showToastError("Please select region")
-            }
-            else {
+            } else {
                 homeViewModel.profileSetup(selectedRegion!!)
             }
         }

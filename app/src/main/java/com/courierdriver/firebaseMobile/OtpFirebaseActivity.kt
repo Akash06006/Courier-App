@@ -67,14 +67,17 @@ class OtpFirebaseActivity {
             {
                 UtilsFunctions.showToastSuccess(mBaseActivity!!.getString(R.string.resend_otp_message))
             }
-            else {
-                val intent = Intent(mBaseActivity, OTPVerificationActivity::class.java)
+            else{
+
+            }
+            /*  else {
+              val intent = Intent(mBaseActivity, OTPVerificationActivity::class.java)
                 intent.putExtra("data", mJsonObject!!.toString())
                 intent.putExtra("phoneNumber", mJsonObject!!.get("phoneNumber").toString())
                 intent.putExtra("countryCode", mJsonObject!!.get("countryCode").toString())
                 intent.putExtra("action", otpAction)
                 mBaseActivity!!.startActivity(intent)
-            }
+            }*/
             //  }
         }
     }

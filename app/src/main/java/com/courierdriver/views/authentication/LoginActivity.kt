@@ -110,11 +110,13 @@ class LoginActivity : BaseActivity() {
 
                     if (loginResponse.code == 200) {
                         GlobalConstants.VERIFICATION_TYPE = "login"
+/*
                         SharedPrefClass().putObject(
                             MyApplication.instance,
                             "isLogin",
                             true
                         )
+*/
                         SharedPrefClass().putObject(
                             MyApplication.instance,
                             GlobalConstants.ACCESS_TOKEN,
@@ -185,12 +187,14 @@ class LoginActivity : BaseActivity() {
                             activityLoginbinding.edtPhone.text.toString()
                         )
 
-                        //  showToastSuccess(message)
-                        GlobalConstants.VERIFICATION_TYPE = "signup"
-                        FirebaseFunctions.sendOTP("login", mOtpJsonObject, this)
-                        /* val intent = Intent(this, LandingActivty::class.java)
-                         startActivity(intent)
-                         finish()*/
+                     //   FirebaseFunctions.sendOTP("login", mOtpJsonObject, this)
+
+                        val intent = Intent(this, OTPVerificationActivity::class.java)
+                        intent.putExtra("phoneNumber", activityLoginbinding.edtPhone.text.toString())
+                        intent.putExtra("countryCode", "+"+activityLoginbinding.btCountryCode.selectedCountryCode)
+                        intent.putExtra("data", mOtpJsonObject.toString())
+                        intent.putExtra("action", "")
+                        startActivity(intent)
 
                     } else {
                         showToastError(message)

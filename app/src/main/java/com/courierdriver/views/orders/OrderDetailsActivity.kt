@@ -205,14 +205,27 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
         SocketConnectionManager.getInstance()
             .addEventListener("updateOrderStatus") { args ->
                 //val data = args[0] as JSONObject
+
+//                {"result":1,"message":"Success","method":"updateOrderStatus","data":{"orderNo":"ORDER#2102254","id":"87c1e776-61c3-41e2-8f3b-0a5a61e9c447","progressStatus":1,"orderStatus":"4"}}
                 try {
+                    val obj = args[0] as JSONObject
                     Log.d("updateOrderStatus", "updateOrderStatus")
-                    // val orderStatus = data.getString("orderStatus")
+                     val data = obj.getJSONObject("data")
+                    val orderStatus = data.getString("orderStatus")
                     if (UtilsFunctions.isNetworkConnected()) {
                         //baseActivity.startProgressDialog()
-                        orderViewModel.orderDetail(orderId)
+                        if(orderStatus == "4")
+                        {
+                            runOnUiThread {
+                                showCancelledOrderAlert("Order is cancelled by customer")
+                            }
+                        }
+                        else {
+                            orderViewModel.orderDetail(orderId)
+                        }
                     }
                 } catch (e: Exception) {
+                    e.printStackTrace()
                 }
             }
 
@@ -626,9 +639,9 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
                                  drawPolyline(currentLatLng, destLatLng, false)
                              }*/
 
-                            if (isFirst) {
-                                isFirst = false
-                                setPickupDestinationMarker(response)
+                            setPickupDestinationMarker(response)
+                          /*  if (isFirst) {
+                                isFirst = false*/
                                 deliveryList = response.data!!.deliveryAddress!!
                                 customerId = response.data!!.userId!!
                                 dialogDelAddressList = ArrayList()
@@ -645,13 +658,14 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
                                         dialogDelAddressList!!.add(deliveryList!![i])
                                     }
                                 }
-                            }
+//                            }
 
                         }
                         203 -> {
                             showOrderTakenAlert()
                         }
-                        else -> message?.let { UtilsFunctions.showToastError(it) }
+                        else ->
+                            message?.let { UtilsFunctions.showToastError(it) }
                     }
                 }
             })

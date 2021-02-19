@@ -55,6 +55,7 @@ ChatActivity : BaseActivity(),
     var selectedImage = ""
     var orderId = ""
     var boatMessageDialog : Dialog? = null
+
     /*
         var socketConnectionManager: SocketConnectionManager? = null
     */
@@ -118,9 +119,9 @@ ChatActivity : BaseActivity(),
                     objectChatHistory.put("userType", "user")
                     SocketConnectionManager.getInstance()
                         .socket.emit(
-                        "chatHistory",
-                        objectChatHistory
-                    )
+                            "chatHistory",
+                            objectChatHistory
+                        )
                     Log.e("Socket", "Room join")
 
                 } catch (e : JSONException) {
@@ -202,7 +203,7 @@ ChatActivity : BaseActivity(),
                     )
                     mMessageAdapter!!.setData(chatList)
                     mMessageAdapter!!.notifyDataSetChanged()
-                    // chatBinding.reyclerviewMessageList.scrollToPosition(chatList?.size?.minus(1))
+                    chatBinding.reyclerviewMessageList.smoothScrollToPosition(chatList!!.size)
                 }
             }
 
@@ -382,9 +383,9 @@ ChatActivity : BaseActivity(),
             )
             SocketConnectionManager.getInstance()
                 .socket.emit(
-                "chatHistory",
-                objChatHistory
-            )
+                    "chatHistory",
+                    objChatHistory
+                )
             Log.e("Socket", "Image Sent")
             dialog.dismiss()
         }

@@ -104,7 +104,7 @@ class SignupActivity : BaseActivity() {
                              true
                          )*/
                         GlobalConstants.VERIFICATION_TYPE = "signup"
-                        FirebaseFunctions.sendOTP("login", mOtpJsonObject, this)
+                        //TODO-- FirebaseFunctions.sendOTP("login", mOtpJsonObject, this)
                         // mOtpJsonObject.addProperty("phoneNumber", response.data?.phoneNumber)
                         //mOtpJsonObject.addProperty("countryCode", response.data?.countryCode)
                         SharedPrefClass().putObject(
@@ -143,6 +143,18 @@ class SignupActivity : BaseActivity() {
                             loginResponse.data!!.firstName + " " + loginResponse.data!!.lastName
                         )
 
+                        SharedPrefClass().putObject(
+                            MyApplication.instance,
+                            GlobalConstants.FIRSTNAME,
+                            loginResponse.data!!.firstName
+                        )
+
+                        SharedPrefClass().putObject(
+                            MyApplication.instance,
+                            GlobalConstants.LASTNAME,
+                            loginResponse.data!!.lastName
+                        )
+
 
                         SharedPrefClass().putObject(
                             MyApplication.instance,
@@ -166,6 +178,18 @@ class SignupActivity : BaseActivity() {
                         val mJsonObject = JsonObject()
                         mJsonObject.addProperty("userId", loginResponse.data!!.id)
                         mJsonObject.addProperty("sessionToken", loginResponse.data!!.token)
+                        val intent = Intent(this, OTPVerificationActivity::class.java)
+                        intent.putExtra(
+                            "phoneNumber",
+                            activitySignupbinding.edtPhone.text.toString()
+                        )
+                        intent.putExtra(
+                            "countryCode",
+                            "+91"
+                        )
+                        intent.putExtra("data", mOtpJsonObject.toString())
+                        intent.putExtra("action", "")
+                        startActivity(intent)
                         // loginViewModel.callVerifyUserApi(mJsonObject)
                         /*showToastSuccess(message)
                         val intent = Intent(this, OTPVerificationActivity::class.java)
@@ -230,10 +254,10 @@ class SignupActivity : BaseActivity() {
             fun(it : String?) {
                 when (it) {
                     "btnSignup" -> {
-                        val fName = activitySignupbinding.edtFirstName.text.toString()
-                        val lName = activitySignupbinding.edtLastName.text.toString()
-                        val email = activitySignupbinding.edtEmail.text.toString()
-                        val phone = activitySignupbinding.edtPhone.text.toString()
+                        val fName = activitySignupbinding.edtFirstName.text.toString().trim()
+                        val lName = activitySignupbinding.edtLastName.text.toString().trim()
+                        val email = activitySignupbinding.edtEmail.text.toString().trim()
+                        val phone = activitySignupbinding.edtPhone.text.toString().trim()
                         val password = activitySignupbinding.edtPassword.text.toString()
                         val confirmPassword =
                             activitySignupbinding.edtConfirmPassword.text.toString()
@@ -242,38 +266,38 @@ class SignupActivity : BaseActivity() {
 
 
                         when {
-                            fName.isEmpty() -> showError(
+                            fName.trim().isEmpty() -> showError(
                                 activitySignupbinding.edtFirstName,
                                 getString(R.string.empty) + " " + getString(
                                     R.string.fname
                                 )
                             )
-                            lName.isEmpty() -> showError(
+                            lName.trim().isEmpty() -> showError(
                                 activitySignupbinding.edtLastName,
                                 getString(R.string.empty) + " " + getString(
                                     R.string.lname
                                 )
                             )
-                            email.isEmpty() -> showError(
+                            email.trim().isEmpty() -> showError(
                                 activitySignupbinding.edtEmail,
                                 getString(R.string.empty) + " " + getString(
                                     R.string.email
                                 )
                             )
-                            !email.matches((ValidationsClass.EMAIL_PATTERN).toRegex()) ->
+                            !email.trim().matches((ValidationsClass.EMAIL_PATTERN).toRegex()) ->
                                 showError(
                                     activitySignupbinding.edtEmail,
                                     getString(R.string.invalid) + " " + getString(
                                         R.string.email
                                     )
                                 )
-                            phone.isEmpty() -> showError(
+                            phone.trim().isEmpty() -> showError(
                                 activitySignupbinding.edtPhone,
                                 getString(R.string.empty) + " " + getString(
                                     R.string.phone_number
                                 )
                             )
-                            phone.length < 10 -> showError(
+                            phone.trim().length < 10 -> showError(
                                 activitySignupbinding.edtPhone,
                                 getString(R.string.phone_number) + " " + getString(
                                     R.string.phone_min

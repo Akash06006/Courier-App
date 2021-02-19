@@ -326,7 +326,7 @@
     <string name="rider_receipts">Rider Receipts</string>
     <string name="folder">Folder</string>
     <string name="discard">Discard</string>
-
+    <string name="msg_token_fmt">InstanceID Token: %s</string>
     <string name="gallery_select_title_msg">Tap to select</string>
     <string-array name="Languages">
         <item>Java</item>

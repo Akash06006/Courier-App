@@ -755,9 +755,18 @@ CreateOrderSecondFragment : BaseFragment() {
                 // showToastError("parcelValue")
                 MyApplication.createOrdersInput.parcelValue =
                     fragmentCreateOrdersSecondBinding.edtParcelValue.text.toString()
-                //showToastSuccess("" + MyApplication.createOrdersInput.parcelValue)
+                if (!TextUtils.isEmpty(fragmentCreateOrdersSecondBinding.edtParcelValue.text.toString())) {
+                    if (fragmentCreateOrdersSecondBinding.edtParcelValue.text.toString()
+                            .toDouble() > 30000
+                    ) {
+                        fragmentCreateOrdersSecondBinding.edtParcelValue.setError("Locomo does not accept parcel valued more than ₹30,000")
+                        fragmentCreateOrdersSecondBinding.edtParcelValue.setText("")
+                    }
+                }
                 checkTikMark()
                 calculatePrice()
+                //showToastSuccess("" + MyApplication.createOrdersInput.parcelValue)
+
             } else {
                 //showToastError("itemName")
                 checkTikMark()

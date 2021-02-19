@@ -29,9 +29,11 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.iid.FirebaseInstanceId
 import com.google.gson.JsonObject
 import org.json.JSONObject
 import java.util.*
@@ -50,7 +52,7 @@ class LoginActivity : BaseActivity() {
     private var fbSiginJSONObject = JSONObject()
     private var loginWith = ""
     private var deviceToken = ""
-
+    private var token = ""
     override fun getLayoutId() : Int {
         return R.layout.activity_login
     }
@@ -66,7 +68,7 @@ class LoginActivity : BaseActivity() {
         if (deviceToken != null || deviceToken != "null")
             GlobalConstants.NOTIFICATION_TOKEN = deviceToken
 
-
+        firebaseToken()
         activityLoginbinding =
             viewDataBinding as ActivityLoginBinding //DataBindingUtil.setContentView(this, R.layout.activity_login)
         loginViewModel = ViewModelProviders.of(this).get(LoginViewModel::class.java)
@@ -137,6 +139,17 @@ class LoginActivity : BaseActivity() {
                         )
                         SharedPrefClass().putObject(
                             MyApplication.instance,
+                            GlobalConstants.FIRSTNAME,
+                            loginResponse.data!!.firstName
+                        )
+
+                        SharedPrefClass().putObject(
+                            MyApplication.instance,
+                            GlobalConstants.LASTNAME,
+                            loginResponse.data!!.lastName
+                        )
+                        SharedPrefClass().putObject(
+                            MyApplication.instance,
                             GlobalConstants.CUSTOMER_IAMGE,
                             loginResponse.data!!.image
                         )
@@ -147,7 +160,19 @@ class LoginActivity : BaseActivity() {
                             loginResponse.data!!.referralCode
                         )
                         GlobalConstants.VERIFICATION_TYPE = "login"
-                        FirebaseFunctions.sendOTP("login", mOtpJsonObject, this)
+                        // FirebaseFunctions.sendOTP("login", mOtpJsonObject, this)
+                        val intent = Intent(this, OTPVerificationActivity::class.java)
+                        intent.putExtra(
+                            "phoneNumber",
+                            activityLoginbinding.edtEmail.text.toString()
+                        )
+                        intent.putExtra(
+                            "countryCode",
+                            "+91"
+                        )
+                        intent.putExtra("data", mOtpJsonObject.toString())
+                        intent.putExtra("action", "")
+                        startActivity(intent)
                         /* val intent = Intent(this, LandingActivty::class.java)
                          intent.flags =
                              Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
@@ -356,6 +381,25 @@ class LoginActivity : BaseActivity() {
                 }
             })
         )
+    }
+
+    private fun firebaseToken() {
+        FirebaseInstanceId.getInstance().instanceId
+            .addOnCompleteListener(OnCompleteListener { task->
+                if (!task.isSuccessful) {
+                    Log.w("", "getInstanceId failed", task.exception)
+                    return@OnCompleteListener
+                }
+                // Get new Instance ID token
+                token = task.result?.token.toString()
+                GlobalConstants.NOTIFICATION_TOKEN = task.result?.token.toString()
+                Log.d("", "token $token")
+                // Log and toast
+                val msg = getString(R.string.msg_token_fmt, token)
+                //enableNotification(token)
+                Log.d("", msg)
+                //Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
+            })
     }
 
     private fun configureGoogleSignIn() {

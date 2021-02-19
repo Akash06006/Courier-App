@@ -463,8 +463,8 @@
                                     android:background="@null"
                                     android:digits="0123456789"
                                     android:imeOptions="actionDone"
-                                    android:inputType="number"
-                                    android:maxLength="7"
+                                    android:inputType="number|textNoSuggestions"
+                                    android:maxLength="5"
                                     android:onClick="@{(v) -> orderViewModel.clickListener(v)}"
                                     android:paddingTop="10dp"
                                     android:paddingRight="10dp"
@@ -478,11 +478,11 @@
                                 android:id="@+id/imgParcelValue"
                                 android:layout_width="25dp"
                                 android:layout_height="25dp"
-                                android:visibility="gone"
                                 android:layout_alignParentRight="true"
                                 android:layout_centerVertical="true"
                                 android:onClick="@{(v) -> orderViewModel.clickListener(v)}"
-                                android:src="@drawable/ic_info" />
+                                android:src="@drawable/ic_info"
+                                android:visibility="gone" />
 
                         <View
                                 android:layout_width="wrap_content"

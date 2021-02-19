@@ -77,12 +77,13 @@ HomeFragment : BaseFragment() {
         mFusedLocationClass = FusedLocationClass(activity)
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(activity!!)
         // initRecyclerView()
-        val name = SharedPrefClass().getPrefValue(activity!!, GlobalConstants.USERNAME).toString()
-        val splitRes = name.split(" ")
+        val first = SharedPrefClass().getPrefValue(activity!!, GlobalConstants.FIRSTNAME).toString()
+        val last = SharedPrefClass().getPrefValue(activity!!, GlobalConstants.LASTNAME).toString()
+        // val splitRes = name.split(" ")
         val firstName : String =
-            splitRes[0].substring(0, 1).toUpperCase() + splitRes[0].substring(1).toLowerCase()
+            first.substring(0, 1).toUpperCase() + first.substring(1).toLowerCase()
         val lastName : String =
-            splitRes[1].substring(0, 1).toUpperCase() + splitRes[1].substring(1).toLowerCase()
+            last.substring(0, 1).toUpperCase() + last.substring(1).toLowerCase()
         fragmentHomeBinding.imgToolbarText.text = "Welcome, " + firstName + " " + lastName
         fragmentHomeBinding.toolbar.setImageResource(R.drawable.ic_side_menu)
         val userImage =

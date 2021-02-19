@@ -54,10 +54,10 @@ abstract class BaseActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState : Bundle?) {
         super.onCreate(savedInstanceState)
         getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-       /* this@BaseActivity.overridePendingTransition(
-            R.anim.slide_in,
-            R.anim.slide_out
-        )*/
+        /* this@BaseActivity.overridePendingTransition(
+             R.anim.slide_in,
+             R.anim.slide_out
+         )*/
 
         viewDataBinding = DataBindingUtil.setContentView(this, getLayoutId())
         //  mtoolbar = findViewById(R.id.toolbar);
@@ -300,6 +300,7 @@ abstract class BaseActivity : AppCompatActivity() {
                 perms[Manifest.permission.RECORD_AUDIO] = PackageManager.PERMISSION_GRANTED
                 perms[Manifest.permission.READ_CONTACTS] = PackageManager.PERMISSION_GRANTED
                 perms[Manifest.permission.CALL_PHONE] = PackageManager.PERMISSION_GRANTED
+                perms[Manifest.permission.RECEIVE_SMS] = PackageManager.PERMISSION_GRANTED
                 // Fill with actual results from user
                 if (grantResults.isNotEmpty()) {
                     for (i in permissions.indices)
@@ -311,6 +312,7 @@ abstract class BaseActivity : AppCompatActivity() {
                         && perms[Manifest.permission.RECORD_AUDIO] == PackageManager.PERMISSION_GRANTED
                         && perms[Manifest.permission.READ_CONTACTS] == PackageManager.PERMISSION_GRANTED
                         && perms[Manifest.permission.CALL_PHONE] == PackageManager.PERMISSION_GRANTED
+                        && perms[Manifest.permission.RECEIVE_SMS] == PackageManager.PERMISSION_GRANTED
                     ) {
                         // process the normal flow
                         //else any one or both the permissions are not granted
@@ -333,10 +335,10 @@ abstract class BaseActivity : AppCompatActivity() {
                             || ActivityCompat.shouldShowRequestPermissionRationale(
                                 this,
                                 Manifest.permission.RECORD_AUDIO
-                            ) /*|| ActivityCompat.shouldShowRequestPermissionRationale(
+                            ) || ActivityCompat.shouldShowRequestPermissionRationale(
                                 this,
-                                Manifest.permission.GET_ACCOUNTS
-                            )*/
+                                Manifest.permission.RECEIVE_SMS
+                            )
                             || ActivityCompat.shouldShowRequestPermissionRationale(
                                 this,
                                 Manifest.permission.CALL_PHONE
@@ -413,6 +415,8 @@ abstract class BaseActivity : AppCompatActivity() {
             ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_CONTACTS)
         val permissionCalls =
             ContextCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE)
+        val permissionReceiveSMS =
+            ContextCompat.checkSelfPermission(this, Manifest.permission.RECEIVE_SMS)
         val listPermissionsNeeded = ArrayList<String>()
 
         if (camerapermission != PackageManager.PERMISSION_GRANTED) {
@@ -423,6 +427,9 @@ abstract class BaseActivity : AppCompatActivity() {
         }
         if (permissionLocation != PackageManager.PERMISSION_GRANTED) {
             listPermissionsNeeded.add(Manifest.permission.ACCESS_FINE_LOCATION)
+        }
+        if (permissionReceiveSMS != PackageManager.PERMISSION_GRANTED) {
+            listPermissionsNeeded.add(Manifest.permission.RECEIVE_SMS)
         }
         if (permissionRecordAudio != PackageManager.PERMISSION_GRANTED) {
             listPermissionsNeeded.add(Manifest.permission.RECORD_AUDIO)

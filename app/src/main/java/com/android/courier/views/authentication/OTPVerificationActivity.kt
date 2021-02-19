@@ -1,21 +1,27 @@
 package com.android.courier.views.authentication
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.annotation.TargetApi
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import android.content.Intent
+import android.content.IntentFilter
+import android.content.pm.PackageManager
+import android.net.ConnectivityManager
 import android.os.Build
 import android.os.CountDownTimer
 import android.text.TextUtils
 import android.view.WindowManager
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import com.android.courier.R
 import com.android.courier.application.MyApplication
+import com.android.courier.broadcast.OTP_Receiver
 import com.android.courier.common.FirebaseFunctions
 import com.android.courier.constants.GlobalConstants
 import com.android.courier.databinding.ActivityOtpVerificationBinding
 import com.android.courier.model.CommonModel
-import com.android.courier.model.LoginResponse
 import com.android.courier.sharedpreference.SharedPrefClass
 import com.android.courier.utils.BaseActivity
 import com.android.courier.viewmodels.LoginViewModel
@@ -28,7 +34,6 @@ import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthProvider
 import com.google.gson.JsonObject
 import org.json.JSONException
-import org.json.JSONObject
 
 class OTPVerificationActivity : BaseActivity() {
     private lateinit var otpVerificationModel : OTPVerificationModel
@@ -41,6 +46,7 @@ class OTPVerificationActivity : BaseActivity() {
     var token = ""
     var number = ""
     var countryCode = ""
+    val otpBroadcast = OTP_Receiver()
     override fun getLayoutId() : Int {
         return R.layout.activity_otp_verification
     }
@@ -48,7 +54,13 @@ class OTPVerificationActivity : BaseActivity() {
     override fun onResume() {
         super.onResume()
         getWindow().setSoftInputMode(
-            WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+            WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
+        );
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        unregisterReceiver(otpBroadcast);
     }
 
     @SuppressLint("SetTextI18n")
@@ -64,7 +76,14 @@ class OTPVerificationActivity : BaseActivity() {
         otpVerificationModel = ViewModelProviders.of(this).get(OTPVerificationModel::class.java)
         loginViewModel = ViewModelProviders.of(this).get(LoginViewModel::class.java)
         activityOtpVerificationBinding.verifViewModel = otpVerificationModel
+        val filter =
+            IntentFilter("android.provider.Telephony.SMS_RECEIVED"/*ConnectivityManager.CONNECTIVITY_ACTION*/)
+        registerReceiver(otpBroadcast, filter)
+        requestsmspermission()
+        getIntentData()
 
+
+        OTP_Receiver().setEditText(activityOtpVerificationBinding.pinview)
         try {
             number = intent.extras?.get("phoneNumber").toString()
             countryCode = intent.extras?.get("countryCode").toString()
@@ -189,6 +208,51 @@ class OTPVerificationActivity : BaseActivity() {
 
     }
 
+    private fun requestsmspermission() {
+        val smspermission : String = Manifest.permission.RECEIVE_SMS
+        val grant = ContextCompat.checkSelfPermission(this, smspermission)
+        //check if read SMS permission is granted or not
+        if (grant != PackageManager.PERMISSION_GRANTED) {
+            val permission_list = arrayOfNulls<String>(1)
+            permission_list[0] = smspermission
+            ActivityCompat.requestPermissions(this, permission_list, 1)
+        }
+    }
+
+    private fun getIntentData() {
+        try {
+            /*number = intent.extras?.get("phoneNumber").toString()
+            countryCode = intent.extras?.get("countryCode").toString()
+            mJsonObject.addProperty("phoneNumber", number)
+            mJsonObject.addProperty("countryCode", countryCode)
+            number = number.replace("\"", "")
+            countryCode = countryCode.replace("\"", "")*/
+
+            number = intent.getStringExtra("phoneNumber")
+            countryCode = intent.getStringExtra("countryCode")
+
+            mJsonObject = JsonObject()
+
+            mJsonObject.addProperty(
+                "countryCode",
+                "+" + countryCode
+            )
+            mJsonObject.addProperty(
+                "phoneNumber",
+                number
+            )
+
+            GlobalConstants.VERIFICATION_TYPE = "signup"
+            FirebaseFunctions.sendOTP("login", mJsonObject, this)
+            val msg = activityOtpVerificationBinding.tvOtpSent.text.toString()
+            activityOtpVerificationBinding.tvOtpSent.text = "$msg $number"
+
+        } catch (e : JSONException) {
+            e.printStackTrace()
+        }
+
+    }
+
     private val mCallbacks = object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
         override fun onVerificationCompleted(phoneAuthCredential : PhoneAuthCredential) {
             //Getting the code sent by SMS
@@ -206,7 +270,10 @@ class OTPVerificationActivity : BaseActivity() {
         @TargetApi(Build.VERSION_CODES.M)
         override fun onVerificationFailed(e : FirebaseException) {
             if ((e as FirebaseAuthException).errorCode == "ERROR_INVALID_PHONE_NUMBER")
-                showToastError(e.message.toString().split("\\.".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[0])
+                showToastError(
+                    e.message.toString().split("\\.".toRegex()).dropLastWhile { it.isEmpty() }
+                        .toTypedArray()[0]
+                )
             else
                 showToastError(getString(R.string.server_not_reached))
         }
@@ -222,7 +289,8 @@ class OTPVerificationActivity : BaseActivity() {
 
     private fun signInWithPhoneAuthCredential(credential : PhoneAuthCredential) {
         mAuth.signInWithCredential(credential)
-            .addOnCompleteListener(this
+            .addOnCompleteListener(
+                this
             ) { task->
                 stopProgressDialog()
                 if (task.isSuccessful) {

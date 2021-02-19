@@ -50,7 +50,9 @@ class PaymentOptionsListAdapter(
 
         if (paymentList!![position].type!!.trim().equals("Paytm")) {
             holder.binding!!.imgPayment.setImageResource(R.drawable.ic_paytm)
-        } else if (paymentList!![position].type!!.trim().contains("Google")) {
+        } else if (paymentList!![position].type!!.trim()
+                .contains("Google") || paymentList!![position].type!!.trim().equals("GPay")
+        ) {
             holder.binding!!.imgPayment.setImageResource(R.drawable.ic_google_pay)
         } else if (paymentList!![position].type!!.trim().contains("Phone")) {
             holder.binding!!.imgPayment.setImageResource(R.drawable.ic_phone_pay)

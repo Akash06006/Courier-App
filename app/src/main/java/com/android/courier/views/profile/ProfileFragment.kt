@@ -108,12 +108,11 @@ class ProfileFragment : BaseFragment(), ChoiceCallBack {
         KeyboardUtils.addKeyboardToggleListener(activity!!, object :
             KeyboardUtils.SoftKeyboardToggleListener {
             override fun onToggleSoftKeyboard(isVisible : Boolean) {
-                if(isVisible){
+                if (isVisible) {
                     (activity as LandingActivty).hideShowTab(false)
-                }else{
+                } else {
                     (activity as LandingActivty).hideShowTab(true)
                 }
-
 
             }
         })
@@ -142,6 +141,17 @@ class ProfileFragment : BaseFragment(), ChoiceCallBack {
                                 activity!!,
                                 getString(R.string.fname),
                                 response.data!!.firstName + " " + response.data!!.lastName
+                            )
+                            SharedPrefClass().putObject(
+                                MyApplication.instance,
+                                GlobalConstants.FIRSTNAME,
+                                response.data!!.firstName
+                            )
+
+                            SharedPrefClass().putObject(
+                                MyApplication.instance,
+                                GlobalConstants.LASTNAME,
+                                response.data!!.lastName
                             )
                             SharedPrefClass().putObject(
                                 activity!!,
@@ -473,6 +483,7 @@ class ProfileFragment : BaseFragment(), ChoiceCallBack {
             setImage(profileImage)            // val extras = data!!.extras
             // val imageBitmap = extras!!.get("data") as Bitmap
             //getImageUri(imageBitmap)
+        } else {
         }
 
     }

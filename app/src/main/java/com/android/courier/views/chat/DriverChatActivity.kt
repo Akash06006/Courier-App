@@ -55,6 +55,7 @@ class DriverChatActivity : BaseActivity(),
     var orderId = ""
     var driverId = ""
     var boatMessageDialog : Dialog? = null
+
     /*
         var socketConnectionManager: SocketConnectionManager? = null
     */
@@ -124,9 +125,9 @@ class DriverChatActivity : BaseActivity(),
                     )
                     SocketConnectionManager.getInstance()
                         .socket.emit(
-                        "chatHistoryUser",
-                        objectChatHistory
-                    )
+                            "chatHistoryUser",
+                            objectChatHistory
+                        )
                     Log.e("Socket", "Room join")
 
                 } catch (e : JSONException) {
@@ -211,7 +212,7 @@ class DriverChatActivity : BaseActivity(),
                     )
                     mMessageAdapter!!.setData(chatList)
                     mMessageAdapter!!.notifyDataSetChanged()
-                    // chatBinding.reyclerviewMessageList.scrollToPosition(chatList?.size?.minus(1))
+                    chatBinding.reyclerviewMessageList.smoothScrollToPosition(chatList!!.size)
                 }
             }
 

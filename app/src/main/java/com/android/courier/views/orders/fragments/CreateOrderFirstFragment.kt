@@ -301,20 +301,34 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
                             }
                             // bannersList.addAll(response.data?.bannersData!!)
                             deliveryTypeList.addAll(response.data?.deliveryOptionData!!)
-                            if (deliveryTypeList.size > 0) {
-                                deliveryTypeList[0].selected = "true"
-                                //  if (isSelected.equals("true")) {
-                                deliveryTypeId = deliveryTypeList[0].id!!
-                                GlobalConstants.DELIVERY_TYPE = deliveryTypeId
-                                MyApplication.createOrdersInput.deliveryOption = deliveryTypeId
-                                if (deliveryTypeList[0].title!!.contains("Reg")) {
-                                    MyApplication.createOrdersInput.deliveryType = "1"
-                                } else {
-                                    MyApplication.createOrdersInput.deliveryType = "2"
+                            if (!TextUtils.isEmpty(MyApplication.createOrdersInput.deliveryOption)) {
+                                for (deliveryType in deliveryTypeList) {
+                                    deliveryType.selected = "false"
+                                    if (deliveryType.id.equals(MyApplication.createOrdersInput.deliveryOption)) {
+                                        deliveryType.selected = "true"
+                                        deliveryTypeId = deliveryType.id.toString()
+                                        // deliveryValue = deliveryType.title!!
+                                        createOrderInput.deliveryOption = deliveryTypeId
+                                        MyApplication.createOrdersInput.deliveryOption =
+                                            deliveryTypeId
+                                    }
                                 }
+                            } else {
+                                if (deliveryTypeList.size > 0) {
+                                    deliveryTypeList[0].selected = "true"
+                                    //  if (isSelected.equals("true")) {
+                                    deliveryTypeId = deliveryTypeList[0].id!!
+                                    GlobalConstants.DELIVERY_TYPE = deliveryTypeId
+                                    MyApplication.createOrdersInput.deliveryOption = deliveryTypeId
+                                    if (deliveryTypeList[0].title!!.contains("Reg")) {
+                                        MyApplication.createOrdersInput.deliveryType = "1"
+                                    } else {
+                                        MyApplication.createOrdersInput.deliveryType = "2"
+                                    }
 
-                                initDeliveryTypeAdapter()
+                                }
                             }
+                            initDeliveryTypeAdapter()
 
                             preFilledData()
 
@@ -525,6 +539,7 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
                                 MyApplication.createOrdersInput.isaddAltered = "" +
                                         isaddAltered.toString()
                                 var isAllDetailAded = true
+                                MyApplication.createOrdersInput.deliveryOption = deliveryTypeId
                                 for (item in addressList) {
                                     if (TextUtils.isEmpty(item.address) || TextUtils.isEmpty(
                                             item.phoneNumber
@@ -843,7 +858,7 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
                     }
                 }
                 weightAdapter?.notifyDataSetChanged()
-
+                val deliveryId = MyApplication.createOrdersInput.deliveryOption
 
                 for (deliveryType in deliveryTypeList) {
                     deliveryType.selected = "false"
@@ -852,6 +867,7 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
                         deliveryTypeId = deliveryType.id.toString()
                         // deliveryValue = deliveryType.title!!
                         createOrderInput.deliveryOption = deliveryTypeId
+                        MyApplication.createOrdersInput.deliveryOption = deliveryTypeId
                     }
                 }
                 deliveryTypeAdapter?.notifyDataSetChanged()
@@ -937,6 +953,7 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
         deliveryTypeId = deliveryTypeList[position].id!!
         GlobalConstants.DELIVERY_TYPE = deliveryTypeId
         MyApplication.createOrdersInput.deliveryOption = deliveryTypeId
+
         if (deliveryTypeList[position].title!!.contains("Reg")) {
             MyApplication.createOrdersInput.deliveryType = "1"
         } else {
@@ -973,8 +990,8 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
         rowView.id = i
         imgDelContact.id = i
         imgDelMap.id = i
-
-
+        edtDeliveryMob = edtDelMob
+        edtDeliveryMob?.requestFocus()
 
         createOrderFirstBinding.llAddress.addView(rowView)
         addressModel.id = i
@@ -1265,33 +1282,44 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
                                 place.latLng!!.longitude.toString()
                             createOrderFirstBinding.edtPickMob.requestFocus()
                         } else if (clickedForLocation.equals("delivery")) {
-                            calculatePrice()
-                            isaddAltered = "true"
-                            createOrderFirstBinding.edtDelAddress.setText(place.name + "," + place.address.toString())
-                            delAddress = place.name + "," + place.address.toString()
-                            delLat = place.latLng!!.latitude.toString()
-                            delLong = place.latLng!!.longitude.toString()
-                            distance = "0"
-                            callDistanceAPI()
                             createOrderFirstBinding.edtDelMob.requestFocus()
+                            val selectedAddress = place.name + "," + place.address.toString()
+                            if (selectedAddress.equals(pickupAddress)) {
+                                showToastError("Pickup and delivery address should be different")
+                            } else {
+                                calculatePrice()
+                                isaddAltered = "true"
+                                createOrderFirstBinding.edtDelAddress.setText(selectedAddress)
+                                delAddress = place.name + "," + place.address.toString()
+                                delLat = place.latLng!!.latitude.toString()
+                                delLong = place.latLng!!.longitude.toString()
+                                distance = "0"
+                                callDistanceAPI()
+                                createOrderFirstBinding.edtDelMob.requestFocus()
+                            }
                             //}
                         } else {
-                            isaddAltered = "true"
-                            calculatePrice()
-                            edtDelAddress?.setText(place.address.toString())
-                            val tag = edtDelAddress?.id
-                            for (items in addressList) {
-                                if (tag == items.id) {
-                                    items.address = place.name + "," + place.address.toString()
-                                    items.lat =
-                                        place.latLng!!.latitude.toString()
-                                    items.long =
-                                        place.latLng!!.longitude.toString()
-                                    break
+                            if (selectedAddress.equals(pickupAddress)) {
+                                showToastError("Pickup and delivery address should be different")
+                            } else {
+                                isaddAltered = "true"
+                                calculatePrice()
+                                edtDelAddress?.setText(place.address.toString())
+                                val tag = edtDelAddress?.id
+                                for (items in addressList) {
+                                    if (tag == items.id) {
+                                        items.address = place.name + "," + place.address.toString()
+                                        items.lat =
+                                            place.latLng!!.latitude.toString()
+                                        items.long =
+                                            place.latLng!!.longitude.toString()
+                                        break
+                                    }
                                 }
+                                distance = "0"
+                                edtDeliveryMob?.requestFocus()
+                                callDistanceAPI()
                             }
-                            distance = "0"
-                            callDistanceAPI()
                             //}
                         }
                     }
@@ -1327,32 +1355,45 @@ CreateOrderFirstFragment : BaseFragment(), DialogssInterface, View.OnScrollChang
                     MyApplication.createOrdersInput.pickupAddress?.long = pickLong
                     createOrderFirstBinding.edtPickMob.requestFocus()
                 } else if (clickedForLocation.equals("delivery")) {
-                    isaddAltered = "true"
-                    calculatePrice()
-                    createOrderFirstBinding.edtDelAddress.setText(address)
-                    delLat = lat as String
-                    delLong = long.toString()
-                    delAddress = address.toString()
-                    //}
-                    distance = "0"
-                    callDistanceAPI()
-                    createOrderFirstBinding.edtDelMob.requestFocus()
-                } else {
-                    isaddAltered = "true"
-                    calculatePrice()
-                    edtDelAddress?.setText(address)
-                    val tag = edtDelAddress?.id
-                    for (items in addressList) {
-                        if (tag == items.id) {
-                            items.address = address
-                            items.lat = lat as String
-                            items.long = long.toString()
-                            break
-                        }
+                    val selectedAddress = address
+                    if (selectedAddress.equals(pickupAddress)) {
+                        showToastError("Pickup and delivery address should be different")
+                    } else {
+                        isaddAltered = "true"
+                        calculatePrice()
+                        createOrderFirstBinding.edtDelAddress.setText(address)
+                        delLat = lat as String
+                        delLong = long.toString()
+                        delAddress = address.toString()
+                        //}
+                        distance = "0"
+                        callDistanceAPI()
+                        createOrderFirstBinding.edtDelMob.requestFocus()
                     }
-                    //}
-                    distance = "0"
-                    callDistanceAPI()
+
+                } else {
+                    val selectedAddress = address
+                    if (selectedAddress.equals(pickupAddress)) {
+                        showToastError("Pickup and delivery address should be different")
+                    } else {
+                        isaddAltered = "true"
+                        calculatePrice()
+                        edtDelAddress?.setText(address)
+                        val tag = edtDelAddress?.id
+                        for (items in addressList) {
+                            if (tag == items.id) {
+                                items.address = address
+                                items.lat = lat as String
+                                items.long = long.toString()
+                                break
+                            }
+                        }
+                        //}
+                        edtDeliveryMob?.requestFocus()
+                        distance = "0"
+                        callDistanceAPI()
+
+                    }
                 }
 
             }

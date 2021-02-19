@@ -52,13 +52,14 @@ class LoginActivity : BaseActivity() {
     private var googleSiginJSONObject = JsonObject()
     private var fbSiginJSONObject = JSONObject()
     private var loginWith = ""
-    private var deviceToken =""
+    private var deviceToken = ""
 
     override fun getLayoutId(): Int {
         return R.layout.activity_login
     }
 
     override fun initViews() {
+        checkAndRequestPermissions()
         activityLoginbinding =
             viewDataBinding as ActivityLoginBinding //DataBindingUtil.setContentView(this, R.layout.activity_login)
         loginViewModel = ViewModelProviders.of(this).get(LoginViewModel::class.java)
@@ -70,12 +71,15 @@ class LoginActivity : BaseActivity() {
 //                .requestIdToken("6946227711-va1qdqpru77knadr33pnseqnn9l89hgf.apps.googleusercontent.com")
                 .requestEmail()
                 .build()
-        firebaseToken()
-
         deviceToken = SharedPrefClass().getPrefValue(
             MyApplication.instance,
             GlobalConstants.NOTIFICATION_TOKEN
         ).toString()
+
+        if (deviceToken != null || deviceToken != "null")
+            GlobalConstants.NOTIFICATION_TOKEN = deviceToken
+
+        firebaseToken()
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
         getLoginResultObserver()
         checkSocialObserver()
@@ -187,11 +191,17 @@ class LoginActivity : BaseActivity() {
                             activityLoginbinding.edtPhone.text.toString()
                         )
 
-                     //   FirebaseFunctions.sendOTP("login", mOtpJsonObject, this)
+                        //   FirebaseFunctions.sendOTP("login", mOtpJsonObject, this)
 
                         val intent = Intent(this, OTPVerificationActivity::class.java)
-                        intent.putExtra("phoneNumber", activityLoginbinding.edtPhone.text.toString())
-                        intent.putExtra("countryCode", "+"+activityLoginbinding.btCountryCode.selectedCountryCode)
+                        intent.putExtra(
+                            "phoneNumber",
+                            activityLoginbinding.edtPhone.text.toString()
+                        )
+                        intent.putExtra(
+                            "countryCode",
+                            "+" + activityLoginbinding.btCountryCode.selectedCountryCode
+                        )
                         intent.putExtra("data", mOtpJsonObject.toString())
                         intent.putExtra("action", "")
                         startActivity(intent)
@@ -390,6 +400,7 @@ class LoginActivity : BaseActivity() {
                 }
 
                 // Get new Instance ID token
+                GlobalConstants.NOTIFICATION_TOKEN = task.result?.token.toString()
                 token = task.result?.token.toString()
                 Log.d("", "token $token")
                 // Log and toast
@@ -413,19 +424,19 @@ class LoginActivity : BaseActivity() {
 
     private fun handleSignInResultFacebook(jsonObject: JSONObject?) {
         fbSiginJSONObject = jsonObject!!
-       /* val intent = Intent(this, SignupActivity::class.java)
-        intent.putExtra("social", "false")
-        intent.putExtra("fbSocial", "true")
-        intent.putExtra("googleSocial", "false")
-        intent.putExtra("fbData", jsonObject.toString())
-        startActivity(intent)*/
+        /* val intent = Intent(this, SignupActivity::class.java)
+         intent.putExtra("social", "false")
+         intent.putExtra("fbSocial", "true")
+         intent.putExtra("googleSocial", "false")
+         intent.putExtra("fbData", jsonObject.toString())
+         startActivity(intent)*/
         val socialId = jsonObject.getString("id")
         var email = ""
         if (jsonObject.has("email")) {
             email = jsonObject.getString("email")
         }
 
-        loginViewModel.checkForSocial(socialId, email,deviceToken)
+        loginViewModel.checkForSocial(socialId, email, deviceToken)
 
     }
 
@@ -460,17 +471,17 @@ class LoginActivity : BaseActivity() {
 
             googleSiginJSONObject = input
 
-            loginViewModel.checkForSocial(account.id, account.email,deviceToken)
+            loginViewModel.checkForSocial(account.id, account.email, deviceToken)
 
             mGoogleSignInClient!!.signOut()
             mGoogleSignInClient!!.revokeAccess()
 
-           /* val intent = Intent(this, SignupActivity::class.java)
-            intent.putExtra("social", "false")
-            intent.putExtra("fbSocial", "false")
-            intent.putExtra("googleSocial", "true")
-            intent.putExtra("fbData", input.toString())
-            startActivity(intent)*/
+            /* val intent = Intent(this, SignupActivity::class.java)
+             intent.putExtra("social", "false")
+             intent.putExtra("fbSocial", "false")
+             intent.putExtra("googleSocial", "true")
+             intent.putExtra("fbData", input.toString())
+             startActivity(intent)*/
         } catch (e: Exception) {
             e.printStackTrace()
             //Toast.makeText(this, "Somthing went wrong", Toast.LENGTH_LONG).show()
@@ -479,7 +490,7 @@ class LoginActivity : BaseActivity() {
 
     private fun checkSocialObserver() {
         loginViewModel.checkForSocialData().observe(this,
-            Observer<LoginResponse> { loginResponse->
+            Observer<LoginResponse> { loginResponse ->
                 stopProgressDialog()
                 if (loginResponse != null) {
                     when (loginResponse.code) {
@@ -510,12 +521,12 @@ class LoginActivity : BaseActivity() {
                                 GlobalConstants.USER_IMAGE,
                                 loginResponse.data!!.image
                             )
-                            if(loginResponse.data!!.isDocUploaded !=null)
-                            SharedPrefClass().putObject(
-                                MyApplication.instance,
-                                GlobalConstants.IS_DOC_UPLOADED,
-                                loginResponse.data!!.isDocUploaded
-                            )
+                            if (loginResponse.data!!.isDocUploaded != null)
+                                SharedPrefClass().putObject(
+                                    MyApplication.instance,
+                                    GlobalConstants.IS_DOC_UPLOADED,
+                                    loginResponse.data!!.isDocUploaded
+                                )
                             SharedPrefClass().putObject(
                                 MyApplication.instance,
                                 GlobalConstants.IS_SOCIAL,

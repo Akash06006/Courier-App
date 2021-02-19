@@ -1,6 +1,7 @@
 package com.courierdriver.utils
 
 import android.Manifest
+import android.Manifest.permission.RECEIVE_SMS
 import android.app.Activity
 import android.app.AlertDialog
 import android.app.Dialog
@@ -292,6 +293,8 @@ abstract class BaseActivity : AppCompatActivity() {
                 perms[Manifest.permission.WRITE_EXTERNAL_STORAGE] =
                     PackageManager.PERMISSION_GRANTED
                 perms[Manifest.permission.ACCESS_FINE_LOCATION] = PackageManager.PERMISSION_GRANTED
+                perms[Manifest.permission.RECEIVE_SMS] = PackageManager.PERMISSION_GRANTED
+
                 perms[Manifest.permission.RECORD_AUDIO] = PackageManager.PERMISSION_GRANTED
                 perms[Manifest.permission.READ_CONTACTS] = PackageManager.PERMISSION_GRANTED
                 perms[Manifest.permission.CALL_PHONE] = PackageManager.PERMISSION_GRANTED
@@ -306,6 +309,7 @@ abstract class BaseActivity : AppCompatActivity() {
                         && perms[Manifest.permission.RECORD_AUDIO] == PackageManager.PERMISSION_GRANTED
                         && perms[Manifest.permission.READ_CONTACTS] == PackageManager.PERMISSION_GRANTED
                         && perms[Manifest.permission.CALL_PHONE] == PackageManager.PERMISSION_GRANTED
+                        && perms[Manifest.permission.RECEIVE_SMS] == PackageManager.PERMISSION_GRANTED
                     ) {
                         // process the normal flow
                         //else any one or both the permissions are not granted
@@ -328,10 +332,10 @@ abstract class BaseActivity : AppCompatActivity() {
                             || ActivityCompat.shouldShowRequestPermissionRationale(
                                 this,
                                 Manifest.permission.RECORD_AUDIO
-                            ) /*|| ActivityCompat.shouldShowRequestPermissionRationale(
+                            ) || ActivityCompat.shouldShowRequestPermissionRationale(
                                 this,
-                                Manifest.permission.GET_ACCOUNTS
-                            )*/
+                                Manifest.permission.RECEIVE_SMS
+                            )
                             || ActivityCompat.shouldShowRequestPermissionRationale(
                                 this,
                                 Manifest.permission.CALL_PHONE
@@ -406,6 +410,8 @@ abstract class BaseActivity : AppCompatActivity() {
             ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
         val permissionLocation =
             ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+        val permissionReceiveSMS =
+            ContextCompat.checkSelfPermission(this, Manifest.permission.RECEIVE_SMS)
         val permissionRecordAudio =
             ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO)
         val listPermissionsNeeded = ArrayList<String>()
@@ -419,9 +425,10 @@ abstract class BaseActivity : AppCompatActivity() {
         if (permissionLocation != PackageManager.PERMISSION_GRANTED) {
             listPermissionsNeeded.add(Manifest.permission.ACCESS_FINE_LOCATION)
         }
-        if (permissionRecordAudio != PackageManager.PERMISSION_GRANTED) {
-            listPermissionsNeeded.add(Manifest.permission.RECORD_AUDIO)
+        if (permissionReceiveSMS != PackageManager.PERMISSION_GRANTED) {
+            listPermissionsNeeded.add(Manifest.permission.RECEIVE_SMS)
         }
+
         if (!listPermissionsNeeded.isEmpty()) {
             ActivityCompat.requestPermissions(
                 this,

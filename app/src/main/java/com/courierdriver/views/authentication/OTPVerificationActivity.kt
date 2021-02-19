@@ -8,6 +8,7 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.CountDownTimer
 import android.text.TextUtils
+import android.view.KeyEvent
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
@@ -25,6 +26,7 @@ import com.courierdriver.viewmodels.LoginViewModel
 import com.courierdriver.viewmodels.OTPVerificationModel
 import com.courierdriver.views.home.DefineWorkActivity
 import com.courierdriver.views.home.LandingActivty
+import com.goodiebag.pinview.Pinview.PinViewEventListener
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
@@ -65,12 +67,22 @@ class OTPVerificationActivity : BaseActivity() {
         countDown()
         sharedPrefValue()
 
+
         getVerifyUserObserver()
         loaderObserver()
         viewClicks()
         requestsmspermission()
         getIntentData()
         OTP_Receiver().setEditText(activityOtpVerificationBinding.pinview)
+        /* activityOtpVerificationBinding.pinview.setPinViewEventListener(object :
+             Pinview.PinViewEventListener() {
+             fun onDataEntered(pinview: Pinview, fromUser: Boolean) {
+                 //Make api calls here or what not
+                 Toast.makeText(this@MainActivity, pinview.getValue(), Toast.LENGTH_SHORT).show()
+             }
+         })*/
+
+
     }
 
     private fun requestsmspermission() {

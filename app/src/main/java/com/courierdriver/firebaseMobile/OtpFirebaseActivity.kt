@@ -63,11 +63,9 @@ class OtpFirebaseActivity {
             )
             //storing the verification id that is sent to the user
             //if (otpAction == "signup" || otpAction == "forgot") {
-            if(otpAction=="resend")
-            {
+            if (otpAction == "resend") {
                 UtilsFunctions.showToastSuccess(mBaseActivity!!.getString(R.string.resend_otp_message))
-            }
-            else{
+            } else {
 
             }
             /*  else {

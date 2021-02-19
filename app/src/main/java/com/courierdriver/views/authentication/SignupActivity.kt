@@ -132,17 +132,20 @@ class SignupActivity : BaseActivity(), ChoiceCallBack {
                         }
                     }
                     "btnSignup" -> {
-                        val fName = activitySignupbinding.edtFirstName.text.toString()
-                        val lName = activitySignupbinding.edtLastName.text.toString()
-                        val email = activitySignupbinding.edtEmail.text.toString().trim()
-                        val phone = activitySignupbinding.edtPhone.text.toString()
+                        var fName = activitySignupbinding.edtFirstName.text.toString().trim()
+                        var lName = activitySignupbinding.edtLastName.text.toString().trim()
+                        var email = activitySignupbinding.edtEmail.text.toString().trim()
+                        var phone = activitySignupbinding.edtPhone.text.toString().trim()
                         val password = activitySignupbinding.edtPassword.text.toString()
                         val confirmPassword =
                             activitySignupbinding.edtConfirmPassword.text.toString()
-
+                        fName = fName.trim()
+                        lName = lName.trim()
+                        email = email.trim()
+                        phone = phone.trim()
 
                         when {
-                            fName.isEmpty() -> showError(
+                            fName.trim().isEmpty() -> showError(
                                 activitySignupbinding.edtFirstName,
                                 getString(R.string.empty) + " " + getString(
                                     R.string.fname
@@ -384,8 +387,14 @@ class SignupActivity : BaseActivity(), ChoiceCallBack {
                             )
 
                             val intent = Intent(this, OTPVerificationActivity::class.java)
-                            intent.putExtra("phoneNumber",activitySignupbinding.edtPhone.text.toString())
-                            intent.putExtra("countryCode", "+" + activitySignupbinding.btnCcp.selectedCountryCode)
+                            intent.putExtra(
+                                "phoneNumber",
+                                activitySignupbinding.edtPhone.text.toString()
+                            )
+                            intent.putExtra(
+                                "countryCode",
+                                "+" + activitySignupbinding.btnCcp.selectedCountryCode
+                            )
                             intent.putExtra("data", mOtpJsonObject.toString())
                             intent.putExtra("action", "")
                             startActivity(intent)

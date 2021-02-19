@@ -62,8 +62,8 @@ class LocomoIdFragment : BaseFragment(), DownloadFileCallback {
                         showImagePreviewDialog()
                     }
                     "img_download" -> {
-                        downloadImageNew("Locomo id",downloadUrl)
-                      //  DownloadTask(baseActivity, downloadUrl, this)
+                        downloadImageNew("Locomo id", downloadUrl)
+                        //  DownloadTask(baseActivity, downloadUrl, this)
                     }
                 }
             })
@@ -90,7 +90,6 @@ class LocomoIdFragment : BaseFragment(), DownloadFileCallback {
 
         Glide.with(baseActivity)
             .load(model!!.locomoIdUrl)
-            .diskCacheStrategy(DiskCacheStrategy.ALL)
             .placeholder(R.drawable.loading_image)
             .into(imgPreview)
 

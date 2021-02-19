@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="verifViewModel"
             type="com.courierdriver.viewmodels.OTPVerificationModel" />
@@ -96,11 +97,11 @@
                 android:id="@+id/pinview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingLeft="@dimen/dp_10"
                 android:layout_marginTop="@dimen/dp_10"
+                android:paddingLeft="@dimen/dp_10"
                 android:paddingRight="@dimen/dp_10"
-                app:cursorVisible="true"
-                app:forceKeyboard="true"
+                app:cursorVisible="false"
+                app:forceKeyboard="false"
                 app:hint=""
                 app:inputType="number"
                 app:password="false"
@@ -115,8 +116,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:paddingTop="@dimen/dp_10"
                 android:onClick="@{(v) -> verifViewModel.clickListener(v)}"
+                android:paddingTop="@dimen/dp_10"
                 android:text="@string/resend_otp"
                 android:textColor="@color/colorPrimary"
                 android:textSize="@dimen/sp_14"

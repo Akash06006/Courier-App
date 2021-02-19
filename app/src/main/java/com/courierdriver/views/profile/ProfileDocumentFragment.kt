@@ -140,7 +140,7 @@ class ProfileDocumentFragment : BaseFragment(), ChoiceCallBack, SelfieCallBack {
                                     aadharBackStr = data!!.image!!
                                 }
                             }
-                           // message?.let { UtilsFunctions.showToastSuccess(it) }
+                            // message?.let { UtilsFunctions.showToastSuccess(it) }
                         }
                         else -> message?.let { UtilsFunctions.showToastError(it) }
                     }
@@ -230,27 +230,29 @@ class ProfileDocumentFragment : BaseFragment(), ChoiceCallBack, SelfieCallBack {
                             TextUtils.isEmpty(dlNumber) -> {
                                 baseActivity.showToastError("Please enter driving license number")
                             }
-                           /* TextUtils.isEmpty(aadharFrontStr) -> {
-                                baseActivity.showToastError("Please select Aadhar front photo")
-                            }
-                            TextUtils.isEmpty(aadharBackStr) -> {
-                                baseActivity.showToastError("Please select Aadhar back photo")
-                            }
-                            TextUtils.isEmpty(panCardStr) -> {
-                                baseActivity.showToastError("Please select PAN card image")
-                                }
-                            TextUtils.isEmpty(dlFrontStr) -> {
-                                baseActivity.showToastError("Please select Driving license front image")
-                            }
-                            TextUtils.isEmpty(dlBackStr) -> {
-                                baseActivity.showToastError("Please select Driving license back image")
-                            }*/
+                            /* TextUtils.isEmpty(aadharFrontStr) -> {
+                                 baseActivity.showToastError("Please select Aadhar front photo")
+                             }
+                             TextUtils.isEmpty(aadharBackStr) -> {
+                                 baseActivity.showToastError("Please select Aadhar back photo")
+                             }
+                             TextUtils.isEmpty(panCardStr) -> {
+                                 baseActivity.showToastError("Please select PAN card image")
+                                 }
+                             TextUtils.isEmpty(dlFrontStr) -> {
+                                 baseActivity.showToastError("Please select Driving license front image")
+                             }
+                             TextUtils.isEmpty(dlBackStr) -> {
+                                 baseActivity.showToastError("Please select Driving license back image")
+                             }*/
                             else -> {
                                 val mHashMap = HashMap<String, RequestBody>()
                                 mHashMap["dlNumber"] =
                                     Utils(baseActivity).createPartFromString(dlNumber)
                                 mHashMap["transportType"] =
-                                    Utils(baseActivity).createPartFromString(activityDocVeribinding.tvTransport.text.toString())
+                                    Utils(baseActivity).createPartFromString(
+                                        activityDocVeribinding.tvTransport.text.toString()
+                                    )
                                 mHashMap["poaFront"] =
                                     Utils(baseActivity).createPartFromString(aadharFrontStr)
                                 mHashMap["poaBack"] =

@@ -18,41 +18,42 @@
         android:layout_height="wrap_content"
         android:paddingBottom="@dimen/dp_20"
         android:scrollbars="none">
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/colorLiteWhite"
-        android:orientation="vertical"
-        app:hideKeyBoardOnClick="@{`back` }">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/ic_bottom_circle"
-            android:backgroundTint="@color/colorPrimary"
-            android:paddingTop="@dimen/dp_80"
-            android:paddingBottom="@dimen/dp_100">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:background="@drawable/ic_app_icon_splash"
-                android:textColor="@color/colorWhite" />
-        </RelativeLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/rel_image"
-            android:layout_marginLeft="@dimen/dp_20"
-            android:layout_marginTop="-60dp"
-            android:layout_marginBottom="@dimen/dp_20"
-            android:layout_marginRight="@dimen/dp_20"
-            android:background="@drawable/ic_top_bottom_circle"
-            android:backgroundTint="@color/colorWhite"
+            android:layout_height="match_parent"
+            android:background="@color/colorLiteWhite"
             android:orientation="vertical"
-            android:paddingBottom="@dimen/dp_20">
+            app:hideKeyBoardOnClick="@{`back` }">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ic_bottom_circle"
+                android:backgroundTint="@color/colorPrimary"
+                android:paddingTop="@dimen/dp_80"
+                android:paddingBottom="@dimen/dp_100">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/ic_app_icon_splash"
+                    android:textColor="@color/colorWhite" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/rel_image"
+                android:layout_marginLeft="@dimen/dp_20"
+                android:layout_marginTop="-60dp"
+                android:layout_marginRight="@dimen/dp_20"
+                android:layout_marginBottom="@dimen/dp_20"
+                android:background="@drawable/ic_top_bottom_circle"
+                android:backgroundTint="@color/colorWhite"
+                android:orientation="vertical"
+                android:paddingBottom="@dimen/dp_20">
 
 
                 <LinearLayout
@@ -91,13 +92,13 @@
                                 android:layout_marginLeft="10dp"
                                 android:layout_marginTop="20dp"
                                 android:layout_marginRight="10dp"
-                                android:hint="@string/fname"
-                                android:maxLength="32"
                                 android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz "
+                                android:hint="@string/fname"
                                 android:imeOptions="actionNext"
+                                android:inputType="textPersonName"
+                                android:maxLength="20"
                                 android:paddingBottom="15dp"
                                 android:singleLine="true"
-                                android:inputType="textPersonName"
                                 android:textSize="14sp"
                                 app:font="@{`regular`}" />
 
@@ -106,13 +107,13 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="10dp"
-                                android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz "
                                 android:layout_marginTop="10dp"
                                 android:layout_marginRight="10dp"
+                                android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz "
                                 android:hint="@string/lname"
-                                android:maxLength="32"
-                                android:inputType="textPersonName"
                                 android:imeOptions="actionNext"
+                                android:inputType="textPersonName"
+                                android:maxLength="20"
                                 android:paddingBottom="15dp"
                                 android:singleLine="true"
                                 android:textSize="14sp"
@@ -141,10 +142,10 @@
                         android:layout_marginLeft="10dp"
                         android:layout_marginTop="10dp"
                         android:layout_marginRight="10dp"
-                        android:maxLength="100"
                         android:hint="@string/email"
                         android:imeOptions="actionNext"
                         android:inputType="textEmailAddress"
+                        android:maxLength="100"
                         android:paddingBottom="15dp"
                         android:singleLine="true"
                         android:textSize="14sp"
@@ -199,9 +200,9 @@
                             android:layout_marginRight="10dp"
                             android:digits="0123456789"
                             android:hint="@string/phone_number"
-                            android:maxLength="13"
                             android:imeOptions="actionNext"
                             android:inputType="phone"
+                            android:maxLength="13"
                             android:paddingTop="10dp"
                             android:singleLine="true"
                             android:textSize="14sp"
@@ -230,12 +231,12 @@
                         android:layout_marginTop="10dp"
                         android:layout_marginRight="10dp"
                         android:hint="@string/password"
-                        android:visibility="gone"
                         android:imeOptions="actionNext"
                         android:inputType="textPassword"
                         android:paddingBottom="15dp"
                         android:singleLine="true"
                         android:textSize="14sp"
+                        android:visibility="gone"
                         app:font="@{`regular`}" />
 
                     <EditText
@@ -246,12 +247,12 @@
                         android:layout_marginTop="10dp"
                         android:layout_marginRight="10dp"
                         android:hint="@string/confirm_password"
-                        android:visibility="gone"
                         android:imeOptions="actionDone"
                         android:inputType="textPassword"
                         android:paddingBottom="15dp"
                         android:singleLine="true"
                         android:textSize="14sp"
+                        android:visibility="gone"
                         app:font="@{`regular`}" />
 
                     <RelativeLayout
@@ -296,7 +297,7 @@
 
                 </LinearLayout>
 
+            </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
-</ScrollView>
+    </ScrollView>
 </layout>

@@ -222,9 +222,9 @@ class CustomerChatActivity : BaseActivity(),
 
     override fun onConnectError() {
         Log.e("Socket", "Error Connected")
-        runOnUiThread {
-            Toast.makeText(this, "error", Toast.LENGTH_SHORT).show()
-        }
+        /* runOnUiThread {
+             Toast.makeText(this, "error", Toast.LENGTH_SHORT).show()
+         }*/
     }
 
     override fun onConnected() {

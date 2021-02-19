@@ -26,13 +26,15 @@ class LoginViewModel : BaseViewModel() {
     private val mIsUpdating = MutableLiveData<Boolean>()
     private val postEmailError = MutableLiveData<String>()
     private val postPassError = MutableLiveData<String>()
-    private var checkForSocialList : MutableLiveData<LoginResponse>? = MutableLiveData()
+    private var checkForSocialList: MutableLiveData<LoginResponse>? = MutableLiveData()
 
     init {
-        loginResponse = loginRepository.getLoginData(null)
-        signupResponse = loginRepository.callSignupApi(null, null)
-        verifyUserResponse = loginRepository.callVerifyUserApi(null)
-        checkForSocialList = loginRepository.checkSocial(null, checkForSocialList)
+        if (UtilsFunctions.isNetworkConnectedReturn()) {
+            loginResponse = loginRepository.getLoginData(null)
+            signupResponse = loginRepository.callSignupApi(null, null)
+            verifyUserResponse = loginRepository.callVerifyUserApi(null)
+            checkForSocialList = loginRepository.checkSocial(null, checkForSocialList)
+        }
     }
 
     fun getLoginRes(): LiveData<LoginResponse> {
@@ -88,7 +90,7 @@ class LoginViewModel : BaseViewModel() {
     ) {
         if (UtilsFunctions.isNetworkConnected()) {
             //emialExistenceResponse = loginRepository.checkPhoneExistence(mJsonObject)
-            signupResponse = loginRepository.callSignupApi(mJsonObject,userImage)
+            signupResponse = loginRepository.callSignupApi(mJsonObject, userImage)
             mIsUpdating.postValue(true)
         }
 
@@ -117,7 +119,7 @@ class LoginViewModel : BaseViewModel() {
         }
     }
 
-    fun checkForSocialData() : LiveData<LoginResponse> {
+    fun checkForSocialData(): LiveData<LoginResponse> {
         return checkForSocialList!!
     }
 }

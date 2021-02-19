@@ -15,7 +15,7 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:paddingBottom="@dimen/dp_20"
         android:scrollbars="none">
 
@@ -177,6 +177,7 @@
                             android:hint="@string/phone_number"
                             android:imeOptions="actionDone"
                             android:inputType="phone"
+                            android:maxLength="10"
                             android:singleLine="true"
                             android:textSize="@dimen/sp_14"
                             app:font="@{`regular`}" />

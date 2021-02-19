@@ -46,7 +46,7 @@ class LandingActivty : BaseActivity(), View.OnClickListener, NotifyWorkStatusBut
         activityOtpVerificationBinding.imgMessageParent.setOnClickListener(this)
         activityOtpVerificationBinding.relAvailable.setOnClickListener(this)
 
-        loaderObserver()
+        //loaderObserver()
         setButtonsWithSharePref()
         updateAvailabilityObserver()
         subscribeWorkStatusReceiver()
@@ -89,8 +89,7 @@ class LandingActivty : BaseActivity(), View.OnClickListener, NotifyWorkStatusBut
         }
     }
 
-     fun markAvailableTrue()
-    {
+    fun markAvailableTrue() {
         isAvailable = false
         available = "false"
         activityOtpVerificationBinding.imgAvailable.setImageDrawable(
@@ -105,8 +104,7 @@ class LandingActivty : BaseActivity(), View.OnClickListener, NotifyWorkStatusBut
         activityOtpVerificationBinding.txtAvailble.text = "Working"
     }
 
-    fun markUnAvailableTrue()
-    {
+    fun markUnAvailableTrue() {
         available = "true"
         isAvailable = true
         activityOtpVerificationBinding.imgAvailable.setImageDrawable(
@@ -248,10 +246,10 @@ class LandingActivty : BaseActivity(), View.OnClickListener, NotifyWorkStatusBut
             ContextCompat.getColor(this, notificationColor),
             android.graphics.PorterDuff.Mode.SRC_IN
         )
-        activityOtpVerificationBinding.imgAvailable.setColorFilter(
-            ContextCompat.getColor(this, availbleColor),
-            android.graphics.PorterDuff.Mode.SRC_IN
-        )
+        /*  activityOtpVerificationBinding.imgAvailable.setColorFilter(
+              ContextCompat.getColor(this, availbleColor),
+              android.graphics.PorterDuff.Mode.SRC_IN
+          )*/
 
 
         //activityOtpVerificationBinding.imgProfile.setColorFilter(ContextCompat.getColor(this, R.color.colorWhite), android.graphics.PorterDuff.Mode.MULTIPLY);

@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.annotation.TargetApi
 import android.app.Activity
 import android.app.ActivityManager
+import android.app.AlertDialog
 import android.app.Dialog
 import android.content.*
 import android.content.pm.PackageManager
@@ -77,6 +78,7 @@ import com.google.android.libraries.places.api.Places
 import com.google.maps.DirectionsApi
 import com.google.maps.GeoApiContext
 import com.theartofdev.edmodo.cropper.CropImage
+import kotlinx.android.synthetic.main.layout_custom_alert.*
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import org.json.JSONArray
@@ -210,17 +212,15 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
                 try {
                     val obj = args[0] as JSONObject
                     Log.d("updateOrderStatus", "updateOrderStatus")
-                     val data = obj.getJSONObject("data")
+                    val data = obj.getJSONObject("data")
                     val orderStatus = data.getString("orderStatus")
                     if (UtilsFunctions.isNetworkConnected()) {
                         //baseActivity.startProgressDialog()
-                        if(orderStatus == "4")
-                        {
+                        if (orderStatus == "4") {
                             runOnUiThread {
                                 showCancelledOrderAlert("Order is cancelled by customer")
                             }
-                        }
-                        else {
+                        } else {
                             orderViewModel.orderDetail(orderId)
                         }
                     }
@@ -498,9 +498,7 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
                     val message = response.message
                     when (response.code) {
                         200 -> {
-                            if (mSocket!!.connected()) {
-                                mSocket!!.disconnect()
-                            }
+
                             if (deliveryList!!.size > 1) {
                                 for (i in 0 until deliveryList!!.size) {
                                     if (!deliveryList!![i].isComplete!!) {
@@ -509,8 +507,19 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
                                 }
                             }
                             addressId = "0"
+                            if (dialogDelAddressList!!.size == 1) {
+                                //TODO------
+                                val jsonObjectLatLng = JSONObject()
+                                jsonObjectLatLng.put("methodName", "leaveSocket")
+                                jsonObjectLatLng.put("orderId", orderId)
+                                jsonObjectLatLng.put("empId", userId)
+                                mSocket!!.emit("socketFromClient", jsonObjectLatLng)
+                            }
                             orderViewModel.orderDetail(orderId)
 
+                            if (mSocket!!.connected()) {
+                                mSocket!!.disconnect()
+                            }
                             UtilsFunctions.showToastSuccess(message!!)
                         }
                         else -> UtilsFunctions.showToastError(message!!)
@@ -640,24 +649,24 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
                              }*/
 
                             setPickupDestinationMarker(response)
-                          /*  if (isFirst) {
-                                isFirst = false*/
-                                deliveryList = response.data!!.deliveryAddress!!
-                                customerId = response.data!!.userId!!
-                                dialogDelAddressList = ArrayList()
-                                if (dialogDelAddressList!!.size > 0)
-                                    dialogDelAddressList!!.clear()
-                                var count = 0
-                                Log.d("TAG", "deliveryList=---- " + deliveryList!!.count())
-                                for (i in 0 until deliveryList!!.count()) {
-                                    if (deliveryList!![i].isComplete == false) {
-                                        count += 1
-                                        Log.d("TAG", "count=---- $count")
-                                        Log.d("TAG", "address=---- " + deliveryList!![i].address)
+                            /*  if (isFirst) {
+                                  isFirst = false*/
+                            deliveryList = response.data!!.deliveryAddress!!
+                            customerId = response.data!!.userId!!
+                            dialogDelAddressList = ArrayList()
+                            if (dialogDelAddressList!!.size > 0)
+                                dialogDelAddressList!!.clear()
+                            var count = 0
+                            Log.d("TAG", "deliveryList=---- " + deliveryList!!.count())
+                            for (i in 0 until deliveryList!!.count()) {
+                                if (deliveryList!![i].isComplete == false) {
+                                    count += 1
+                                    Log.d("TAG", "count=---- $count")
+                                    Log.d("TAG", "address=---- " + deliveryList!![i].address)
 
-                                        dialogDelAddressList!!.add(deliveryList!![i])
-                                    }
+                                    dialogDelAddressList!!.add(deliveryList!![i])
                                 }
+                            }
 //                            }
 
                         }
@@ -1130,12 +1139,12 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
     private fun showCancelledOrderAlert(message1: String) {
         val binding =
             DataBindingUtil.inflate<ViewDataBinding>(
-                LayoutInflater.from(this),
+                LayoutInflater.from(getApplicationContext()),
                 R.layout.layout_custom_alert,
                 null,
                 false
             )
-        val dialog = Dialog(this)
+        val dialog = Dialog(this@OrderDetailsActivity)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setContentView(binding.root)
         dialog.setTitle(getString(R.string.app_name))
@@ -1143,12 +1152,34 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
         val text = dialog.findViewById(R.id.text) as TextView
         text.text = message1
         val dialogButton = dialog.findViewById(R.id.dialogButtonOK) as Button
+        val dialogButtonCancel = dialog.findViewById(R.id.dialogButtonCancel) as Button
+        dialogButtonCancel.visibility = View.GONE
         // if button is clicked, close the custom dialog
         dialogButton.setOnClickListener {
             dialog.dismiss()
             finish()
         }
         dialog.show()
+
+
+        //Inflate the dialog with custom view
+        /*val mDialogView =
+            LayoutInflater.from(baseContext).inflate(R.layout.layout_custom_alert, null)
+        //AlertDialogBuilder
+        val mBuilder = AlertDialog.Builder(baseContext)
+            .setView(mDialogView)
+            .setTitle(getString(R.string.app_name))
+        //show dialog
+        val mAlertDialog = mBuilder.show()
+        //text.setText(message1)
+        // dialogButtonCancel.visibility = View.GONE
+        //button click of custom layout
+        dialogButtonOK.setOnClickListener {
+            //dismiss dialog
+            mAlertDialog.dismiss()
+            finish()
+            //get text from EditTexts of custom layout
+        }*/
     }
 
     private fun setDeliveryAddressAdapter(deliveryAddressList: ArrayList<OrdersDetailResponse.PickupAddress>?) {

@@ -84,8 +84,8 @@
 
                     <LinearLayout
                         android:id="@+id/ll_front_aadhar"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="150dp"
+                        android:layout_height="160dp"
                         android:layout_centerInParent="true"
                         android:onClick="@{(v) -> docVerifyViewModel.clickListener(v)}"
                         android:orientation="vertical">
@@ -97,13 +97,13 @@
                             android:visibility="gone" />
 
                         <TextView
-                            android:visibility="gone"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:layout_marginTop="@dimen/dp_2"
                             android:text="@string/front"
-                            android:textColor="@color/colorTextBlue" />
+                            android:textColor="@color/colorTextBlue"
+                            android:visibility="gone" />
                     </LinearLayout>
 
                     <ImageView
@@ -144,8 +144,8 @@
 
                     <LinearLayout
                         android:id="@+id/ll_back_aadhar"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="150dp"
+                        android:layout_height="160dp"
                         android:layout_centerInParent="true"
                         android:onClick="@{(v) -> docVerifyViewModel.clickListener(v)}"
                         android:orientation="vertical">
@@ -162,8 +162,8 @@
                             android:layout_gravity="center"
                             android:layout_marginTop="@dimen/dp_2"
                             android:text="@string/back"
-                            android:visibility="gone"
-                            android:textColor="@color/colorTextBlue" />
+                            android:textColor="@color/colorTextBlue"
+                            android:visibility="gone" />
                     </LinearLayout>
 
                     <ImageView
@@ -218,8 +218,8 @@
 
                     <LinearLayout
                         android:id="@+id/ll_pan_card"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="160dp"
                         android:layout_centerInParent="true"
                         android:onClick="@{(v) -> docVerifyViewModel.clickListener(v)}"
                         android:orientation="vertical">
@@ -359,8 +359,8 @@
 
                     <LinearLayout
                         android:id="@+id/ll_front_driving"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="150dp"
+                        android:layout_height="160dp"
                         android:layout_centerInParent="true"
                         android:onClick="@{(v) -> docVerifyViewModel.clickListener(v)}"
                         android:orientation="vertical">
@@ -377,8 +377,8 @@
                             android:layout_gravity="center"
                             android:layout_marginTop="@dimen/dp_2"
                             android:text="@string/front"
-                            android:visibility="gone"
-                            android:textColor="@color/colorTextBlue" />
+                            android:textColor="@color/colorTextBlue"
+                            android:visibility="gone" />
                     </LinearLayout>
 
                     <ImageView
@@ -420,8 +420,8 @@
 
                     <LinearLayout
                         android:id="@+id/ll_back_driving"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="150dp"
+                        android:layout_height="160dp"
                         android:layout_centerInParent="true"
                         android:onClick="@{(v) -> docVerifyViewModel.clickListener(v)}"
                         android:orientation="vertical">
@@ -438,8 +438,8 @@
                             android:layout_gravity="center"
                             android:layout_marginTop="@dimen/dp_2"
                             android:text="@string/back"
-                            android:visibility="gone"
-                            android:textColor="@color/colorTextBlue" />
+                            android:textColor="@color/colorTextBlue"
+                            android:visibility="gone" />
                     </LinearLayout>
 
                     <ImageView

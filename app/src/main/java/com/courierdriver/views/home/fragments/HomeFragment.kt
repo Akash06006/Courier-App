@@ -100,7 +100,7 @@ class HomeFragment() : BaseFragment(), DialogssInterface,
         acceptOrderObserver()
         cancelOrderObserver()
         // cancelReasonObserver()
-        loaderObserver()
+        // loaderObserver()
         if (TextUtils.isEmpty(regionId))
             getRegionListObserver()
 
@@ -243,9 +243,11 @@ class HomeFragment() : BaseFragment(), DialogssInterface,
                             fragmentHomeBinding.linNotWorking.visibility = View.GONE
                             fragmentHomeBinding.linInProgress.visibility = View.GONE
 
-                            val workStatusData = Intent("workStatusButtonReceiver")
-                            LocalBroadcastManager.getInstance(baseActivity)
-                                .sendBroadcast(workStatusData)
+                            /* val workStatusData = Intent("workStatusButtonReceiver")
+                             LocalBroadcastManager.getInstance(baseActivity)
+                                 .sendBroadcast(workStatusData)*/
+
+                            (activity as LandingActivty).markAvailableTrue()
                             getAvailableOrders()
                         }
                         else -> UtilsFunctions.showToastError(message!!)

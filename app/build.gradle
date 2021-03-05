@@ -2,6 +2,9 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
+//apply plugin: 'com.google.firebase.crashlytics'
+
+
 android {
     compileSdkVersion 28
     defaultConfig {
@@ -38,6 +41,11 @@ android {
                             'src/main/res'
                     ]
         }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 
@@ -133,5 +141,11 @@ dependencies {
     compile 'com.github.tamir7.contacts:contacts:1.1.7'
 
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
+
+ /*   implementation 'com.google.firebase:firebase-analytics:17.5.0'
+
+    implementation 'com.google.firebase:firebase-crashlytics:17.2.1'
+*/
+
 }
 apply plugin: 'com.google.gms.google-services'

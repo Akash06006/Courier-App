@@ -342,6 +342,7 @@ open class DriverTrackingActivity : BaseActivity(), OnMapReadyCallback, Location
         buildGoogleApiClient()
         googleMap.uiSettings.isCompassEnabled = false
         googleMap.isTrafficEnabled = false
+        mGoogleMap!!.mapType = GoogleMap.MAP_TYPE_NORMAL
         mGoogleMap!!.uiSettings.isMapToolbarEnabled = false
         googleMap.isMyLocationEnabled = false
         // mHandler.postDelayed(mRunnable, 500)

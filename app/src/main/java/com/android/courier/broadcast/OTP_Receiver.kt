@@ -25,8 +25,8 @@ class OTP_Receiver : BroadcastReceiver() {
                     // here we are spliting the sms using " : " symbol
                     val n = 6
                     //  val otp = msg.split(": ".toRegex()).toTypedArray()[1]
-                    /* Toast.makeText(MyApplication.instance, msg.substring(0, n), Toast.LENGTH_LONG)
-                         .show()*/
+                     Toast.makeText(MyApplication.instance, msg.substring(0, n), Toast.LENGTH_LONG)
+                         .show()
                     editText!!.value = msg.substring(0, n)
                 }
             }

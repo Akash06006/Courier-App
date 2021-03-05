@@ -207,6 +207,7 @@
                         android:layout_marginRight="10dp"
                         android:hint="@string/referral_code"
                         android:imeOptions="actionDone"
+                        android:maxLength="20"
                         android:paddingBottom="15dp"
                         android:singleLine="true"
                         android:textSize="14sp"

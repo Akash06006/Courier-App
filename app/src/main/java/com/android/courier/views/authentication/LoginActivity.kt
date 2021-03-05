@@ -1,7 +1,10 @@
 package com.android.courier.views.authentication
 
 import android.content.Intent
+import android.content.pm.PackageInfo
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Base64
 import android.util.Log
 import android.widget.EditText
 import android.widget.Toast
@@ -36,6 +39,7 @@ import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.iid.FirebaseInstanceId
 import com.google.gson.JsonObject
 import org.json.JSONObject
+import java.security.MessageDigest
 import java.util.*
 
 class LoginActivity : BaseActivity() {
@@ -68,6 +72,21 @@ class LoginActivity : BaseActivity() {
         if (deviceToken != null || deviceToken != "null")
             GlobalConstants.NOTIFICATION_TOKEN = deviceToken
 
+
+        try {
+            val info : PackageInfo = packageManager
+                .getPackageInfo(packageName, PackageManager.GET_SIGNATURES)
+            for (signature in info.signatures) {
+                val md = MessageDigest.getInstance("SHA")
+                md.update(signature.toByteArray())
+                val hashKey = String(Base64.encode(md.digest(), 0))
+                Log.i("Key Hash", "key:$hashKey=")
+            }
+        } catch (e : java.lang.Exception) {
+            Log.e("Key Hash", "error:", e)
+        }
+
+
         firebaseToken()
         activityLoginbinding =
             viewDataBinding as ActivityLoginBinding //DataBindingUtil.setContentView(this, R.layout.activity_login)
@@ -87,11 +106,6 @@ class LoginActivity : BaseActivity() {
                     val message = loginResponse.message
 
                     if (loginResponse.code == 200) {
-                        /* SharedPrefClass().putObject(
-                             MyApplication.instance,
-                             "isLogin",
-                             true
-                         )*/
                         SharedPrefClass().putObject(
                             MyApplication.instance,
                             GlobalConstants.ACCESS_TOKEN,
@@ -173,7 +187,12 @@ class LoginActivity : BaseActivity() {
                         intent.putExtra("data", mOtpJsonObject.toString())
                         intent.putExtra("action", "")
                         startActivity(intent)
-                        /* val intent = Intent(this, LandingActivty::class.java)
+                        /* SharedPrefClass().putObject(
+                             MyApplication.instance,
+                             "isLogin",
+                             true
+                         )
+                         val intent = Intent(this, LandingActivty::class.java)
                          intent.flags =
                              Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                          startActivity(intent)

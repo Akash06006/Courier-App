@@ -7,6 +7,7 @@ import com.android.courier.utils.FontStyle
 import com.facebook.FacebookSdk
 import com.facebook.appevents.AppEventsLogger
 import com.github.tamir7.contacts.Contacts
+//import com.google.firebase.crashlytics.FirebaseCrashlytics
 
 class MyApplication : MultiDexApplication() {
     private var customFontFamily : FontStyle? = null
@@ -14,6 +15,8 @@ class MyApplication : MultiDexApplication() {
         MultiDex.install(this)
         super.onCreate()
         instance = this
+        //val crashlytics = FirebaseCrashlytics.getInstance()
+       // crashlytics.log("my message")
         Contacts.initialize(this)
         FacebookSdk.sdkInitialize(instance)
         AppEventsLogger.activateApp(this)
@@ -34,6 +37,7 @@ class MyApplication : MultiDexApplication() {
          */
         @get:Synchronized
         lateinit var instance : MyApplication
+
         @get:Synchronized
         lateinit var createOrdersInput : CreateOrdersInput
     }

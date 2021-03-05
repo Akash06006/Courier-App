@@ -15,6 +15,22 @@
       },
       "oauth_client": [
         {
+          "client_id": "828323466157-5uvqa9mkk9hitk0hqdiheg6aqe4abfnu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.android.courier",
+            "certificate_hash": "7e197197b3e55cf5dcd7a9e0732543ac5357b133"
+          }
+        },
+        {
+          "client_id": "828323466157-82nfn1lfmctt5ereb6dnju9dd8thoj6t.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.android.courier",
+            "certificate_hash": "b35fecec1da9299a85b051229ccd2da38a247918"
+          }
+        },
+        {
           "client_id": "828323466157-knfujamuc71cm4r2160a5b37qh8k3v03.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -40,10 +56,10 @@
               "client_type": 3
             },
             {
-              "client_id": "828323466157-g5qli1pn7s1mump29vpqqj3lvppca4vg.apps.googleusercontent.com",
+              "client_id": "828323466157-5pta9mtq3t18h6jkf8tbbd6lu5cqdvic.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.app.locomodriver"
+                "bundle_id": "com.app.locomo"
               }
             }
           ]
@@ -76,10 +92,10 @@
               "client_type": 3
             },
             {
-              "client_id": "828323466157-g5qli1pn7s1mump29vpqqj3lvppca4vg.apps.googleusercontent.com",
+              "client_id": "828323466157-5pta9mtq3t18h6jkf8tbbd6lu5cqdvic.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.app.locomodriver"
+                "bundle_id": "com.app.locomo"
               }
             }
           ]

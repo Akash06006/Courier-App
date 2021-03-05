@@ -170,7 +170,7 @@ class OTPVerificationActivity : BaseActivity() {
 
                     }
                     "tv_resend" -> {
-                        activityOtpVerificationBinding.pinview.value = ""
+                      //  activityOtpVerificationBinding.pinview.value = ""
                         val mJsonObject1 = JsonObject()
                         mJsonObject1.addProperty(
                             "countryCode",

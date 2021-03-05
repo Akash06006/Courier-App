@@ -326,42 +326,7 @@ class OrderDetailRepository {
 
     }
 
-    fun getDataLists(
-    ): MutableLiveData<ListsResponse> {
-        //if (hashMap != null) {
-        val mApiService = ApiService<JsonObject>()
-        mApiService.get(
-            object : ApiResponse<JsonObject> {
-                override fun onResponse(mResponse: Response<JsonObject>) {
-                    val loginResponse = if (mResponse.body() != null)
-                        gson.fromJson<ListsResponse>(
-                            "" + mResponse.body(),
-                            ListsResponse::class.java
-                        )
-                    else {
-                        gson.fromJson<ListsResponse>(
-                            mResponse.errorBody()!!.charStream(),
-                            ListsResponse::class.java
-                        )
-                    }
 
-
-                    data3!!.postValue(loginResponse)
-
-                }
-
-                override fun onError(mKey: String) {
-                    UtilsFunctions.showToastError(MyApplication.instance.getString(R.string.internal_server_error))
-                    data3!!.postValue(null)
-
-                }
-
-            }, ApiClient.getApiInterface().getLists()
-        )
-        // }
-        return data3!!
-
-    }
 
     fun getOrderList(
         listType: String?

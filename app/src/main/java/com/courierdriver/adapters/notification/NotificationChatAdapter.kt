@@ -1,6 +1,7 @@
 package com.courierdriver.adapters.notification
 
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -88,7 +89,12 @@ class NotificationChatAdapter(
                 when (notificationList!![adapterPosition].notificationType) {
                     "CUSTOMER" -> {
                         val intent = Intent(mContext, CustomerChatActivity::class.java)
-                        intent.putExtra("cust_id", notificationList!![adapterPosition].userId)
+                        Log.e("cust_id:   ", notificationList!![adapterPosition].senderId)
+                        val custId = notificationList!![adapterPosition].senderId
+                        intent.putExtra(
+                            "cust_id",
+                            custId /*notificationList!![adapterPosition].senderId*/
+                        )
                         intent.putExtra("orderId", notificationList!![adapterPosition].orderId)
                         mContext.startActivity(intent)
                     }

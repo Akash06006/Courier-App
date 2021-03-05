@@ -694,7 +694,7 @@ class OrderDetailsActivity : BaseActivity(), OnMapReadyCallback, LocationListene
         dialog.setTitle(getString(R.string.app_name))
         // set the custom dialog components - text, image and button
         val text = dialog.findViewById(R.id.text) as TextView
-        text.text = "Order has been taken by othe rider."
+        text.text = "Order has been taken by other rider."
         val dialogButton = dialog.findViewById(R.id.dialogButtonOK) as Button
         val dialogButtonCancel = dialog.findViewById(R.id.dialogButtonCancel) as Button
         dialogButtonCancel.visibility = View.GONE

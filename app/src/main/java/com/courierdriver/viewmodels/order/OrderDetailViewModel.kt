@@ -50,7 +50,7 @@ class OrderDetailViewModel : BaseViewModel() {
         if (UtilsFunctions.isNetworkConnectedReturn()) {
             profileDetail = orderRepository.getUserProfile(null)
             data = orderRepository.updateUserProfile(null, null)
-            listsResponse = orderRepository.getDataLists()
+           // listsResponse = orderRepository.getDataLists()
             orderList = orderRepository.getOrderList("")
             acceptOrderList = orderRepository.acceptOrder(null, acceptOrderList)
             calculatePrice = orderRepository.calculatePrice(null)

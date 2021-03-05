@@ -192,7 +192,6 @@ class LoginActivity : BaseActivity() {
                         )
 
                         //   FirebaseFunctions.sendOTP("login", mOtpJsonObject, this)
-
                         val intent = Intent(this, OTPVerificationActivity::class.java)
                         intent.putExtra(
                             "phoneNumber",
@@ -206,6 +205,17 @@ class LoginActivity : BaseActivity() {
                         intent.putExtra("action", "")
                         startActivity(intent)
 
+                        /*SharedPrefClass().putObject(
+                            MyApplication.instance,
+                            "isLogin",
+                            true
+                        )
+
+                        val intent = Intent(this, LandingActivty::class.java)
+                        intent.flags =
+                            Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        startActivity(intent)
+                        finish()*/
                     } else {
                         showToastError(message)
                     }

@@ -233,7 +233,7 @@
                             android:layout_marginRight="@dimen/dp_10"
                             android:layout_weight="1"
                             android:gravity="end"
-                            android:text="+91 3784048373"
+                            android:text="@{model.phoneNumber}"
                             android:textColor="@color/colorBlack"
                             android:textSize="@dimen/sp_14"
                             app:font="@{`semibold`}" />

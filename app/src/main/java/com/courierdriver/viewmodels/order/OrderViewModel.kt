@@ -24,8 +24,7 @@ class OrderViewModel : BaseViewModel() {
        // if (UtilsFunctions.isNetworkConnected()) {
             profileDetail = orderRepository.getUserProfile(null)
             data = orderRepository.updateUserProfile(null, null)
-            listsResponse = orderRepository.getDataLists()
-      //  }
+
 
     }
 
@@ -37,9 +36,7 @@ class OrderViewModel : BaseViewModel() {
         return data
     }
 
-    fun getListsRes(): LiveData<ListsResponse> {
-        return listsResponse
-    }
+
 
     override fun isLoading(): LiveData<Boolean> {
         return mIsUpdating

@@ -30,12 +30,28 @@ class HomeRepository {
             val mApiService = ApiService<JsonObject>()
             mApiService.get(
                 object : ApiResponse<JsonObject> {
-                    override fun onResponse(mResponse: Response<JsonObject>) {
+                    override fun onResponse(mResponse: Response<JsonObject>)/* {
                         val data = gson.fromJson<OrderListModel>(
                             "" + mResponse.body()!!,
                             OrderListModel::class.java
                         )
-                        orderList!!.postValue(data)
+
+                    }*/ {
+                        val loginResponse =
+                            if (mResponse.body() != null) gson.fromJson<OrderListModel>(
+                                "" + mResponse.body()!!,
+                                OrderListModel::class.java
+                            )
+                            else {
+                                gson.fromJson<OrderListModel>(
+                                    mResponse.errorBody()!!.charStream(),
+                                    OrderListModel::class.java
+                                )
+                            }
+
+
+                        orderList!!.postValue(loginResponse)
+
                     }
 
                     override fun onError(mKey: String) {

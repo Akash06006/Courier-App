@@ -37,27 +37,6 @@ class CreateOrderActivty : BaseActivity() {
         if (UtilsFunctions.isNetworkConnected()) {
             startProgressDialog()
         }
-
-        orderViewModel.getListsRes().observe(this,
-            Observer<ListsResponse> { response ->
-                stopProgressDialog()
-
-                if (response != null) {
-                    val message = response.message
-                    when {
-                        response.code == 200 -> {
-                            vehicleList.addAll(response.data?.vehicleData!!)
-                            weightList.addAll(response.data?.weightData!!)
-
-                            initDiscountsAdapter()
-                            initWeightAdapter()
-                            initVehiclesAdapter()
-                        }
-                        else -> message?.let { UtilsFunctions.showToastError(it) }
-                    }
-                }
-            })
-
     }
 
     private fun initDiscountsAdapter() {

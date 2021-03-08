@@ -114,13 +114,11 @@ class LoginActivity : BaseActivity() {
 
                     if (loginResponse.code == 200) {
                         GlobalConstants.VERIFICATION_TYPE = "login"
-/*
                         SharedPrefClass().putObject(
                             MyApplication.instance,
                             "isLogin",
                             true
                         )
-*/
                         SharedPrefClass().putObject(
                             MyApplication.instance,
                             GlobalConstants.ACCESS_TOKEN,
@@ -192,7 +190,7 @@ class LoginActivity : BaseActivity() {
                         )
 
                         //   FirebaseFunctions.sendOTP("login", mOtpJsonObject, this)
-                        val intent = Intent(this, OTPVerificationActivity::class.java)
+                      /*  val intent = Intent(this, OTPVerificationActivity::class.java)
                         intent.putExtra(
                             "phoneNumber",
                             activityLoginbinding.edtPhone.text.toString()
@@ -203,9 +201,9 @@ class LoginActivity : BaseActivity() {
                         )
                         intent.putExtra("data", mOtpJsonObject.toString())
                         intent.putExtra("action", "")
-                        startActivity(intent)
+                        startActivity(intent)*/
 
-                        /*SharedPrefClass().putObject(
+                        SharedPrefClass().putObject(
                             MyApplication.instance,
                             "isLogin",
                             true
@@ -215,7 +213,7 @@ class LoginActivity : BaseActivity() {
                         intent.flags =
                             Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                         startActivity(intent)
-                        finish()*/
+                        finish()
                     } else {
                         showToastError(message)
                     }
